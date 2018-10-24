@@ -1,2 +1,1 @@
-# training-app
-Training App for DHIS2
+# dhis2-app-skeleton
