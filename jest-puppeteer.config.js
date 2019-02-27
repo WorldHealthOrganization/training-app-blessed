@@ -6,7 +6,7 @@ const dhis2Url =
 const appUrl = process.env.REACT_APP_URL_TEST || 'http://localhost:9000'
 const port = parseInt(url.parse(appUrl).port || 80, 10)
 const startServer = process.env.START_SERVER !== 'false'
-const serverCommand = `REACT_APP_DHIS2_URL=${dhis2Url} REACT_APP_URL_TEST=${appUrl} PORT=${port} yarn start`
+const serverCommand = `REACT_APP_DHIS2_BASE_URL=${dhis2Url} REACT_APP_URL_TEST=${appUrl} PORT=${port} yarn start`
 
 module.exports = {
     launch: {

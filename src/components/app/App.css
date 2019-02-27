@@ -1,3 +1,7 @@
+body {
+    margin: 0px;
+}
+
 .content {
-    margin-top: 60px;
+    margin: 15px;
 }

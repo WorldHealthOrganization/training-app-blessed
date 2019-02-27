@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import HeaderBar from "@dhis2/d2-ui-header-bar";
+import HeaderBar from "@dhis2/ui/widgets/HeaderBar";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import JssProvider from "react-jss/lib/JssProvider";
 import { createGenerateClassName } from "@material-ui/core/styles";
@@ -47,7 +47,7 @@ class App extends Component {
                     <MuiThemeProvider theme={muiTheme}>
                         <OldMuiThemeProvider>
                             <React.Fragment>
-                                <HeaderBar d2={d2} />
+                                <HeaderBar appName={"Skeleton app"} />
 
                                 <div id="app" className="content">
                                     <SnackbarProvider>
