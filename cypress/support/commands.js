@@ -1,5 +1,5 @@
 // <reference types="Cypress" />
-/* global Promise, Cypress, cy */
+/* global Cypress, cy */
 
 import { stubFetch, externalUrl, generateFixtures, stubBackend } from "./network-fixtures";
 import _ from "lodash";

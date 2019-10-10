@@ -1,16 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import HeaderBar from "@dhis2/ui/widgets/HeaderBar";
+import React, { useEffect, useState } from "react";
+import { HeaderBar } from "@dhis2/ui-widgets";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import JssProvider from "react-jss/lib/JssProvider";
 import { createGenerateClassName } from "@material-ui/core/styles";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import { useDataQuery, useConfig } from "@dhis2/app-runtime";
+import { HashRouter } from "react-router-dom";
 import _ from "lodash";
+import i18n from "@dhis2/d2-i18n";
+import { init } from "d2";
 
-import { muiTheme } from "../../dhis2.theme";
 import "./App.css";
-import SnackbarProvider from "../feedback/SnackbarProvider";
-import Root from "./Root";
+import { muiTheme } from "./themes/dhis2.theme";
+import muiThemeLegacy from "./themes/dhis2-legacy.theme";
+import Root from "../pages/root/Root";
 import Share from "../share/Share";
 
 const generateClassName = createGenerateClassName({
@@ -18,50 +21,84 @@ const generateClassName = createGenerateClassName({
     productionPrefix: "c",
 });
 
-class App extends Component {
-    static propTypes = {
-        d2: PropTypes.object.isRequired,
-        appConfig: PropTypes.object.isRequired,
-    };
+const isLangRTL = code => {
+    const langs = ["ar", "fa", "ur"];
+    const prefixed = langs.map(c => `${c}-`);
+    return _(langs).includes(code) || prefixed.filter(c => code && code.startsWith(c)).length > 0;
+};
 
-    componentDidMount() {
-        const { d2, appConfig } = this.props;
-        const appKey = _(this.props.appConfig).get("appKey");
+const configI18n = ({ keyUiLocale: uiLocale }) => {
+    i18n.changeLanguage(uiLocale);
+    document.documentElement.setAttribute("dir", isLangRTL(uiLocale) ? "rtl" : "ltr");
+};
 
-        if (appConfig && appConfig.feedback) {
-            const feedbackOptions = {
-                ...appConfig.feedback,
-                i18nPath: "feedback-tool/i18n",
-            };
-            window.$.feedbackDhis2(d2, appKey, feedbackOptions);
-        }
-    }
+const App = () => {
+    const { baseUrl } = useConfig();
+    const [d2, setD2] = useState(null);
+    const [showShareButton, setShowShareButton] = useState(false);
+    const { loading, error, data } = useDataQuery({
+        userSettings: { resource: "/userSettings" },
+    });
+    useEffect(() => {
+        const run = async () => {
+            const appConfig = await fetch("app-config.json", {
+                credentials: "same-origin",
+            }).then(res => res.json());
+            const d2 = await init({ baseUrl: baseUrl + "/api" });
 
-    render() {
-        const { d2, appConfig } = this.props;
-        const showShareButton = _(appConfig).get("appearance.showShareButton") || false;
+            setD2(d2);
+            setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
 
+            initFeedbackTool(d2, appConfig);
+        };
+
+        run();
+    }, []);
+
+    if (loading || !d2) return <div>Loading...</div>;
+
+    if (error)
         return (
-            <React.Fragment>
-                <JssProvider generateClassName={generateClassName}>
-                    <MuiThemeProvider theme={muiTheme}>
-                        <OldMuiThemeProvider>
-                            <React.Fragment>
-                                <HeaderBar appName={"Skeleton app"} />
-
-                                <div id="app" className="content">
-                                    <SnackbarProvider>
-                                        <Root d2={d2} />
-                                    </SnackbarProvider>
-                                </div>
-
-                                <Share visible={showShareButton} />
-                            </React.Fragment>
-                        </OldMuiThemeProvider>
-                    </MuiThemeProvider>
-                </JssProvider>
-            </React.Fragment>
+            <div>
+                <a rel="noopener noreferrer" target="_blank" href={baseUrl}>
+                    {"Login"}
+                </a>
+                {` ${baseUrl}`}
+            </div>
         );
+
+    configI18n(data.userSettings);
+
+    return (
+        <HashRouter>
+            <JssProvider generateClassName={generateClassName}>
+                <MuiThemeProvider theme={muiTheme}>
+                    <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
+                        <React.Fragment>
+                            <HeaderBar appName={"Skeleton app"} />
+
+                            <div id="app" className="content">
+                                <Root />
+                            </div>
+
+                            <Share visible={showShareButton} />
+                        </React.Fragment>
+                    </OldMuiThemeProvider>
+                </MuiThemeProvider>
+            </JssProvider>
+        </HashRouter>
+    );
+};
+
+function initFeedbackTool(d2, appConfig) {
+    const appKey = _(appConfig).get("appKey");
+
+    if (appConfig && appConfig.feedback) {
+        const feedbackOptions = {
+            ...appConfig.feedback,
+            i18nPath: "feedback-tool/i18n",
+        };
+        window.$.feedbackDhis2(d2, appKey, feedbackOptions);
     }
 }
 
