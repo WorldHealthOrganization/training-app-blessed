@@ -5,7 +5,6 @@ import JssProvider from "react-jss/lib/JssProvider";
 import { createGenerateClassName } from "@material-ui/core/styles";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { useDataQuery, useConfig } from "@dhis2/app-runtime";
-import { HashRouter } from "react-router-dom";
 import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 import { init } from "d2";
@@ -13,7 +12,7 @@ import { init } from "d2";
 import "./App.css";
 import { muiTheme } from "./themes/dhis2.theme";
 import muiThemeLegacy from "./themes/dhis2-legacy.theme";
-import Root from "../pages/root/Root";
+import Root from "../../pages/root/Root";
 import Share from "../share/Share";
 
 const generateClassName = createGenerateClassName({
@@ -70,23 +69,21 @@ const App = () => {
     configI18n(data.userSettings);
 
     return (
-        <HashRouter>
-            <JssProvider generateClassName={generateClassName}>
-                <MuiThemeProvider theme={muiTheme}>
-                    <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
-                        <React.Fragment>
-                            <HeaderBar appName={"Skeleton app"} />
+        <JssProvider generateClassName={generateClassName}>
+            <MuiThemeProvider theme={muiTheme}>
+                <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
+                    <React.Fragment>
+                        <HeaderBar appName={"Skeleton app"} />
 
-                            <div id="app" className="content">
-                                <Root />
-                            </div>
+                        <div id="app" className="content">
+                            <Root />
+                        </div>
 
-                            <Share visible={showShareButton} />
-                        </React.Fragment>
-                    </OldMuiThemeProvider>
-                </MuiThemeProvider>
-            </JssProvider>
-        </HashRouter>
+                        <Share visible={showShareButton} />
+                    </React.Fragment>
+                </OldMuiThemeProvider>
+            </MuiThemeProvider>
+        </JssProvider>
     );
 };
 
