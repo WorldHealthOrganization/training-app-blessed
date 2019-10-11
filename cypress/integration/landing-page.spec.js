@@ -15,10 +15,8 @@ context("Landing page", () => {
         cy.contains("Counter=1");
     });
 
-    /*
     it("shows feedback when button clicked", () => {
         cy.contains("Click to show feedback").click();
-        cy.contains("Hello there");
+        cy.contains("Some info");
     });
-    */
 });

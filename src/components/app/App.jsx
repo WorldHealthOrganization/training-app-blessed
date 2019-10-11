@@ -8,6 +8,7 @@ import { useDataQuery, useConfig } from "@dhis2/app-runtime";
 import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 import { init } from "d2";
+import { SnackbarProvider } from "d2-ui-components";
 
 import "./App.css";
 import { muiTheme } from "./themes/dhis2.theme";
@@ -72,7 +73,7 @@ const App = () => {
         <JssProvider generateClassName={generateClassName}>
             <MuiThemeProvider theme={muiTheme}>
                 <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
-                    <React.Fragment>
+                    <SnackbarProvider>
                         <HeaderBar appName={"Skeleton app"} />
 
                         <div id="app" className="content">
@@ -80,7 +81,7 @@ const App = () => {
                         </div>
 
                         <Share visible={showShareButton} />
-                    </React.Fragment>
+                    </SnackbarProvider>
                 </OldMuiThemeProvider>
             </MuiThemeProvider>
         </JssProvider>
