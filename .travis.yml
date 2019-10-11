@@ -19,5 +19,5 @@ install:
 script:
     - PORT=8081 REACT_APP_DHIS2_BASE_URL=http://dev2.eyeseetea.com:8082 yarn start &
     - yarn run wait-on http://localhost:8081 && sleep 10s
-    - REACT_APP_CYPRESS=true CYPRESS_EXTERNAL_API=http://dev2.eyeseetea.com:8082 CYPRESS_ROOT_URL=http://localhost:8081 yarn cy:e2e:open --browser chrome
+    - REACT_APP_CYPRESS=true CYPRESS_EXTERNAL_API=http://dev2.eyeseetea.com:8082 CYPRESS_ROOT_URL=http://localhost:8081 yarn cy:e2e:run --browser chrome
     - kill $(jobs -p) || true
