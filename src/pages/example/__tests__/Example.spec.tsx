@@ -21,9 +21,9 @@ test("greeting", () => {
 
 test("increment button", () => {
     const component = getComponent();
-    expect(component.queryByText("Counter=0")).toBeInTheDocument();
+    expect(component.queryByText("Value=0")).toBeInTheDocument();
     fireEvent.click(component.getByText("+1"));
-    expect(component.queryByText("Counter=1")).toBeInTheDocument();
+    expect(component.queryByText("Value=1")).toBeInTheDocument();
 });
 
 test("feedback button", () => {
