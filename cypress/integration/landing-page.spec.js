@@ -12,7 +12,7 @@ context("Landing page", () => {
 
     it("increments counter when button clicked", () => {
         cy.contains("+1").click();
-        cy.contains("Counter=1");
+        cy.contains("Value=1");
     });
 
     it("shows feedback when button clicked", () => {
