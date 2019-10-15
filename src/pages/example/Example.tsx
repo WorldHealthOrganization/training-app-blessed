@@ -19,15 +19,16 @@ export default function Example(props: ExampleProps) {
     const api = useContext(ApiContext);
 
     useEffect(() => {
-        async function set() {
-            const dataSets = (await api.models.dataSets.get({ pageSize: 5 }).response).data.objects;
-            setDataSets(dataSets);
+        function set() {
+            const { cancel, response } = api.models.dataSets.get({ pageSize: 5 });
+            response.then(response_ => setDataSets(response_.data.objects));
+            return cancel;
         }
-        set();
+        return set();
     }, []);
 
     return (
-        <React.Fragment>
+        <div>
             <h2>Hello {props.name}!</h2>
 
             <div>
@@ -50,6 +51,6 @@ export default function Example(props: ExampleProps) {
                     {i18n.t("Click to show feedback")}
                 </button>
             </div>
-        </React.Fragment>
+        </div>
     );
 }
