@@ -8,6 +8,7 @@ interface ExampleProps {
     name: string;
 }
 
+// We need explicit casting until d2-api supports type inteference from the options argument
 interface DataSet {
     id: Id;
 }

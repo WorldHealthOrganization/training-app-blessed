@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, waitForDomChange } from "@testing-library/react";
 import { SnackbarProvider } from "d2-ui-components";
 import "@testing-library/jest-dom/extend-expect";
 import MockAdapter from "axios-mock-adapter";
@@ -36,7 +36,14 @@ describe("Example", () => {
 
     test("greeting", async () => {
         const component = getComponent();
+        // Use component.debug() to see its full HTML
         expect(component.queryByText("Hello Some Name!")).toBeInTheDocument();
+    });
+
+    test("dataset IDS", async () => {
+        const component = getComponent();
+        await waitForDomChange();
+        expect(component.queryByText("1234a, 1234b", { exact: false })).toBeInTheDocument();
     });
 
     test("increment button", async () => {
