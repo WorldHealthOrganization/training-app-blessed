@@ -2,19 +2,13 @@
 
 ```
 $ yarn install
+# Run `yarn build && cd build && yarn link` in d2-api
+$ yarn link d2-api
 ```
 
 ## Development
 
 Start development server:
-
-```
-$ yarn start
-```
-
-This will open the development server at port 8081 and will connect to DHIS 2 instance http://localhost:8080.
-
-Use custom values passing environment variables:
 
 ```
 $ PORT=8082 REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start

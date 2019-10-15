@@ -1,16 +1,26 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { SnackbarProvider } from "d2-ui-components";
-// https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom/extend-expect";
 
 import Example from "../Example";
+import D2Api from "d2-api";
+import { ApiContext } from "../../../contexts/api-context";
+
+// Temporal, we should create a stub for D2Api
+
+const api = new D2Api({
+    baseUrl: "https://play.dhis2.org/2.32.2",
+    auth: { username: "admin", password: "district" },
+});
 
 function getComponent({ name = "Some Name" } = {}) {
     return render(
-        <SnackbarProvider>
-            <Example name={name} />
-        </SnackbarProvider>
+        <ApiContext.Provider value={api}>
+            <SnackbarProvider>
+                <Example name={name} />
+            </SnackbarProvider>
+        </ApiContext.Provider>
     );
 }
 

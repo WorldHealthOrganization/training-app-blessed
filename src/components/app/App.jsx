@@ -9,12 +9,14 @@ import _ from "lodash";
 import i18n from "@dhis2/d2-i18n";
 import { init } from "d2";
 import { SnackbarProvider } from "d2-ui-components";
+import D2Api from "d2-api";
 
 import "./App.css";
 import { muiTheme } from "./themes/dhis2.theme";
 import muiThemeLegacy from "./themes/dhis2-legacy.theme";
 import Root from "../../pages/root/Root";
 import Share from "../share/Share";
+import { ApiContext } from "../../contexts/api-context";
 
 const generateClassName = createGenerateClassName({
     dangerouslyUseGlobalCSS: false,
@@ -35,18 +37,23 @@ const configI18n = ({ keyUiLocale: uiLocale }) => {
 const App = () => {
     const { baseUrl } = useConfig();
     const [d2, setD2] = useState(null);
+    const [api, setApi] = useState(null);
     const [showShareButton, setShowShareButton] = useState(false);
     const { loading, error, data } = useDataQuery({
         userSettings: { resource: "/userSettings" },
     });
+
     useEffect(() => {
         const run = async () => {
             const appConfig = await fetch("app-config.json", {
                 credentials: "same-origin",
             }).then(res => res.json());
             const d2 = await init({ baseUrl: baseUrl + "/api" });
+            const api = new D2Api({ baseUrl });
+            Object.assign({ d2, api });
 
             setD2(d2);
+            setApi(api);
             setShowShareButton(_(appConfig).get("appearance.showShareButton") || false);
 
             initFeedbackTool(d2, appConfig);
@@ -55,7 +62,7 @@ const App = () => {
         run();
     }, []);
 
-    if (loading || !d2) return <div>Loading...</div>;
+    if (loading || !d2 || !api) return <div>Loading...</div>;
 
     if (error)
         return (
@@ -77,7 +84,9 @@ const App = () => {
                         <HeaderBar appName={"Skeleton app"} />
 
                         <div id="app" className="content">
-                            <Root />
+                            <ApiContext.Provider value={api}>
+                                <Root />
+                            </ApiContext.Provider>
                         </div>
 
                         <Share visible={showShareButton} />
