@@ -3,6 +3,7 @@ import i18n from "../../locales";
 import { useSnackbar } from "d2-ui-components";
 import D2Api, { Id } from "d2-api";
 import { ApiContext } from "../../contexts/api-context";
+import { makeStyles } from "@material-ui/styles";
 
 interface ExampleProps {
     name: string;
@@ -17,6 +18,7 @@ export default function Example(props: ExampleProps) {
     const [counter, setCounter] = useState(0);
     const [dataSets, setDataSets] = useState<DataSet[]>([]);
     const snackbar = useSnackbar();
+    const classes = useStyles();
     const api = useContext(ApiContext);
 
     useEffect(() => {
@@ -30,7 +32,7 @@ export default function Example(props: ExampleProps) {
 
     return (
         <div>
-            <h2>Hello {props.name}!</h2>
+            <h2 className={classes.title}>Hello {props.name}!</h2>
 
             <div>
                 <p>
@@ -55,3 +57,9 @@ export default function Example(props: ExampleProps) {
         </div>
     );
 }
+
+const useStyles = makeStyles({
+    title: {
+        color: "blue",
+    },
+});

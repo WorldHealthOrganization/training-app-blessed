@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HeaderBar } from "@dhis2/ui-widgets";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-import JssProvider from "react-jss/lib/JssProvider";
-import { createGenerateClassName } from "@material-ui/core/styles";
+import { StylesProvider, createGenerateClassName, createStyles } from "@material-ui/styles";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { useDataQuery, useConfig } from "@dhis2/app-runtime";
 import _ from "lodash";
@@ -19,7 +18,6 @@ import Share from "../share/Share";
 import { ApiContext } from "../../contexts/api-context";
 
 const generateClassName = createGenerateClassName({
-    dangerouslyUseGlobalCSS: false,
     productionPrefix: "c",
 });
 
@@ -77,7 +75,7 @@ const App = () => {
     configI18n(data.userSettings);
 
     return (
-        <JssProvider generateClassName={generateClassName}>
+        <StylesProvider generateClassName={generateClassName}>
             <MuiThemeProvider theme={muiTheme}>
                 <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
                     <SnackbarProvider>
@@ -93,7 +91,7 @@ const App = () => {
                     </SnackbarProvider>
                 </OldMuiThemeProvider>
             </MuiThemeProvider>
-        </JssProvider>
+        </StylesProvider>
     );
 };
 
@@ -108,5 +106,4 @@ function initFeedbackTool(d2, appConfig) {
         window.$.feedbackDhis2(d2, appKey, feedbackOptions);
     }
 }
-
 export default App;
