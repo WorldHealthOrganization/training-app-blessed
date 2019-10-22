@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HeaderBar } from "@dhis2/ui-widgets";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-import { StylesProvider, createGenerateClassName, createStyles } from "@material-ui/styles";
+import { StylesProvider, createGenerateClassName } from "@material-ui/styles";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import { useDataQuery, useConfig } from "@dhis2/app-runtime";
 import _ from "lodash";
