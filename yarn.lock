@@ -3990,10 +3990,10 @@ d2-manifest@^1.0.0:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui-components@0.0.28-alpha.0:
-  version "0.0.28-alpha.0"
-  resolved "https://registry.yarnpkg.com/d2-ui-components/-/d2-ui-components-0.0.28-alpha.0.tgz#b340f8b18ffbfc0e5904749c43a34f78b99d7df6"
-  integrity sha512-T6kqnL2f2iLHWv3YSNI2Q5G2EY7cIHaff+aEzD+eA9yLOQx55IcpCDo/DQUnTHByXyrZ3WIO50zQWvTgp4FKhA==
+d2-ui-components@0.0.29:
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/d2-ui-components/-/d2-ui-components-0.0.29.tgz#d5ae4980ddd814ea1a0f8dcff76919c6b9f34d92"
+  integrity sha512-+Bh9MgaS8sns2HqI6Xl82gLfth+Hyj3pyYPEfLPdKAtJMT+S+DBRqJhNyvWSwPCnenHj26xrrucbvnXnTYN3qA==
   dependencies:
     "@date-io/moment" "^1.0.2"
     "@dhis2/d2-i18n" "^1.0.3"
@@ -4008,7 +4008,7 @@ d2-ui-components@0.0.28-alpha.0:
     material-ui-pickers "^2.1.2"
     moment "^2.22.2"
     nano-memoize "^1.1.5"
-    node-sass "^4.11.0"
+    node-sass "^4.12.0"
     throttle-debounce "^2.1.0"
 
 d2@31.1.1:
@@ -9119,7 +9119,7 @@ node-releases@^1.0.0-alpha.11, node-releases@^1.1.29:
   dependencies:
     semver "^6.3.0"
 
-node-sass@^4.11.0:
+node-sass@^4.12.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.12.0.tgz#0914f531932380114a30cc5fa4fa63233a25f017"
   integrity sha512-A1Iv4oN+Iel6EPv77/HddXErL2a+gZ4uBeZUy+a8O35CFYTXhgA8MgLCWBtwpGZdCvTvQ9d+bQxX/QC36GDPpQ==
