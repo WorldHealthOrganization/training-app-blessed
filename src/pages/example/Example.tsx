@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import i18n from "../../locales";
 import { useSnackbar } from "d2-ui-components";
-import D2Api, { Id } from "d2-api";
+import { Id } from "d2-api";
 import { ApiContext } from "../../contexts/api-context";
 import { makeStyles } from "@material-ui/styles";
 
