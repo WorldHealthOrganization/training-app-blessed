@@ -26,6 +26,7 @@ yarn-error.log*
 
 src/locales/
 src/react-app.d.ts
+src/react-app-env.d.ts
 
 # cypress
 cypress/screenshots/
