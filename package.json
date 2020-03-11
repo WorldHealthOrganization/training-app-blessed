@@ -1,5 +1,5 @@
 {
-    "name": "dhis2-skeleton-app",
+    "name": "dhis2-app-skeleton",
     "description": "DHIS2 Skeleton App",
     "version": "0.0.1",
     "license": "GPL-3.0",
@@ -7,7 +7,7 @@
     "homepage": ".",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/eyeseetea/dhis2-skeleton-app.git"
+        "url": "git+https://github.com/eyeseetea/dhis2-app-skeleton.git"
     },
     "dependencies": {
         "@dhis2/app-runtime": "^2.0.4",
