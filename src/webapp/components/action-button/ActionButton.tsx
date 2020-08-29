@@ -19,7 +19,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({ onClick }) => {
 
 const StyledFab = styled(Fab)`
     position: fixed;
-    margin: 10px;
+    margin: 6px;
     bottom: 20px;
     right: 40px;
     display: inline-flex;
