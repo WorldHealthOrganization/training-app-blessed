@@ -40,8 +40,7 @@ export const IFrame = ({ className, src, title = "IFrame" }: IFrameProps) => {
 
         sleep(2000);
         const { contentWindow, contentDocument } = ref.current;
-        //@ts-ignore
-        const { document } = contentWindow || contentDocument;
+        const { document = contentDocument } = contentWindow ?? {};
         textSelector(document, "Welcome Alexis RICO", console.log);
     }, [loading]);
 
