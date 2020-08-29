@@ -23,13 +23,13 @@ const StyledFab = styled(Fab)`
     bottom: 20px;
     right: 40px;
     display: inline-flex;
+    cursor: pointer;
     align-items: center;
-    color: #fff;
     padding: 15px 20px;
+    color: #fff;
     background-color: #3c8dbc;
     border-color: #367fa9;
     border-radius: 100px;
-    cursor: pointer;
 
     :hover {
         background-color: #296282;
