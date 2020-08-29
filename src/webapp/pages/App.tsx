@@ -2,10 +2,10 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { LoadingProvider, SnackbarProvider } from "d2-ui-components";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
-import Root from "../../pages/root/RootPage";
+import muiThemeLegacy from "../themes/dhis2-legacy.theme";
+import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
-import muiThemeLegacy from "./themes/dhis2-legacy.theme";
-import { muiTheme } from "./themes/dhis2.theme";
+import Root from "./root/RootPage";
 
 const App = () => {
     return (

@@ -2,12 +2,12 @@ import { Provider } from "@dhis2/app-runtime";
 import i18n from "@dhis2/d2-i18n";
 import axios from "axios";
 import { init } from "d2";
-import { D2Api } from "./types/d2-api";
 import _ from "lodash";
 import React from "react";
 import ReactDOM from "react-dom";
+import { D2Api } from "./types/d2-api";
 import { AppContext } from "./webapp/contexts/app-context";
-import App from "./webapp/components/app/App";
+import App from "./webapp/pages/App";
 
 async function getBaseUrl() {
     if (process.env.NODE_ENV === "development") {
