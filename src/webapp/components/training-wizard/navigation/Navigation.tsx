@@ -14,7 +14,7 @@ export const Navigation = ({ steps, onNext, onPrev }: WizardNavigationProps) => 
                 <NavigationButton onClick={onPrev}>{i18n.t("Previous")}</NavigationButton>
                 <ProgressBar>
                     {[1, 2, 3, 4].map(value => (
-                        <NavigationBullet completed={value === 2} />
+                        <NavigationBullet key={value} completed={value === 2} />
                     ))}
                 </ProgressBar>
                 <NavigationButton onClick={onNext}>{i18n.t("Next")}</NavigationButton>
