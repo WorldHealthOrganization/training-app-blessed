@@ -1,12 +1,22 @@
-import React from "react";
-import Draggable from "react-draggable";
+import React, { useCallback, useEffect, useState } from "react";
+import Draggable, { ControlPosition, DraggableEvent, DraggableData } from "react-draggable";
 import styled from "styled-components";
 import { ModalHeader } from "./ModalHeader";
 
 export const Modal: React.FC<ModalProps> = ({ children, onClose, onMinimize, minimized }) => {
+    const [position, setPosition] = useState<ControlPosition>();
     const dragId = "drag-button";
+
+    const clearPosition = useCallback((_event: DraggableEvent, { x, y }: DraggableData) => {
+        setPosition({ x, y });
+    }, []);
+
+    useEffect(() => {
+        setPosition({ x: 0, y: 0 });
+    }, [minimized]);
+
     return (
-        <Draggable handle={`#${dragId}`}>
+        <Draggable handle={`#${dragId}`} position={position} onDrag={clearPosition}>
             <ModalWrapper>
                 <ModalBody>
                     <ModalHeader
