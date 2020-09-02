@@ -28,7 +28,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ open, setOpen })
     if (!open) return null;
 
     return (
-        <Modal onClose={onClose} onMinimize={onMinimize}>
+        <Modal onClose={onClose} onMinimize={onMinimize} minimized={minimized}>
             <StyledWizard
                 useSnackFeedback={true}
                 initialStepKey={"general-info"}
