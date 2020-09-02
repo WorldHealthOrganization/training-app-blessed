@@ -16,7 +16,7 @@ export const Stepper = ({ steps, currentStepKey, onStepClicked }: WizardStepperP
             {steps.map((step, index) => (
                 <Step key={step.key}>
                     <Bullet
-                        stepKey={index}
+                        stepKey={index + 1}
                         current={currentStep === step}
                         completed={index < currentStepIndex}
                         last={index === steps.length}
