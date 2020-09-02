@@ -3,13 +3,13 @@ import Draggable from "react-draggable";
 import styled from "styled-components";
 import { ModalHeader } from "./ModalHeader";
 
-export const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
+export const Modal: React.FC<ModalProps> = ({ children, onClose, onMinimize }) => {
     const dragId = "drag-button";
     return (
         <Draggable handle={`#${dragId}`}>
             <ModalWrapper>
                 <ModalBody>
-                    <ModalHeader dragId={dragId} onClose={onClose} onMinimize={onClose} />
+                    <ModalHeader dragId={dragId} onClose={onClose} onMinimize={onMinimize} />
                     {children}
                 </ModalBody>
             </ModalWrapper>
@@ -19,6 +19,7 @@ export const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
 
 export interface ModalProps {
     onClose: () => void;
+    onMinimize: () => void;
 }
 
 const ModalWrapper = styled.div`

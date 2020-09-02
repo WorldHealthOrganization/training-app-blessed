@@ -1,5 +1,5 @@
 import { Wizard } from "d2-ui-components";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Modal } from "./modal/Modal";
 import { Navigation } from "./navigation/Navigation";
@@ -11,15 +11,29 @@ export interface TrainingWizardProps {
 }
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ open, setOpen }) => {
+    const [minimized, setMinimized] = useState(false);
+
+    const onMinimize = useCallback(() => {
+        setMinimized(minimized => !minimized);
+    }, []);
+
+    const onClose = useCallback(() => {
+        setOpen(false);
+    }, [setOpen]);
+
+    useEffect(() => {
+        setMinimized(false);
+    }, [open]);
+
     if (!open) return null;
 
     return (
-        <Modal onClose={() => setOpen(false)}>
+        <Modal onClose={onClose} onMinimize={onMinimize}>
             <StyledWizard
                 useSnackFeedback={true}
                 initialStepKey={"general-info"}
-                StepperComponent={Stepper}
-                NavigationComponent={Navigation}
+                StepperComponent={minimized ? EmptyComponent : Stepper}
+                NavigationComponent={minimized ? EmptyComponent : Navigation}
                 steps={[
                     {
                         key: "general-info",
@@ -58,3 +72,5 @@ const GeneralInfoStep = () => {
         </React.Fragment>
     );
 };
+
+const EmptyComponent = () => null;
