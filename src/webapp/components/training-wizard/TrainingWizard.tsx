@@ -61,7 +61,7 @@ const StyledWizard = styled(Wizard)`
 const GeneralInfoStep = () => {
     return (
         <React.Fragment>
-            <p style={{ marginBottom: 130, color: "#fff" }}>Placeholder for the contents</p>
+            <p style={{ margin: 50, color: "#fff" }}>Placeholder for the contents</p>
         </React.Fragment>
     );
 };
