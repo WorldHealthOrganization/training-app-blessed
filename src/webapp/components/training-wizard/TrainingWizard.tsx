@@ -6,26 +6,19 @@ import { Navigation } from "./navigation/Navigation";
 import { Stepper } from "./stepper/Stepper";
 
 export interface TrainingWizardProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
+    onClose: () => void;
 }
 
-export const TrainingWizard: React.FC<TrainingWizardProps> = ({ open, setOpen }) => {
+export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
     const [minimized, setMinimized] = useState(false);
 
     const onMinimize = useCallback(() => {
         setMinimized(minimized => !minimized);
     }, []);
 
-    const onClose = useCallback(() => {
-        setOpen(false);
-    }, [setOpen]);
-
     useEffect(() => {
         setMinimized(false);
-    }, [open]);
-
-    if (!open) return null;
+    }, []);
 
     return (
         <Modal onClose={onClose} onMinimize={onMinimize} minimized={minimized}>
