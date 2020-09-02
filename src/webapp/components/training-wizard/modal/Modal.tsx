@@ -37,11 +37,14 @@ const ModalWrapper = styled.div`
     bottom: 0;
     left: 0;
     text-align: center;
-
-    max-width: 600px;
 `;
 
 const ModalBody = styled.div`
+    position: fixed;
+    margin: 6px;
+    bottom: 20px;
+    right: 40px;
+
     background-color: #276696;
     border-radius: 18px;
     padding: 18px;

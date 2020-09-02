@@ -13,7 +13,7 @@ export const BasePage = () => {
     return (
         <React.Fragment>
             <IFrame className={classes.iframe} src={baseUrl} />
-            <ActionButton onClick={() => setOpen(!open)} />
+            {!open && <ActionButton onClick={() => setOpen(!open)} />}
             <TrainingWizard open={open} setOpen={setOpen} />
         </React.Fragment>
     );
