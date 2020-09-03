@@ -1,7 +1,14 @@
+import { AppState } from "../domain/entities/AppState";
 import { D2Api } from "../types/d2-api";
 
 export class CompositionRoot {
+    private currentState?: AppState;
+
     constructor(public readonly api: D2Api) {}
+
+    public get appState() {
+        return this.currentState;
+    }
 }
 
 export interface UseCase {
