@@ -60,10 +60,33 @@ const StyledWizard = styled(Wizard)`
 
 const GeneralInfoStep = () => {
     return (
-        <React.Fragment>
-            <p style={{ margin: 50, color: "#fff" }}>Placeholder for the contents</p>
-        </React.Fragment>
+        <ContentWrapper>
+            <p style={{ margin: 0, color: "#fff" }}>
+                {"Placeholder for the contents ".repeat(100)}
+            </p>
+        </ContentWrapper>
     );
 };
+
+const ContentWrapper = styled.div`
+    margin: 0;
+    max-height: 320px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #fff;
+        border-radius: 4px;
+    }
+`;
 
 const EmptyComponent = () => null;

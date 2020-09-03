@@ -25,7 +25,7 @@ export const Navigation = ({ steps, onNext, onPrev }: WizardNavigationProps) => 
 
 const ModalFooter = styled.div`
     overflow: hidden;
-    margin: 0px 0px 20px;
+    margin: 20px 0px 20px;
 `;
 
 const ProgressBar = styled.div`

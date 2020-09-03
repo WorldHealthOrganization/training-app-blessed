@@ -54,7 +54,8 @@ const ModalBody = styled.div`
     margin: 6px;
     bottom: 20px;
     right: 40px;
-    min-width: 400px;
+    width: 450px;
+    height: 500px;
 
     background-color: #276696;
     border-radius: 18px;
