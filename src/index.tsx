@@ -8,6 +8,7 @@ import ReactDOM from "react-dom";
 import { D2Api } from "./types/d2-api";
 import { AppContext } from "./webapp/contexts/app-context";
 import App from "./webapp/pages/App";
+import { CompositionRoot } from "./webapp/CompositionRoot";
 
 async function getBaseUrl() {
     if (process.env.NODE_ENV === "development") {
@@ -38,13 +39,14 @@ async function main() {
         const d2 = await init({ baseUrl: baseUrl + "/api", schemas: [] });
         const api = new D2Api({ baseUrl });
         Object.assign(window, { bulkLoad: { d2, api } });
+        const compositionRoot = new CompositionRoot(api);
 
         const userSettings = await api.get<{ keyUiLocale: string }>("/userSettings").getData();
         configI18n(userSettings);
 
         ReactDOM.render(
             <Provider config={{ baseUrl, apiVersion: 30 }}>
-                <AppContext.Provider value={{ api }}>
+                <AppContext.Provider value={{ baseUrl, api, compositionRoot }}>
                     <App />
                 </AppContext.Provider>
             </Provider>,
