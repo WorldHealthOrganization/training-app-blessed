@@ -3,7 +3,6 @@ import { D2Api } from "../../types/d2-api";
 
 export interface AppContext {
     api: D2Api;
-    d2: object;
 }
 
 export const AppContext = React.createContext<AppContext | null>(null);

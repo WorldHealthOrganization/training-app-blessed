@@ -44,7 +44,7 @@ async function main() {
 
         ReactDOM.render(
             <Provider config={{ baseUrl, apiVersion: 30 }}>
-                <AppContext.Provider value={{ d2, api }}>
+                <AppContext.Provider value={{ api }}>
                     <App />
                 </AppContext.Provider>
             </Provider>,
