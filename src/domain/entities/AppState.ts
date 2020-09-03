@@ -14,6 +14,7 @@ interface TrainingAppState extends BaseAppState {
 
 interface DialogAppState extends BaseAppState {
     type: "TRAINING_DIALOG";
+    dialog: string;
 }
 
 export type AppState = TrainingAppState | DialogAppState;

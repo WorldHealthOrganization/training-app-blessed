@@ -9,6 +9,10 @@ export class CompositionRoot {
     public get appState() {
         return this.currentState;
     }
+
+    public updateAppState(appState: AppState) {
+        this.currentState = appState;
+    }
 }
 
 export interface UseCase {
