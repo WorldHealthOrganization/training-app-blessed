@@ -34,4 +34,5 @@ const ProgressBar = styled.div`
     align-items: flex-end;
     width: 25%;
     margin: 0 auto;
+    place-content: space-evenly;
 `;
