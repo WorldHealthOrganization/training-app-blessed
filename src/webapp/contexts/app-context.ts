@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { CompositionRoot } from "../CompositionRoot";
-import { D2Api } from "../../types/d2-api";
 import { AppState } from "../../domain/entities/AppState";
+import { D2Api } from "../../types/d2-api";
+import { CompositionRoot } from "../CompositionRoot";
 
 export interface AppContext {
     baseUrl: string;
@@ -30,5 +30,5 @@ const buildDefaultAppState = (): AppState => {
     return {
         type: "TRAINING_DIALOG",
         dialog: "WELCOME",
-    }
-}
+    };
+};
