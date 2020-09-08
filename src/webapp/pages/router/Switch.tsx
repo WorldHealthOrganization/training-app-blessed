@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { buildPathFromState } from "../../../domain/entities/AppState";
+import { log } from "../../../utils/debug";
 import { useAppContext } from "../../contexts/app-context";
 
 export const RouterSwitch: React.FC<RouterSwitchProps> = ({ routes }) => {
@@ -18,11 +19,11 @@ export const RouterSwitch: React.FC<RouterSwitchProps> = ({ routes }) => {
 
     // Load state with initial path
     useEffect(() => {
-        console.log(`[HISTORY] Start on page: ${history.location.pathname}`);
+        log(`[HISTORY] Start on page: ${history.location.pathname}`);
 
-        // Detect path changes
+        // Detect and log path changes
         return history.listen(location => {
-            console.log(`[HISTORY] You changed the page to: ${location.pathname}`);
+            log(`[HISTORY] You changed the page to: ${location.pathname}`);
         });
     }, [history]);
 

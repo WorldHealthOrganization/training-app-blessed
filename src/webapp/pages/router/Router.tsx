@@ -13,13 +13,6 @@ const userRoutes: AppRoute[] = [
         defaultRoute: true,
         component: BasePage,
     },
-    {
-        key: "settings",
-        name: () => i18n.t("Settings"),
-        path: "/settings",
-        section: "settings",
-        component: () => <p>Hi</p>,
-    },
 ];
 
 export const Router = () => {

@@ -22,7 +22,7 @@ export function useAppContext(): AppContextHookResult {
     if (!context) throw new Error("Context not found");
 
     const { baseUrl, compositionRoot } = context;
-    const { appState = { type: "UNKNOWN" } } = compositionRoot;
+    const { appState } = compositionRoot;
 
     return { baseUrl, appState, compositionRoot };
 }

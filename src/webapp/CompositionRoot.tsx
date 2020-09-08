@@ -3,7 +3,7 @@ import { D2Api } from "../types/d2-api";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
-    private currentState?: AppState;
+    private currentState: AppState = { type: "UNKNOWN" };
 
     constructor(public readonly api: D2Api) {}
 
@@ -21,11 +21,6 @@ export class CompositionRoot {
     }
 }
 
-export interface UseCase {
-    execute: Function;
-}
-
-
 function getExecute<UseCases extends Record<Key, UseCase>, Key extends keyof UseCases>(
     useCases: UseCases
 ): { [K in Key]: UseCases[K]["execute"] } {
@@ -38,4 +33,8 @@ function getExecute<UseCases extends Record<Key, UseCase>, Key extends keyof Use
         output[key] = execute;
         return output;
     }, initialOutput);
+}
+
+export interface UseCase {
+    execute: Function;
 }

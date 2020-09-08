@@ -25,10 +25,14 @@ interface TrainingDialogAppState extends BaseAppState {
 }
 
 interface UnknownAppState extends BaseAppState {
-    type: "UNKNOWN"
+    type: "UNKNOWN";
 }
 
-export type AppState = MainDialogAppState | TrainingAppState | TrainingDialogAppState | UnknownAppState;
+export type AppState =
+    | MainDialogAppState
+    | TrainingAppState
+    | TrainingDialogAppState
+    | UnknownAppState;
 
 export const buildPathFromState = (state: AppState): string => {
     switch (state.type) {
