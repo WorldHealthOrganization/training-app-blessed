@@ -5,7 +5,7 @@ import React from "react";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
-import Root from "./root/RootPage";
+import { Router } from "./router/Router";
 
 const App = () => {
     return (
@@ -14,7 +14,7 @@ const App = () => {
                 <SnackbarProvider>
                     <LoadingProvider>
                         <div id="app" className="content">
-                            <Root />
+                            <Router />
                         </div>
                     </LoadingProvider>
                 </SnackbarProvider>

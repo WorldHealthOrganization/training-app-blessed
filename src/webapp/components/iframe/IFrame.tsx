@@ -1,6 +1,7 @@
 import { useLoading } from "d2-ui-components";
-import React, { useEffect, useRef } from "react";
 import _ from "lodash";
+import React, { useEffect, useRef } from "react";
+import { log } from "../../../utils/debug";
 
 export interface IFrameProps {
     src: string;
@@ -41,7 +42,7 @@ export const IFrame = ({ className, src, title = "IFrame" }: IFrameProps) => {
         sleep(2000);
         const { contentWindow, contentDocument } = ref.current;
         const { document = contentDocument } = contentWindow ?? {};
-        textSelector(document, "Welcome Alexis RICO", console.log);
+        textSelector(document, "Welcome Alexis RICO", log);
     }, [loading]);
 
     return (
