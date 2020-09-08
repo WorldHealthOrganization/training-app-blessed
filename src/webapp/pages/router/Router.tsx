@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter } from "react-router-dom";
 import i18n from "../../../locales";
 import { BasePage } from "../base/BasePage";
-import { AppRoute, RouterSwitch } from "./Switch";
+import { AppRoute, Switch } from "./Switch";
 
 const userRoutes: AppRoute[] = [
     {
@@ -20,7 +20,7 @@ const userRoutes: AppRoute[] = [
 export const Router = () => {
     return (
         <HashRouter>
-            <RouterSwitch routes={userRoutes} />
+            <Switch routes={userRoutes} />
         </HashRouter>
     );
 };

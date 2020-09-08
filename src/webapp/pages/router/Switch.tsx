@@ -4,7 +4,7 @@ import { buildPathFromState } from "../../../domain/entities/AppState";
 import { log } from "../../../utils/debug";
 import { useAppContext } from "../../contexts/app-context";
 
-export const RouterSwitch: React.FC<RouterSwitchProps> = ({ routes }) => {
+export const Switch: React.FC<SwitchProps> = ({ routes }) => {
     const { appState } = useAppContext();
     const navigate = useNavigate();
     const location = useLocation();
@@ -44,6 +44,6 @@ export interface AppRoute extends RouteObject {
     defaultRoute?: boolean;
 }
 
-export interface RouterSwitchProps {
+export interface SwitchProps {
     routes: AppRoute[];
 }
