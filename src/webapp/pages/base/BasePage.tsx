@@ -1,20 +1,27 @@
 import { useConfig } from "@dhis2/app-runtime";
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useCallback } from "react";
 import { ActionButton } from "../../components/action-button/ActionButton";
-import { DraggableDialog } from "../../components/draggable-dialog/DraggableDialog";
 import { IFrame } from "../../components/iframe/IFrame";
+import { TrainingWizard } from "../../components/training-wizard/TrainingWizard";
 
 export const BasePage = () => {
     const { baseUrl } = useConfig();
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
+    const onClose = useCallback(() => {
+        setOpen(false);
+    }, [setOpen]);
+
     return (
         <React.Fragment>
             <IFrame className={classes.iframe} src={baseUrl} />
-            <ActionButton onClick={() => setOpen(!open)} />
-            <DraggableDialog open={open} setOpen={setOpen} />
+            {open ? (
+                <TrainingWizard onClose={onClose} />
+            ) : (
+                <ActionButton onClick={() => setOpen(!open)} />
+            )}
         </React.Fragment>
     );
 };
