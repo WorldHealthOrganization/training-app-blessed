@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
-import { buildPathFromState } from "../../../domain/entities/AppState";
-import { log } from "../../../utils/debug";
-import { useAppContext } from "../../contexts/app-context";
+import { buildPathFromState } from "../../domain/entities/AppState";
+import { log } from "../../utils/debug";
+import { useAppContext } from "../contexts/app-context";
 import { AppRoute } from "./AppRoute";
 
-export const Switch: React.FC<SwitchProps> = ({ routes }) => {
+export const Router: React.FC<RouterProps> = ({ routes }) => {
     const { appState } = useAppContext();
     const navigate = useNavigate();
     const location = useLocation();
@@ -31,6 +31,6 @@ export const Switch: React.FC<SwitchProps> = ({ routes }) => {
     return element ?? defaultRoute.element;
 };
 
-export interface SwitchProps {
+export interface RouterProps {
     routes: AppRoute[];
 }
