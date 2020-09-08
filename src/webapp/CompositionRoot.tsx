@@ -1,4 +1,4 @@
-import { AppState } from "../domain/entities/AppState";
+import { AppState, buildPathFromState } from "../domain/entities/AppState";
 import { D2Api } from "../types/d2-api";
 import { cache } from "../utils/cache";
 
@@ -8,7 +8,8 @@ export class CompositionRoot {
     constructor(public readonly api: D2Api) {}
 
     public get appState() {
-        return this.currentState;
+        const path = buildPathFromState(this.currentState);
+        return { ...this.currentState, path };
     }
 
     public updateAppState(appState: AppState) {

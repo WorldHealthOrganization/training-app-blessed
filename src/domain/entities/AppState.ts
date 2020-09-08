@@ -8,6 +8,7 @@ export type AppStateType =
 
 interface BaseAppState {
     type: AppStateType;
+    path?: string;
 }
 
 interface MainDialogAppState extends BaseAppState {
