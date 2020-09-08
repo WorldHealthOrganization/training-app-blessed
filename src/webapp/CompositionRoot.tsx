@@ -1,4 +1,5 @@
 import { AppState, buildPathFromState } from "../domain/entities/AppState";
+import { PlaceholderUseCase } from "../domain/usecases/PlaceholderUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
@@ -15,7 +16,9 @@ export class CompositionRoot {
 
     @cache()
     public get usecases() {
-        return getExecute({});
+        return getExecute({
+            placeholder: new PlaceholderUseCase(),
+        });
     }
 }
 

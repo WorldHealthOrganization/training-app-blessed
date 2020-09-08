@@ -11,16 +11,19 @@ export interface AppContext {
 
 export const AppContext = React.createContext<AppContext | null>(null);
 
-interface AppContextHookResult extends AppContext {
+interface AppContextHookResult {
     appState: AppState;
+    baseUrl: string;
+    routes: AppRoute[];
+    usecases: CompositionRoot["usecases"];
 }
 
 export function useAppContext(): AppContextHookResult {
     const context = useContext(AppContext);
     if (!context) throw new Error("Context not found");
 
-    const { compositionRoot } = context;
-    const { appState } = compositionRoot;
+    const { baseUrl, compositionRoot, routes } = context;
+    const { appState, usecases } = compositionRoot;
 
-    return { ...context, appState };
+    return { appState, baseUrl, routes, usecases };
 }
