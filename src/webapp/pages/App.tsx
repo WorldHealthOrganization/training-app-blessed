@@ -48,7 +48,7 @@ const App = () => {
                         <LoadingProvider>
                             <div id="app" className="content">
                                 <HashRouter>
-                                    <Router routes={routes} />
+                                    <Router />
                                 </HashRouter>
                             </div>
                         </LoadingProvider>

@@ -3,10 +3,9 @@ import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-d
 import { buildPathFromState } from "../../domain/entities/AppState";
 import { log } from "../../utils/debug";
 import { useAppContext } from "../contexts/app-context";
-import { AppRoute } from "./AppRoute";
 
-export const Router: React.FC<RouterProps> = ({ routes }) => {
-    const { appState } = useAppContext();
+export const Router: React.FC = () => {
+    const { appState, routes } = useAppContext();
     const navigate = useNavigate();
     const location = useLocation();
     const element = useRoutes(routes);
@@ -28,7 +27,3 @@ export const Router: React.FC<RouterProps> = ({ routes }) => {
 
     return element ?? defaultRoute.element;
 };
-
-export interface RouterProps {
-    routes: AppRoute[];
-}
