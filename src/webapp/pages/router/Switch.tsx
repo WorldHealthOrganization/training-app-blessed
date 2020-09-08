@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { useLocation, useNavigate, useRoutes, matchRoutes } from "react-router-dom";
 import { buildPathFromState } from "../../../domain/entities/AppState";
 import { log } from "../../../utils/debug";
 import { useAppContext } from "../../contexts/app-context";
 
 export const RouterSwitch: React.FC<RouterSwitchProps> = ({ routes }) => {
     const { appState } = useAppContext();
-    const history = useHistory();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const element = useRoutes(routes);
 
     const defaultRoute = routes.find(({ defaultRoute }) => defaultRoute) ?? routes[0];
 
@@ -14,41 +16,32 @@ export const RouterSwitch: React.FC<RouterSwitchProps> = ({ routes }) => {
     useEffect(() => {
         if (appState.type === "UNKNOWN") return;
         const path = buildPathFromState(appState);
-        history.push(path);
-    }, [appState, history]);
+        navigate(path);
+    }, [appState, navigate]);
 
     // Load state with initial path
     useEffect(() => {
-        log(`[HISTORY] Start on page: ${history.location.pathname}`);
+        log(
+            `[HISTORY] Start on page: ${location.pathname}`,
+            matchRoutes(routes, location.pathname)
+        );
+    }, [routes, location]);
 
-        // Detect and log path changes
-        return history.listen(location => {
-            log(`[HISTORY] You changed the page to: ${location.pathname}`);
-        });
-    }, [history]);
-
-    return (
-        <Switch>
-            {routes.map(({ key, path, component }) => (
-                <Route key={key} path={path}>
-                    {component({})}
-                </Route>
-            ))}
-
-            {defaultRoute && (
-                <Route exact={true} path={"/"} render={() => <Redirect to={defaultRoute.path} />} />
-            )}
-        </Switch>
-    );
+    return element ?? defaultRoute.element;
 };
 
-export interface AppRoute {
-    key: string;
+interface RouteObject {
+    caseSensitive: boolean;
+    children: RouteObject[];
+    element: React.ReactElement;
     path: string;
+}
+
+export interface AppRoute extends RouteObject {
+    key: string;
     name: () => string;
     section: string;
     defaultRoute?: boolean;
-    component: (props: unknown) => React.ReactElement | null;
 }
 
 export interface RouterSwitchProps {

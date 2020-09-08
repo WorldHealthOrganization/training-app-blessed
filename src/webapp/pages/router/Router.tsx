@@ -8,10 +8,12 @@ const userRoutes: AppRoute[] = [
     {
         key: "home",
         name: () => i18n.t("Home"),
-        path: "/",
         section: "main",
         defaultRoute: true,
-        component: BasePage,
+        caseSensitive: false,
+        path: "/",
+        element: <BasePage />,
+        children: [],
     },
 ];
 
