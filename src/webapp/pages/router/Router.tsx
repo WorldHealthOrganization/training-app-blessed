@@ -2,7 +2,8 @@ import React from "react";
 import { HashRouter } from "react-router-dom";
 import i18n from "../../../locales";
 import { BasePage } from "../base/BasePage";
-import { AppRoute, Switch } from "./Switch";
+import { AppRoute } from "./AppRoute";
+import { Switch } from "./Switch";
 
 const userRoutes: AppRoute[] = [
     {
