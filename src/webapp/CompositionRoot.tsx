@@ -1,5 +1,6 @@
 import { AppState } from "../domain/entities/AppState";
 import { D2Api } from "../types/d2-api";
+import { cache } from "../utils/cache";
 
 export class CompositionRoot {
     private currentState?: AppState;
@@ -13,13 +14,18 @@ export class CompositionRoot {
     public updateAppState(appState: AppState) {
         this.currentState = appState;
     }
+
+    @cache()
+    public get usecases() {
+        return getExecute({});
+    }
 }
 
 export interface UseCase {
     execute: Function;
 }
 
-/*
+
 function getExecute<UseCases extends Record<Key, UseCase>, Key extends keyof UseCases>(
     useCases: UseCases
 ): { [K in Key]: UseCases[K]["execute"] } {
@@ -33,4 +39,3 @@ function getExecute<UseCases extends Record<Key, UseCase>, Key extends keyof Use
         return output;
     }, initialOutput);
 }
-*/
