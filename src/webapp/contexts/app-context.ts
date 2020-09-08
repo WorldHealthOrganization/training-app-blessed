@@ -14,6 +14,7 @@ export const AppContext = React.createContext<AppContext | null>(null);
 interface AppContextHookResult {
     baseUrl: string;
     appState: AppState;
+    compositionRoot: CompositionRoot;
 }
 
 export function useAppContext(): AppContextHookResult {
@@ -21,14 +22,7 @@ export function useAppContext(): AppContextHookResult {
     if (!context) throw new Error("Context not found");
 
     const { baseUrl, compositionRoot } = context;
-    const { appState = buildDefaultAppState() } = compositionRoot;
+    const { appState = { type: "UNKNOWN" } } = compositionRoot;
 
-    return { baseUrl, appState };
+    return { baseUrl, appState, compositionRoot };
 }
-
-const buildDefaultAppState = (): AppState => {
-    return {
-        type: "TRAINING_DIALOG",
-        dialog: "WELCOME",
-    };
-};
