@@ -13,6 +13,7 @@ import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
 import { BasePage } from "./base/BasePage";
+import { WelcomePage } from "./welcome/WelcomePage";
 
 export const routes: AppRoute[] = [
     {
@@ -22,6 +23,15 @@ export const routes: AppRoute[] = [
         caseSensitive: false,
         path: "/",
         element: <BasePage />,
+        children: [],
+    },
+    {
+        key: "welcome",
+        name: () => i18n.t("Welcome"),
+        defaultRoute: true,
+        caseSensitive: false,
+        path: "/welcome",
+        element: <WelcomePage />,
         children: [],
     },
 ];
