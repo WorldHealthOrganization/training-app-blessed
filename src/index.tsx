@@ -36,7 +36,7 @@ async function main() {
     try {
         const d2 = await init({ baseUrl: baseUrl + "/api", schemas: [] });
         const api = new D2Api({ baseUrl });
-        Object.assign(window, { bulkLoad: { d2, api } });
+        Object.assign(window, { d2, api });
 
         const userSettings = await api.get<{ keyUiLocale: string }>("/userSettings").getData();
         configI18n(userSettings);
