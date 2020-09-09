@@ -8,74 +8,20 @@ import {
     ModalParagraph,
     ModalTitle,
 } from "../../components/modal";
+import { Card } from "./card-board/Card";
+import { Cardboard } from "./card-board/Cardboard";
 
 export const ProgressPage = () => {
     return (
         <StyledModal>
+            <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
+            <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
             <ModalContent>
-                <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
-                <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
-                <div className="cardBoard">
-                    <div className="card done">
-                        <span className="cardIcon">
-                            <span className="material-icons">done</span>
-                        </span>
-                        <span className="cardTitle">Basic navigation</span>
-                        <span className="percProgress">100%</span>
-                        <progress id="cardId1" value="100" max="100"></progress>
-                    </div>
-                    <div className="card done">
-                        <span className="cardIcon">
-                            <span className="material-icons">done</span>
-                        </span>
-                        <span className="cardTitle">Dashboards</span>
-                        <span className="percProgress">50%</span>
-                        <progress id="cardId2" value="50" max="100"></progress>
-                    </div>
-                    <div className="card done">
-                        <span className="cardIcon">
-                            <span className="material-icons">done</span>
-                        </span>
-                        <span className="cardTitle">Data Entry</span>
-                        <span className="percProgress">100%</span>
-                        <progress id="cardId3" value="100" max="100"></progress>
-                    </div>
-                    <div className="card pending">
-                        <span className="cardTitle">Event Capture</span>
-                        <span className="percProgress">0%</span>
-                        <progress id="cardId4" value="0" max="100"></progress>
-                    </div>
-                    <div className="card">
-                        <span className="cardTitle">Chart builder</span>
-                        <span className="percProgress">80%</span>
-                        <progress id="cardId5" value="80" max="100"></progress>
-                    </div>
-                </div>
-                <div className="cardBoard">
-                    <div className="card pending">
-                        <span className="cardTitle">Data visualisation</span>
-                        <span className="percProgress">0%</span>
-                        <progress id="cardId1" value="0" max="100"></progress>
-                    </div>
-                    <div className="card">
-                        <span className="cardTitle">Pivot tables</span>
-                        <span className="percProgress">80%</span>
-                        <progress id="cardId1" value="80" max="100"></progress>
-                    </div>
-                    <div className="card done">
-                        <span className="cardIcon">
-                            <span className="material-icons">done</span>
-                        </span>
-                        <span className="cardTitle">Maps</span>
-                        <span className="percProgress">100%</span>
-                        <progress id="cardId1" value="100" max="100"></progress>
-                    </div>
-                    <div className="card pending">
-                        <span className="cardTitle">Bulk Load</span>
-                        <span className="percProgress">0%</span>
-                        <progress id="cardId1" value="0" max="100"></progress>
-                    </div>
-                </div>
+                <Cardboard>
+                    {[...cards].map(({ name, progress }, idx) => (
+                        <Card key={`card-${idx}`} label={name} progress={progress} />
+                    ))}
+                </Cardboard>
             </ModalContent>
             <ModalFooter className="modal-footer">
                 <MainButton color="secondary">Exit Tutorial</MainButton>
@@ -89,4 +35,24 @@ const StyledModal = styled(Modal)`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    ${ModalContent} {
+        max-width: none;
+        max-height: 500px;
+        width: 700px;
+        padding: 0px;
+        margin: 0px 10px 20px 10px;
+    }
 `;
+
+const cards = [
+    { name: "Basic navigation", progress: 100 },
+    { name: "Dashboards", progress: 50 },
+    { name: "Data entry", progress: 100 },
+    { name: "Event capture", progress: 0 },
+    { name: "Chart builder", progress: 80 },
+    { name: "Data visualization", progress: 0 },
+    { name: "Pivot tables", progress: 80 },
+    { name: "Maps", progress: 100 },
+    { name: "Bulk Load", progress: 0 },
+];
