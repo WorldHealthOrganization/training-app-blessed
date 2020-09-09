@@ -1,28 +1,33 @@
 import React from "react";
 import styled from "styled-components";
 import DataEntryIcon from "../../assets/data-entry/Icon.png";
-import { Modal } from "../../components/modal/Modal";
-import { ModalContent } from "../../components/modal/ModalContent";
 import { MainButton } from "../../components/main-button/MainButton";
+import {
+    Modal,
+    ModalContent,
+    ModalFooter,
+    ModalParagraph,
+    ModalTitle,
+} from "../../components/modal";
 
 export const WelcomePage = () => {
     return (
         <StyledModal>
             <ModalContent>
-                <BigTitle>Welcome to the tutorial for Data Entry</BigTitle>
+                <ModalTitle big={true}>Welcome to the tutorial for Data Entry</ModalTitle>
                 <Image>
                     <img src={DataEntryIcon} alt="Welcome Illustration" />
                 </Image>
-                <Paragraph>
+                <ModalParagraph>
                     The data entry application is used to enter data that need to be entered for one
                     location on a regular basis such as weekly, monthy etc. Data is registered for a
                     location, time period and a specific dataset.{" "}
-                </Paragraph>
+                </ModalParagraph>
             </ModalContent>
-            <Footer>
+            <ModalFooter>
                 <MainButton color="secondary">Exit Tutorial</MainButton>
                 <MainButton color="primary">Start Tutorial</MainButton>
-            </Footer>
+            </ModalFooter>
         </StyledModal>
     );
 };
@@ -34,28 +39,7 @@ const StyledModal = styled(Modal)`
     transform: translate(-50%, -50%);
 `;
 
-const BigTitle = styled.span`
-    display: block;
-    font-size: 48px;
-    line-height: 60px;
-    font-weight: 300;
-    margin: 30px 0px 30px 0px;
-`;
-
 const Image = styled.span`
     display: block;
     margin: 18px 0px;
-`;
-
-const Paragraph = styled.span`
-    display: block;
-    font-size: 18px;
-    font-weight: 300;
-    line-height: 28px;
-    margin: 20px 0px;
-`;
-
-const Footer = styled.div`
-    overflow: hidden;
-    margin: 0px 0px 20px;
 `;
