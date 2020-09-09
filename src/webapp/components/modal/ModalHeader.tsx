@@ -5,25 +5,32 @@ import MinimizeIcon from "@material-ui/icons/Minimize";
 import React from "react";
 import styled from "styled-components";
 
-export const ModalHeader = ({ dragId, minimized, onClose, onMinimize }: ModalHeaderProps) => {
+export const ModalHeader = ({
+    allowDrag,
+    dragId,
+    onClose,
+    minimized,
+    onMinimize,
+}: ModalHeaderProps) => {
     return (
         <div>
-            <DragButton id={dragId} />
-            <CloseButton onClick={onClose} />
-            {minimized ? (
+            {allowDrag ? <DragButton id={dragId} /> : null}
+            {onClose ? <CloseButton onClick={onClose} /> : null}
+            {onMinimize && minimized ? (
                 <ExpandButton onClick={onMinimize} />
-            ) : (
+            ) : onMinimize ? (
                 <MinimizeButton onClick={onMinimize} />
-            )}
+            ) : null}
         </div>
     );
 };
 
 export interface ModalHeaderProps {
+    allowDrag?: boolean;
     dragId: string;
-    minimized: boolean;
-    onClose: () => void;
-    onMinimize: () => void;
+    onClose?: () => void;
+    minimized?: boolean;
+    onMinimize?: () => void;
 }
 
 const DragButton = styled(DragIndicatorIcon)`

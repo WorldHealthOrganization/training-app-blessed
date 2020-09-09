@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
-import { buildPathFromState } from "../../../domain/entities/AppState";
-import { log } from "../../../utils/debug";
-import { useAppContext } from "../../contexts/app-context";
-import { AppRoute } from "./AppRoute";
+import { buildPathFromState } from "../../domain/entities/AppState";
+import { log } from "../../utils/debug";
+import { useAppContext } from "../contexts/app-context";
 
-export const Switch: React.FC<SwitchProps> = ({ routes }) => {
-    const { appState } = useAppContext();
+export const Router: React.FC = () => {
+    const { appState, routes } = useAppContext();
     const navigate = useNavigate();
     const location = useLocation();
     const element = useRoutes(routes);
 
+    const [startPage] = useState(location.pathname);
     const defaultRoute = routes.find(({ defaultRoute }) => defaultRoute) ?? routes[0];
 
     // Update path on state change
@@ -22,15 +22,8 @@ export const Switch: React.FC<SwitchProps> = ({ routes }) => {
 
     // Load state with initial path
     useEffect(() => {
-        log(
-            `[HISTORY] Start on page: ${location.pathname}`,
-            matchRoutes(routes, location.pathname)
-        );
-    }, [routes, location]);
+        log(`[HISTORY] Start page: ${startPage}`, matchRoutes(routes, startPage));
+    }, [routes, startPage]);
 
     return element ?? defaultRoute.element;
 };
-
-export interface SwitchProps {
-    routes: AppRoute[];
-}

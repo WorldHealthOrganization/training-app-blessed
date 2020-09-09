@@ -1,11 +1,9 @@
 import { AppState, buildPathFromState } from "../domain/entities/AppState";
-import { D2Api } from "../types/d2-api";
+import { PlaceholderUseCase } from "../domain/usecases/PlaceholderUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
     private currentState: AppState = { type: "UNKNOWN" };
-
-    constructor(public readonly api: D2Api) {}
 
     public get appState() {
         const path = buildPathFromState(this.currentState);
@@ -18,7 +16,9 @@ export class CompositionRoot {
 
     @cache()
     public get usecases() {
-        return getExecute({});
+        return getExecute({
+            placeholder: new PlaceholderUseCase(),
+        });
     }
 }
 

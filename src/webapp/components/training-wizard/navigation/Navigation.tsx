@@ -2,8 +2,8 @@ import { WizardNavigationProps } from "d2-ui-components";
 import React from "react";
 import styled from "styled-components";
 import i18n from "../../../../locales";
+import { MainButton } from "../../main-button/MainButton";
 import { NavigationBullet } from "./NavigationBullet";
-import { NavigationButton } from "./NavigationButton";
 
 export const Navigation = ({ steps, onNext, onPrev }: WizardNavigationProps) => {
     if (steps.length === 0) return null;
@@ -11,13 +11,13 @@ export const Navigation = ({ steps, onNext, onPrev }: WizardNavigationProps) => 
     return (
         <ModalFooter>
             <span className="modalFooterButtons">
-                <NavigationButton onClick={onPrev}>{i18n.t("Previous")}</NavigationButton>
+                <MainButton onClick={onPrev}>{i18n.t("Previous")}</MainButton>
                 <ProgressBar>
                     {[1, 2, 3, 4].map(value => (
                         <NavigationBullet key={value} completed={value === 2} />
                     ))}
                 </ProgressBar>
-                <NavigationButton onClick={onNext}>{i18n.t("Next")}</NavigationButton>
+                <MainButton onClick={onNext}>{i18n.t("Next")}</MainButton>
             </span>
         </ModalFooter>
     );
