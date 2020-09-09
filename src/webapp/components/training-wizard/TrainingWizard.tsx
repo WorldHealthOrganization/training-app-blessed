@@ -34,23 +34,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
                 initialStepKey={"general-info"}
                 StepperComponent={minimized ? EmptyComponent : Stepper}
                 NavigationComponent={minimized ? EmptyComponent : Navigation}
-                steps={[
-                    {
-                        key: "general-info",
-                        label: "General info",
-                        component: GeneralInfoStep,
-                    },
-                    {
-                        key: "general-info2",
-                        label: "General info",
-                        component: GeneralInfoStep,
-                    },
-                    {
-                        key: "general-info3",
-                        label: "General info",
-                        component: GeneralInfoStep,
-                    },
-                ]}
+                steps={steps}
             />
         </StyledModal>
     );
@@ -80,3 +64,21 @@ const StyledModal = styled(Modal)`
 `;
 
 const EmptyComponent = () => null;
+
+export const steps = [
+    {
+        key: "general-info",
+        label: "General info",
+        component: GeneralInfoStep,
+    },
+    {
+        key: "general-info2",
+        label: "General info",
+        component: GeneralInfoStep,
+    },
+    {
+        key: "general-info3",
+        label: "General info",
+        component: GeneralInfoStep,
+    },
+];

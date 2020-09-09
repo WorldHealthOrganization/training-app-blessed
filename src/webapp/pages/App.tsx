@@ -13,8 +13,9 @@ import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
 import { BasePage } from "./base/BasePage";
-import { WelcomePage } from "./welcome/WelcomePage";
+import { FinalPage } from "./final/FinalPage";
 import { ProgressPage } from "./progress/ProgressPage";
+import { WelcomePage } from "./welcome/WelcomePage";
 
 export const routes: AppRoute[] = [
     {
@@ -42,6 +43,15 @@ export const routes: AppRoute[] = [
         caseSensitive: false,
         path: "/progress",
         element: <ProgressPage />,
+        children: [],
+    },
+    {
+        key: "final",
+        name: () => i18n.t("Final"),
+        defaultRoute: true,
+        caseSensitive: false,
+        path: "/final",
+        element: <FinalPage />,
         children: [],
     },
 ];

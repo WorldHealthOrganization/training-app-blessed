@@ -28,14 +28,14 @@ export const Bullet = styled(BaseBullet)`
     width: 20px;
     display: inline-block;
     line-height: 20px;
-    cursor: pointer;
+    cursor: ${props => props.onClick ? "pointer" : "inherit"};
     user-select: none;
 
     color: #276696;
     background-color: ${props => (props.current || props.completed ? "#43cbcb" : "#fff")};
 
     ::after {
-        display: ${props => (props.completed ? "inline-block" : "none")};
+        display: ${props => (props.completed && !props.last ? "inline-block" : "none")};
         content: "";
         position: absolute;
         bottom: 12px;

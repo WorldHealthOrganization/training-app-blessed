@@ -5083,10 +5083,10 @@ d2-manifest@1.0.0:
     minimist "^1.1.0"
     readline-sync "^1.4.1"
 
-d2-ui-components@2.1.0-beta.3:
-  version "2.1.0-beta.3"
-  resolved "https://registry.yarnpkg.com/d2-ui-components/-/d2-ui-components-2.1.0-beta.3.tgz#4beae98c3b6deca12cf56e835a9d64e950e35d3d"
-  integrity sha512-g30uASWhjvCV27YeGzqHCsoHgCUKmwO3jrExyjyjdIw1zm3tY3e1CCWDMhX5ZHPTxsKplDKjIdbUHntCrnlqLw==
+d2-ui-components@2.1.0-beta.4:
+  version "2.1.0-beta.4"
+  resolved "https://registry.yarnpkg.com/d2-ui-components/-/d2-ui-components-2.1.0-beta.4.tgz#53736bdef73c3603cd0a41b6ea2e2a213f27ce27"
+  integrity sha512-yIEJoofkvX2B/X93JIrAbGwLiDeT1XnSthYCxv2StdQD/UM1fCCeTc1JpOaNwJ4YDZH6/x5ZxhdBF6u1vNAheA==
   dependencies:
     "@date-io/core" "^1.3.6"
     "@date-io/moment" "^1.0.2"
