@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
-export const StepWrapper = styled.div`
+export const ModalContent = styled.div`
+    padding: 15px;
+    max-width: 600px;
+    
     margin: 0;
-    max-height: 320px;
     overflow-x: hidden;
     overflow-y: auto;
 

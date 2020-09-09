@@ -1,12 +1,12 @@
 import React from "react";
-import { StepWrapper } from "../step-wrapper/StepWrapper";
+import { ModalContent } from "../../modal/ModalContent";
 
 export const GeneralInfoStep = () => {
     return (
-        <StepWrapper>
+        <ModalContent>
             <p style={{ margin: 0, color: "#fff" }}>
                 {"Placeholder for the contents ".repeat(100)}
             </p>
-        </StepWrapper>
+        </ModalContent>
     );
 };

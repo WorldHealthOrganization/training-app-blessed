@@ -75,7 +75,6 @@ const ModalBody = styled.div`
     padding: 18px;
     font-family: "Roboto", sans-serif;
     color: #fff;
-    max-width: 45%;
     pointer-events: auto;
 `;
 

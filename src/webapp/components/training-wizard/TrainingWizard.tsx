@@ -2,6 +2,7 @@ import { Wizard } from "d2-ui-components";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Modal } from "../modal/Modal";
+import { ModalContent } from "../modal/ModalContent";
 import { Navigation } from "./navigation/Navigation";
 import { Stepper } from "./stepper/Stepper";
 import { GeneralInfoStep } from "./steps/GeneralInfoStep";
@@ -71,6 +72,11 @@ const StyledModal = styled(Modal)`
     right: 40px;
     width: 450px;
     height: 500px;
+
+    ${ModalContent} {
+        padding: 0;
+        max-height: 320px;
+    }
 `;
 
 const EmptyComponent = () => null;
