@@ -1,9 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Draggable, { ControlPosition, DraggableEvent, DraggableData } from "react-draggable";
+import Draggable, {
+    ControlPosition,
+    DraggableData,
+    DraggableEvent,
+    DraggableProps,
+} from "react-draggable";
 import styled from "styled-components";
 import { ModalHeader } from "./ModalHeader";
 
-export const Modal: React.FC<ModalProps> = ({ children, onClose, onMinimize, minimized }) => {
+export const Modal: React.FC<ModalProps> = ({
+    className,
+    children,
+    onClose,
+    onMinimize,
+    minimized,
+}) => {
     const [position, setPosition] = useState<ControlPosition>();
     const dragId = "drag-button";
 
@@ -16,9 +27,9 @@ export const Modal: React.FC<ModalProps> = ({ children, onClose, onMinimize, min
     }, [minimized]);
 
     return (
-        <Draggable handle={`#${dragId}`} position={position} onDrag={clearPosition}>
+        <StyledDraggable handle={`#${dragId}`} position={position} onDrag={clearPosition}>
             <ModalWrapper>
-                <ModalBody>
+                <ModalBody className={className}>
                     <ModalHeader
                         dragId={dragId}
                         minimized={minimized}
@@ -28,7 +39,7 @@ export const Modal: React.FC<ModalProps> = ({ children, onClose, onMinimize, min
                     {children}
                 </ModalBody>
             </ModalWrapper>
-        </Draggable>
+        </StyledDraggable>
     );
 };
 
@@ -36,6 +47,7 @@ export interface ModalProps {
     onClose: () => void;
     onMinimize: () => void;
     minimized: boolean;
+    className?: string;
 }
 
 const ModalWrapper = styled.div`
@@ -50,16 +62,27 @@ const ModalWrapper = styled.div`
 `;
 
 const ModalBody = styled.div`
-    position: fixed;
-    margin: 6px;
-    bottom: 20px;
-    right: 40px;
-    width: 450px;
-    height: 500px;
-
     background-color: #276696;
     border-radius: 18px;
     padding: 18px;
     font-family: "Roboto", sans-serif;
     color: #fff;
+    max-width: 45%;
+    pointer-events: auto;
+`;
+
+const CustomDraggable: React.FC<Partial<DraggableProps> & { className?: string }> = ({
+    className,
+    children,
+    ...rest
+}) => {
+    return (
+        <Draggable {...rest} defaultClassName={className}>
+            {children}
+        </Draggable>
+    );
+};
+
+const StyledDraggable = styled(CustomDraggable)`
+    pointer-events: none;
 `;

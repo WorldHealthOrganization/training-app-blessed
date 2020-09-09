@@ -1,9 +1,10 @@
 import { Wizard } from "d2-ui-components";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Modal } from "./modal/Modal";
+import { Modal } from "../modal/Modal";
 import { Navigation } from "./navigation/Navigation";
 import { Stepper } from "./stepper/Stepper";
+import { GeneralInfoStep } from "./steps/GeneralInfoStep";
 
 export interface TrainingWizardProps {
     onClose: () => void;
@@ -21,7 +22,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
     }, []);
 
     return (
-        <Modal onClose={onClose} onMinimize={onMinimize} minimized={minimized}>
+        <StyledModal onClose={onClose} onMinimize={onMinimize} minimized={minimized}>
             <StyledWizard
                 useSnackFeedback={true}
                 initialStepKey={"general-info"}
@@ -45,7 +46,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
                     },
                 ]}
             />
-        </Modal>
+        </StyledModal>
     );
 };
 
@@ -58,35 +59,13 @@ const StyledWizard = styled(Wizard)`
     }
 `;
 
-const GeneralInfoStep = () => {
-    return (
-        <ContentWrapper>
-            <p style={{ margin: 0, color: "#fff" }}>
-                {"Placeholder for the contents ".repeat(100)}
-            </p>
-        </ContentWrapper>
-    );
-};
-
-const ContentWrapper = styled.div`
-    margin: 0;
-    max-height: 320px;
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    ::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #fff;
-        border-radius: 4px;
-    }
+const StyledModal = styled(Modal)`
+    position: fixed;
+    margin: 6px;
+    bottom: 20px;
+    right: 40px;
+    width: 450px;
+    height: 500px;
 `;
 
 const EmptyComponent = () => null;
