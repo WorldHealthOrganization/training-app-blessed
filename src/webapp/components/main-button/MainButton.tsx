@@ -1,7 +1,8 @@
 import { Button } from "@material-ui/core";
 import styled from "styled-components";
+import { getColor } from "../../themes/colors";
 
-export const NavigationButton = styled(Button)`
+export const MainButton = styled(Button)`
     font-size: 18px;
     color: #fff;
     margin: 0px 20px 0 20px;
@@ -9,12 +10,12 @@ export const NavigationButton = styled(Button)`
     border-radius: 100px;
     border: 0px;
 
-    background-color: #43cbcb;
+    background-color: ${props => getColor(props?.color, "main")};
     text-transform: inherit;
     font-weight: inherit;
     line-height: inherit;
 
     :hover {
-        background-color: #2e8e8e;
+        background-color: ${props => getColor(props?.color, "dark")};
     }
 `;
