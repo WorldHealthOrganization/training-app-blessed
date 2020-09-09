@@ -28,7 +28,7 @@ export const Bullet = styled(BaseBullet)`
     width: 20px;
     display: inline-block;
     line-height: 20px;
-    cursor: ${props => props.onClick ? "pointer" : "inherit"};
+    cursor: ${props => (props.onClick ? "pointer" : "inherit")};
     user-select: none;
 
     color: #276696;
