@@ -4,7 +4,12 @@ import React from "react";
 import styled from "styled-components";
 import { Bullet } from "./Bullet";
 
-export const Stepper = ({ steps, currentStepKey, onStepClicked }: WizardStepperProps) => {
+export const Stepper = ({
+    steps,
+    currentStepKey,
+    onStepClicked,
+    markAllCompleted = false,
+}: WizardStepperProps & { markAllCompleted?: boolean }) => {
     if (steps.length === 0) return null;
 
     const index = _(steps).findIndex(step => step.key === currentStepKey);
@@ -18,9 +23,9 @@ export const Stepper = ({ steps, currentStepKey, onStepClicked }: WizardStepperP
                     <Bullet
                         stepKey={index + 1}
                         current={currentStep === step}
-                        completed={index < currentStepIndex}
-                        last={index === steps.length}
-                        onClick={onStepClicked(step.key)}
+                        completed={markAllCompleted || index < currentStepIndex}
+                        last={index === steps.length - 1}
+                        onClick={onStepClicked ? onStepClicked(step.key) : undefined}
                     />
                 </Step>
             ))}
