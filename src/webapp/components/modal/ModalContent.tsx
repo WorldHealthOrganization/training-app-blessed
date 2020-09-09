@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const ModalContent = styled.div`
     padding: 15px;
     max-width: 600px;
-    
+
     margin: 0;
     overflow-x: hidden;
     overflow-y: auto;

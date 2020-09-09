@@ -18,4 +18,6 @@ const theme: Dictionary<Dictionary<string>> = {
     },
 };
 
-export const getColor = (color = "primary", palette = "main") => theme[palette][color] ?? theme.main.primary;
+export const getColor = (color = "primary", palette = "main") => {
+    return theme[palette][color] ?? theme.main.primary;
+};
