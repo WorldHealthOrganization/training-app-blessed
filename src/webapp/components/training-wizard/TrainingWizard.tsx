@@ -22,7 +22,12 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
     }, []);
 
     return (
-        <StyledModal onClose={onClose} onMinimize={onMinimize} minimized={minimized}>
+        <StyledModal
+            onClose={onClose}
+            onMinimize={onMinimize}
+            minimized={minimized}
+            allowDrag={true}
+        >
             <StyledWizard
                 useSnackFeedback={true}
                 initialStepKey={"general-info"}

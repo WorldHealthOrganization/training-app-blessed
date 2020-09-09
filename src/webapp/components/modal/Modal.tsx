@@ -14,6 +14,7 @@ export const Modal: React.FC<ModalProps> = ({
     onClose,
     onMinimize,
     minimized,
+    allowDrag,
 }) => {
     const [position, setPosition] = useState<ControlPosition>();
     const dragId = "drag-button";
@@ -27,7 +28,12 @@ export const Modal: React.FC<ModalProps> = ({
     }, [minimized]);
 
     return (
-        <StyledDraggable handle={`#${dragId}`} position={position} onDrag={clearPosition}>
+        <StyledDraggable
+            disabled={!allowDrag}
+            handle={`#${dragId}`}
+            position={position}
+            onDrag={clearPosition}
+        >
             <ModalWrapper>
                 <ModalBody className={className}>
                     <ModalHeader
@@ -35,6 +41,7 @@ export const Modal: React.FC<ModalProps> = ({
                         minimized={minimized}
                         onClose={onClose}
                         onMinimize={onMinimize}
+                        allowDrag={allowDrag}
                     />
                     {children}
                 </ModalBody>
@@ -44,10 +51,11 @@ export const Modal: React.FC<ModalProps> = ({
 };
 
 export interface ModalProps {
-    onClose: () => void;
-    onMinimize: () => void;
-    minimized: boolean;
     className?: string;
+    onClose?: () => void;
+    onMinimize?: () => void;
+    minimized?: boolean;
+    allowDrag?: boolean;
 }
 
 const ModalWrapper = styled.div`
