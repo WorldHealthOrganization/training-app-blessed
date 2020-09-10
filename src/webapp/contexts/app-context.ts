@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AppState } from "../../domain/entities/AppState";
 import { CompositionRoot } from "../CompositionRoot";
 import { AppRoute } from "../router/AppRoute";
@@ -13,7 +13,7 @@ export const AppContext = React.createContext<AppContext | null>(null);
 
 interface AppContextHookResult {
     appState: AppState;
-    baseUrl: string;
+    setAppState: (appState: AppState) => void;
     routes: AppRoute[];
     usecases: CompositionRoot["usecases"];
 }
@@ -22,8 +22,9 @@ export function useAppContext(): AppContextHookResult {
     const context = useContext(AppContext);
     if (!context) throw new Error("Context not found");
 
-    const { baseUrl, compositionRoot, routes } = context;
-    const { appState, usecases } = compositionRoot;
+    const [appState, setAppState] = useState<AppState>({ type: "UNKNOWN" });
+    const { compositionRoot, routes } = context;
+    const { usecases } = compositionRoot;
 
-    return { appState, baseUrl, routes, usecases };
+    return { appState, setAppState, routes, usecases };
 }

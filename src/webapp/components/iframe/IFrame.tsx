@@ -49,7 +49,7 @@ export const IFrame = ({ className, src, title = "IFrame" }: IFrameProps) => {
         <iframe
             className={className}
             ref={ref}
-            src={`${src}/dhis-web-dataentry/index.action`}
+            src={src}
             title={title}
             style={{ width: "100%", height: "100%" }}
             frameBorder="0"
