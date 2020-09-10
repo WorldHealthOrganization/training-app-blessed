@@ -91,5 +91,11 @@ const CustomDraggable: React.FC<Partial<DraggableProps> & { className?: string }
 };
 
 const StyledDraggable = styled(CustomDraggable)`
+    /* Required to allow clicks on items behind draggable region */
     pointer-events: none;
+
+    /* Required to not loose dragging focus if cursor goes outside of draggable region*/
+    :active {
+        pointer-events: all;
+    }
 `;
