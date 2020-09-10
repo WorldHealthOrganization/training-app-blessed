@@ -15,7 +15,7 @@ import { steps } from "../../components/training-wizard/TrainingWizard";
 export const FinalPage = () => {
     return (
         <StyledModal>
-            <ModalContent>
+            <ModalContent bigger={true}>
                 <ModalTitle big={true}>Well done!</ModalTitle>
                 <ModalParagraph>You’ve completed the data entry tutorial!</ModalParagraph>
                 <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
@@ -39,8 +39,6 @@ const StyledModal = styled(Modal)`
     height: 600px;
 
     ${ModalContent} {
-        max-width: none;
-        width: 700px;
         position: relative;
         top: 25%;
     }

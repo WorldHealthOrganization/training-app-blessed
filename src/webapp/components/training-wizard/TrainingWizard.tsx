@@ -68,17 +68,17 @@ const EmptyComponent = () => null;
 export const steps = [
     {
         key: "general-info",
-        label: "General info",
+        label: "Select your location",
         component: GeneralInfoStep,
     },
     {
         key: "general-info2",
-        label: "General info",
+        label: "Select data set",
         component: GeneralInfoStep,
     },
     {
         key: "general-info3",
-        label: "General info",
+        label: "Run a validation check",
         component: GeneralInfoStep,
     },
 ];
