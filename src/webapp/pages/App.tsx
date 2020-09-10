@@ -15,6 +15,7 @@ import "./App.css";
 import { BasePage } from "./base/BasePage";
 import { FinalPage } from "./final/FinalPage";
 import { ProgressPage } from "./progress/ProgressPage";
+import { SummaryPage } from "./summary/SummaryPage";
 import { WelcomePage } from "./welcome/WelcomePage";
 
 export const routes: AppRoute[] = [
@@ -52,6 +53,15 @@ export const routes: AppRoute[] = [
         caseSensitive: false,
         path: "/final",
         element: <FinalPage />,
+        children: [],
+    },
+    {
+        key: "summary",
+        name: () => i18n.t("Summary"),
+        defaultRoute: true,
+        caseSensitive: false,
+        path: "/summary",
+        element: <SummaryPage />,
         children: [],
     },
 ];
