@@ -19,6 +19,6 @@ export interface TrainingModuleStep {
 }
 
 export interface TrainingModuleContent {
-    headerImageUrl: string;
+    headerImageUrl?: string;
     text: string;
 }

@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
+import { TrainingModule } from "../../../../domain/entities/TrainingModule";
+import { useAppContext } from "../../../contexts/app-context";
 import { ModalContent } from "../../modal/ModalContent";
 
 export const GeneralInfoStep = () => {
-    const input =
-        "# This is a header\n\nAnd this is a paragraph\n\nAnd a **bold** text\n\n<p align='right'>This is right aligned</p>\n\n![alt text](http://qnimate.com/wp-content/uploads/2014/03/images2.jpg)";
+    const { usecases } = useAppContext();
+    const [module, setModule] = useState<TrainingModule>();
+
+    useEffect(() => {
+        usecases.getModule().then(setModule);
+    }, [usecases]);
 
     return (
         <ModalContent>
-            <Markdown source={input} escapeHtml={false} />
+            {module ? (
+                <Markdown source={module.steps[0].contents[0].text} escapeHtml={false} />
+            ) : null}
         </ModalContent>
     );
 };

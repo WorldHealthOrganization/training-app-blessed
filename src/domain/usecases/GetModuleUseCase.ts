@@ -1,0 +1,41 @@
+import { UseCase } from "../../webapp/CompositionRoot";
+import { TrainingModule } from "../entities/TrainingModule";
+
+export class GetModuleUseCase implements UseCase {
+    public async execute(): Promise<TrainingModule> {
+        return {
+            id: "data-entry",
+            dhisAppKey: "data-entry",
+            name: "Data Entry",
+            publicAccess: "--------",
+            userAccesses: [],
+            userGroupAccesses: [],
+            user: {
+                id: "",
+                name: "",
+            },
+            lastUpdatedBy: {
+                id: "",
+                name: "",
+            },
+            created: new Date(),
+            lastUpdated: new Date(),
+            type: "core",
+            versionRange: "",
+            dhisVersionRange: "",
+            dhisLaunchUrl: "/dhis-web-dataentry/index.action",
+            steps: [
+                {
+                    path: "",
+                    title: "Title",
+                    contents: [
+                        {
+                            text:
+                                "# This is a header\n\nAnd this is a paragraph\n\nAnd a **bold** text\n\n<p align='right'>This is right aligned</p>\n\n![alt text](http://qnimate.com/wp-content/uploads/2014/03/images2.jpg)",
+                        },
+                    ],
+                },
+            ],
+        };
+    }
+}

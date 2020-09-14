@@ -1,11 +1,11 @@
-import { PlaceholderUseCase } from "../domain/usecases/PlaceholderUseCase";
+import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
     @cache()
     public get usecases() {
         return getExecute({
-            placeholder: new PlaceholderUseCase(),
+            getModule: new GetModuleUseCase(),
         });
     }
 }
