@@ -19,6 +19,7 @@ export interface TrainingModuleStep {
 }
 
 export interface TrainingModuleContent {
+    type: "markdown";
     headerImageUrl?: string;
     text: string;
 }

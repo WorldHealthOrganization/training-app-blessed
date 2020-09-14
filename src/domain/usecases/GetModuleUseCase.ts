@@ -27,11 +27,12 @@ export class GetModuleUseCase implements UseCase {
             steps: [
                 {
                     path: "",
-                    title: "Title",
+                    title: "Get location",
                     contents: [
                         {
+                            type: "markdown",
                             text:
-                                "# This is a header\n\nAnd this is a paragraph\n\nAnd a **bold** text\n\n<p align='right'>This is right aligned</p>\n\n![alt text](http://qnimate.com/wp-content/uploads/2014/03/images2.jpg)",
+                                "And this is a paragraph\n\nAnd a **bold** text\n\n<p align='right'>This is right aligned</p>\n\n![alt text](http://qnimate.com/wp-content/uploads/2014/03/images2.jpg)",
                         },
                     ],
                 },

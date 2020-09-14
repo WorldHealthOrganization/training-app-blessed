@@ -1,18 +1,28 @@
 import { Wizard } from "d2-ui-components";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { TrainingModule, TrainingModuleContent } from "../../../domain/entities/TrainingModule";
+import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
 import { ModalContent } from "../modal/ModalContent";
 import { Navigation } from "./navigation/Navigation";
 import { Stepper } from "./stepper/Stepper";
-import { GeneralInfoStep } from "./steps/GeneralInfoStep";
+import { MarkdownContentStep } from "./steps/MarkdownContentStep";
 
 export interface TrainingWizardProps {
     onClose: () => void;
 }
 
+export interface TrainingWizardStepProps {
+    title?: string;
+    description?: string;
+    content?: TrainingModuleContent;
+}
+
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
+    const { usecases } = useAppContext();
     const [minimized, setMinimized] = useState(false);
+    const [module, setModule] = useState<TrainingModule>();
 
     const onMinimize = useCallback(() => {
         setMinimized(minimized => !minimized);
@@ -21,6 +31,15 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
     useEffect(() => {
         setMinimized(false);
     }, []);
+
+    useEffect(() => {
+        usecases.getModule().then(setModule);
+    }, [usecases]);
+
+    const wizardSteps = steps.map(step => ({ ...step, props: {
+        title: module?.steps[0].title,
+        content: module?.steps[0].contents[0]
+    } }));
 
     return (
         <StyledModal
@@ -34,7 +53,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
                 initialStepKey={"general-info"}
                 StepperComponent={minimized ? EmptyComponent : Stepper}
                 NavigationComponent={minimized ? EmptyComponent : Navigation}
-                steps={steps}
+                steps={wizardSteps}
             />
         </StyledModal>
     );
@@ -69,16 +88,16 @@ export const steps = [
     {
         key: "general-info",
         label: "Select your location",
-        component: GeneralInfoStep,
+        component: MarkdownContentStep,
     },
     {
         key: "general-info2",
         label: "Select data set",
-        component: GeneralInfoStep,
+        component: MarkdownContentStep,
     },
     {
         key: "general-info3",
         label: "Run a validation check",
-        component: GeneralInfoStep,
+        component: MarkdownContentStep,
     },
 ];
