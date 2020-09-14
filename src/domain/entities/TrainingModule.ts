@@ -9,7 +9,6 @@ export interface TrainingModule extends SharedRef {
     dhisVersionRange: string;
     dhisAppKey: string;
     dhisLaunchUrl: string;
-    renderHtml: boolean;
 }
 
 export interface TrainingModuleStep {
