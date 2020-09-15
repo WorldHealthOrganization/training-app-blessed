@@ -1,4 +1,5 @@
 import { Wizard } from "d2-ui-components";
+import _ from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule, TrainingModuleContent } from "../../../domain/entities/TrainingModule";
@@ -36,10 +37,16 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
         usecases.getModule().then(setModule);
     }, [usecases]);
 
-    const wizardSteps = steps.map(step => ({ ...step, props: {
-        title: module?.steps[0].title,
-        content: module?.steps[0].contents[0]
-    } }));
+    if (!module) return null;
+
+    const wizardSteps = _.flatMap(module.steps, ({ title, contents }, step) =>
+        contents.map((content, position) => ({
+            key: `${module.id}-${step}-${position}`,
+            label: "Select your location",
+            component: MarkdownContentStep,
+            props: { title, content },
+        }))
+    );
 
     return (
         <StyledModal
@@ -83,21 +90,3 @@ const StyledModal = styled(Modal)`
 `;
 
 const EmptyComponent = () => null;
-
-export const steps = [
-    {
-        key: "general-info",
-        label: "Select your location",
-        component: MarkdownContentStep,
-    },
-    {
-        key: "general-info2",
-        label: "Select data set",
-        component: MarkdownContentStep,
-    },
-    {
-        key: "general-info3",
-        label: "Run a validation check",
-        component: MarkdownContentStep,
-    },
-];
