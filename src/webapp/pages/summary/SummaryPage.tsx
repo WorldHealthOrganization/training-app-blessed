@@ -3,20 +3,9 @@ import styled from "styled-components";
 import { MainButton } from "../../components/main-button/MainButton";
 import { Modal, ModalContent, ModalFooter, ModalTitle } from "../../components/modal";
 import { Bullet } from "../../components/training-wizard/stepper/Bullet";
-import { steps } from "../../components/training-wizard/TrainingWizard";
 import { Label, Line, Step } from "./SummaryStep";
 
-const values = [
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-];
+const values: never[] = [];
 
 export const SummaryPage = () => {
     return (

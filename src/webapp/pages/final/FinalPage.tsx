@@ -10,7 +10,6 @@ import {
     ModalTitle,
 } from "../../components/modal";
 import { Stepper } from "../../components/training-wizard/stepper/Stepper";
-import { steps } from "../../components/training-wizard/TrainingWizard";
 
 export const FinalPage = () => {
     return (
@@ -18,7 +17,7 @@ export const FinalPage = () => {
             <ModalContent bigger={true}>
                 <ModalTitle big={true}>Well done!</ModalTitle>
                 <ModalParagraph>You’ve completed the data entry tutorial!</ModalParagraph>
-                <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
+                <Stepper steps={[]} lastClickableStepIndex={-1} markAllCompleted={true} />
                 <ModalFooter>
                     <MainButton>Next</MainButton>
                 </ModalFooter>
