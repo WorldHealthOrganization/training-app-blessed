@@ -1,4 +1,4 @@
-import { Wizard } from "d2-ui-components";
+import { Wizard, WizardStep } from "d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -18,6 +18,10 @@ export interface TrainingWizardStepProps {
     title?: string;
     description?: string;
     content?: TrainingModuleContent;
+    stepIndex: number;
+    contentIndex: number;
+    totalSteps: number;
+    totalContents: number;
 }
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
@@ -39,12 +43,20 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
 
     if (!module) return null;
 
-    const wizardSteps = _.flatMap(module.steps, ({ title, contents }, step) =>
+    const wizardSteps: WizardStep[] = _.flatMap(module.steps, ({ title, contents }, step) =>
         contents.map((content, position) => ({
             key: `${module.id}-${step}-${position}`,
+            module,
             label: "Select your location",
             component: MarkdownContentStep,
-            props: { title, content },
+            props: {
+                title,
+                content,
+                stepIndex: step,
+                contentIndex: position,
+                totalSteps: module.steps.length,
+                totalContents: contents.length,
+            },
         }))
     );
 
@@ -57,7 +69,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
         >
             <StyledWizard
                 useSnackFeedback={true}
-                initialStepKey={"general-info"}
+                initialStepKey={wizardSteps[0].key}
                 StepperComponent={minimized ? EmptyComponent : Stepper}
                 NavigationComponent={minimized ? EmptyComponent : Navigation}
                 steps={wizardSteps}

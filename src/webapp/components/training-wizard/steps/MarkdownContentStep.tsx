@@ -5,10 +5,14 @@ import { ModalContent } from "../../modal/ModalContent";
 import { TrainingWizardStepProps } from "../TrainingWizard";
 import { StepHeader } from "./StepHeader";
 
-export const MarkdownContentStep: React.FC<TrainingWizardStepProps> = ({ content, title = "" }) => {
+export const MarkdownContentStep: React.FC<TrainingWizardStepProps> = ({
+    content,
+    title = "",
+    stepIndex,
+}) => {
     return (
         <ModalContent>
-            <StepHeader index={1} title={title} />
+            <StepHeader index={stepIndex + 1} title={title} />
             {content ? <Markdown source={content.text} escapeHtml={false} /> : null}
         </ModalContent>
     );

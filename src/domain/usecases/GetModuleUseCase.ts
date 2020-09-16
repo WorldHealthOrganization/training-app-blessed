@@ -34,6 +34,24 @@ export class GetModuleUseCase implements UseCase {
                             text:
                                 "And this is a paragraph\n\nAnd a **bold** text\n\n<p align='right'>This is right aligned</p>\n\n![alt text](http://qnimate.com/wp-content/uploads/2014/03/images2.jpg)",
                         },
+                        {
+                            type: "markdown",
+                            text: "Another page",
+                        },
+                    ],
+                },
+                {
+                    path: "",
+                    title: "Step 2",
+                    contents: [
+                        {
+                            type: "markdown",
+                            text: "Page 1",
+                        },
+                        {
+                            type: "markdown",
+                            text: "Another page",
+                        },
                     ],
                 },
             ],

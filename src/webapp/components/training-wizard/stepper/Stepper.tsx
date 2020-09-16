@@ -2,12 +2,12 @@ import { WizardStepperProps } from "d2-ui-components";
 import _ from "lodash";
 import React from "react";
 import styled from "styled-components";
+import { arrayFill } from "../../../../utils/array";
 import { Bullet } from "./Bullet";
 
 export const Stepper = ({
     steps,
     currentStepKey,
-    onStepClicked,
     markAllCompleted = false,
 }: WizardStepperProps & { markAllCompleted?: boolean }) => {
     if (steps.length === 0) return null;
@@ -16,16 +16,20 @@ export const Stepper = ({
     const currentStepIndex = index >= 0 ? index : 0;
     const currentStep = steps[currentStepIndex];
 
+    const {
+        stepIndex = currentStepIndex,
+        totalSteps = steps.length,
+    } = (currentStep.props as unknown) as any;
+
     return (
         <ProgressBar>
-            {steps.map((step, index) => (
-                <Step key={step.key}>
+            {arrayFill(totalSteps).map(index => (
+                <Step key={`step-${index}`}>
                     <Bullet
                         stepKey={index + 1}
-                        current={currentStep === step}
-                        completed={markAllCompleted || index < currentStepIndex}
-                        last={index === steps.length - 1}
-                        onClick={onStepClicked ? onStepClicked(step.key) : undefined}
+                        current={index === stepIndex}
+                        completed={markAllCompleted || index < stepIndex}
+                        last={index === totalSteps - 1}
                     />
                 </Step>
             ))}

@@ -1,24 +1,30 @@
 import { WizardNavigationProps } from "d2-ui-components";
+import _ from "lodash";
 import React from "react";
 import styled from "styled-components";
 import i18n from "../../../../locales";
+import { arrayFill } from "../../../../utils/array";
 import { MainButton } from "../../main-button/MainButton";
 import { NavigationBullet } from "./NavigationBullet";
 
-export const Navigation = ({ steps, onNext, onPrev }: WizardNavigationProps) => {
+export const Navigation = ({ steps, onNext, onPrev, currentStepKey }: WizardNavigationProps) => {
     if (steps.length === 0) return null;
+
+    const index = _(steps).findIndex(step => step.key === currentStepKey);
+    const currentStepIndex = index >= 0 ? index : 0;
+    const currentStep = steps[currentStepIndex];
+
+    const { contentIndex = 0, totalContents = 0 } = (currentStep.props as unknown) as any;
 
     return (
         <ModalFooter>
-            <span className="modalFooterButtons">
-                <MainButton onClick={onPrev}>{i18n.t("Previous")}</MainButton>
-                <ProgressBar>
-                    {[1, 2, 3, 4].map(value => (
-                        <NavigationBullet key={value} completed={value === 2} />
-                    ))}
-                </ProgressBar>
-                <MainButton onClick={onNext}>{i18n.t("Next")}</MainButton>
-            </span>
+            <MainButton onClick={onPrev}>{i18n.t("Previous")}</MainButton>
+            <ProgressBar>
+                {arrayFill(totalContents).map(value => (
+                    <NavigationBullet key={value} completed={value === contentIndex} />
+                ))}
+            </ProgressBar>
+            <MainButton onClick={onNext}>{i18n.t("Next")}</MainButton>
         </ModalFooter>
     );
 };
