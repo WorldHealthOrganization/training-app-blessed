@@ -67,11 +67,14 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
 };
 
 const StyledWizard = styled(Wizard)`
+    height: 100%;
+
     .MuiPaper-root {
         box-shadow: none;
         background-color: inherit;
         margin: inherit;
         padding: inherit;
+        height: 100%;
     }
 `;
 

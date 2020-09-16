@@ -4,6 +4,7 @@ export const ModalContent = styled.div<{ bigger?: boolean }>`
     padding: 15px;
     max-width: ${({ bigger }) => (bigger ? "none" : "600px")};
     width: ${({ bigger }) => (bigger ? "700px" : "inherit")};
+    height: 100%;
 
     margin: 0;
     overflow-x: hidden;
