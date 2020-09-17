@@ -1,10 +1,12 @@
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
+import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
     @cache()
     public get usecases() {
         return getExecute({
+            listModules: new ListModulesUseCase(),
             getModule: new GetModuleUseCase(),
         });
     }
