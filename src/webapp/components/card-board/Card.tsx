@@ -4,11 +4,11 @@ import { CardIcon } from "./CardIcon";
 import { CardProgress, CardProgressText } from "./CardProgress";
 import { CardTitle } from "./CardTitle";
 
-const BaseCard: React.FC<CardProps> = ({ className, label, progress }) => {
+const BaseCard: React.FC<CardProps> = ({ className, label, progress, onClick }) => {
     const normalizedProgress = normalizeProgress(progress);
 
     return (
-        <div className={className}>
+        <div className={className} onClick={onClick}>
             {progress >= 100 ? <CardIcon>done</CardIcon> : null}
             <CardTitle>{label}</CardTitle>
             <CardProgressText>{`${normalizedProgress}%`}</CardProgressText>
@@ -25,6 +25,8 @@ export const Card = styled(BaseCard)`
     width: 104px;
     text-align: left;
     margin: 6px;
+    user-select: none;
+    cursor: ${({ onClick }) => (onClick ? "pointer" : "inherit")};
 `;
 
 const getCardColor = (progress: number) => {
@@ -41,4 +43,5 @@ export interface CardProps {
     className?: string;
     label: string;
     progress: number;
+    onClick?: () => void;
 }
