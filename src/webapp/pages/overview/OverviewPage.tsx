@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import { Card } from "../../components/card-board/Card";
+import { Cardboard } from "../../components/card-board/Cardboard";
 import { MainButton } from "../../components/main-button/MainButton";
 import {
     Modal,
     ModalContent,
     ModalFooter,
     ModalParagraph,
-    ModalTitle,
+    ModalTitle
 } from "../../components/modal";
-import { Card } from "./card-board/Card";
-import { Cardboard } from "./card-board/Cardboard";
 
 export const OverviewPage = () => {
     return (
