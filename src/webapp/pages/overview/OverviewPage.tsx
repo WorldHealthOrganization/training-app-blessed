@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
 import { MainButton } from "../../components/main-button/MainButton";
@@ -10,16 +11,24 @@ import {
     ModalParagraph,
     ModalTitle,
 } from "../../components/modal";
+import { useAppContext } from "../../contexts/app-context";
 
 export const OverviewPage = () => {
+    const { usecases } = useAppContext();
+    const [modules, setModules] = useState<Pick<TrainingModule, "name">[]>([]);
+
+    useEffect(() => {
+        usecases.listModules().then(setModules);
+    }, [usecases]);
+
     return (
         <StyledModal>
             <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
             <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
             <ModalContent>
                 <Cardboard>
-                    {[...cards].map(({ name, progress }, idx) => (
-                        <Card key={`card-${idx}`} label={name} progress={progress} />
+                    {modules.map(({ name }, idx) => (
+                        <Card key={`card-${idx}`} label={name} progress={0} />
                     ))}
                 </Cardboard>
             </ModalContent>
@@ -44,15 +53,3 @@ const StyledModal = styled(Modal)`
         margin: 0px 10px 20px 10px;
     }
 `;
-
-const cards = [
-    { name: "Basic navigation", progress: 100 },
-    { name: "Dashboards", progress: 50 },
-    { name: "Data entry", progress: 100 },
-    { name: "Event capture", progress: 0 },
-    { name: "Chart builder", progress: 80 },
-    { name: "Data visualization", progress: 0 },
-    { name: "Pivot tables", progress: 80 },
-    { name: "Maps", progress: 100 },
-    { name: "Bulk Load", progress: 0 },
-];
