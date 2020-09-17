@@ -3,7 +3,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { LoadingProvider, SnackbarProvider } from "d2-ui-components";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import i18n from "../../locales";
 import { CompositionRoot } from "../CompositionRoot";
 import { AppContext } from "../contexts/app-context";
@@ -12,10 +12,10 @@ import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
-import { TutorialPage } from "./tutorial/TutorialPage";
 import { FinalPage } from "./final/FinalPage";
 import { OverviewPage } from "./overview/OverviewPage";
 import { SummaryPage } from "./summary/SummaryPage";
+import { TutorialPage } from "./tutorial/TutorialPage";
 import { WelcomePage } from "./welcome/WelcomePage";
 
 export const routes: AppRoute[] = [
@@ -33,7 +33,7 @@ export const routes: AppRoute[] = [
         name: () => i18n.t("Tutorial"),
         defaultRoute: true,
         caseSensitive: false,
-        path: "/tutorial/:key",
+        path: "/tutorial/:key/",
         element: <TutorialPage />,
         children: [],
     },
@@ -77,9 +77,9 @@ const App = () => {
                     <SnackbarProvider>
                         <LoadingProvider>
                             <div id="app" className="content">
-                                <HashRouter>
+                                <BrowserRouter>
                                     <Router />
-                                </HashRouter>
+                                </BrowserRouter>
                             </div>
                         </LoadingProvider>
                     </SnackbarProvider>
