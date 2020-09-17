@@ -7,7 +7,7 @@ import { arrayFill } from "../../../../utils/array";
 import { MainButton } from "../../main-button/MainButton";
 import { NavigationBullet } from "./NavigationBullet";
 
-export const Navigation = ({ steps, onNext, onPrev, currentStepKey }: WizardNavigationProps) => {
+export const Navigation: React.FC<WizardNavigationProps> = ({ steps, onNext, onPrev, currentStepKey }) => {
     if (steps.length === 0) return null;
 
     const index = _(steps).findIndex(step => step.key === currentStepKey);
