@@ -12,7 +12,7 @@ import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
-import { BasePage } from "./base/BasePage";
+import { TutorialPage } from "./tutorial/TutorialPage";
 import { FinalPage } from "./final/FinalPage";
 import { ProgressPage } from "./progress/ProgressPage";
 import { SummaryPage } from "./summary/SummaryPage";
@@ -25,7 +25,7 @@ export const routes: AppRoute[] = [
         defaultRoute: true,
         caseSensitive: false,
         path: "/",
-        element: <BasePage />,
+        element: <TutorialPage />,
         children: [],
     },
     {

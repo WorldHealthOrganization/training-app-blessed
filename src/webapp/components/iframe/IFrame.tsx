@@ -1,6 +1,7 @@
 import { useLoading } from "d2-ui-components";
 import _ from "lodash";
 import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
 import { log } from "../../../utils/debug";
 
 export interface IFrameProps {
@@ -29,7 +30,7 @@ const textSelector = async (document: any, text: string, action = _.noop, error 
     return element;
 };
 
-export const IFrame = ({ className, src, title = "IFrame" }: IFrameProps) => {
+export const IFrame: React.FC<IFrameProps> = ({ className, src, title = "IFrame" }) => {
     const ref = useRef<HTMLIFrameElement>(null);
     const loading = useLoading();
 
@@ -46,7 +47,7 @@ export const IFrame = ({ className, src, title = "IFrame" }: IFrameProps) => {
     }, [loading]);
 
     return (
-        <iframe
+        <StyledIFrame
             className={className}
             ref={ref}
             src={src}
@@ -56,3 +57,7 @@ export const IFrame = ({ className, src, title = "IFrame" }: IFrameProps) => {
         />
     );
 };
+
+const StyledIFrame = styled.iframe`
+    position: absolute;
+`;
