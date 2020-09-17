@@ -8,7 +8,7 @@ import {
     ModalContent,
     ModalFooter,
     ModalParagraph,
-    ModalTitle
+    ModalTitle,
 } from "../../components/modal";
 
 export const OverviewPage = () => {
