@@ -11,7 +11,7 @@ import {
 import { Card } from "./card-board/Card";
 import { Cardboard } from "./card-board/Cardboard";
 
-export const ProgressPage = () => {
+export const OverviewPage = () => {
     return (
         <StyledModal>
             <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>

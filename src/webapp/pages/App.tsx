@@ -14,17 +14,26 @@ import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
 import { TutorialPage } from "./tutorial/TutorialPage";
 import { FinalPage } from "./final/FinalPage";
-import { ProgressPage } from "./progress/ProgressPage";
+import { OverviewPage } from "./overview/OverviewPage";
 import { SummaryPage } from "./summary/SummaryPage";
 import { WelcomePage } from "./welcome/WelcomePage";
 
 export const routes: AppRoute[] = [
     {
-        key: "home",
-        name: () => i18n.t("Home"),
+        key: "overview",
+        name: () => i18n.t("Overview"),
         defaultRoute: true,
         caseSensitive: false,
         path: "/",
+        element: <OverviewPage />,
+        children: [],
+    },
+    {
+        key: "tutorial",
+        name: () => i18n.t("Tutorial"),
+        defaultRoute: true,
+        caseSensitive: false,
+        path: "/tutorial/:key",
         element: <TutorialPage />,
         children: [],
     },
@@ -33,17 +42,8 @@ export const routes: AppRoute[] = [
         name: () => i18n.t("Welcome"),
         defaultRoute: true,
         caseSensitive: false,
-        path: "/welcome",
+        path: "/tutorial/:key/welcome",
         element: <WelcomePage />,
-        children: [],
-    },
-    {
-        key: "progress",
-        name: () => i18n.t("Progress"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/progress",
-        element: <ProgressPage />,
         children: [],
     },
     {
@@ -51,7 +51,7 @@ export const routes: AppRoute[] = [
         name: () => i18n.t("Final"),
         defaultRoute: true,
         caseSensitive: false,
-        path: "/final",
+        path: "/tutorial/:key/final",
         element: <FinalPage />,
         children: [],
     },
@@ -60,7 +60,7 @@ export const routes: AppRoute[] = [
         name: () => i18n.t("Summary"),
         defaultRoute: true,
         caseSensitive: false,
-        path: "/summary",
+        path: "/tutorial/:key/summary",
         element: <SummaryPage />,
         children: [],
     },
