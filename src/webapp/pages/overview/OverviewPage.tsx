@@ -13,14 +13,19 @@ import {
 import { useAppContext } from "../../contexts/app-context";
 
 export const OverviewPage = () => {
-    const { usecases } = useAppContext();
-    const [modules, setModules] = useState<{ name: string; progress: number }[]>([]);
+    const { usecases, setAppState } = useAppContext();
+    const [modules, setModules] = useState<{ name: string; key: string; progress: number }[]>([]);
 
     useEffect(() => {
         usecases.listModules().then(setModules);
     }, [usecases]);
 
-    const onClick = useCallback(() => {}, []);
+    const loadModule = useCallback(
+        (module: string) => {
+            setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
+        },
+        [setAppState]
+    );
 
     return (
         <StyledModal>
@@ -28,12 +33,12 @@ export const OverviewPage = () => {
             <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
             <ModalContent>
                 <Cardboard>
-                    {modules.map(({ name, progress }, idx) => (
+                    {modules.map(({ name, key, progress }, idx) => (
                         <Card
                             key={`card-${idx}`}
                             label={name}
                             progress={progress}
-                            onClick={onClick}
+                            onClick={() => loadModule(key)}
                         />
                     ))}
                 </Cardboard>

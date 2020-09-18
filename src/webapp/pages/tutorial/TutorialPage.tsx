@@ -5,22 +5,34 @@ import { TrainingWizard } from "../../components/training-wizard/TrainingWizard"
 import { useAppContext } from "../../contexts/app-context";
 
 export const TutorialPage = () => {
-    const { usecases } = useAppContext();
+    const { usecases, appState, setAppState } = useAppContext();
 
-    const [open, setOpen] = useState(false);
     const [module, setModule] = useState<TrainingModule>();
 
     const onClose = useCallback(() => {
-        setOpen(false);
-    }, [setOpen]);
+        setAppState(appState => {
+            if (appState.type !== "TRAINING") return appState;
+            return { ...appState, state: "CLOSED" };
+        });
+    }, [setAppState]);
+
+    const toggleClose = useCallback(() => {
+        setAppState(appState => {
+            if (appState.type !== "TRAINING") return appState;
+            const state = appState.state === "CLOSED" ? "OPEN" : "CLOSED";
+            return { ...appState, state };
+        });
+    }, [setAppState]);
 
     useEffect(() => {
         usecases.getModule().then(setModule);
     }, [usecases]);
 
-    return open ? (
-        <TrainingWizard onClose={onClose} module={module} />
+    if (appState.type !== "TRAINING") return null;
+
+    return appState.state === "CLOSED" ? (
+        <ActionButton onClick={toggleClose} />
     ) : (
-        <ActionButton onClick={() => setOpen(!open)} />
+        <TrainingWizard onClose={onClose} module={module} />
     );
 };

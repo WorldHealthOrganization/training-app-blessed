@@ -6,7 +6,7 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import i18n from "../../locales";
 import { CompositionRoot } from "../CompositionRoot";
-import { AppContext } from "../contexts/app-context";
+import { AppContextProvider } from "../contexts/app-context";
 import { AppRoute } from "../router/AppRoute";
 import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
@@ -23,46 +23,32 @@ export const routes: AppRoute[] = [
         key: "overview",
         name: () => i18n.t("Overview"),
         defaultRoute: true,
-        caseSensitive: false,
-        path: "/",
+        paths: ["/"],
         element: <OverviewPage />,
-        children: [],
-    },
-    {
-        key: "tutorial",
-        name: () => i18n.t("Tutorial"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/tutorial/:key/",
-        element: <TutorialPage />,
-        children: [],
     },
     {
         key: "welcome",
         name: () => i18n.t("Welcome"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/tutorial/:key/welcome",
+        paths: ["/tutorial/:key", "/tutorial/:key/welcome"],
         element: <WelcomePage />,
-        children: [],
+    },
+    {
+        key: "tutorial",
+        name: () => i18n.t("Tutorial"),
+        paths: ["/tutorial/:key/:step/:content"],
+        element: <TutorialPage />,
     },
     {
         key: "final",
         name: () => i18n.t("Final"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/tutorial/:key/final",
+        paths: ["/tutorial/:key/final"],
         element: <FinalPage />,
-        children: [],
     },
     {
         key: "summary",
         name: () => i18n.t("Summary"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/tutorial/:key/summary",
+        paths: ["/tutorial/:key/summary"],
         element: <SummaryPage />,
-        children: [],
     },
 ];
 
@@ -71,7 +57,7 @@ const App = () => {
     const compositionRoot = new CompositionRoot();
 
     return (
-        <AppContext.Provider value={{ baseUrl, routes, compositionRoot }}>
+        <AppContextProvider baseUrl={baseUrl} routes={routes} compositionRoot={compositionRoot}>
             <MuiThemeProvider theme={muiTheme}>
                 <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
                     <SnackbarProvider>
@@ -85,7 +71,7 @@ const App = () => {
                     </SnackbarProvider>
                 </OldMuiThemeProvider>
             </MuiThemeProvider>{" "}
-        </AppContext.Provider>
+        </AppContextProvider>
     );
 };
 
