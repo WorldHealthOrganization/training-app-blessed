@@ -22,12 +22,10 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
 
 export function useAppContext(): UseAppContextResult {
     const context = useContext(AppContext);
-    if (!context) throw new Error("Context not found");
+    if (!context) throw new Error("Context not initialized");
 
     const { compositionRoot, routes, appState, setAppState } = context;
     const { usecases } = compositionRoot;
-
-    console.log("context", appState);
 
     return { appState, setAppState, routes, usecases };
 }
