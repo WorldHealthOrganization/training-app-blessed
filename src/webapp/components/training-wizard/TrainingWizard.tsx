@@ -3,7 +3,6 @@ import _ from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule, TrainingModuleContent } from "../../../domain/entities/TrainingModule";
-import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
 import { ModalContent } from "../modal/ModalContent";
 import { Navigation } from "./navigation/Navigation";
@@ -12,6 +11,7 @@ import { MarkdownContentStep } from "./steps/MarkdownContentStep";
 
 export interface TrainingWizardProps {
     onClose: () => void;
+    module?: TrainingModule;
 }
 
 export interface TrainingWizardStepProps {
@@ -24,10 +24,8 @@ export interface TrainingWizardStepProps {
     totalContents: number;
 }
 
-export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
-    const { usecases } = useAppContext();
+export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
     const [minimized, setMinimized] = useState(false);
-    const [module, setModule] = useState<TrainingModule>();
 
     const onMinimize = useCallback(() => {
         setMinimized(minimized => !minimized);
@@ -36,10 +34,6 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
     useEffect(() => {
         setMinimized(false);
     }, []);
-
-    useEffect(() => {
-        usecases.getModule().then(setModule);
-    }, [usecases]);
 
     if (!module) return null;
 

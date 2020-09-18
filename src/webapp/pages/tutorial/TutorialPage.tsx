@@ -1,27 +1,26 @@
-import { useConfig } from "@dhis2/app-runtime";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import { ActionButton } from "../../components/action-button/ActionButton";
-import { IFrame } from "../../components/iframe/IFrame";
 import { TrainingWizard } from "../../components/training-wizard/TrainingWizard";
+import { useAppContext } from "../../contexts/app-context";
 
 export const TutorialPage = () => {
-    const { baseUrl } = useConfig();
+    const { usecases } = useAppContext();
 
     const [open, setOpen] = useState(false);
+    const [module, setModule] = useState<TrainingModule>();
 
     const onClose = useCallback(() => {
         setOpen(false);
     }, [setOpen]);
 
-    return (
-        <React.Fragment>
-            <IFrame src={`${baseUrl}/dhis-web-dataentry/index.action`} />
+    useEffect(() => {
+        usecases.getModule().then(setModule);
+    }, [usecases]);
 
-            {open ? (
-                <TrainingWizard onClose={onClose} />
-            ) : (
-                <ActionButton onClick={() => setOpen(!open)} />
-            )}
-        </React.Fragment>
+    return open ? (
+        <TrainingWizard onClose={onClose} module={module} />
+    ) : (
+        <ActionButton onClick={() => setOpen(!open)} />
     );
 };

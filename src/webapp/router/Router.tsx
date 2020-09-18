@@ -1,7 +1,9 @@
+import { useConfig } from "@dhis2/app-runtime";
 import React, { useEffect, useState } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import { buildPathFromState } from "../../domain/entities/AppState";
 import { log } from "../../utils/debug";
+import { IFrame } from "../components/iframe/IFrame";
 import { useAppContext } from "../contexts/app-context";
 
 export const Router: React.FC = () => {
@@ -9,6 +11,7 @@ export const Router: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const element = useRoutes(routes);
+    const { baseUrl } = useConfig();
 
     const [startPage] = useState(location.pathname);
     const defaultRoute = routes.find(({ defaultRoute }) => defaultRoute) ?? routes[0];
@@ -25,5 +28,10 @@ export const Router: React.FC = () => {
         log(`[HISTORY] Start page: ${startPage}`, matchRoutes(routes, startPage));
     }, [routes, startPage]);
 
-    return element ?? defaultRoute.element;
+    return (
+        <React.Fragment>
+            <IFrame src={`${baseUrl}/dhis-web-dataentry/index.action`} />
+            {element ?? defaultRoute.element}
+        </React.Fragment>
+    );
 };
