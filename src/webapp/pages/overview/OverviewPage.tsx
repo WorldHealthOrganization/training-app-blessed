@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
 import { MainButton } from "../../components/main-button/MainButton";
@@ -15,11 +14,13 @@ import { useAppContext } from "../../contexts/app-context";
 
 export const OverviewPage = () => {
     const { usecases } = useAppContext();
-    const [modules, setModules] = useState<Pick<TrainingModule, "name">[]>([]);
+    const [modules, setModules] = useState<{ name: string; progress: number }[]>([]);
 
     useEffect(() => {
         usecases.listModules().then(setModules);
     }, [usecases]);
+
+    const onClick = useCallback(() => {}, []);
 
     return (
         <StyledModal>
@@ -27,8 +28,13 @@ export const OverviewPage = () => {
             <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
             <ModalContent>
                 <Cardboard>
-                    {modules.map(({ name }, idx) => (
-                        <Card key={`card-${idx}`} label={name} progress={0} />
+                    {modules.map(({ name, progress }, idx) => (
+                        <Card
+                            key={`card-${idx}`}
+                            label={name}
+                            progress={progress}
+                            onClick={onClick}
+                        />
                     ))}
                 </Cardboard>
             </ModalContent>

@@ -1,31 +1,16 @@
 import { UseCase } from "../../webapp/CompositionRoot";
-import { TrainingModule } from "../entities/TrainingModule";
 
 export class ListModulesUseCase implements UseCase {
-    public async execute(): Promise<Omit<TrainingModule, "steps">[]> {
+    public async execute() {
         return [
-            {
-                id: "data-entry",
-                dhisAppKey: "data-entry",
-                name: "Data Entry",
-                publicAccess: "--------",
-                userAccesses: [],
-                userGroupAccesses: [],
-                user: {
-                    id: "",
-                    name: "",
-                },
-                lastUpdatedBy: {
-                    id: "",
-                    name: "",
-                },
-                created: new Date(),
-                lastUpdated: new Date(),
-                type: "core",
-                versionRange: "",
-                dhisVersionRange: "",
-                dhisLaunchUrl: "/dhis-web-dataentry/index.action",
-            },
+            { name: "Dashboards", progress: 100 },
+            { name: "Data entry", progress: 50 },
+            { name: "Event capture", progress: 0 },
+            { name: "Chart builder", progress: 0 },
+            { name: "Data visualization", progress: 0 },
+            { name: "Pivot tables", progress: 0 },
+            { name: "Maps", progress: 20 },
+            { name: "Bulk Load", progress: 0 },
         ];
     }
 }
