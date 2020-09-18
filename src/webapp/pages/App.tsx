@@ -13,18 +13,18 @@ import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
 import { FinalPage } from "./final/FinalPage";
-import { OverviewPage } from "./overview/OverviewPage";
+import { HomePage } from "./home/HomePage";
 import { SummaryPage } from "./summary/SummaryPage";
 import { TutorialPage } from "./tutorial/TutorialPage";
 import { WelcomePage } from "./welcome/WelcomePage";
 
 export const routes: AppRoute[] = [
     {
-        key: "overview",
-        name: () => i18n.t("Overview"),
+        key: "home",
+        name: () => i18n.t("Home"),
         defaultRoute: true,
         paths: ["/"],
-        element: <OverviewPage />,
+        element: <HomePage />,
     },
     {
         key: "welcome",

@@ -11,7 +11,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     routes,
     compositionRoot,
 }) => {
-    const [appState, setAppState] = useState<AppState>({ type: "MAIN_DIALOG", dialog: "overview" });
+    const [appState, setAppState] = useState<AppState>({ type: "HOME" });
 
     return (
         <AppContext.Provider value={{ baseUrl, routes, compositionRoot, appState, setAppState }}>

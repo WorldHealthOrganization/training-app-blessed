@@ -12,7 +12,7 @@ import {
 } from "../../components/modal";
 import { useAppContext } from "../../contexts/app-context";
 
-export const OverviewPage = () => {
+export const HomePage = () => {
     const { usecases, setAppState } = useAppContext();
     const [modules, setModules] = useState<{ name: string; key: string; progress: number }[]>([]);
 

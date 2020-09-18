@@ -1,4 +1,4 @@
-export type AppStateType = "MAIN_DIALOG" | "TRAINING" | "TRAINING_DIALOG" | "UNKNOWN";
+export type AppStateType = "HOME" | "TRAINING" | "TRAINING_DIALOG";
 export type TrainingStateType = "CLOSED" | "OPEN" | "MINIMIZED";
 
 interface BaseAppState {
@@ -6,9 +6,8 @@ interface BaseAppState {
     path?: string;
 }
 
-interface MainDialogAppState extends BaseAppState {
-    type: "MAIN_DIALOG";
-    dialog: string;
+interface HomeAppState extends BaseAppState {
+    type: "HOME";
 }
 
 interface TrainingAppState extends BaseAppState {
@@ -25,20 +24,12 @@ interface TrainingDialogAppState extends BaseAppState {
     dialog: string;
 }
 
-interface UnknownAppState extends BaseAppState {
-    type: "UNKNOWN";
-}
-
-export type AppState =
-    | MainDialogAppState
-    | TrainingAppState
-    | TrainingDialogAppState
-    | UnknownAppState;
+export type AppState = HomeAppState | TrainingAppState | TrainingDialogAppState;
 
 export const buildPathFromState = (state: AppState): string => {
     switch (state.type) {
-        case "MAIN_DIALOG":
-            return `/${state.dialog}`;
+        case "HOME":
+            return `/`;
         case "TRAINING_DIALOG":
             return `/tutorial/${state.module}/${state.dialog}`;
         case "TRAINING":

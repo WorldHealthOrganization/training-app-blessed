@@ -21,7 +21,6 @@ export const Router: React.FC = () => {
 
     // Update path on state change
     useEffect(() => {
-        if (appState.type === "UNKNOWN") return;
         const path = buildPathFromState(appState);
         if (path !== location.pathname) navigate(path);
     }, [appState, navigate, location.pathname]);
