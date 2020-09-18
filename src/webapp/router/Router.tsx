@@ -21,9 +21,13 @@ export const Router: React.FC = () => {
 
     // Update path on state change
     useEffect(() => {
-        const path = buildPathFromState(appState);
-        if (path !== location.pathname) navigate(path);
-    }, [appState, navigate, location.pathname]);
+        if (appState.type === "EXIT") {
+            window.location.href = baseUrl;
+        } else {
+            const path = buildPathFromState(appState);
+            if (path !== location.pathname) navigate(path);
+        }
+    }, [appState, navigate, location.pathname, baseUrl]);
 
     // TODO: Load state with initial path
     useEffect(() => {

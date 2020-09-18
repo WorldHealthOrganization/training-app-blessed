@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import DataEntryIcon from "../../assets/data-entry/Icon.png";
 import { MainButton } from "../../components/main-button/MainButton";
@@ -9,8 +9,15 @@ import {
     ModalParagraph,
     ModalTitle,
 } from "../../components/modal";
+import { useAppContext } from "../../contexts/app-context";
 
 export const WelcomePage = () => {
+    const { setAppState } = useAppContext();
+
+    const exitTutorial = useCallback(() => {
+        setAppState({ type: "EXIT" });
+    }, [setAppState]);
+
     return (
         <StyledModal>
             <ModalContent>
@@ -25,7 +32,9 @@ export const WelcomePage = () => {
                 </ModalParagraph>
             </ModalContent>
             <ModalFooter>
-                <MainButton color="secondary">Exit Tutorial</MainButton>
+                <MainButton color="secondary" onClick={exitTutorial}>
+                    Exit Tutorial
+                </MainButton>
                 <MainButton color="primary">Start Tutorial</MainButton>
             </ModalFooter>
         </StyledModal>

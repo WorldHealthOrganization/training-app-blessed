@@ -27,6 +27,10 @@ export const HomePage = () => {
         [setAppState]
     );
 
+    const exitTutorial = useCallback(() => {
+        setAppState({ type: "EXIT" });
+    }, [setAppState]);
+
     return (
         <StyledModal>
             <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
@@ -44,7 +48,9 @@ export const HomePage = () => {
                 </Cardboard>
             </ModalContent>
             <ModalFooter className="modal-footer">
-                <MainButton color="secondary">Exit Tutorial</MainButton>
+                <MainButton color="secondary" onClick={exitTutorial}>
+                    Exit Tutorial
+                </MainButton>
             </ModalFooter>
         </StyledModal>
     );
