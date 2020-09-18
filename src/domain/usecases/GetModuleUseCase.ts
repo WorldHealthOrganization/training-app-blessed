@@ -4,7 +4,8 @@ import { TrainingModule } from "../entities/TrainingModule";
 export class GetModuleUseCase implements UseCase {
     public async execute(): Promise<TrainingModule> {
         return {
-            id: "data-entry",
+            id: "",
+            key: "data-entry",
             dhisAppKey: "data-entry",
             name: "Data Entry",
             publicAccess: "--------",

@@ -3,6 +3,7 @@ import { SharedRef } from "./Ref";
 export type TrainingModuleType = "app" | "core" | "widget";
 
 export interface TrainingModule extends SharedRef {
+    key: string;
     type: TrainingModuleType;
     steps: TrainingModuleStep[];
     versionRange: string;
