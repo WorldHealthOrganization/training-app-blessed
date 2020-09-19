@@ -25,7 +25,7 @@ export const WelcomePage = () => {
     }, [module, setAppState]);
 
     const exitTutorial = useCallback(() => {
-        setAppState({ type: "EXIT" });
+        setAppState({ type: "HOME" });
     }, [setAppState]);
 
     if (!module) return null;
@@ -42,7 +42,7 @@ export const WelcomePage = () => {
             </ModalContent>
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
-                    Exit Tutorial
+                    Go Back
                 </MainButton>
                 <MainButton color="primary" onClick={startTutorial}>
                     Start Tutorial
