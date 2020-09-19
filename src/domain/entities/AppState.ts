@@ -32,7 +32,7 @@ interface TrainingAppState extends BaseAppState {
 interface TrainingDialogAppState extends BaseAppState {
     type: "TRAINING_DIALOG";
     module: string;
-    dialog: string;
+    dialog: "welcome" | "final" | "summary";
 }
 
 export type AppState =

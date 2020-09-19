@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import { MainButton } from "../../components/main-button/MainButton";
 import { Modal, ModalContent, ModalFooter, ModalTitle } from "../../components/modal";
 import { Bullet } from "../../components/training-wizard/stepper/Bullet";
@@ -8,13 +7,18 @@ import { useAppContext } from "../../contexts/app-context";
 import { Label, Line, Step } from "./SummaryStep";
 
 export const SummaryPage = () => {
-    const { usecases } = useAppContext();
+    const { module, setAppState } = useAppContext();
 
-    const [module, setModule] = useState<TrainingModule>();
-
-    useEffect(() => {
-        usecases.getModule().then(setModule);
-    }, [usecases]);
+    const startTutorial = useCallback(() => {
+        if (!module) return;
+        setAppState({
+            type: "TRAINING",
+            state: "CLOSED",
+            module: module.key,
+            step: 1,
+            content: 1,
+        });
+    }, [setAppState, module]);
 
     return (
         <StyledModal>
@@ -36,7 +40,7 @@ export const SummaryPage = () => {
                 })}
             </ModalContent>
             <ModalFooter>
-                <MainButton>Next</MainButton>
+                <MainButton onClick={startTutorial}>Next</MainButton>
             </ModalFooter>
         </StyledModal>
     );
