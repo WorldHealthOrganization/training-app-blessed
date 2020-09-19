@@ -3,7 +3,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { LoadingProvider, SnackbarProvider } from "d2-ui-components";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import i18n from "../../locales";
 import { CompositionRoot } from "../CompositionRoot";
 import { AppContextProvider } from "../contexts/app-context";
@@ -67,9 +67,9 @@ const App = () => {
                     <SnackbarProvider>
                         <LoadingProvider>
                             <div id="app" className="content">
-                                <BrowserRouter>
+                                <HashRouter>
                                     <Router />
-                                </BrowserRouter>
+                                </HashRouter>
                             </div>
                         </LoadingProvider>
                     </SnackbarProvider>
