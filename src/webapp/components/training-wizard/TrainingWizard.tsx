@@ -124,11 +124,11 @@ const StyledModal = styled(Modal)`
     bottom: 20px;
     right: 40px;
     width: 450px;
-    height: ${({ minimized }) => (minimized ? "inherit" : "500px")};
+    height: ${({ minimized }) => (minimized ? "inherit" : "75%")};
 
     ${ModalContent} {
         padding: 0;
-        max-height: 320px;
+        max-height: 75%;
     }
 
     ${StyledWizard} .MuiPaper-root {
