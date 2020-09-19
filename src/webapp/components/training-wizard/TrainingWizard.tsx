@@ -23,6 +23,7 @@ export interface TrainingWizardStepProps {
     title?: string;
     description?: string;
     content?: TrainingModuleContent;
+    minimized: boolean;
     stepIndex: number;
     contentIndex: number;
     totalSteps: number;
@@ -31,6 +32,11 @@ export interface TrainingWizardStepProps {
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
     const { appState, setAppState } = useAppContext();
+
+    const minimized = useMemo(
+        () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
+        [appState]
+    );
 
     const wizardSteps: WizardStep[] = useMemo(() => {
         if (!module) return [];
@@ -47,10 +53,11 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
                     contentIndex: position,
                     totalSteps: module.steps.length,
                     totalContents: contents.length,
+                    minimized,
                 },
             }))
         );
-    }, [module]);
+    }, [module, minimized]);
 
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
@@ -69,11 +76,6 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
             });
         },
         [setAppState]
-    );
-
-    const minimized = useMemo(
-        () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
-        [appState]
     );
 
     const onMinimize = useCallback(() => {
@@ -112,7 +114,6 @@ const StyledWizard = styled(Wizard)`
         box-shadow: none;
         background-color: inherit;
         margin: inherit;
-        padding: inherit;
         height: 100%;
     }
 `;
@@ -123,11 +124,15 @@ const StyledModal = styled(Modal)`
     bottom: 20px;
     right: 40px;
     width: 450px;
-    height: 500px;
+    height: ${({ minimized }) => (minimized ? "inherit" : "500px")};
 
     ${ModalContent} {
         padding: 0;
         max-height: 320px;
+    }
+
+    ${StyledWizard} .MuiPaper-root {
+        padding: ${({ minimized }) => (minimized ? "35px 0px 20px" : "inherit")};
     }
 `;
 
