@@ -14,7 +14,9 @@ import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
     const { usecases, setAppState } = useAppContext();
-    const [modules, setModules] = useState<{ name: string; key: string; progress: number }[]>([]);
+    const [modules, setModules] = useState<
+        { name: string; key: string; progress: number; disabled?: boolean }[]
+    >([]);
 
     useEffect(() => {
         usecases.listModules().then(setModules);
@@ -37,12 +39,13 @@ export const HomePage = () => {
             <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
             <ModalContent>
                 <Cardboard>
-                    {modules.map(({ name, key, progress }, idx) => (
+                    {modules.map(({ name, key, progress, disabled }, idx) => (
                         <Card
                             key={`card-${idx}`}
                             label={name}
                             progress={progress}
                             onClick={() => loadModule(key)}
+                            disabled={disabled}
                         />
                     ))}
                 </Cardboard>
