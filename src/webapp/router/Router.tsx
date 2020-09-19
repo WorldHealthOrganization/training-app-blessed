@@ -1,5 +1,5 @@
 import { useConfig } from "@dhis2/app-runtime";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import { buildPathFromState } from "../../domain/entities/AppState";
 import { log } from "../../utils/debug";
@@ -13,7 +13,7 @@ export const Router: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const routerRoutes = buildRoutes(routes);
+    const routerRoutes = useMemo(() => buildRoutes(routes), [routes]);
     const element = useRoutes(routerRoutes);
 
     const [startPage] = useState(location.pathname);
@@ -27,11 +27,11 @@ export const Router: React.FC = () => {
             const path = buildPathFromState(appState);
             if (path !== location.pathname) navigate(path);
         }
-    }, [appState, navigate, location.pathname, baseUrl]);
+    }, [appState, navigate, location, baseUrl]);
 
     // TODO: Load state with initial path
     useEffect(() => {
-        log(`[HISTORY] Start page: ${startPage}`, matchRoutes(routerRoutes, startPage));
+        log(`Start page: ${startPage}`, matchRoutes(routerRoutes, startPage));
     }, [routerRoutes, startPage]);
 
     return (
