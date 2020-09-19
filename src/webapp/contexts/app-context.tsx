@@ -40,7 +40,7 @@ export function useAppContext(): UseAppContextResult {
     const { usecases } = compositionRoot;
 
     useEffect(() => {
-        if (!!module) return;
+        if (module) return;
         compositionRoot.usecases.getModule().then(setModule);
     }, [module, compositionRoot, setModule]);
 
