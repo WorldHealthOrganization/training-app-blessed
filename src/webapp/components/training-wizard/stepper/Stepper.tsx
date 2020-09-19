@@ -1,8 +1,9 @@
 import { WizardStepperProps } from "d2-ui-components";
 import _ from "lodash";
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { arrayFill } from "../../../../utils/array";
+import { useAppContext } from "../../../contexts/app-context";
 import { Bullet } from "./Bullet";
 
 export const Stepper = ({
@@ -10,6 +11,18 @@ export const Stepper = ({
     currentStepKey,
     markAllCompleted = false,
 }: WizardStepperProps & { markAllCompleted?: boolean }) => {
+    const { setAppState } = useAppContext();
+
+    const moveStep = useCallback(
+        (step: number) => {
+            setAppState(appState => {
+                if (appState.type !== "TRAINING") return appState;
+                return { ...appState, step, content: 1 };
+            });
+        },
+        [setAppState]
+    );
+
     if (steps.length === 0) return null;
 
     const index = _(steps).findIndex(step => step.key === currentStepKey);
@@ -30,6 +43,7 @@ export const Stepper = ({
                         current={index === stepIndex}
                         completed={markAllCompleted || index < stepIndex}
                         last={index === totalSteps - 1}
+                        onClick={() => moveStep(index + 1)}
                     />
                 </Step>
             ))}

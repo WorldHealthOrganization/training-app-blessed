@@ -30,3 +30,10 @@ export interface TrainingModuleDetails {
     description: string;
     icon: string;
 }
+
+export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
+    const match = /^.*-(\d)-(\d)$/.exec(key);
+    if (!match) return null;
+
+    return { step: parseInt(match[1]), content: parseInt(match[2]) };
+};

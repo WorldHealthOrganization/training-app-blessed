@@ -1,8 +1,13 @@
 import { Wizard, WizardStep } from "d2-ui-components";
 import _ from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule, TrainingModuleContent } from "../../../domain/entities/TrainingModule";
+import {
+    extractStepFromKey,
+    TrainingModule,
+    TrainingModuleContent,
+} from "../../../domain/entities/TrainingModule";
+import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
 import { ModalContent } from "../modal/ModalContent";
 import { Navigation } from "./navigation/Navigation";
@@ -25,11 +30,30 @@ export interface TrainingWizardStepProps {
 }
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
+    const { appState, setAppState } = useAppContext();
     const [minimized, setMinimized] = useState(false);
 
     const onMinimize = useCallback(() => {
         setMinimized(minimized => !minimized);
     }, []);
+
+    const stepKey = useMemo(() => {
+        if (appState.type !== "TRAINING" || !module) return undefined;
+        return `${module.key}-${appState.step}-${appState.content}`;
+    }, [appState, module]);
+
+    const onStepChange = useCallback(
+        (stepKey: string) => {
+            const result = extractStepFromKey(stepKey);
+            if (!result) return;
+
+            setAppState(appState => {
+                if (appState.type !== "TRAINING") return appState;
+                return { ...appState, ...result };
+            });
+        },
+        [setAppState]
+    );
 
     useEffect(() => {
         setMinimized(false);
@@ -39,7 +63,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
 
     const wizardSteps: WizardStep[] = _.flatMap(module.steps, ({ title, contents }, step) =>
         contents.map((content, position) => ({
-            key: `${module.id}-${step}-${position}`,
+            key: `${module.key}-${step + 1}-${position + 1}`,
             module,
             label: "Select your location",
             component: MarkdownContentStep,
@@ -62,11 +86,12 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
             allowDrag={true}
         >
             <StyledWizard
-                useSnackFeedback={true}
+                steps={wizardSteps}
+                stepKey={stepKey}
+                onStepChange={onStepChange}
                 initialStepKey={wizardSteps[0].key}
                 StepperComponent={minimized ? EmptyComponent : Stepper}
                 NavigationComponent={minimized ? EmptyComponent : Navigation}
-                steps={wizardSteps}
             />
         </StyledModal>
     );
