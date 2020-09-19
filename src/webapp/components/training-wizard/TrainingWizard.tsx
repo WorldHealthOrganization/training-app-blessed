@@ -32,10 +32,31 @@ export interface TrainingWizardStepProps {
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
     const { appState, setAppState } = useAppContext();
 
+    const wizardSteps: WizardStep[] = useMemo(() => {
+        if (!module) return [];
+        return _.flatMap(module.steps, ({ title, contents }, step) =>
+            contents.map((content, position) => ({
+                key: `${module.key}-${step + 1}-${position + 1}`,
+                module,
+                label: "Select your location",
+                component: MarkdownContentStep,
+                props: {
+                    title,
+                    content,
+                    stepIndex: step,
+                    contentIndex: position,
+                    totalSteps: module.steps.length,
+                    totalContents: contents.length,
+                },
+            }))
+        );
+    }, [module]);
+
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
-        return `${module.key}-${appState.step}-${appState.content}`;
-    }, [appState, module]);
+        const key = `${module.key}-${appState.step}-${appState.content}`;
+        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0].key;
+    }, [appState, module, wizardSteps]);
 
     const onStepChange = useCallback(
         (stepKey: string) => {
@@ -50,7 +71,10 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         [setAppState]
     );
 
-    const minimized = appState.type === "TRAINING" && appState.state === "MINIMIZED";
+    const minimized = useMemo(
+        () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
+        [appState]
+    );
 
     const onMinimize = useCallback(() => {
         setAppState(appState => {
@@ -60,24 +84,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         });
     }, [setAppState]);
 
-    if (!module) return null;
-
-    const wizardSteps: WizardStep[] = _.flatMap(module.steps, ({ title, contents }, step) =>
-        contents.map((content, position) => ({
-            key: `${module.key}-${step + 1}-${position + 1}`,
-            module,
-            label: "Select your location",
-            component: MarkdownContentStep,
-            props: {
-                title,
-                content,
-                stepIndex: step,
-                contentIndex: position,
-                totalSteps: module.steps.length,
-                totalContents: contents.length,
-            },
-        }))
-    );
+    if (!module || wizardSteps.length === 0) return null;
 
     return (
         <StyledModal

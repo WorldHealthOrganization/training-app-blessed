@@ -1,4 +1,3 @@
-import { log } from "../../utils/debug";
 import { ReactRouterMatch } from "../../webapp/router/AppRoute";
 
 export type AppStateType = "HOME" | "TRAINING" | "TRAINING_DIALOG" | "EXIT" | "UNKNOWN";
@@ -55,7 +54,27 @@ export const buildPathFromState = (state: AppState): string => {
     }
 };
 
-export const buildStateFromPath = (match: ReactRouterMatch[]): AppState => {
-    log(match);
+export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
+    for (const match of matches) {
+        switch (match.route.path) {
+            case "/":
+                return { type: "HOME" };
+            case "/tutorial/:key":
+            case "/tutorial/:key/welcome":
+                return { type: "TRAINING_DIALOG", dialog: "welcome", module: match.params.key };
+            case "/tutorial/:key/summary":
+                return { type: "TRAINING_DIALOG", dialog: "summary", module: match.params.key };
+            case "/tutorial/:key/final":
+                return { type: "TRAINING_DIALOG", dialog: "final", module: match.params.key };
+            case "/tutorial/:key/:step/:content":
+                return {
+                    type: "TRAINING",
+                    module: match.params.key,
+                    step: parseInt(match.params.step),
+                    content: parseInt(match.params.content),
+                    state: "OPEN",
+                };
+        }
+    }
     return { type: "HOME" };
 };
