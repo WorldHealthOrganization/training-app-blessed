@@ -67,6 +67,7 @@ const ModalWrapper = styled.div`
     bottom: 0;
     left: 0;
     text-align: center;
+    user-select: none;
 `;
 
 const ModalBody = styled.div`
