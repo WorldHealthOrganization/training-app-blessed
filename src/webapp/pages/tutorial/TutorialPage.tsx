@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
+import React, { useCallback } from "react";
 import { ActionButton } from "../../components/action-button/ActionButton";
 import { TrainingWizard } from "../../components/training-wizard/TrainingWizard";
 import { useAppContext } from "../../contexts/app-context";
 
 export const TutorialPage = () => {
-    const { usecases, appState, setAppState } = useAppContext();
-
-    const [module, setModule] = useState<TrainingModule>();
+    const { appState, setAppState, module } = useAppContext();
 
     const onClose = useCallback(() => {
         setAppState(appState => {
@@ -23,10 +20,6 @@ export const TutorialPage = () => {
             return { ...appState, state };
         });
     }, [setAppState]);
-
-    useEffect(() => {
-        usecases.getModule().then(setModule);
-    }, [usecases]);
 
     if (appState.type !== "TRAINING") return null;
 
