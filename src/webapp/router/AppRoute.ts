@@ -7,6 +7,7 @@ export interface AppRoute {
     defaultRoute?: boolean;
     element: ReactElement;
     paths: string[];
+    backdrop?: boolean;
 }
 
 export interface ReactRouterRoute {

@@ -25,12 +25,14 @@ export const routes: AppRoute[] = [
         defaultRoute: true,
         paths: ["/"],
         element: <HomePage />,
+        backdrop: true,
     },
     {
         key: "welcome",
         name: () => i18n.t("Welcome"),
         paths: ["/tutorial/:key", "/tutorial/:key/welcome"],
         element: <WelcomePage />,
+        backdrop: true,
     },
     {
         key: "tutorial",
@@ -43,12 +45,14 @@ export const routes: AppRoute[] = [
         name: () => i18n.t("Final"),
         paths: ["/tutorial/:key/final"],
         element: <FinalPage />,
+        backdrop: true,
     },
     {
         key: "summary",
         name: () => i18n.t("Summary"),
         paths: ["/tutorial/:key/summary"],
         element: <SummaryPage />,
+        backdrop: true,
     },
 ];
 
