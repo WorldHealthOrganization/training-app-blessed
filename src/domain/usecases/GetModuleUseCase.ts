@@ -40,7 +40,7 @@ export class GetModuleUseCase implements UseCase {
                         {
                             type: "markdown",
                             text:
-                                "A quick way to find a location (organisation unit) is to use the search box above the tree (the green symbol).\n\n![https://user-images.githubusercontent.com/2181866/93662240-058a2c80-fa5f-11ea-832f-6c18ae922e80.png](https://user-images.githubusercontent.com/2181866/93662240-058a2c80-fa5f-11ea-832f-6c18ae922e80.png)\n\nType in the name or first few letters of your location, and select it from the drop-down menu by clicking on it to highlight it orange.\n\nThis will enter the location in the Organisation Unit field of your data entry form.",
+                                "![https://user-images.githubusercontent.com/2181866/93662240-058a2c80-fa5f-11ea-832f-6c18ae922e80.png](https://user-images.githubusercontent.com/2181866/93662240-058a2c80-fa5f-11ea-832f-6c18ae922e80.png)\n\nA quick way to find a location (organisation unit) is to use the search box above the tree (the green symbol).\n\nType in the name or first few letters of your location, and select it from the drop-down menu by clicking on it to highlight it orange.\n\nThis will enter the location in the Organisation Unit field of your data entry form.",
                         },
                         {
                             type: "markdown",
