@@ -12,7 +12,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     routes,
     compositionRoot,
 }) => {
-    const [appState, setAppState] = useState<AppState>({ type: "HOME" });
+    const [appState, setAppState] = useState<AppState>({ type: "UNKNOWN" });
     const [module, setModule] = useState<TrainingModule>();
 
     return (
