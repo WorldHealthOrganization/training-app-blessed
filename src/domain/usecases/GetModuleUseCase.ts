@@ -26,9 +26,9 @@ export class GetModuleUseCase implements UseCase {
             dhisVersionRange: "",
             dhisLaunchUrl: "/dhis-web-dataentry/index.action",
             details: {
-                title: "Welcome to the tutorial for Data Entry",
+                title: "Welcome to the tutorial on Data Entry",
                 description:
-                    "The data entry application is used to enter data that need to be entered for one location on a regular basis such as weekly, monthy etc. Data is registered for a location, time period and a specific dataset.",
+                    "The data entry application is used to manually enter data that have been recorded for one location on a regular basis, such as weekly, monthly etc. Data is registered for a location, time period and a specific data set.",
                 icon:
                     "https://user-images.githubusercontent.com/2181866/93660832-454b1700-fa53-11ea-881c-5fe97edb02a3.png",
             },
@@ -45,7 +45,7 @@ export class GetModuleUseCase implements UseCase {
                         {
                             type: "markdown",
                             text:
-                                "Another way to find your location (organisation unit) is to search the hierarchy tree menu.\n\n![https://github.com/EyeSeeTea/training-app/blob/feature/basic-ui/mockup/elements/screen.png?raw=true](https://github.com/EyeSeeTea/training-app/blob/feature/basic-ui/mockup/elements/screen.png?raw=true)\n\nExpand and close the branches by clicking on the +/- symbols. Click on your organisation unit name to highlight it orange and this will enter the location in the Organisation Unit field of your data entry form. ",
+                                "Another way to find your location (organisation unit) is to search the hierarchy tree menu.\n\nExpand and close the branches by clicking on the +/- symbols. Click on your organisation unit name to highlight it orange and this will enter the location in the Organisation Unit field of your data entry form. ",
                         },
                     ],
                 },
@@ -55,15 +55,8 @@ export class GetModuleUseCase implements UseCase {
                     contents: [
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 1",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 2",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 3",
+                            text:
+                                "Select a data set from the dropdown list of data sets available to your selected location. Note that not all data sets are available for all organisation units. The data set you select will create a form with similar fields to your paper based form. ",
                         },
                     ],
                 },
@@ -73,15 +66,13 @@ export class GetModuleUseCase implements UseCase {
                     contents: [
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 1",
+                            text:
+                                "Select a period for which to register data. The available periods are determined by the reporting frequency required for the selected form.",
                         },
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 2",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 3",
+                            text:
+                                "You can also jump a year back or forward by using the arrows next to the period.",
                         },
                     ],
                 },
@@ -91,15 +82,8 @@ export class GetModuleUseCase implements UseCase {
                     contents: [
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 1",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 2",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 3",
+                            text:
+                                "By now you should see the data entry form. If not, there may be additional data dimensions that you need to select from drop-down menus, depending on how your form is structured. This may include the type of reporting institution, project or other features.",
                         },
                     ],
                 },
@@ -109,15 +93,8 @@ export class GetModuleUseCase implements UseCase {
                     contents: [
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 1",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 2",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 3",
+                            text:
+                                "Start entering data by clicking inside the first cell and either typing in the values or selecting them from the dropdown menus.\n\nThe values are saved immediately and do not require any save/finished button click. A green field indicates that the value has been saved in the system. Grey fields are those that are completed automatically by the DHIS2 system.",
                         },
                     ],
                 },
@@ -127,15 +104,8 @@ export class GetModuleUseCase implements UseCase {
                     contents: [
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 1",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 2",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 3",
+                            text:
+                                "If you type in an invalid value or a value that is outside of a valid range, you will get a pop-up that explains the problem and the field will be coloured yellow (not saved) until you have corrected the value.",
                         },
                     ],
                 },
@@ -145,15 +115,8 @@ export class GetModuleUseCase implements UseCase {
                     contents: [
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 1",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 2",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 3",
+                            text:
+                                "Click “Run validation” to check that all the data that you have entered meet the rules built-in to the form for ensuring accuracy of the data.",
                         },
                     ],
                 },
@@ -163,15 +126,8 @@ export class GetModuleUseCase implements UseCase {
                     contents: [
                         {
                             type: "markdown",
-                            text: "Data entry - Step - Page 1",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 2",
-                        },
-                        {
-                            type: "markdown",
-                            text: "Data entry - Step - Page 3",
+                            text:
+                                "Click “complete” to submit the data that you have entered to DHIS2.",
                         },
                     ],
                 },
