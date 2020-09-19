@@ -24,11 +24,6 @@ export interface ReactRouterMatch {
 
 export const buildRoutes = (appRoutes: AppRoute[]): ReactRouterRoute[] => {
     return _.flatMap(appRoutes, ({ paths, element }) =>
-        paths.map(path => ({
-            path,
-            element,
-            caseSensitive: false,
-            children: [],
-        }))
+        paths.map(path => ({ path, element, caseSensitive: false }))
     );
 };
