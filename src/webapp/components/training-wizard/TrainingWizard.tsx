@@ -95,7 +95,6 @@ const StyledModal = styled(Modal)`
     ${ModalContent} {
         padding: 0;
         max-height: 320px;
-        text-align: justify;
     }
 `;
 
