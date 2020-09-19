@@ -1,6 +1,6 @@
 import { Wizard, WizardStep } from "d2-ui-components";
 import _ from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
 import {
     extractStepFromKey,
@@ -31,11 +31,6 @@ export interface TrainingWizardStepProps {
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
     const { appState, setAppState } = useAppContext();
-    const [minimized, setMinimized] = useState(false);
-
-    const onMinimize = useCallback(() => {
-        setMinimized(minimized => !minimized);
-    }, []);
 
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
@@ -55,9 +50,15 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         [setAppState]
     );
 
-    useEffect(() => {
-        setMinimized(false);
-    }, []);
+    const minimized = appState.type === "TRAINING" && appState.state === "MINIMIZED";
+
+    const onMinimize = useCallback(() => {
+        setAppState(appState => {
+            if (appState.type !== "TRAINING") return appState;
+            const state = appState.state === "MINIMIZED" ? "OPEN" : "MINIMIZED";
+            return { ...appState, state };
+        });
+    }, [setAppState]);
 
     if (!module) return null;
 
