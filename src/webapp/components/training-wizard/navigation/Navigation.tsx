@@ -25,9 +25,11 @@ export const Navigation: React.FC<WizardNavigationProps> = ({
         <ModalFooter>
             <MainButton onClick={onPrev}>{i18n.t("Previous")}</MainButton>
             <ProgressBar>
-                {arrayFill(totalContents).map(value => (
-                    <NavigationBullet key={value} completed={value === contentIndex} />
-                ))}
+                {totalContents > 1
+                    ? arrayFill(totalContents).map(value => (
+                          <NavigationBullet key={value} completed={value === contentIndex} />
+                      ))
+                    : null}
             </ProgressBar>
             <MainButton onClick={onNext}>{i18n.t("Next")}</MainButton>
         </ModalFooter>
