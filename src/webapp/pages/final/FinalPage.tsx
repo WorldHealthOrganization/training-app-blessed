@@ -16,7 +16,10 @@ export const FinalPage = () => {
     const { setAppState, module } = useAppContext();
 
     const finish = useCallback(() => {
-        setAppState({ type: "HOME" });
+        setAppState(appState => {
+            if (appState.type !== "TRAINING_DIALOG") return appState;
+            return { type: "TRAINING_DIALOG", module: appState.module, dialog: "summary" };
+        });
     }, [setAppState]);
 
     if (!module) return null;

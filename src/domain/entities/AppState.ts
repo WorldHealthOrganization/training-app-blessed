@@ -31,7 +31,7 @@ interface TrainingAppState extends BaseAppState {
 interface TrainingDialogAppState extends BaseAppState {
     type: "TRAINING_DIALOG";
     module: string;
-    dialog: "welcome" | "final" | "summary";
+    dialog: "welcome" | "final" | "summary" | "contents";
 }
 
 export type AppState =
@@ -62,6 +62,8 @@ export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
             case "/tutorial/:key":
             case "/tutorial/:key/welcome":
                 return { type: "TRAINING_DIALOG", dialog: "welcome", module: match.params.key };
+            case "/tutorial/:key/contents":
+                return { type: "TRAINING_DIALOG", dialog: "contents", module: match.params.key };
             case "/tutorial/:key/summary":
                 return { type: "TRAINING_DIALOG", dialog: "summary", module: match.params.key };
             case "/tutorial/:key/final":

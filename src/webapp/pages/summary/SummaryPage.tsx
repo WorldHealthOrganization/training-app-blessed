@@ -6,23 +6,34 @@ import { Bullet } from "../../components/training-wizard/stepper/Bullet";
 import { useAppContext } from "../../contexts/app-context";
 import { Label, Line, Step } from "./SummaryStep";
 
-export const SummaryPage = () => {
+const ContentsSummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) => {
     const { module, setAppState } = useAppContext();
 
     const startTutorial = useCallback(() => {
         if (!module) return;
         setAppState({
             type: "TRAINING",
-            state: "CLOSED",
+            state: "OPEN",
             module: module.key,
             step: 1,
             content: 1,
         });
     }, [setAppState, module]);
 
+    const endTutorial = useCallback(() => {
+        if (!module) return;
+        setAppState({ type: "HOME" });
+    }, [setAppState, module]);
+
+    const title = completed
+        ? "What did you learn in this tutorial?"
+        : "What will this tutorial cover?";
+
+    const action = completed ? endTutorial : startTutorial;
+
     return (
-        <StyledModal>
-            <ModalTitle>What did you learn in this tutorial?</ModalTitle>
+        <StyledModal completed={completed}>
+            <ModalTitle>{title}</ModalTitle>
             <ModalContent bigger={true}>
                 {module?.steps.map(({ title }, idx) => {
                     const half = module.steps.length / 2;
@@ -40,13 +51,13 @@ export const SummaryPage = () => {
                 })}
             </ModalContent>
             <ModalFooter>
-                <MainButton onClick={startTutorial}>Next</MainButton>
+                <MainButton onClick={action}>Next</MainButton>
             </ModalFooter>
         </StyledModal>
     );
 };
 
-const StyledModal = styled(Modal)`
+const StyledModal = styled(Modal)<{ completed?: boolean }>`
     position: fixed;
     left: 50%;
     top: 50%;
@@ -59,4 +70,21 @@ const StyledModal = styled(Modal)`
         display: grid;
         grid-template-columns: repeat(2, 1fr);
     }
+
+    ${({ completed }) =>
+        !completed &&
+        `
+        ${Line} {
+            border-left: 2px solid white;
+        }
+
+        ${Bullet} {
+            color: white;
+            background-color: transparent;
+            border: 2px solid white;
+        }
+    `}
 `;
+
+export const ContentsPage: React.FC = () => <ContentsSummaryPage completed={false} />;
+export const SummaryPage: React.FC = () => <ContentsSummaryPage completed={true} />;
