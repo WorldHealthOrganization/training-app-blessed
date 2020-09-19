@@ -26,7 +26,7 @@ const Bullet = styled.span`
 
 const Title = styled.span`
     color: white;
-    font-size: 36px;
+    font-size: 32px;
     line-height: 47px;
     font-weight: 300;
     margin: 0px 0px 30px 0px;
