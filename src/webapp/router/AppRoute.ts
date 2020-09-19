@@ -1,18 +1,25 @@
 import _ from "lodash";
+import { ReactElement, ReactNode } from "react";
 
 export interface AppRoute {
     key: string;
     name: () => string;
     defaultRoute?: boolean;
-    element: React.ReactElement;
+    element: ReactElement;
     paths: string[];
 }
 
 export interface ReactRouterRoute {
     caseSensitive: boolean;
-    children: ReactRouterRoute[];
-    element: React.ReactElement;
+    children?: ReactRouterRoute[];
+    element: ReactNode;
     path: string;
+}
+
+export interface ReactRouterMatch {
+    route: ReactRouterRoute;
+    pathname: string;
+    params: Record<string, string>;
 }
 
 export const buildRoutes = (appRoutes: AppRoute[]): ReactRouterRoute[] => {

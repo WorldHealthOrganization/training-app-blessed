@@ -1,3 +1,6 @@
+import { log } from "../../utils/debug";
+import { ReactRouterMatch } from "../../webapp/router/AppRoute";
+
 export type AppStateType = "HOME" | "TRAINING" | "TRAINING_DIALOG" | "EXIT" | "UNKNOWN";
 export type TrainingStateType = "CLOSED" | "OPEN" | "MINIMIZED";
 
@@ -50,4 +53,9 @@ export const buildPathFromState = (state: AppState): string => {
         default:
             return "/";
     }
+};
+
+export const buildStateFromPath = (match: ReactRouterMatch[]): AppState => {
+    log(match);
+    return { type: "HOME" };
 };

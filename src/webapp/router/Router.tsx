@@ -1,14 +1,13 @@
 import { useConfig } from "@dhis2/app-runtime";
 import React, { useEffect, useMemo, useState } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
-import { buildPathFromState } from "../../domain/entities/AppState";
-import { log } from "../../utils/debug";
+import { buildPathFromState, buildStateFromPath } from "../../domain/entities/AppState";
 import { IFrame } from "../components/iframe/IFrame";
 import { useAppContext } from "../contexts/app-context";
 import { buildRoutes } from "./AppRoute";
 
 export const Router: React.FC = () => {
-    const { appState, routes } = useAppContext();
+    const { appState, routes, setAppState } = useAppContext();
     const { baseUrl } = useConfig();
     const navigate = useNavigate();
     const location = useLocation();
@@ -31,10 +30,11 @@ export const Router: React.FC = () => {
         }
     }, [appState, navigate, location, baseUrl]);
 
-    // TODO: Load state with initial path
+    // Load state with initial path
     useEffect(() => {
-        log(`Start page: ${startPage}`, matchRoutes(routerRoutes, startPage));
-    }, [routerRoutes, startPage]);
+        const match = matchRoutes(routerRoutes, startPage);
+        if (match) setAppState(buildStateFromPath(match));
+    }, [routerRoutes, startPage, setAppState]);
 
     return (
         <React.Fragment>
