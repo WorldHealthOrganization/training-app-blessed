@@ -1,5 +1,5 @@
 import { useConfig } from "@dhis2/app-runtime";
-import { MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import { LoadingProvider, SnackbarProvider } from "d2-ui-components";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
@@ -69,19 +69,21 @@ const App = () => {
 
     return (
         <AppContextProvider baseUrl={baseUrl} routes={routes} compositionRoot={compositionRoot}>
-            <MuiThemeProvider theme={muiTheme}>
-                <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
-                    <SnackbarProvider>
-                        <LoadingProvider>
-                            <div id="app" className="content">
-                                <HashRouter>
-                                    <Router />
-                                </HashRouter>
-                            </div>
-                        </LoadingProvider>
-                    </SnackbarProvider>
-                </OldMuiThemeProvider>
-            </MuiThemeProvider>{" "}
+            <StylesProvider injectFirst>
+                <MuiThemeProvider theme={muiTheme}>
+                    <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
+                        <SnackbarProvider>
+                            <LoadingProvider>
+                                <div id="app" className="content">
+                                    <HashRouter>
+                                        <Router />
+                                    </HashRouter>
+                                </div>
+                            </LoadingProvider>
+                        </SnackbarProvider>
+                    </OldMuiThemeProvider>
+                </MuiThemeProvider>
+            </StylesProvider>
         </AppContextProvider>
     );
 };
