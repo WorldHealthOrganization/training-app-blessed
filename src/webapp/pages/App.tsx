@@ -1,21 +1,21 @@
 import { useConfig } from "@dhis2/app-runtime";
-import { MuiThemeProvider } from "@material-ui/core/styles";
+import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import { LoadingProvider, SnackbarProvider } from "d2-ui-components";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
 import { HashRouter } from "react-router-dom";
 import i18n from "../../locales";
 import { CompositionRoot } from "../CompositionRoot";
-import { AppContext } from "../contexts/app-context";
+import { AppContextProvider } from "../contexts/app-context";
 import { AppRoute } from "../router/AppRoute";
 import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
-import { BasePage } from "./base/BasePage";
 import { FinalPage } from "./final/FinalPage";
-import { ProgressPage } from "./progress/ProgressPage";
-import { SummaryPage } from "./summary/SummaryPage";
+import { HomePage } from "./home/HomePage";
+import { ContentsPage, SummaryPage } from "./summary/SummaryPage";
+import { TutorialPage } from "./tutorial/TutorialPage";
 import { WelcomePage } from "./welcome/WelcomePage";
 
 export const routes: AppRoute[] = [
@@ -23,46 +23,43 @@ export const routes: AppRoute[] = [
         key: "home",
         name: () => i18n.t("Home"),
         defaultRoute: true,
-        caseSensitive: false,
-        path: "/",
-        element: <BasePage />,
-        children: [],
+        paths: ["/"],
+        element: <HomePage />,
+        backdrop: true,
     },
     {
         key: "welcome",
         name: () => i18n.t("Welcome"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/welcome",
+        paths: ["/tutorial/:key", "/tutorial/:key/welcome"],
         element: <WelcomePage />,
-        children: [],
+        backdrop: true,
     },
     {
-        key: "progress",
-        name: () => i18n.t("Progress"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/progress",
-        element: <ProgressPage />,
-        children: [],
+        key: "tutorial",
+        name: () => i18n.t("Tutorial"),
+        paths: ["/tutorial/:key/:step/:content"],
+        element: <TutorialPage />,
+    },
+    {
+        key: "contents",
+        name: () => i18n.t("Contents"),
+        paths: ["/tutorial/:key/contents"],
+        element: <ContentsPage />,
+        backdrop: true,
     },
     {
         key: "final",
         name: () => i18n.t("Final"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/final",
+        paths: ["/tutorial/:key/final"],
         element: <FinalPage />,
-        children: [],
+        backdrop: true,
     },
     {
         key: "summary",
         name: () => i18n.t("Summary"),
-        defaultRoute: true,
-        caseSensitive: false,
-        path: "/summary",
+        paths: ["/tutorial/:key/summary"],
         element: <SummaryPage />,
-        children: [],
+        backdrop: true,
     },
 ];
 
@@ -71,21 +68,23 @@ const App = () => {
     const compositionRoot = new CompositionRoot();
 
     return (
-        <AppContext.Provider value={{ baseUrl, routes, compositionRoot }}>
-            <MuiThemeProvider theme={muiTheme}>
-                <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
-                    <SnackbarProvider>
-                        <LoadingProvider>
-                            <div id="app" className="content">
-                                <HashRouter>
-                                    <Router />
-                                </HashRouter>
-                            </div>
-                        </LoadingProvider>
-                    </SnackbarProvider>
-                </OldMuiThemeProvider>
-            </MuiThemeProvider>{" "}
-        </AppContext.Provider>
+        <AppContextProvider baseUrl={baseUrl} routes={routes} compositionRoot={compositionRoot}>
+            <StylesProvider injectFirst>
+                <MuiThemeProvider theme={muiTheme}>
+                    <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
+                        <SnackbarProvider>
+                            <LoadingProvider>
+                                <div id="app" className="content">
+                                    <HashRouter>
+                                        <Router />
+                                    </HashRouter>
+                                </div>
+                            </LoadingProvider>
+                        </SnackbarProvider>
+                    </OldMuiThemeProvider>
+                </MuiThemeProvider>
+            </StylesProvider>
+        </AppContextProvider>
     );
 };
 

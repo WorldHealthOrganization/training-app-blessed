@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
-import DataEntryIcon from "../../assets/data-entry/Icon.png";
 import { MainButton } from "../../components/main-button/MainButton";
 import {
     Modal,
@@ -9,24 +8,39 @@ import {
     ModalParagraph,
     ModalTitle,
 } from "../../components/modal";
+import { useAppContext } from "../../contexts/app-context";
 
 export const WelcomePage = () => {
+    const { setAppState, module } = useAppContext();
+
+    const startTutorial = useCallback(() => {
+        if (!module) return;
+        setAppState({ type: "TRAINING_DIALOG", dialog: "contents", module: module.key });
+    }, [module, setAppState]);
+
+    const exitTutorial = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
+    if (!module) return null;
+    const { title, description, icon } = module.details;
+
     return (
         <StyledModal>
             <ModalContent>
-                <ModalTitle big={true}>Welcome to the tutorial for Data Entry</ModalTitle>
+                <ModalTitle big={true}>{title}</ModalTitle>
                 <Image>
-                    <img src={DataEntryIcon} alt="Welcome Illustration" />
+                    <img src={icon} alt="Welcome Illustration" />
                 </Image>
-                <ModalParagraph>
-                    The data entry application is used to enter data that need to be entered for one
-                    location on a regular basis such as weekly, monthy etc. Data is registered for a
-                    location, time period and a specific dataset.{" "}
-                </ModalParagraph>
+                <ModalParagraph>{description}</ModalParagraph>
             </ModalContent>
             <ModalFooter>
-                <MainButton color="secondary">Exit Tutorial</MainButton>
-                <MainButton color="primary">Start Tutorial</MainButton>
+                <MainButton color="secondary" onClick={exitTutorial}>
+                    Go Back
+                </MainButton>
+                <MainButton color="primary" onClick={startTutorial}>
+                    Start Tutorial
+                </MainButton>
             </ModalFooter>
         </StyledModal>
     );

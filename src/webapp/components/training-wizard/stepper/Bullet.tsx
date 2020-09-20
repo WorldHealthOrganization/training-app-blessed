@@ -2,7 +2,7 @@ import DoneIcon from "@material-ui/icons/Done";
 import React, { MouseEvent } from "react";
 import styled from "styled-components";
 
-const BaseBullet = ({ className, stepKey, completed, onClick }: BulletProps) => {
+const BaseBullet: React.FC<BulletProps> = ({ className, stepKey, completed, onClick }) => {
     return (
         <div className={className} onClick={onClick}>
             {completed ? <StyledDoneIcon /> : stepKey}

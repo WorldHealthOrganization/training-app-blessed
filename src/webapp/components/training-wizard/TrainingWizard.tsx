@@ -1,26 +1,92 @@
-import { Wizard } from "d2-ui-components";
-import React, { useCallback, useEffect, useState } from "react";
+import { Wizard, WizardStep } from "d2-ui-components";
+import _ from "lodash";
+import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
+import {
+    extractStepFromKey,
+    TrainingModule,
+    TrainingModuleContent,
+} from "../../../domain/entities/TrainingModule";
+import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
 import { ModalContent } from "../modal/ModalContent";
 import { Navigation } from "./navigation/Navigation";
 import { Stepper } from "./stepper/Stepper";
-import { GeneralInfoStep } from "./steps/GeneralInfoStep";
+import { MarkdownContentStep } from "./steps/MarkdownContentStep";
 
 export interface TrainingWizardProps {
     onClose: () => void;
+    module?: TrainingModule;
 }
 
-export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
-    const [minimized, setMinimized] = useState(false);
+export interface TrainingWizardStepProps {
+    title?: string;
+    description?: string;
+    content?: TrainingModuleContent;
+    minimized: boolean;
+    stepIndex: number;
+    contentIndex: number;
+    totalSteps: number;
+    totalContents: number;
+}
+
+export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
+    const { appState, setAppState } = useAppContext();
+
+    const minimized = useMemo(
+        () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
+        [appState]
+    );
+
+    const wizardSteps: WizardStep[] = useMemo(() => {
+        if (!module) return [];
+        return _.flatMap(module.steps, ({ title, contents }, step) =>
+            contents.map((content, position) => ({
+                key: `${module.key}-${step + 1}-${position + 1}`,
+                module,
+                label: "Select your location",
+                component: MarkdownContentStep,
+                props: {
+                    title,
+                    content,
+                    stepIndex: step,
+                    contentIndex: position,
+                    totalSteps: module.steps.length,
+                    totalContents: contents.length,
+                    minimized,
+                },
+            }))
+        );
+    }, [module, minimized]);
+
+    const stepKey = useMemo(() => {
+        if (appState.type !== "TRAINING" || !module) return undefined;
+        const key = `${module.key}-${appState.step}-${appState.content}`;
+        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0].key;
+    }, [appState, module, wizardSteps]);
+
+    const onStepChange = useCallback(
+        (stepKey: string) => {
+            const result = extractStepFromKey(stepKey);
+            if (!result) return;
+
+            setAppState(appState => {
+                if (appState.type !== "TRAINING") return appState;
+                return { ...appState, ...result };
+            });
+        },
+        [setAppState]
+    );
 
     const onMinimize = useCallback(() => {
-        setMinimized(minimized => !minimized);
-    }, []);
+        setAppState(appState => {
+            if (appState.type !== "TRAINING") return appState;
+            const state = appState.state === "MINIMIZED" ? "OPEN" : "MINIMIZED";
+            return { ...appState, state };
+        });
+    }, [setAppState]);
 
-    useEffect(() => {
-        setMinimized(false);
-    }, []);
+    if (!module || wizardSteps.length === 0) return null;
 
     return (
         <StyledModal
@@ -30,22 +96,25 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose }) => {
             allowDrag={true}
         >
             <StyledWizard
-                useSnackFeedback={true}
-                initialStepKey={"general-info"}
+                steps={wizardSteps}
+                stepKey={stepKey}
+                onStepChange={onStepChange}
+                initialStepKey={wizardSteps[0].key}
                 StepperComponent={minimized ? EmptyComponent : Stepper}
                 NavigationComponent={minimized ? EmptyComponent : Navigation}
-                steps={steps}
             />
         </StyledModal>
     );
 };
 
 const StyledWizard = styled(Wizard)`
+    height: 100%;
+
     .MuiPaper-root {
         box-shadow: none;
         background-color: inherit;
         margin: inherit;
-        padding: inherit;
+        height: 100%;
     }
 `;
 
@@ -55,30 +124,16 @@ const StyledModal = styled(Modal)`
     bottom: 20px;
     right: 40px;
     width: 450px;
-    height: 500px;
+    height: ${({ minimized }) => (minimized ? "inherit" : "75%")};
 
     ${ModalContent} {
         padding: 0;
-        max-height: 320px;
+        max-height: 75%;
+    }
+
+    ${StyledWizard} .MuiPaper-root {
+        padding: ${({ minimized }) => (minimized ? "35px 0px 20px" : "inherit")};
     }
 `;
 
 const EmptyComponent = () => null;
-
-export const steps = [
-    {
-        key: "general-info",
-        label: "Select your location",
-        component: GeneralInfoStep,
-    },
-    {
-        key: "general-info2",
-        label: "Select data set",
-        component: GeneralInfoStep,
-    },
-    {
-        key: "general-info3",
-        label: "Run a validation check",
-        component: GeneralInfoStep,
-    },
-];

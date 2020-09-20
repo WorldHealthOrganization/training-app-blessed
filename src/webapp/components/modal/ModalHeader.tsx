@@ -5,13 +5,13 @@ import MinimizeIcon from "@material-ui/icons/Minimize";
 import React from "react";
 import styled from "styled-components";
 
-export const ModalHeader = ({
+export const ModalHeader: React.FC<ModalHeaderProps> = ({
     allowDrag,
     dragId,
     onClose,
     minimized,
     onMinimize,
-}: ModalHeaderProps) => {
+}) => {
     return (
         <div>
             {allowDrag ? <DragButton id={dragId} /> : null}

@@ -1,12 +1,30 @@
-export interface AppRoute extends RouteObject {
+import _ from "lodash";
+import { ReactElement, ReactNode } from "react";
+
+export interface AppRoute {
     key: string;
     name: () => string;
     defaultRoute?: boolean;
+    element: ReactElement;
+    paths: string[];
+    backdrop?: boolean;
 }
 
-interface RouteObject {
+export interface ReactRouterRoute {
     caseSensitive: boolean;
-    children: RouteObject[];
-    element: React.ReactElement;
+    children?: ReactRouterRoute[];
+    element: ReactNode;
     path: string;
 }
+
+export interface ReactRouterMatch {
+    route: ReactRouterRoute;
+    pathname: string;
+    params: Record<string, string>;
+}
+
+export const buildRoutes = (appRoutes: AppRoute[]): ReactRouterRoute[] => {
+    return _.flatMap(appRoutes, ({ paths, element }) =>
+        paths.map(path => ({ path, element, caseSensitive: false }))
+    );
+};

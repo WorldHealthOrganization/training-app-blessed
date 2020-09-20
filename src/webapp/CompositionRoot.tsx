@@ -1,23 +1,13 @@
-import { AppState, buildPathFromState } from "../domain/entities/AppState";
-import { PlaceholderUseCase } from "../domain/usecases/PlaceholderUseCase";
+import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
+import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
-    private currentState: AppState = { type: "UNKNOWN" };
-
-    public get appState() {
-        const path = buildPathFromState(this.currentState);
-        return { ...this.currentState, path };
-    }
-
-    public updateAppState(appState: AppState) {
-        this.currentState = appState;
-    }
-
     @cache()
     public get usecases() {
         return getExecute({
-            placeholder: new PlaceholderUseCase(),
+            listModules: new ListModulesUseCase(),
+            getModule: new GetModuleUseCase(),
         });
     }
 }

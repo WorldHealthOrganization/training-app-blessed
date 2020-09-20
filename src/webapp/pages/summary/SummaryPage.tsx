@@ -1,51 +1,63 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { MainButton } from "../../components/main-button/MainButton";
 import { Modal, ModalContent, ModalFooter, ModalTitle } from "../../components/modal";
 import { Bullet } from "../../components/training-wizard/stepper/Bullet";
-import { steps } from "../../components/training-wizard/TrainingWizard";
+import { useAppContext } from "../../contexts/app-context";
 import { Label, Line, Step } from "./SummaryStep";
 
-const values = [
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-    ...steps,
-];
+const ContentsSummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) => {
+    const { module, setAppState } = useAppContext();
 
-export const SummaryPage = () => {
+    const startTutorial = useCallback(() => {
+        if (!module) return;
+        setAppState({
+            type: "TRAINING",
+            state: "OPEN",
+            module: module.key,
+            step: 1,
+            content: 1,
+        });
+    }, [setAppState, module]);
+
+    const endTutorial = useCallback(() => {
+        if (!module) return;
+        setAppState({ type: "HOME" });
+    }, [setAppState, module]);
+
+    const title = completed
+        ? "What did you learn in this tutorial?"
+        : "What will this tutorial cover?";
+
+    const action = completed ? endTutorial : startTutorial;
+
     return (
-        <StyledModal>
-            <ModalTitle>What did you learn in this tutorial?</ModalTitle>
+        <StyledModal completed={completed}>
+            <ModalTitle>{title}</ModalTitle>
             <ModalContent bigger={true}>
-                {values.map(({ label }, idx) => {
-                    const half = values.length / 2;
+                {module?.steps.map(({ title }, idx) => {
+                    const half = module.steps.length / 2;
                     const column = idx < half ? "left" : "right";
                     const row = idx % half;
-                    const last = idx + 1 === Math.round(half) || idx === values.length - 1;
+                    const last = idx + 1 === Math.round(half) || idx === module.steps.length - 1;
 
                     return (
                         <Step key={`step-${idx}`} column={column} row={row} last={last}>
                             <Bullet stepKey={idx + 1} />
                             <Line />
-                            <Label>{label}</Label>
+                            <Label>{title}</Label>
                         </Step>
                     );
                 })}
             </ModalContent>
             <ModalFooter>
-                <MainButton>Next</MainButton>
+                <MainButton onClick={action}>Next</MainButton>
             </ModalFooter>
         </StyledModal>
     );
 };
 
-const StyledModal = styled(Modal)`
+const StyledModal = styled(Modal)<{ completed?: boolean }>`
     position: fixed;
     left: 50%;
     top: 50%;
@@ -58,4 +70,21 @@ const StyledModal = styled(Modal)`
         display: grid;
         grid-template-columns: repeat(2, 1fr);
     }
+
+    ${({ completed }) =>
+        !completed &&
+        `
+        ${Line} {
+            border-left: 2px solid white;
+        }
+
+        ${Bullet} {
+            color: white;
+            background-color: transparent;
+            border: 2px solid white;
+        }
+    `}
 `;
+
+export const ContentsPage: React.FC = () => <ContentsSummaryPage completed={false} />;
+export const SummaryPage: React.FC = () => <ContentsSummaryPage completed={true} />;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import Decoration from "../../assets/Decoration.png";
 import { MainButton } from "../../components/main-button/MainButton";
@@ -10,17 +10,30 @@ import {
     ModalTitle,
 } from "../../components/modal";
 import { Stepper } from "../../components/training-wizard/stepper/Stepper";
-import { steps } from "../../components/training-wizard/TrainingWizard";
+import { useAppContext } from "../../contexts/app-context";
 
 export const FinalPage = () => {
+    const { setAppState, module } = useAppContext();
+
+    const finish = useCallback(() => {
+        setAppState(appState => {
+            if (appState.type !== "TRAINING_DIALOG") return appState;
+            return { type: "TRAINING_DIALOG", module: appState.module, dialog: "summary" };
+        });
+    }, [setAppState]);
+
+    if (!module) return null;
+
     return (
         <StyledModal>
             <ModalContent bigger={true}>
                 <ModalTitle big={true}>Well done!</ModalTitle>
-                <ModalParagraph>You’ve completed the data entry tutorial!</ModalParagraph>
-                <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
+                <ModalParagraph>
+                    You’ve completed the {module.name.toLowerCase()} tutorial!
+                </ModalParagraph>
+                <Stepper steps={[]} lastClickableStepIndex={-1} markAllCompleted={true} />
                 <ModalFooter>
-                    <MainButton>Next</MainButton>
+                    <MainButton onClick={finish}>Next</MainButton>
                 </ModalFooter>
             </ModalContent>
         </StyledModal>

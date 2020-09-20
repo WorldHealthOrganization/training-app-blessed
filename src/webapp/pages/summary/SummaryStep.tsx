@@ -3,9 +3,9 @@ import { Bullet } from "../../components/training-wizard/stepper/Bullet";
 
 export const Line = styled.div`
     position: absolute;
-    top: 60%;
+    top: 80%;
     left: 26px;
-    height: 75%;
+    height: 40%;
     border-left: 3px solid #43cbcb;
 `;
 
