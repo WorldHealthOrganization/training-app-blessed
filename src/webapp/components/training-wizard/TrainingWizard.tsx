@@ -123,7 +123,6 @@ const StyledModal = styled(Modal)`
     margin: 6px;
     bottom: 20px;
     right: 40px;
-    width: 450px;
     height: ${({ minimized }) => (minimized ? "inherit" : "75%")};
 
     ${ModalContent} {
