@@ -39,5 +39,6 @@ const Markdown = styled(ReactMarkdown)`
 
     img {
         width: 100%;
+        border-radius: 1em;
     }
 `;
