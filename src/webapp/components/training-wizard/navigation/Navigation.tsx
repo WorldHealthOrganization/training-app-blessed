@@ -26,7 +26,7 @@ export const Navigation: React.FC<WizardNavigationProps> = ({
         } else {
             setAppState(appState => {
                 if (appState.type !== "TRAINING") return appState;
-                return { type: "TRAINING_DIALOG", dialog: "summary", module: appState.module };
+                return { type: "TRAINING_DIALOG", dialog: "contents", module: appState.module };
             });
         }
     }, [onPrev, setAppState, currentStepIndex]);
