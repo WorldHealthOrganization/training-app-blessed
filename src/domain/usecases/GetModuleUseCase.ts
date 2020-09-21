@@ -7,7 +7,7 @@ export class GetModuleUseCase implements UseCase {
             id: "",
             key: "data-entry",
             dhisAppKey: "data-entry",
-            name: "Data Entry",
+            name: "Data entry",
             publicAccess: "--------",
             userAccesses: [],
             userGroupAccesses: [],
@@ -26,7 +26,7 @@ export class GetModuleUseCase implements UseCase {
             dhisVersionRange: "",
             dhisLaunchUrl: "/dhis-web-dataentry/index.action",
             details: {
-                title: "Welcome to the tutorial on Data Entry",
+                title: "Welcome to the tutorial on Data entry",
                 description:
                     "The data entry application is used to manually enter data that have been recorded for one location on a regular basis, such as weekly, monthly etc. Data is registered for a location, time period and a specific data set.",
                 icon:

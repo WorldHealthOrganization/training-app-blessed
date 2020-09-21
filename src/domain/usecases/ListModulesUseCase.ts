@@ -10,7 +10,7 @@ export class ListModulesUseCase implements UseCase {
             { name: "Data visualization", key: "data-visualization", progress: 0, disabled: true },
             { name: "Pivot tables", key: "pivot-table", progress: 0, disabled: true },
             { name: "Maps", key: "maps", progress: 20, disabled: true },
-            { name: "Bulk Load", key: "bulk-load", progress: 0, disabled: true },
+            { name: "Bulk load", key: "bulk-load", progress: 0, disabled: true },
         ];
     }
 }
