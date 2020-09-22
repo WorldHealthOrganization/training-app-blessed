@@ -34,27 +34,29 @@ export const HomePage = () => {
     }, [setAppState]);
 
     return (
-        <StyledModal>
-            <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
-            <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
+        <StyledModal onClose={exitTutorial}>
             <ModalContent>
-                <Cardboard>
-                    {modules.map(({ name, key, progress, disabled }, idx) => (
-                        <Card
-                            key={`card-${idx}`}
-                            label={name}
-                            progress={progress}
-                            onClick={() => loadModule(key)}
-                            disabled={disabled}
-                        />
-                    ))}
-                </Cardboard>
+                <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
+                <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
+                <ModalContent>
+                    <Cardboard>
+                        {modules.map(({ name, key, progress, disabled }, idx) => (
+                            <Card
+                                key={`card-${idx}`}
+                                label={name}
+                                progress={progress}
+                                onClick={() => loadModule(key)}
+                                disabled={disabled}
+                            />
+                        ))}
+                    </Cardboard>
+                </ModalContent>
+                <ModalFooter className="modal-footer">
+                    <MainButton color="secondary" onClick={exitTutorial}>
+                        Exit Tutorial
+                    </MainButton>
+                </ModalFooter>
             </ModalContent>
-            <ModalFooter className="modal-footer">
-                <MainButton color="secondary" onClick={exitTutorial}>
-                    Exit Tutorial
-                </MainButton>
-            </ModalFooter>
         </StyledModal>
     );
 };
