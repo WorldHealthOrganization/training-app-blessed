@@ -25,6 +25,11 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         setAppState({ type: "HOME" });
     }, [setAppState, module]);
 
+    const minimize = useCallback(() => {
+        if (!module) return;
+        setAppState({ type: "TRAINING", module: module.key, step: 0, content: 0, state: "CLOSED" });
+    }, [module, setAppState]);
+
     const title = completed
         ? "What did you learn in this tutorial?"
         : "What will this tutorial cover?";
@@ -32,27 +37,30 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
     const action = completed ? endTutorial : startTutorial;
 
     return (
-        <StyledModal completed={completed}>
-            <ModalTitle>{title}</ModalTitle>
-            <ModalContent bigger={true}>
-                {module?.steps.map(({ title }, idx) => {
-                    const half = module.steps.length / 2;
-                    const column = idx < half ? "left" : "right";
-                    const row = idx % half;
-                    const last = idx + 1 === Math.round(half) || idx === module.steps.length - 1;
+        <StyledModal completed={completed} onClose={completed ? endTutorial : minimize}>
+            <ContentWrapper>
+                <ModalTitle>{title}</ModalTitle>
+                <ModalContent bigger={true}>
+                    {module?.steps.map(({ title }, idx) => {
+                        const half = module.steps.length / 2;
+                        const column = idx < half ? "left" : "right";
+                        const row = idx % half;
+                        const last =
+                            idx + 1 === Math.round(half) || idx === module.steps.length - 1;
 
-                    return (
-                        <Step key={`step-${idx}`} column={column} row={row} last={last}>
-                            <Bullet stepKey={idx + 1} />
-                            <Line />
-                            <Label>{title}</Label>
-                        </Step>
-                    );
-                })}
-            </ModalContent>
-            <ModalFooter>
-                <MainButton onClick={action}>Next</MainButton>
-            </ModalFooter>
+                        return (
+                            <Step key={`step-${idx}`} column={column} row={row} last={last}>
+                                <Bullet stepKey={idx + 1} />
+                                <Line />
+                                <Label>{title}</Label>
+                            </Step>
+                        );
+                    })}
+                </ModalContent>
+                <ModalFooter>
+                    <MainButton onClick={action}>Next</MainButton>
+                </ModalFooter>
+            </ContentWrapper>
         </StyledModal>
     );
 };
@@ -84,4 +92,8 @@ const StyledModal = styled(Modal)<{ completed?: boolean }>`
             border: 2px solid white;
         }
     `}
+`;
+
+const ContentWrapper = styled.div`
+    padding: 15px;
 `;

@@ -35,7 +35,7 @@ export const HomePage = () => {
 
     return (
         <StyledModal onClose={exitTutorial}>
-            <ModalContent>
+            <ContentWrapper>
                 <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
                 <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
                 <ModalContent>
@@ -56,7 +56,7 @@ export const HomePage = () => {
                         Exit Tutorial
                     </MainButton>
                 </ModalFooter>
-            </ModalContent>
+            </ContentWrapper>
         </StyledModal>
     );
 };
@@ -74,4 +74,8 @@ const StyledModal = styled(Modal)`
         padding: 0px;
         margin: 0px 10px 20px 10px;
     }
+`;
+
+const ContentWrapper = styled.div`
+    padding: 15px;
 `;

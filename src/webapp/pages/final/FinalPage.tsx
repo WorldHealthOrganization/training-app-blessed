@@ -15,17 +15,21 @@ import { useAppContext } from "../../contexts/app-context";
 export const FinalPage = () => {
     const { setAppState, module } = useAppContext();
 
-    const finish = useCallback(() => {
+    const openSummary = useCallback(() => {
         setAppState(appState => {
             if (appState.type !== "TRAINING_DIALOG") return appState;
             return { type: "TRAINING_DIALOG", module: appState.module, dialog: "summary" };
         });
     }, [setAppState]);
 
+    const exit = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
     if (!module) return null;
 
     return (
-        <StyledModal>
+        <StyledModal onClose={exit}>
             <ModalContent bigger={true}>
                 <ModalTitle big={true}>Well done!</ModalTitle>
                 <ModalParagraph>
@@ -33,7 +37,7 @@ export const FinalPage = () => {
                 </ModalParagraph>
                 <Stepper steps={[]} lastClickableStepIndex={-1} markAllCompleted={true} />
                 <ModalFooter>
-                    <MainButton onClick={finish}>Next</MainButton>
+                    <MainButton onClick={openSummary}>Next</MainButton>
                 </ModalFooter>
             </ModalContent>
         </StyledModal>
