@@ -6,7 +6,7 @@ import { Bullet } from "../../components/training-wizard/stepper/Bullet";
 import { useAppContext } from "../../contexts/app-context";
 import { Label, Line, Step } from "./SummaryStep";
 
-const ContentsSummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) => {
+export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) => {
     const { module, setAppState } = useAppContext();
 
     const startTutorial = useCallback(() => {
@@ -85,6 +85,3 @@ const StyledModal = styled(Modal)<{ completed?: boolean }>`
         }
     `}
 `;
-
-export const ContentsPage: React.FC = () => <ContentsSummaryPage completed={false} />;
-export const SummaryPage: React.FC = () => <ContentsSummaryPage completed={true} />;
