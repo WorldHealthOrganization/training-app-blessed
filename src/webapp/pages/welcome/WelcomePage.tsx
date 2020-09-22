@@ -22,11 +22,16 @@ export const WelcomePage = () => {
         setAppState({ type: "HOME" });
     }, [setAppState]);
 
+    const toggleClose = useCallback(() => {
+        if (!module) return;
+        setAppState({ type: "TRAINING", module: module.key, step: 0, content: 0, state: "CLOSED" });
+    }, [module, setAppState]);
+
     if (!module) return null;
     const { title, description, icon } = module.details;
 
     return (
-        <StyledModal>
+        <StyledModal onClose={toggleClose}>
             <ModalContent>
                 <ModalTitle big={true}>{title}</ModalTitle>
                 <Image>
