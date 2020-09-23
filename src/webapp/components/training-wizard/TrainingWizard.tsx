@@ -23,11 +23,11 @@ export interface TrainingWizardStepProps {
     title?: string;
     description?: string;
     content?: TrainingModuleContent;
-    minimized: boolean;
-    stepIndex: number;
-    contentIndex: number;
-    totalSteps: number;
-    totalContents: number;
+    minimized?: boolean;
+    stepIndex?: number;
+    contentIndex?: number;
+    totalSteps?: number;
+    totalContents?: number;
 }
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {

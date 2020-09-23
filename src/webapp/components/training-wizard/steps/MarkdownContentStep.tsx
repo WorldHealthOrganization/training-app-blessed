@@ -8,7 +8,7 @@ import { StepHeader } from "./StepHeader";
 export const MarkdownContentStep: React.FC<TrainingWizardStepProps> = ({
     content,
     title = "",
-    stepIndex,
+    stepIndex = 0,
     minimized,
 }) => {
     return (

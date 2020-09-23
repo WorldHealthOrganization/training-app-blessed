@@ -15,26 +15,38 @@ import { useAppContext } from "../../contexts/app-context";
 export const FinalPage = () => {
     const { setAppState, module } = useAppContext();
 
-    const finish = useCallback(() => {
+    const openSummary = useCallback(() => {
         setAppState(appState => {
             if (appState.type !== "TRAINING_DIALOG") return appState;
             return { type: "TRAINING_DIALOG", module: appState.module, dialog: "summary" };
         });
     }, [setAppState]);
 
+    const exit = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
     if (!module) return null;
 
+    const steps = module.steps.map(({ title }, idx) => ({
+        key: `step-${idx}`,
+        label: title,
+        component: () => null,
+    }));
+
     return (
-        <StyledModal>
+        <StyledModal onClose={exit}>
             <ModalContent bigger={true}>
-                <ModalTitle big={true}>Well done!</ModalTitle>
-                <ModalParagraph>
-                    You’ve completed the {module.name.toLowerCase()} tutorial!
-                </ModalParagraph>
-                <Stepper steps={[]} lastClickableStepIndex={-1} markAllCompleted={true} />
-                <ModalFooter>
-                    <MainButton onClick={finish}>Next</MainButton>
-                </ModalFooter>
+                <Container>
+                    <ModalTitle big={true}>Well done!</ModalTitle>
+                    <ModalParagraph>
+                        You’ve completed the {module.name.toLowerCase()} tutorial!
+                    </ModalParagraph>
+                    <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
+                    <ModalFooter>
+                        <MainButton onClick={openSummary}>Next</MainButton>
+                    </ModalFooter>
+                </Container>
             </ModalContent>
         </StyledModal>
     );
@@ -52,13 +64,16 @@ const StyledModal = styled(Modal)`
     height: 600px;
 
     ${ModalContent} {
-        position: relative;
-        top: 25%;
+        height: unset;
+    }
+
+    ${ModalTitle} {
+        font-size: 60px;
     }
 
     ${ModalParagraph} {
-        font-size: 25px;
-        line-height: 32px;
+        font-size: 34px;
+        line-height: 42px;
         font-weight: 300;
         margin: 25px 0px 15px 0px;
     }
@@ -66,4 +81,8 @@ const StyledModal = styled(Modal)`
     ${ModalFooter} {
         margin-top: 20px;
     }
+`;
+
+const Container = styled.div`
+    margin: 12% 18% 0 18%;
 `;

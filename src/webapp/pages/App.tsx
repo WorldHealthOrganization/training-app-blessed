@@ -14,7 +14,7 @@ import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
 import { FinalPage } from "./final/FinalPage";
 import { HomePage } from "./home/HomePage";
-import { ContentsPage, SummaryPage } from "./summary/SummaryPage";
+import { SummaryPage } from "./summary/SummaryPage";
 import { TutorialPage } from "./tutorial/TutorialPage";
 import { WelcomePage } from "./welcome/WelcomePage";
 
@@ -44,7 +44,7 @@ export const routes: AppRoute[] = [
         key: "contents",
         name: () => i18n.t("Contents"),
         paths: ["/tutorial/:key/contents"],
-        element: <ContentsPage />,
+        element: <SummaryPage completed={false} />,
         backdrop: true,
     },
     {
@@ -58,7 +58,7 @@ export const routes: AppRoute[] = [
         key: "summary",
         name: () => i18n.t("Summary"),
         paths: ["/tutorial/:key/summary"],
-        element: <SummaryPage />,
+        element: <SummaryPage completed={true} />,
         backdrop: true,
     },
 ];

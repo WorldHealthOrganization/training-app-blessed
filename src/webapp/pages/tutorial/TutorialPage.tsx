@@ -16,6 +16,10 @@ export const TutorialPage = () => {
     const toggleClose = useCallback(() => {
         setAppState(appState => {
             if (appState.type !== "TRAINING") return appState;
+            if (appState.step === 0) {
+                return { type: "TRAINING_DIALOG", dialog: "welcome", module: appState.module };
+            }
+
             const state = appState.state === "CLOSED" ? "OPEN" : "CLOSED";
             return { ...appState, state };
         });

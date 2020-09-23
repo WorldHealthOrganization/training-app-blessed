@@ -1,16 +1,13 @@
-import { WizardStepperProps } from "d2-ui-components";
+import { WizardStep, WizardStepperProps } from "d2-ui-components";
 import _ from "lodash";
 import React, { useCallback } from "react";
 import styled from "styled-components";
 import { arrayFill } from "../../../../utils/array";
 import { useAppContext } from "../../../contexts/app-context";
+import { TrainingWizardStepProps } from "../TrainingWizard";
 import { Bullet } from "./Bullet";
 
-export const Stepper = ({
-    steps,
-    currentStepKey,
-    markAllCompleted = false,
-}: WizardStepperProps & { markAllCompleted?: boolean }) => {
+export const Stepper = ({ steps, currentStepKey, markAllCompleted = false }: StepperProps) => {
     const { setAppState } = useAppContext();
 
     const moveStep = useCallback(
@@ -27,12 +24,9 @@ export const Stepper = ({
 
     const index = _(steps).findIndex(step => step.key === currentStepKey);
     const currentStepIndex = index >= 0 ? index : 0;
-    const currentStep = steps[currentStepIndex];
 
-    const {
-        stepIndex = currentStepIndex,
-        totalSteps = steps.length,
-    } = (currentStep.props as unknown) as any;
+    const { props = {} } = steps[currentStepIndex];
+    const { stepIndex = currentStepIndex, totalSteps = steps.length } = props;
 
     return (
         <ProgressBar>
@@ -50,6 +44,11 @@ export const Stepper = ({
         </ProgressBar>
     );
 };
+
+export interface StepperProps extends WizardStepperProps {
+    steps: Array<WizardStep & { props?: TrainingWizardStepProps }>;
+    markAllCompleted?: boolean;
+}
 
 const ProgressBar = styled.div`
     display: flex;

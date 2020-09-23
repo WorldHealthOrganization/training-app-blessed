@@ -34,27 +34,29 @@ export const HomePage = () => {
     }, [setAppState]);
 
     return (
-        <StyledModal>
-            <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
-            <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
-            <ModalContent>
-                <Cardboard>
-                    {modules.map(({ name, key, progress, disabled }, idx) => (
-                        <Card
-                            key={`card-${idx}`}
-                            label={name}
-                            progress={progress}
-                            onClick={() => loadModule(key)}
-                            disabled={disabled}
-                        />
-                    ))}
-                </Cardboard>
-            </ModalContent>
-            <ModalFooter className="modal-footer">
-                <MainButton color="secondary" onClick={exitTutorial}>
-                    Exit Tutorial
-                </MainButton>
-            </ModalFooter>
+        <StyledModal onClose={exitTutorial}>
+            <ContentWrapper>
+                <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
+                <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
+                <ModalContent>
+                    <Cardboard>
+                        {modules.map(({ name, key, progress, disabled }, idx) => (
+                            <Card
+                                key={`card-${idx}`}
+                                label={name}
+                                progress={progress}
+                                onClick={() => loadModule(key)}
+                                disabled={disabled}
+                            />
+                        ))}
+                    </Cardboard>
+                </ModalContent>
+                <ModalFooter className="modal-footer">
+                    <MainButton color="secondary" onClick={exitTutorial}>
+                        Exit Tutorial
+                    </MainButton>
+                </ModalFooter>
+            </ContentWrapper>
         </StyledModal>
     );
 };
@@ -72,4 +74,8 @@ const StyledModal = styled(Modal)`
         padding: 0px;
         margin: 0px 10px 20px 10px;
     }
+`;
+
+const ContentWrapper = styled.div`
+    padding: 15px;
 `;

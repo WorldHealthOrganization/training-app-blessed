@@ -40,12 +40,17 @@ export class GetModuleUseCase implements UseCase {
                         {
                             type: "markdown",
                             text:
-                                "![https://user-images.githubusercontent.com/2181866/93662240-058a2c80-fa5f-11ea-832f-6c18ae922e80.png](https://user-images.githubusercontent.com/2181866/93662240-058a2c80-fa5f-11ea-832f-6c18ae922e80.png)\n\nA quick way to find a location (organisation unit) is to use the search box above the tree (the green symbol).\n\nType in the name or first few letters of your location, and select it from the drop-down menu by clicking on it to highlight it orange.\n\nThis will enter the location in the Organisation Unit field of your data entry form.",
+                                "![location1](https://user-images.githubusercontent.com/2181866/93662240-058a2c80-fa5f-11ea-832f-6c18ae922e80.png)\n\nFind your location (organisation unit) on the hierarchy tree menu. Expand and close the branches by clicking on the +/- symbols.",
                         },
                         {
                             type: "markdown",
                             text:
-                                "![location2](https://user-images.githubusercontent.com/2181866/93707577-35553500-fb30-11ea-99be-b835bc5da7bf.png)\n\nAnother way to find your location (organisation unit) is to search the hierarchy tree menu.\n\nExpand and close the branches by clicking on the +/- symbols. Click on your organisation unit name to highlight it orange and this will enter the location in the Organisation Unit field of your data entry form. ",
+                                "![location2](https://user-images.githubusercontent.com/2181866/93707577-35553500-fb30-11ea-99be-b835bc5da7bf.png)\n\nClick on your organisation unit name on the menu to highlight it orange. This will enter the location in the Organisation Unit field of your data entry form.",
+                        },
+                        {
+                            type: "markdown",
+                            text:
+                                "![location2](https://user-images.githubusercontent.com/2181866/93707577-35553500-fb30-11ea-99be-b835bc5da7bf.png)\n\nAnother quick way to find an organisation unit is to use the search box above the tree (the green symbol).\n\nType in the name or first few letters of your location, and select it from the drop-down menu by clicking on it to highlight it orange.\n\nThis will enter the location in the Organisation Unit field of your data entry form.",
                         },
                     ],
                 },
@@ -56,7 +61,7 @@ export class GetModuleUseCase implements UseCase {
                         {
                             type: "markdown",
                             text:
-                                "![dataset](https://user-images.githubusercontent.com/2181866/93707575-34bc9e80-fb30-11ea-9994-0e0175a191b5.png)\n\nSelect a data set from the dropdown list of data sets available to your selected location. Note that not all data sets are available for all organisation units. The data set you select will create a form with similar fields to your paper based form. ",
+                                "![dataset](https://user-images.githubusercontent.com/2181866/93707575-34bc9e80-fb30-11ea-9994-0e0175a191b5.png)\n\nSelect a data set from the dropdown list of data sets available to your selected location. Note that not all data sets are available for all organisation units. The data set you select will create a form with similar fields to your paper based form.",
                         },
                     ],
                 },
@@ -72,7 +77,7 @@ export class GetModuleUseCase implements UseCase {
                         {
                             type: "markdown",
                             text:
-                                "![time2](https://user-images.githubusercontent.com/2181866/93707581-36866200-fb30-11ea-9f4d-8909e5c690fb.png)\n\nYou can also jump a year back or forward by using the arrows next to the period.",
+                                "![time2](https://user-images.githubusercontent.com/2181866/93707581-36866200-fb30-11ea-9f4d-8909e5c690fb.png)\n\nYou can also toggle between years, moving a year forward or backward using the buttons next to the period entry field.",
                         },
                     ],
                 },
