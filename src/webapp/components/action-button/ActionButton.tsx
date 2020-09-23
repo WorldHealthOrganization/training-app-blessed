@@ -25,7 +25,7 @@ const StyledFab = styled(Fab)`
     display: inline-flex;
     cursor: pointer;
     align-items: center;
-    padding: 15px 20px;
+    padding: 0px 20px;
     color: #fff;
     background-color: #276696;
     border-color: #367fa9;

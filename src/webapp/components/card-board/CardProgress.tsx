@@ -3,10 +3,9 @@ import styled from "styled-components";
 export const CardProgress = styled.progress`
     display: inline-block;
     width: 100%;
-    height: 20px;
-    padding: 9px 0 0 0;
+    height: 12px;
     margin: 0;
-    background: none;
+    background: #c6d8e6;
     border: 0;
     border-radius: 18px;
 
@@ -17,6 +16,14 @@ export const CardProgress = styled.progress`
         background-color: #c6d8e6;
         border-radius: 15px;
     }
+
+    ::-moz-progress-bar {
+        	height:12px;
+        	width:100%;
+        	margin:0 auto;
+        	background-color: #43CBCB;
+        	border-radius: 15px;
+        }    
 
     ::-webkit-progress-value {
         float: left;

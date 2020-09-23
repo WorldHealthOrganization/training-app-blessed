@@ -8,19 +8,22 @@ export const ModalContent = styled.div<{ bigger?: boolean }>`
 
     margin: 0;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
+    overflow-y: overlay;
+    scrollbar-width: thin;
+    scrollbar-color: #6894b5 transparent;
 
     ::-webkit-scrollbar {
-        width: 4px;
+        width: 6px;
     }
 
     ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 4px;
+        background: #276696;
+        border-radius: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #fff;
-        border-radius: 4px;
+        background: #6894b5;
+        border-radius: 6px;
     }
 `;
