@@ -48,10 +48,9 @@ export interface ModalHeaderProps {
 }
 
 const DragButton = styled(Tooltip)`
-    position: fixed;
-    left: 75%;
     cursor: pointer;
-    margin-right: 8px;
+    position: fixed;
+    margin-left: 300px;
 
     svg {
         font-size: 24px !important;
