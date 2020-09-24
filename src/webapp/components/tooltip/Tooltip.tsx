@@ -24,7 +24,6 @@ export const TooltipText = styled.span`
     padding: 5px 0;
     border-radius: 6px;
 
-    /* Position the tooltip text - see examples below! */
     position: absolute;
     z-index: 1;
     top: -5px;
