@@ -18,12 +18,12 @@ export const CardProgress = styled.progress`
     }
 
     ::-moz-progress-bar {
-        	height:12px;
-        	width:100%;
-        	margin:0 auto;
-        	background-color: #43CBCB;
-        	border-radius: 15px;
-        }    
+        height: 12px;
+        width: 100%;
+        margin: 0 auto;
+        background-color: #43cbcb;
+        border-radius: 15px;
+    }
 
     ::-webkit-progress-value {
         float: left;
