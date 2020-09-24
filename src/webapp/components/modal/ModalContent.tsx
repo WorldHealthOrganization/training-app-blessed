@@ -11,19 +11,19 @@ export const ModalContent = styled.div<{ bigger?: boolean }>`
     overflow-y: scroll;
     overflow-y: overlay;
     scrollbar-width: thin;
-    scrollbar-color: #6894b5 transparent;
+    scrollbar-color: #fff transparent;
 
     ::-webkit-scrollbar {
         width: 6px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #276696;
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #6894b5;
+        background: #fff;
         border-radius: 6px;
     }
 `;
