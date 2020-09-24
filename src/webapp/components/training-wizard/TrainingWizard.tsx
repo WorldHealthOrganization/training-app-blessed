@@ -126,7 +126,7 @@ const StyledModal = styled(Modal)`
     height: ${({ minimized }) => (minimized ? "inherit" : "75%")};
 
     ${ModalContent} {
-        padding: 0;
+        padding: 0px 15px;
         max-height: 75%;
     }
 
