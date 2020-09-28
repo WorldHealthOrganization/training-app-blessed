@@ -1,6 +1,6 @@
 {
     "name": "training-app",
-    "description": "DHIS2 Training App",
+    "description": "Training App",
     "version": "0.0.1",
     "license": "GPL-3.0",
     "author": "EyeSeeTea team",
@@ -26,15 +26,19 @@
         "d2": "31.8.2",
         "d2-api": "1.1.0",
         "d2-manifest": "1.0.0",
-        "d2-ui-components": "2.0.0",
+        "d2-ui-components": "2.2.0-beta.1",
         "font-awesome": "4.7.0",
+        "history": "5.0.0",
         "lodash": "4.17.20",
         "postcss-rtl": "1.7.3",
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "react-draggable": "4.4.3",
-        "react-router-dom": "5.2.0",
+        "react-markdown": "4.3.1",
+        "react-router": "6.0.0-beta.0",
+        "react-router-dom": "6.0.0-beta.0",
         "react-scripts": "3.4.3",
+        "styled-components": "5.1.1",
         "styled-jsx": "3.3.0"
     },
     "scripts": {
@@ -76,6 +80,7 @@
         "@types/react": "16.9.48",
         "@types/react-dom": "16.9.8",
         "@types/react-router-dom": "5.1.5",
+        "@types/styled-components": "5.1.2",
         "@typescript-eslint/eslint-plugin": "3.10.1",
         "@typescript-eslint/parser": "3.10.1",
         "axios-mock-adapter": "1.18.2",
@@ -102,7 +107,7 @@
         "wait-on": "5.2.0"
     },
     "manifest.webapp": {
-        "name": "DHIS2 Training App",
+        "name": "Training App",
         "description": "DHIS2 Training App",
         "icons": {
             "48": "icon.png"

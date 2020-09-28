@@ -2,12 +2,11 @@ import { Provider } from "@dhis2/app-runtime";
 import i18n from "@dhis2/d2-i18n";
 import axios from "axios";
 import { init } from "d2";
-import { D2Api } from "./types/d2-api";
 import _ from "lodash";
 import React from "react";
 import ReactDOM from "react-dom";
-import { AppContext } from "./webapp/contexts/app-context";
-import App from "./webapp/components/app/App";
+import { D2Api } from "./types/d2-api";
+import App from "./webapp/pages/App";
 
 async function getBaseUrl() {
     if (process.env.NODE_ENV === "development") {
@@ -37,16 +36,14 @@ async function main() {
     try {
         const d2 = await init({ baseUrl: baseUrl + "/api", schemas: [] });
         const api = new D2Api({ baseUrl });
-        Object.assign(window, { bulkLoad: { d2, api } });
+        Object.assign(window, { d2, api });
 
         const userSettings = await api.get<{ keyUiLocale: string }>("/userSettings").getData();
         configI18n(userSettings);
 
         ReactDOM.render(
             <Provider config={{ baseUrl, apiVersion: 30 }}>
-                <AppContext.Provider value={{ d2, api }}>
-                    <App />
-                </AppContext.Provider>
+                <App />
             </Provider>,
             document.getElementById("root")
         );

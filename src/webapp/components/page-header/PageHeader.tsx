@@ -53,7 +53,7 @@ const styles = {
     text: { display: "inline-block", fontWeight: 300 },
 };
 
-const Button = ({ onClick }: ButtonProps) => (
+const Button: React.FC<ButtonProps> = ({ onClick }) => (
     <Tooltip title={i18n.t("Help")}>
         <IconButton onClick={onClick} style={styles.help}>
             <Icon color="primary">help</Icon>
