@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-09-19T20:14:37.316Z\n"
+"POT-Creation-Date: 2020-09-24T07:16:54.558Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11,11 +11,14 @@ msgstr ""
 msgid "Tutorial"
 msgstr "Tutorial"
 
-msgid "Back"
-msgstr "Volver"
+msgid "Move window"
+msgstr ""
 
-msgid "Help"
-msgstr "Ayuda"
+msgid "Expand window"
+msgstr ""
+
+msgid "Minimize window"
+msgstr ""
 
 msgid "Previous"
 msgstr "Siguiente"
@@ -37,6 +40,12 @@ msgstr "Fin"
 
 msgid "Summary"
 msgstr "Repaso"
+
+#~ msgid "Back"
+#~ msgstr "Volver"
+
+#~ msgid "Help"
+#~ msgstr "Ayuda"
 
 #~ msgid "configuration"
 #~ msgstr "Configuración"

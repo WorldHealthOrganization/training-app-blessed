@@ -39,10 +39,11 @@ export const Bullet = styled(BaseBullet)`
         content: "";
         position: absolute;
         bottom: 12px;
+        left: 45px;
         height: 3px;
-        width: calc(100% - 21px);
+        width: calc(82%);
         background-color: #43cbcb;
-        margin-left: 10px;
+        margin-left: -4px;
     }
 `;
 

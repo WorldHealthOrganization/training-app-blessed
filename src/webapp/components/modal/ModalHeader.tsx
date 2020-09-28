@@ -4,6 +4,8 @@ import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import MinimizeIcon from "@material-ui/icons/Minimize";
 import React from "react";
 import styled from "styled-components";
+import i18n from "../../../locales";
+import { Tooltip, TooltipText } from "../tooltip/Tooltip";
 
 export const ModalHeader: React.FC<ModalHeaderProps> = ({
     allowDrag,
@@ -14,12 +16,24 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
 }) => {
     return (
         <div>
-            {allowDrag ? <DragButton id={dragId} /> : null}
-            {onClose ? <CloseButton onClick={onClose} /> : null}
+            {allowDrag ? (
+                <DragButton text={i18n.t("Move window")}>
+                    <DragIndicatorIcon id={dragId} />
+                </DragButton>
+            ) : null}
+            {onClose ? (
+                <CloseButton>
+                    <CloseIcon onClick={onClose} />
+                </CloseButton>
+            ) : null}
             {onMinimize && minimized ? (
-                <ExpandButton onClick={onMinimize} />
+                <ExpandButton text={i18n.t("Expand window")}>
+                    <AddIcon onClick={onMinimize} />
+                </ExpandButton>
             ) : onMinimize ? (
-                <MinimizeButton onClick={onMinimize} />
+                <MinimizeButton text={i18n.t("Minimize window")}>
+                    <MinimizeIcon onClick={onMinimize} />
+                </MinimizeButton>
             ) : null}
         </div>
     );
@@ -33,38 +47,58 @@ export interface ModalHeaderProps {
     onMinimize?: () => void;
 }
 
-const DragButton = styled(DragIndicatorIcon)`
-    position: fixed;
-    font-size: 24px !important;
-    font-weight: bold;
-    margin-right: 8px;
+const DragButton = styled(Tooltip)`
+    position: absolute;
+    left: 50%;
     cursor: pointer;
 
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    transform: rotate(90deg);
+    svg {
+        font-size: 24px !important;
+        font-weight: bold;
+
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    ${TooltipText} {
+        top: -2px;
+    }
 `;
 
-const CloseButton = styled(CloseIcon)`
+const CloseButton = styled.div`
     float: right;
-    font-size: 20px !important;
-    font-weight: bold;
-    margin-right: 8px;
     cursor: pointer;
+
+    svg {
+        font-size: 20px !important;
+        font-weight: bold;
+        margin-right: 8px;
+    }
 `;
 
-const MinimizeButton = styled(MinimizeIcon)`
+const MinimizeButton = styled(Tooltip)`
     float: right;
-    font-size: 18px !important;
-    font-weight: bold;
     cursor: pointer;
+
+    svg {
+        font-size: 18px !important;
+        font-weight: bold;
+    }
+
+    ${TooltipText} {
+        top: -10px;
+    }
 `;
 
-const ExpandButton = styled(AddIcon)`
+const ExpandButton = styled(Tooltip)`
     float: right;
-    font-size: 18px !important;
-    font-weight: bold;
     cursor: pointer;
+
+    svg {
+        font-size: 18px !important;
+        font-weight: bold;
+    }
 `;
