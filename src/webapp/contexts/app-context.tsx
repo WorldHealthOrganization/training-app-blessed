@@ -4,7 +4,7 @@ import { TrainingModule } from "../../domain/entities/TrainingModule";
 import { CompositionRoot } from "../CompositionRoot";
 import { AppRoute } from "../router/AppRoute";
 
-const AppContext = React.createContext<AppContext | null>(null);
+const AppContext = React.createContext<AppContextState | null>(null);
 
 export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     children,
@@ -53,7 +53,7 @@ export interface AppContextProviderProps {
     compositionRoot: CompositionRoot;
 }
 
-export interface AppContext {
+export interface AppContextState {
     appState: AppState;
     setAppState: (appState: AppState | AppStateUpdateMethod) => void;
     module?: TrainingModule;
