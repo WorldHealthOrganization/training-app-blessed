@@ -16,14 +16,8 @@
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "experimentalDecorators": true,
-            "noFallthroughCasesInSwitch": true,
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ]
+        "noFallthroughCasesInSwitch": true,
+        "lib": ["dom", "dom.iterable", "esnext"]
     },
-    "include": [
-        "src"
-    ]
+    "include": ["src"]
 }
