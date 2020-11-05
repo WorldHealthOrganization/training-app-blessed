@@ -3,13 +3,10 @@
 module.exports = {
     extends: [
         "react-app",
-        "prettier",
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:cypress/recommended",
         "plugin:@typescript-eslint/recommended",
-        "prettier/@typescript-eslint",
-        "plugin:prettier/recommended",
     ],
     rules: {
         "no-console": "off",
