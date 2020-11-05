@@ -28,9 +28,9 @@ export const FinalPage = () => {
 
     if (!module) return null;
 
-    const steps = module.steps.map(({ title }, idx) => ({
+    const steps = module.contents.steps.map(({ title }, idx) => ({
         key: `step-${idx}`,
-        label: title,
+        label: title.text, // TODO: Translate
         component: () => null,
     }));
 

@@ -41,18 +41,19 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
             <ContentWrapper>
                 <ModalTitle>{title}</ModalTitle>
                 <ModalContent bigger={true}>
-                    {module?.steps.map(({ title }, idx) => {
-                        const half = module.steps.length / 2;
+                    {module?.contents.steps.map(({ title }, idx) => {
+                        const half = module.contents.steps.length / 2;
                         const column = idx < half ? "left" : "right";
                         const row = idx % half;
                         const last =
-                            idx + 1 === Math.round(half) || idx === module.steps.length - 1;
+                            idx + 1 === Math.round(half) ||
+                            idx === module.contents.steps.length - 1;
 
                         return (
                             <Step key={`step-${idx}`} column={column} row={row} last={last}>
                                 <Bullet stepKey={idx + 1} />
                                 <Line />
-                                <Label>{title}</Label>
+                                <Label>{title.text}</Label>
                             </Step>
                         );
                     })}

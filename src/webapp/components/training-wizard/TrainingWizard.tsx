@@ -1,11 +1,11 @@
-import { Wizard, WizardStep } from "d2-ui-components";
+import { Wizard } from "d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
 import {
     extractStepFromKey,
     TrainingModule,
-    TrainingModuleContent,
+    TrainingModulePage,
 } from "../../../domain/entities/TrainingModule";
 import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
@@ -22,7 +22,7 @@ export interface TrainingWizardProps {
 export interface TrainingWizardStepProps {
     title?: string;
     description?: string;
-    content?: TrainingModuleContent;
+    content?: TrainingModulePage;
     minimized?: boolean;
     stepIndex?: number;
     contentIndex?: number;
@@ -38,24 +38,28 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         [appState]
     );
 
-    const wizardSteps: WizardStep[] = useMemo(() => {
+    const wizardSteps = useMemo(() => {
         if (!module) return [];
-        return _.flatMap(module.steps, ({ title, contents }, step) =>
-            contents.map((content, position) => ({
-                key: `${module.key}-${step + 1}-${position + 1}`,
-                module,
-                label: "Select your location",
-                component: MarkdownContentStep,
-                props: {
-                    title,
+        return _.flatMap(module.contents.steps, ({ title, pages }, step) =>
+            pages.map((content, position) => {
+                const props: TrainingWizardStepProps = {
+                    title: title.text,
                     content,
                     stepIndex: step,
                     contentIndex: position,
-                    totalSteps: module.steps.length,
-                    totalContents: contents.length,
+                    totalSteps: module.contents.steps.length,
+                    totalContents: pages.length,
                     minimized,
-                },
-            }))
+                };
+
+                return {
+                    key: `${module.key}-${step + 1}-${position + 1}`,
+                    module,
+                    label: "Select your location",
+                    component: MarkdownContentStep,
+                    props,
+                };
+            })
         );
     }, [module, minimized]);
 

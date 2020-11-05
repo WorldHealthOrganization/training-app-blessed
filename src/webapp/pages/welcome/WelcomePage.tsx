@@ -28,16 +28,18 @@ export const WelcomePage = () => {
     }, [module, setAppState]);
 
     if (!module) return null;
-    const { title, description, icon } = module.details;
+
+    // TODO: Translate
+    const { title, description, icon } = module.contents.welcome;
 
     return (
         <StyledModal onClose={toggleClose}>
             <ModalContent>
-                <ModalTitle big={true}>{title}</ModalTitle>
+                <ModalTitle big={true}>{title.text}</ModalTitle>
                 <Image>
-                    <img src={icon} alt="Welcome Illustration" />
+                    <img src={icon.text} alt="Welcome Illustration" />
                 </Image>
-                <ModalParagraph>{description}</ModalParagraph>
+                <ModalParagraph>{description.text}</ModalParagraph>
             </ModalContent>
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
