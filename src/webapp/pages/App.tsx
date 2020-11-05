@@ -14,6 +14,7 @@ import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
 import { FinalPage } from "./final/FinalPage";
 import { HomePage } from "./home/HomePage";
+import { SettingsPage } from "./settings/SettingsPage";
 import { SummaryPage } from "./summary/SummaryPage";
 import { TutorialPage } from "./tutorial/TutorialPage";
 import { WelcomePage } from "./welcome/WelcomePage";
@@ -26,6 +27,7 @@ export const routes: AppRoute[] = [
         paths: ["/"],
         element: <HomePage />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "welcome",
@@ -33,12 +35,14 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key", "/tutorial/:key/welcome"],
         element: <WelcomePage />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "tutorial",
         name: () => i18n.t("Tutorial"),
         paths: ["/tutorial/:key/:step/:content"],
         element: <TutorialPage />,
+        iframe: true,
     },
     {
         key: "contents",
@@ -46,6 +50,7 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key/contents"],
         element: <SummaryPage completed={false} />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "final",
@@ -53,6 +58,7 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key/final"],
         element: <FinalPage />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "summary",
@@ -60,6 +66,13 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key/summary"],
         element: <SummaryPage completed={true} />,
         backdrop: true,
+        iframe: true,
+    },
+    {
+        key: "settings",
+        name: () => i18n.t("Settings"),
+        paths: ["/settings"],
+        element: <SettingsPage />,
     },
 ];
 

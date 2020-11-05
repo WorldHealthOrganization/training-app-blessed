@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-09-24T07:16:54.558Z\n"
-"PO-Revision-Date: 2020-09-24T07:16:54.558Z\n"
+"POT-Creation-Date: 2020-11-05T08:23:01.213Z\n"
+"PO-Revision-Date: 2020-11-05T08:23:01.213Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -18,6 +18,9 @@ msgid "Expand window"
 msgstr ""
 
 msgid "Minimize window"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 msgid "Previous"
@@ -39,4 +42,19 @@ msgid "Final"
 msgstr ""
 
 msgid "Summary"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Welcome to settings page"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Access to Settings"
+msgstr ""
+
+msgid "Description TODO"
 msgstr ""
