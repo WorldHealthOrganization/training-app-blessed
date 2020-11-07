@@ -9,7 +9,6 @@ import { Tooltip, TooltipText } from "../tooltip/Tooltip";
 
 export const ModalHeader: React.FC<ModalHeaderProps> = ({
     allowDrag,
-    dragId,
     onClose,
     minimized,
     onMinimize,
@@ -18,7 +17,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
         <div>
             {allowDrag ? (
                 <DragButton text={i18n.t("Move window")}>
-                    <DragIndicatorIcon id={dragId} />
+                    <DragIndicatorIcon />
                 </DragButton>
             ) : null}
             {onClose ? (
@@ -41,7 +40,6 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
 
 export interface ModalHeaderProps {
     allowDrag?: boolean;
-    dragId: string;
     onClose?: () => void;
     minimized?: boolean;
     onMinimize?: () => void;

@@ -35,9 +35,8 @@ export const Modal: React.FC<ModalProps> = ({
             onDrag={clearPosition}
         >
             <ModalWrapper>
-                <ModalBody className={className}>
+                <ModalBody id={dragId} className={className}>
                     <ModalHeader
-                        dragId={dragId}
                         minimized={minimized}
                         onClose={onClose}
                         onMinimize={onMinimize}
