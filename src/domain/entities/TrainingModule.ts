@@ -1,5 +1,5 @@
 import { SharedRef } from "./Ref";
-import { TranslatableText } from "./TranslableText";
+import { TranslatableText } from "./TranslatableText";
 
 export type TrainingModuleType = "app" | "core" | "widget";
 
