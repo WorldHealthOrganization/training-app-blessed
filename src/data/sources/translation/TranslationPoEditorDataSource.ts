@@ -1,4 +1,3 @@
-import { ParamValue } from "d2-api/repositories/HttpClientRepository";
 import { Either } from "../../../domain/entities/Either";
 import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import { TranslationLanguage, TranslationProject } from "../../../domain/entities/Translations";
@@ -63,19 +62,17 @@ export class TranslationPoEditorDataSource implements TranslationProviderDataSou
         return Either.success(projects);
     }
 
-    private async request<T extends keyof ApiResult>(
+    private async request<T extends keyof ApiEndpoints>(
         url: T,
-        requestParams: Record<string, ParamValue | ParamValue[]> = {}
-    ): Promise<Either<TranslationError, ApiResult[T]>> {
+        requestParams?: Omit<ApiEndpoints[T]["params"], "api_token">
+    ): Promise<Either<TranslationError, ApiEndpoints[T]["response"]>> {
         const params = { api_token: "b3b4cb367a4b19fd7ef81191b1b541c3", ...requestParams };
         const { response, result } = await this.client
-            .request<ApiResponse<ApiResult[T]>>({ method: "post", url, params })
+            .request<ApiResponse<ApiEndpoints[T]["response"]>>({ method: "post", url, params })
             .getData();
 
         const error = this.validateStatus(response);
-        if (error) return Either.error(error);
-
-        return Either.success(result);
+        return error ? Either.error(error) : Either.success(result);
     }
 
     private validateStatus(response: ApiResponseStatus): TranslationError | undefined {
@@ -102,36 +99,48 @@ interface ApiResponseStatus {
     message: string;
 }
 
-interface ApiResult {
-    "languages/add": undefined;
+interface ApiEndpoints {
+    "languages/add": {
+        params: { api_token: string; id: number; language: string };
+        response: undefined;
+    };
     "/projects/list": {
-        projects: Array<{
-            id: number;
-            name: string;
-            public: 0 | 1;
-            open: 0 | 1;
-            created: string;
-        }>;
+        params: { api_token: string };
+        response: {
+            projects: Array<{
+                id: number;
+                name: string;
+                public: 0 | 1;
+                open: 0 | 1;
+                created: string;
+            }>;
+        };
     };
     "/languages/list": {
-        languages: Array<{
-            name: string;
-            code: string;
-            translations: number;
-            percentage: number;
-            updated: string;
-        }>;
+        params: { api_token: string; id: number };
+        response: {
+            languages: Array<{
+                name: string;
+                code: string;
+                translations: number;
+                percentage: number;
+                updated: string;
+            }>;
+        };
     };
     "projects/add": {
-        project: {
-            id: number;
-            name: string;
-            description: string;
-            public: 0 | 1;
-            open: 0 | 1;
-            reference_language: string;
-            terms: number;
-            created: string;
+        params: { api_token: string; name: string; description?: string };
+        response: {
+            project: {
+                id: number;
+                name: string;
+                description: string;
+                public: 0 | 1;
+                open: 0 | 1;
+                reference_language: string;
+                terms: number;
+                created: string;
+            };
         };
     };
 }
