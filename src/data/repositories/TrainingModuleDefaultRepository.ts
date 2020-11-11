@@ -8,6 +8,10 @@ import { Dictionary } from "../../types/utils";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 
+const isValidType = (type: string): type is TrainingModuleType => {
+    return ["app", "core", "widget"].includes(type);
+};
+
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule>;
 
@@ -16,12 +20,15 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async getModule(moduleKey: string): Promise<TrainingModule> {
+        // Read data store and get module
+        // If does not exist 1) get BuiltinModule and initialize in dataStore
+
         return this.getBuiltinModule(moduleKey);
     }
 
     private getBuiltinModule(moduleKey: string): TrainingModule {
         const { type, contents, ...builtinModule } = this.builtinModules[moduleKey];
-        const validType = ["app", "core", "widget"].includes(type) ? type : "app";
+        const validType = isValidType(type) ? type  : "app";
 
         const translatedContents: TrainingModuleContents = {
             welcome: {
@@ -45,7 +52,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             created: new Date(),
             lastUpdated: new Date(),
             lastUpdatedBy: { id: "", name: "" },
-            type: validType as TrainingModuleType,
+            type: validType,
             contents: translatedContents,
         };
     }
