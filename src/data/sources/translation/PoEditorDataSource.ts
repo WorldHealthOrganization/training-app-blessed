@@ -1,4 +1,5 @@
 import { Either } from "../../../domain/entities/Either";
+import { cache } from "../../../utils/cache";
 import { FetchHttpClientDataSource } from "../http/FetchHttpClientDataSource";
 import { HttpClientDataSource } from "../http/HttpClientDataSource";
 import { TranslationError } from "./TranslationDataSource";
@@ -10,6 +11,7 @@ export class TranslationPoEditorDataSource {
         this.client = new FetchHttpClientDataSource({ baseUrl: "https://api.poeditor.com/v2/" });
     }
 
+    @cache()
     public get projects() {
         return {
             list: this.buildEndpoint("projects/list"),
@@ -22,6 +24,7 @@ export class TranslationPoEditorDataSource {
         };
     }
 
+    @cache()
     public get languages() {
         return {
             available: this.buildEndpoint("languages/available"),
@@ -32,6 +35,7 @@ export class TranslationPoEditorDataSource {
         };
     }
 
+    @cache()
     public get terms() {
         return {
             list: this.buildEndpoint("terms/list"),
@@ -42,6 +46,7 @@ export class TranslationPoEditorDataSource {
         };
     }
 
+    @cache()
     public get translations() {
         return {
             add: this.buildEndpoint("translations/add"),
@@ -50,6 +55,7 @@ export class TranslationPoEditorDataSource {
         };
     }
 
+    @cache()
     public get contributors() {
         return {
             list: this.buildEndpoint("contributors/list"),
