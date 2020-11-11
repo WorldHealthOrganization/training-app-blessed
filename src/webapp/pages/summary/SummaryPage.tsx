@@ -30,6 +30,14 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         setAppState({ type: "TRAINING", module: module.key, step: 0, content: 0, state: "CLOSED" });
     }, [module, setAppState]);
 
+    const jumpToStep = useCallback(
+        (step: number) => {
+            if (!module) return;
+            setAppState({ type: "TRAINING", module: module.key, step, content: 1, state: "OPEN" });
+        },
+        [module, setAppState]
+    );
+
     const title = completed
         ? "What did you learn in this tutorial?"
         : "What will this tutorial cover?";
@@ -51,7 +59,7 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
 
                         return (
                             <Step key={`step-${idx}`} column={column} row={row} last={last}>
-                                <Bullet stepKey={idx + 1} />
+                                <Bullet stepKey={idx + 1} onClick={() => jumpToStep(idx + 1)} />
                                 <Line />
                                 <Label>{title}</Label>
                             </Step>
