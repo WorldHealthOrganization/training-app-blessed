@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AppState } from "../../domain/entities/AppState";
+import { AppState } from "../entities/AppState";
 import { TrainingModule } from "../../domain/entities/TrainingModule";
 import { CompositionRoot } from "../CompositionRoot";
 import { AppRoute } from "../router/AppRoute";

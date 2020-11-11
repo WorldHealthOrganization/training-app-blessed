@@ -1,4 +1,4 @@
-import { ReactRouterMatch } from "../../webapp/router/AppRoute";
+import { ReactRouterMatch } from "../router/AppRoute";
 
 export type TrainingStateType = "CLOSED" | "OPEN" | "MINIMIZED";
 export type AppStateType =

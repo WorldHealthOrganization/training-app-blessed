@@ -2,7 +2,7 @@ import { useConfig } from "@dhis2/app-runtime";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import styled from "styled-components";
-import { buildPathFromState, buildStateFromPath } from "../../domain/entities/AppState";
+import { buildPathFromState, buildStateFromPath } from "../entities/AppState";
 import { IFrame } from "../components/iframe/IFrame";
 import { useAppContext } from "../contexts/app-context";
 import { AppRoute, buildRoutes } from "./AppRoute";
