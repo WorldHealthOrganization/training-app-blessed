@@ -92,7 +92,11 @@
                 ]
             },
             {
-                "title": { "key": "step-4-title", "referenceValue": "Select other data", "translations": {} },
+                "title": {
+                    "key": "step-4-title",
+                    "referenceValue": "Select other data",
+                    "translations": {}
+                },
                 "subtitle": {
                     "key": "step-4-subtitle",
                     "referenceValue": "* Does not apply to all forms",
@@ -135,7 +139,11 @@
                 ]
             },
             {
-                "title": { "key": "step-7-title", "referenceValue": "Correct your data", "translations": {} },
+                "title": {
+                    "key": "step-7-title",
+                    "referenceValue": "Correct your data",
+                    "translations": {}
+                },
                 "subtitle": {
                     "key": "step-7-subtitle",
                     "referenceValue": "* Does not apply in all cases",

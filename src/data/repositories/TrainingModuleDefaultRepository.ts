@@ -1,4 +1,8 @@
-import { TrainingModule, TrainingModuleContents, TrainingModuleType } from "../../domain/entities/TrainingModule";
+import {
+    TrainingModule,
+    TrainingModuleContents,
+    TrainingModuleType,
+} from "../../domain/entities/TrainingModule";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
@@ -12,6 +16,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async getModule(moduleKey: string): Promise<TrainingModule> {
+        return this.getBuiltinModule(moduleKey);
+    }
+
+    private async getBuiltinModule(moduleKey: string): Promise<TrainingModule> {
         const { type, contents, ...builtinModule } = this.builtinModules[moduleKey];
         const validType = ["app", "core", "widget"].includes(type) ? type : "app";
 

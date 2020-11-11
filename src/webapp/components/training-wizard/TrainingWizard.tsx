@@ -2,10 +2,7 @@ import { Wizard } from "d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
-import {
-    extractStepFromKey,
-    TrainingModule
-} from "../../../domain/entities/TrainingModule";
+import { extractStepFromKey, TrainingModule } from "../../../domain/entities/TrainingModule";
 import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
 import { ModalContent } from "../modal/ModalContent";

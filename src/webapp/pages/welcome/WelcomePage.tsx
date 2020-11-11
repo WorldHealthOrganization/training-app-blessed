@@ -29,7 +29,6 @@ export const WelcomePage = () => {
 
     if (!module) return null;
 
-    // TODO: Translate
     const { title, description, icon } = module.contents.welcome;
 
     return (
