@@ -1,10 +1,11 @@
 import { UseCase } from "../../webapp/CompositionRoot";
 import { TrainingModule } from "../entities/TrainingModule";
-import module1 from "../../data/assets/modules/data-entry-module.json";
+import { TrainingModuleRepository } from "../repositories/TrainingModuleRepository";
 
 export class GetModuleUseCase implements UseCase {
-    public async execute(): Promise<TrainingModule> {
-        console.log(module1);
-        return (module1 as unknown) as TrainingModule;
+    constructor(private trainingModuleRepository: TrainingModuleRepository){}
+
+    public async execute(moduleKey: string): Promise<TrainingModule> {
+        return this.trainingModuleRepository.getModule(moduleKey)
     }
 }

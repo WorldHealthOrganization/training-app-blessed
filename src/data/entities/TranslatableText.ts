@@ -1,5 +1,5 @@
 export interface TranslatableText {
     key: string;
-    text: string;
+    referenceValue: string;
     translations: Record<string, string>;
 }

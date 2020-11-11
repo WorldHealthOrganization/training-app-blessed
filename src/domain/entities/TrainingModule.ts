@@ -1,5 +1,4 @@
 import { SharedRef } from "./Ref";
-import { TranslatableText } from "./TranslatableText";
 
 export type TrainingModuleType = "app" | "core" | "widget";
 
@@ -14,19 +13,15 @@ export interface TrainingModule extends SharedRef {
     dhisLaunchUrl: string;
 }
 
-export interface TrainingModuleStep {
-    title: TranslatableText;
-    subtitle?: TranslatableText;
-    pages: TrainingModulePage[];
-}
-
-export interface TrainingModulePage extends TranslatableText {
-    path?: string;
-}
-
 export interface TrainingModuleContents {
-    welcome: { title: TranslatableText; description: TranslatableText; icon: TranslatableText };
+    welcome: { title: string; description: string; icon: string };
     steps: TrainingModuleStep[];
+}
+
+export interface TrainingModuleStep {
+    title: string;
+    subtitle?: string;
+    pages: string[];
 }
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {

@@ -14,7 +14,7 @@ export const MarkdownContentStep: React.FC<TrainingWizardStepProps> = ({
     return (
         <ModalContent>
             <StepHeader index={stepIndex + 1} title={title} />
-            {content && !minimized ? <Markdown source={content.text} escapeHtml={false} /> : null}
+            {content && !minimized ? <Markdown source={content} escapeHtml={false} /> : null}
         </ModalContent>
     );
 };

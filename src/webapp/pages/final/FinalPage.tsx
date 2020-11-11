@@ -30,7 +30,7 @@ export const FinalPage = () => {
 
     const steps = module.contents.steps.map(({ title }, idx) => ({
         key: `step-${idx}`,
-        label: title.text, // TODO: Translate
+        label: title,
         component: () => null,
     }));
 

@@ -4,8 +4,7 @@ import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
 import {
     extractStepFromKey,
-    TrainingModule,
-    TrainingModulePage,
+    TrainingModule
 } from "../../../domain/entities/TrainingModule";
 import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
@@ -22,7 +21,7 @@ export interface TrainingWizardProps {
 export interface TrainingWizardStepProps {
     title?: string;
     description?: string;
-    content?: TrainingModulePage;
+    content?: string;
     minimized?: boolean;
     stepIndex?: number;
     contentIndex?: number;
@@ -43,7 +42,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         return _.flatMap(module.contents.steps, ({ title, pages }, step) =>
             pages.map((content, position) => {
                 const props: TrainingWizardStepProps = {
-                    title: title.text,
+                    title,
                     content,
                     stepIndex: step,
                     contentIndex: position,

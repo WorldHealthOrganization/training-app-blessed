@@ -1,13 +1,21 @@
+import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
+import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
+    private readonly trainingModuleRepository: TrainingModuleRepository;
+
+    constructor() {
+        this.trainingModuleRepository = new TrainingModuleDefaultRepository();
+    }
+
     @cache()
     public get usecases() {
         return getExecute({
             listModules: new ListModulesUseCase(),
-            getModule: new GetModuleUseCase(),
+            getModule: new GetModuleUseCase(this.trainingModuleRepository),
         });
     }
 }

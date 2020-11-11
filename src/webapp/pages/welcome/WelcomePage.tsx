@@ -35,11 +35,11 @@ export const WelcomePage = () => {
     return (
         <StyledModal onClose={toggleClose}>
             <ModalContent>
-                <ModalTitle big={true}>{title.text}</ModalTitle>
+                <ModalTitle big={true}>{title}</ModalTitle>
                 <Image>
-                    <img src={icon.text} alt="Welcome Illustration" />
+                    <img src={icon} alt="Welcome Illustration" />
                 </Image>
-                <ModalParagraph>{description.text}</ModalParagraph>
+                <ModalParagraph>{description}</ModalParagraph>
             </ModalContent>
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
