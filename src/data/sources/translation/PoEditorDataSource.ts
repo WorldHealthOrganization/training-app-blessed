@@ -1,5 +1,6 @@
 import { Either } from "../../../domain/entities/Either";
 import { cache } from "../../../utils/cache";
+import { AxiosHttpClientDataSource } from "../http/AxiosHttpClientDataSource";
 import { FetchHttpClientDataSource } from "../http/FetchHttpClientDataSource";
 import { HttpClientDataSource } from "../http/HttpClientDataSource";
 import { TranslationError } from "./TranslationDataSource";
@@ -7,8 +8,16 @@ import { TranslationError } from "./TranslationDataSource";
 export class TranslationPoEditorDataSource {
     private client: HttpClientDataSource;
 
-    constructor(private apiKey: string) {
-        this.client = new FetchHttpClientDataSource({ baseUrl: "https://api.poeditor.com/v2/" });
+    constructor(private apiKey: string, options: ApiOptions = {}) {
+        const { apiVersion = 2, backend = "fetch" } = options;
+        if (apiVersion !== 2) throw new Error(`Invalid API version: ${apiVersion}`);
+
+        const HttpClientRepositoryImpl =
+            backend === "fetch" ? FetchHttpClientDataSource : AxiosHttpClientDataSource;
+
+        this.client = new HttpClientRepositoryImpl({
+            baseUrl: `https://api.poeditor.com/${apiVersion}/`,
+        });
     }
 
     @cache()
@@ -89,6 +98,11 @@ export class TranslationPoEditorDataSource {
     private validateStatus(response: ApiResponseStatus): TranslationError | undefined {
         return response.status !== "success" ? "UNKNOWN" : undefined;
     }
+}
+
+interface ApiOptions {
+    backend?: "xhr" | "fetch";
+    apiVersion?: number;
 }
 
 interface ApiResponse<T> {
