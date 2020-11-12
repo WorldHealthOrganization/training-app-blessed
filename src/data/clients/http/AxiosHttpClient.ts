@@ -2,14 +2,9 @@ import axios, { AxiosInstance } from "axios";
 import MockAdapter from "axios-mock-adapter";
 import qs from "qs";
 import { CancelableResponse } from "./CancelableResponse";
-import {
-    ConstructorOptions,
-    HttpClientDataSource,
-    HttpRequest,
-    HttpResponse,
-} from "./HttpClientDataSource";
+import { ConstructorOptions, HttpClient, HttpRequest, HttpResponse } from "./HttpClient";
 
-export class AxiosHttpClientDataSource implements HttpClientDataSource {
+export class AxiosHttpClient implements HttpClient {
     private instance: AxiosInstance;
 
     constructor(options: ConstructorOptions) {

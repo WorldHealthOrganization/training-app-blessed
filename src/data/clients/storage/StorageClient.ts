@@ -2,7 +2,7 @@ import _ from "lodash";
 import { Ref } from "../../../domain/entities/Ref";
 import { Namespace, NamespaceProperties } from "./Namespaces";
 
-export abstract class StorageDataSource {
+export abstract class StorageClient {
     // Object operations
     public abstract getObject<T extends object>(key: string): Promise<T | undefined>;
     public abstract getOrCreateObject<T extends object>(key: string, defaultValue: T): Promise<T>;

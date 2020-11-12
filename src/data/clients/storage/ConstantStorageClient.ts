@@ -1,7 +1,7 @@
 import { D2Api } from "../../../types/d2-api";
 import { generateUid } from "../../utils/uid";
 import { constantPrefix } from "./Namespaces";
-import { StorageDataSource } from "./StorageDataSource";
+import { StorageClient } from "./StorageClient";
 
 interface Constant {
     id: string;
@@ -10,7 +10,7 @@ interface Constant {
     description: string;
 }
 
-export class ConstantStorageDataSource extends StorageDataSource {
+export class ConstantStorageClient extends StorageClient {
     constructor(private api: D2Api) {
         super();
     }

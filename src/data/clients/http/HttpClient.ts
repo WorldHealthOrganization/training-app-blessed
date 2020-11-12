@@ -1,7 +1,7 @@
 import MockAdapter from "axios-mock-adapter";
 import { CancelableResponse } from "./CancelableResponse";
 
-export interface HttpClientDataSource {
+export interface HttpClient {
     request<Data>(options: HttpRequest): CancelableResponse<Data>;
     getMockAdapter(): MockAdapter;
 }

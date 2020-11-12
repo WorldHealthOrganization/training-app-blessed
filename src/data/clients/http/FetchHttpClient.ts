@@ -5,15 +5,9 @@ import "isomorphic-fetch";
 import _ from "lodash";
 import qs from "qs";
 import { CancelableResponse } from "./CancelableResponse";
-import {
-    ConstructorOptions,
-    HttpClientDataSource,
-    HttpError,
-    HttpRequest,
-    HttpResponse,
-} from "./HttpClientDataSource";
+import { ConstructorOptions, HttpClient, HttpError, HttpRequest, HttpResponse } from "./HttpClient";
 
-export class FetchHttpClientDataSource implements HttpClientDataSource {
+export class FetchHttpClient implements HttpClient {
     constructor(public options: ConstructorOptions) {}
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {

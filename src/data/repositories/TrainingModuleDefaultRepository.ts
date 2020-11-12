@@ -28,7 +28,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     private getBuiltinModule(moduleKey: string): TrainingModule {
         const { type, contents, ...builtinModule } = this.builtinModules[moduleKey];
-        const validType = isValidType(type) ? type  : "app";
+        const validType = isValidType(type) ? type : "app";
 
         const translatedContents: TrainingModuleContents = {
             welcome: {

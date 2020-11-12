@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { HttpResponse } from "./HttpClientDataSource";
+import { HttpResponse } from "./HttpClient";
 
 export class CancelableResponse<Data> {
     constructor(public cancel: Canceler, public response: Promise<HttpResponse<Data>>) {}

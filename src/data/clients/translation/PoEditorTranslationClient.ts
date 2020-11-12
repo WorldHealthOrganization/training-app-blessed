@@ -1,19 +1,19 @@
 import { Either } from "../../../domain/entities/Either";
 import { cache } from "../../../utils/cache";
-import { AxiosHttpClientDataSource } from "../http/AxiosHttpClientDataSource";
-import { FetchHttpClientDataSource } from "../http/FetchHttpClientDataSource";
-import { HttpClientDataSource } from "../http/HttpClientDataSource";
-import { TranslationError } from "./TranslationDataSource";
+import { AxiosHttpClient } from "../http/AxiosHttpClient";
+import { FetchHttpClient } from "../http/FetchHttpClient";
+import { HttpClient } from "../http/HttpClient";
+import { TranslationError } from "./TranslationClient";
 
-export class TranslationPoEditorDataSource {
-    private client: HttpClientDataSource;
+export class TranslationPoEditorClient {
+    private client: HttpClient;
 
     constructor(private apiKey: string, options: ApiOptions = {}) {
         const { apiVersion = 2, backend = "fetch" } = options;
         if (apiVersion !== 2) throw new Error(`Invalid API version: ${apiVersion}`);
 
         const HttpClientRepositoryImpl =
-            backend === "fetch" ? FetchHttpClientDataSource : AxiosHttpClientDataSource;
+            backend === "fetch" ? FetchHttpClient : AxiosHttpClient;
 
         this.client = new HttpClientRepositoryImpl({
             baseUrl: `https://api.poeditor.com/${apiVersion}/`,
