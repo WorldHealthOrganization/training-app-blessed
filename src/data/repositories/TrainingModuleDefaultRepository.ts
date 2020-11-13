@@ -1,7 +1,7 @@
 import {
+    isValidTrainingType,
     TrainingModule,
     TrainingModuleContents,
-    TrainingModuleType,
 } from "../../domain/entities/TrainingModule";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
@@ -12,10 +12,6 @@ import { StorageClient } from "../clients/storage/StorageClient";
 import { JSONTrainingModule, PersistentTrainingModule } from "../entities/JSONTrainingModule";
 import { translate } from "../entities/TranslatableText";
 import { ConfigDataSource } from "../sources/config/ConfigDataSource";
-
-const isValidType = (type: string): type is TrainingModuleType => {
-    return ["app", "core", "widget"].includes(type);
-};
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -51,8 +47,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     private async buildDomainModel(model: PersistentTrainingModule): Promise<TrainingModule> {
         const { created, lastUpdated, type, contents, ...rest } = model;
         const { uiLocale } = await this.config.getUser();
-
-        const validType = isValidType(type) ? type : "app";
+        const validType = isValidTrainingType(type) ? type : "app";
 
         const translatedContents: TrainingModuleContents = {
             welcome: {

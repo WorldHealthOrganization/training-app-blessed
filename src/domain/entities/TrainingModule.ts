@@ -29,3 +29,7 @@ export const extractStepFromKey = (key: string): { step: number; content: number
 
     return { step: parseInt(match[1]), content: parseInt(match[2]) };
 };
+
+export const isValidTrainingType = (type: string): type is TrainingModuleType => {
+    return ["app", "core", "widget"].includes(type);
+};
