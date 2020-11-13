@@ -10,6 +10,7 @@ import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClien
 import { Namespace } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { JSONTrainingModule, PersistentTrainingModule } from "../entities/JSONTrainingModule";
+import { translate } from "../entities/TranslatableText";
 import { ConfigDataSource } from "../sources/config/ConfigDataSource";
 
 const isValidType = (type: string): type is TrainingModuleType => {
@@ -49,19 +50,20 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     private async buildDomainModel(model: PersistentTrainingModule): Promise<TrainingModule> {
         const { created, lastUpdated, type, contents, ...rest } = model;
+        const { uiLocale } = await this.config.getUser();
 
         const validType = isValidType(type) ? type : "app";
 
         const translatedContents: TrainingModuleContents = {
             welcome: {
-                title: contents.welcome.title.referenceValue,
-                description: contents.welcome.description.referenceValue,
-                icon: contents.welcome.icon.referenceValue,
+                title: translate(contents.welcome.title, uiLocale),
+                description: translate(contents.welcome.description, uiLocale),
+                icon: translate(contents.welcome.icon, uiLocale),
             },
             steps: contents.steps.map(({ title, subtitle, pages }) => ({
-                title: title.referenceValue,
-                subtitle: subtitle?.referenceValue,
-                pages: pages.map(({ referenceValue }) => referenceValue),
+                title: translate(title, uiLocale),
+                subtitle: subtitle ? translate(subtitle, uiLocale) : undefined,
+                pages: pages.map(item => translate(item, uiLocale)),
             })),
         };
 
