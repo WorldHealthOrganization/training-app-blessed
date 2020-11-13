@@ -15,7 +15,7 @@ export class TranslationPoEditorClient {
         const HttpClientImpl = backend === "fetch" ? FetchHttpClient : AxiosHttpClient;
 
         this.client = new HttpClientImpl({
-            baseUrl: `https://api.poeditor.com/${apiVersion}/`,
+            baseUrl: `https://api.poeditor.com/v${apiVersion}/`,
         });
     }
 
