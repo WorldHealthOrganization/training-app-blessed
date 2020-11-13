@@ -1,7 +1,7 @@
-import { SharingSetting, NamedRef } from "../../domain/entities/Ref";
 import { TranslatableText } from "./TranslatableText";
 
 export interface JSONTrainingModule {
+    _version: number;
     id: string;
     name: string;
     type: string;
@@ -11,16 +11,6 @@ export interface JSONTrainingModule {
     dhisVersionRange: string;
     dhisAppKey: string;
     dhisLaunchUrl: string;
-}
-
-export interface PersistentTrainingModule extends JSONTrainingModule {
-    publicAccess: string;
-    userAccesses: SharingSetting[];
-    userGroupAccesses: SharingSetting[];
-    user: NamedRef;
-    created: string;
-    lastUpdated: string;
-    lastUpdatedBy: NamedRef;
 }
 
 export interface JSONTrainingModuleContents {

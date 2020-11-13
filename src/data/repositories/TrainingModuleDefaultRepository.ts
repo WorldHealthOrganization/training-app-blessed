@@ -9,7 +9,8 @@ import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { JSONTrainingModule, PersistentTrainingModule } from "../entities/JSONTrainingModule";
+import { JSONTrainingModule } from "../entities/JSONTrainingModule";
+import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { translate } from "../entities/TranslatableText";
 import { ConfigDataSource } from "../sources/config/ConfigDataSource";
 
@@ -24,7 +25,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async get(moduleKey: string): Promise<TrainingModule | undefined> {
         const dataStoreModule = await this.storageClient.getObjectInCollection<
-            PersistentTrainingModule
+            PersistedTrainingModule
         >(Namespaces.TRAINING_MODULES, moduleKey);
         if (dataStoreModule) return this.buildDomainModel(dataStoreModule);
 
@@ -37,14 +38,18 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return this.buildDomainModel(persistedModel);
     }
 
-    private async saveDataStore(dataStoreModule: PersistentTrainingModule) {
+    private async saveDataStore(dataStoreModule: PersistedTrainingModule) {
         await this.storageClient.saveObjectInCollection(
             Namespaces.TRAINING_MODULES,
             dataStoreModule
         );
     }
 
-    private async buildDomainModel(model: PersistentTrainingModule): Promise<TrainingModule> {
+    private async buildDomainModel(model: PersistedTrainingModule): Promise<TrainingModule> {
+        if (model._version !== 1) {
+            throw new Error(`Unsupported revision of module: ${model._version}`);
+        }
+
         const { created, lastUpdated, type, contents, ...rest } = model;
         const { uiLocale } = await this.config.getUser();
         const validType = isValidTrainingType(type) ? type : "app";
@@ -71,14 +76,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         };
     }
 
-    private async buildPersistedModel(
-        model: JSONTrainingModule
-    ): Promise<PersistentTrainingModule> {
+    private async buildPersistedModel(model: JSONTrainingModule): Promise<PersistedTrainingModule> {
         const currentUser = await this.config.getUser();
         const defaultUser = { id: currentUser.id, name: currentUser.name };
 
         return {
             ...model,
+            translation: { provider: "NONE" },
             created: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             publicAccess: "--------",

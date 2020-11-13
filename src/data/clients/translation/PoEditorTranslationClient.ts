@@ -1,7 +1,6 @@
 import { Either } from "../../../domain/entities/Either";
-import { TranslationProject } from "../../entities/Translation";
 import { PoEditorApi } from "./PoEditorApi";
-import { TranslationClient, TranslationError } from "./TranslationClient";
+import { TranslationClient, TranslationError, TranslationProject } from "./TranslationClient";
 
 export class PoEditorTranslationClient implements TranslationClient {
     private api: PoEditorApi;
