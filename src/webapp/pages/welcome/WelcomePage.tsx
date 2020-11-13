@@ -15,7 +15,7 @@ export const WelcomePage = () => {
 
     const startTutorial = useCallback(() => {
         if (!module) return;
-        setAppState({ type: "TRAINING_DIALOG", dialog: "contents", module: module.key });
+        setAppState({ type: "TRAINING_DIALOG", dialog: "contents", module: module.id });
     }, [module, setAppState]);
 
     const exitTutorial = useCallback(() => {
@@ -24,7 +24,7 @@ export const WelcomePage = () => {
 
     const toggleClose = useCallback(() => {
         if (!module) return;
-        setAppState({ type: "TRAINING", module: module.key, step: 0, content: 0, state: "CLOSED" });
+        setAppState({ type: "TRAINING", module: module.id, step: 0, content: 0, state: "CLOSED" });
     }, [module, setAppState]);
 
     if (!module) return null;

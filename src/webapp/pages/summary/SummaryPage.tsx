@@ -14,7 +14,7 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         setAppState({
             type: "TRAINING",
             state: "OPEN",
-            module: module.key,
+            module: module.id,
             step: 1,
             content: 1,
         });
@@ -27,13 +27,13 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
 
     const minimize = useCallback(() => {
         if (!module) return;
-        setAppState({ type: "TRAINING", module: module.key, step: 0, content: 0, state: "CLOSED" });
+        setAppState({ type: "TRAINING", module: module.id, step: 0, content: 0, state: "CLOSED" });
     }, [module, setAppState]);
 
     const jumpToStep = useCallback(
         (step: number) => {
             if (!module) return;
-            setAppState({ type: "TRAINING", module: module.key, step, content: 1, state: "OPEN" });
+            setAppState({ type: "TRAINING", module: module.id, step, content: 1, state: "OPEN" });
         },
         [module, setAppState]
     );

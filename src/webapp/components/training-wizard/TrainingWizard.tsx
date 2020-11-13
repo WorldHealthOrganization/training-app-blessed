@@ -49,7 +49,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
                 };
 
                 return {
-                    key: `${module.key}-${step + 1}-${position + 1}`,
+                    key: `${module.id}-${step + 1}-${position + 1}`,
                     module,
                     label: "Select your location",
                     component: MarkdownContentStep,
@@ -61,7 +61,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
 
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
-        const key = `${module.key}-${appState.step}-${appState.content}`;
+        const key = `${module.id}-${appState.step}-${appState.content}`;
         return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0].key;
     }, [appState, module, wizardSteps]);
 
