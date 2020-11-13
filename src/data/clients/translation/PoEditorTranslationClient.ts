@@ -15,7 +15,8 @@ export class TranslationPoEditorClient {
         const HttpClientImpl = backend === "fetch" ? FetchHttpClient : AxiosHttpClient;
 
         this.client = new HttpClientImpl({
-            baseUrl: `https://api.poeditor.com/v${apiVersion}/`,
+            baseUrl: `https://cors-anywhere.herokuapp.com/https://api.poeditor.com/v${apiVersion}/`,
+            credentials: "ignore",
         });
     }
 
@@ -76,32 +77,22 @@ export class TranslationPoEditorClient {
         url: T,
         requestParams?: Omit<ApiEndpoints[T]["params"], "api_token">
     ): Promise<Either<TranslationError, ApiEndpoints[T]["response"]>> {
-        const data = this.buildFormData({
-            api_token: this.apiKey,
-            ...(requestParams ?? {}),
-        });
+        const data = { api_token: this.apiKey, ...(requestParams ?? {}) };
 
         const { response, result } = await this.client
             .request<ApiResponse<ApiEndpoints[T]["response"]>>({
                 method: "post",
                 url,
                 data,
-                dataType: "formData"
+                dataType: "formData",
+                headers: {
+                    "x-requested-with": "XMLHttpRequest",
+                },
             })
             .getData();
 
         const error = this.validateStatus(response);
         return error ? Either.error(error) : Either.success(result);
-    }
-
-    private buildFormData<T extends keyof ApiEndpoints>(requestParams: ApiEndpoints[T]["params"]) {
-        const data = new FormData();
-
-        for (const param in requestParams) {
-            data.append(param, String(requestParams[param]));
-        }
-
-        return data;
     }
 
     private buildEndpoint<T extends keyof ApiEndpoints>(url: T) {

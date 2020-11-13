@@ -5,34 +5,47 @@ import "isomorphic-fetch";
 import _ from "lodash";
 import qs from "qs";
 import { CancelableResponse } from "./CancelableResponse";
-import { ConstructorOptions, HttpClient, HttpError, HttpRequest, HttpResponse } from "./HttpClient";
+import {
+    ConstructorOptions,
+    getBody,
+    HttpClient,
+    HttpError,
+    HttpRequest,
+    HttpResponse,
+} from "./HttpClient";
 
 export class FetchHttpClient implements HttpClient {
     constructor(public options: ConstructorOptions) {}
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const controller = new AbortController();
-        const { baseUrl = "", auth } = this.options;
+        const { baseUrl = "", auth, credentials } = this.options;
         const timeout = options.timeout || this.options.timeout;
-        const { method, url, params, data, dataType = "raw", validateStatus = validateStatus2xx } = options;
+        const {
+            method,
+            url,
+            params,
+            data,
+            dataType = "raw",
+            headers: extraHeaders = {},
+            validateStatus = validateStatus2xx,
+        } = options;
 
         const baseHeaders: Record<string, string> = {
             Accept: "application/json, text/plain",
-            ...(data ? { "Content-Type": "application/json;charset=UTF-8" } : {}),
         };
 
         const authHeaders: Record<string, string> = auth
             ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) }
             : {};
 
-        const body = dataType === "formData" ? data as FormData : JSON.stringify(data);
-
+        const credentialsStrategy = auth ? "omit" : "include";
         const fetchOptions: RequestInit = {
             method,
             signal: controller.signal,
-            body,
-            headers: { ...baseHeaders, ...authHeaders },
-            credentials: auth ? "omit" : ("include" as const),
+            body: getBody(dataType, data),
+            headers: { ...baseHeaders, ...authHeaders, ...extraHeaders },
+            credentials: credentials === "include" ? credentialsStrategy : undefined,
         };
 
         const fullUrl = joinPath(baseUrl, url) + getQueryStrings(params);
