@@ -1,5 +1,5 @@
 import { D2Api } from "../../../types/d2-api";
-import { Config } from "../../entities/Config";
+import { cache } from "../../../utils/cache";
 import { Instance } from "../../entities/Instance";
 import { User } from "../../entities/User";
 import { getD2APiFromInstance } from "../../utils/d2-api";
@@ -14,7 +14,8 @@ export class Dhis2ConfigDataSource implements ConfigDataSource {
         this.api = getD2APiFromInstance(this.instance);
     }
 
-    async get(): Promise<Config> {
+    @cache()
+    public async getUser(): Promise<User> {
         const d2User = await this.api.currentUser
             .get({
                 fields: {
@@ -28,15 +29,14 @@ export class Dhis2ConfigDataSource implements ConfigDataSource {
             })
             .getData();
 
-        const currentUser: User = {
+        return {
             id: d2User.id,
             name: d2User.displayName,
             ...d2User.userCredentials,
         };
+    }
 
-        return {
-            instance: this.instance,
-            currentUser,
-        };
+    public getInstance(): Instance {
+        return this.instance;
     }
 }

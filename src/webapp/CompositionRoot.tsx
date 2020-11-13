@@ -1,14 +1,18 @@
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
+import { ConfigDataSource } from "../data/sources/config/ConfigDataSource";
+import { Dhis2ConfigDataSource } from "../data/sources/config/Dhis2ConfigDataSource";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
+    private readonly configDataSource: ConfigDataSource;
     private readonly trainingModuleRepository: TrainingModuleRepository;
 
-    constructor() {
-        this.trainingModuleRepository = new TrainingModuleDefaultRepository();
+    constructor(baseUrl: string) {
+        this.configDataSource = new Dhis2ConfigDataSource(baseUrl);
+        this.trainingModuleRepository = new TrainingModuleDefaultRepository(this.configDataSource);
     }
 
     @cache()

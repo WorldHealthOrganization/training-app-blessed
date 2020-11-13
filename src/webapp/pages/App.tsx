@@ -78,7 +78,7 @@ export const routes: AppRoute[] = [
 
 const App = () => {
     const { baseUrl } = useConfig();
-    const compositionRoot = new CompositionRoot();
+    const compositionRoot = new CompositionRoot(baseUrl);
 
     return (
         <AppContextProvider baseUrl={baseUrl} routes={routes} compositionRoot={compositionRoot}>

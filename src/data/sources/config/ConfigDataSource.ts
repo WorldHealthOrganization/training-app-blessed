@@ -1,5 +1,7 @@
-import { Config } from "../../entities/Config";
+import { Instance } from "../../entities/Instance";
+import { User } from "../../entities/User";
 
 export interface ConfigDataSource {
-    get(): Promise<Config>;
+    getUser(): Promise<User>;
+    getInstance(): Instance;
 }

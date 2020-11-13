@@ -12,10 +12,9 @@ export class TranslationPoEditorClient {
         const { apiVersion = 2, backend = "fetch" } = options;
         if (apiVersion !== 2) throw new Error(`Invalid API version: ${apiVersion}`);
 
-        const HttpClientRepositoryImpl =
-            backend === "fetch" ? FetchHttpClient : AxiosHttpClient;
+        const HttpClientImpl = backend === "fetch" ? FetchHttpClient : AxiosHttpClient;
 
-        this.client = new HttpClientRepositoryImpl({
+        this.client = new HttpClientImpl({
             baseUrl: `https://api.poeditor.com/${apiVersion}/`,
         });
     }
