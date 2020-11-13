@@ -1,6 +1,5 @@
 {
-    "id": "",
-    "key": "data-entry",
+    "id": "data-entry",
     "disabled": false,
     "dhisAppKey": "data-entry",
     "name": "Data entry",

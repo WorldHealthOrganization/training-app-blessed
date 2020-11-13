@@ -4,7 +4,6 @@ import { TranslatableText } from "./TranslatableText";
 export interface JSONTrainingModule {
     id: string;
     name: string;
-    key: string;
     type: string;
     disabled: boolean;
     contents: JSONTrainingModuleContents;
