@@ -14,7 +14,7 @@ export class FetchHttpClient implements HttpClient {
         const controller = new AbortController();
         const { baseUrl = "", auth } = this.options;
         const timeout = options.timeout || this.options.timeout;
-        const { method, url, params, data, validateStatus = validateStatus2xx } = options;
+        const { method, url, params, data, dataType = "raw", validateStatus = validateStatus2xx } = options;
 
         const baseHeaders: Record<string, string> = {
             Accept: "application/json, text/plain",
@@ -25,10 +25,12 @@ export class FetchHttpClient implements HttpClient {
             ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) }
             : {};
 
+        const body = dataType === "formData" ? data as FormData : JSON.stringify(data);
+
         const fetchOptions: RequestInit = {
             method,
             signal: controller.signal,
-            ...(data ? { body: JSON.stringify(data) } : {}),
+            body,
             headers: { ...baseHeaders, ...authHeaders },
             credentials: auth ? "omit" : ("include" as const),
         };
