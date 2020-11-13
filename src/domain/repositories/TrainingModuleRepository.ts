@@ -1,5 +1,5 @@
 import { TrainingModule } from "../entities/TrainingModule";
 
 export interface TrainingModuleRepository {
-    getModule(moduleKey: string): Promise<TrainingModule>;
+    get(moduleKey: string): Promise<TrainingModule | undefined>;
 }

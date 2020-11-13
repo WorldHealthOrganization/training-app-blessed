@@ -6,28 +6,50 @@ import {
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
-import { JSONTrainingModule } from "../entities/JSONTrainingModule";
+import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
+import { Namespace } from "../clients/storage/Namespaces";
+import { StorageClient } from "../clients/storage/StorageClient";
+import { JSONTrainingModule, PersistentTrainingModule } from "../entities/JSONTrainingModule";
+import { ConfigDataSource } from "../sources/config/ConfigDataSource";
 
 const isValidType = (type: string): type is TrainingModuleType => {
     return ["app", "core", "widget"].includes(type);
 };
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
-    private builtinModules: Dictionary<JSONTrainingModule>;
+    private builtinModules: Dictionary<JSONTrainingModule | undefined>;
+    private storageClient: StorageClient;
 
-    constructor() {
+    constructor(private config: ConfigDataSource) {
         this.builtinModules = BuiltinModules;
+        this.storageClient = new DataStoreStorageClient(config.getInstance());
     }
 
-    public async getModule(moduleKey: string): Promise<TrainingModule> {
-        // Read data store and get module
-        // If does not exist 1) get BuiltinModule and initialize in dataStore
+    public async get(moduleKey: string): Promise<TrainingModule | undefined> {
+        const dataStoreModule = await this.storageClient.getObjectInCollection<
+            PersistentTrainingModule
+        >(Namespace.TRAINING_MODULES, moduleKey);
+        if (dataStoreModule) return this.buildDomainModel(dataStoreModule);
 
-        return this.getBuiltinModule(moduleKey);
+        const builtinModule = this.builtinModules[moduleKey];
+        if (!builtinModule) return undefined;
+
+        const persistedModel = await this.buildPersistedModel(builtinModule);
+        await this.saveDataStore(persistedModel);
+
+        return this.buildDomainModel(persistedModel);
     }
 
-    private getBuiltinModule(moduleKey: string): TrainingModule {
-        const { type, contents, ...builtinModule } = this.builtinModules[moduleKey];
+    private async saveDataStore(dataStoreModule: PersistentTrainingModule) {
+        await this.storageClient.saveObjectInCollection(
+            Namespace.TRAINING_MODULES,
+            dataStoreModule
+        );
+    }
+
+    private async buildDomainModel(model: PersistentTrainingModule): Promise<TrainingModule> {
+        const { created, lastUpdated, type, contents, ...rest } = model;
+
         const validType = isValidType(type) ? type : "app";
 
         const translatedContents: TrainingModuleContents = {
@@ -44,16 +66,29 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         };
 
         return {
-            ...builtinModule,
+            ...rest,
+            created: new Date(created),
+            lastUpdated: new Date(lastUpdated),
+            contents: translatedContents,
+            type: validType,
+        };
+    }
+
+    private async buildPersistedModel(
+        model: JSONTrainingModule
+    ): Promise<PersistentTrainingModule> {
+        const currentUser = await this.config.getUser();
+        const defaultUser = { id: currentUser.id, name: currentUser.name };
+
+        return {
+            ...model,
+            created: new Date().toISOString(),
+            lastUpdated: new Date().toISOString(),
             publicAccess: "--------",
             userAccesses: [],
             userGroupAccesses: [],
-            user: { id: "", name: "" },
-            created: new Date(),
-            lastUpdated: new Date(),
-            lastUpdatedBy: { id: "", name: "" },
-            type: validType,
-            contents: translatedContents,
+            user: defaultUser,
+            lastUpdatedBy: defaultUser,
         };
     }
 }
