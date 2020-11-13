@@ -7,7 +7,7 @@ import { TrainingModuleRepository } from "../../domain/repositories/TrainingModu
 import { Dictionary } from "../../types/utils";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
-import { Namespace } from "../clients/storage/Namespaces";
+import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { JSONTrainingModule, PersistentTrainingModule } from "../entities/JSONTrainingModule";
 import { translate } from "../entities/TranslatableText";
@@ -29,7 +29,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async get(moduleKey: string): Promise<TrainingModule | undefined> {
         const dataStoreModule = await this.storageClient.getObjectInCollection<
             PersistentTrainingModule
-        >(Namespace.TRAINING_MODULES, moduleKey);
+        >(Namespaces.TRAINING_MODULES, moduleKey);
         if (dataStoreModule) return this.buildDomainModel(dataStoreModule);
 
         const builtinModule = this.builtinModules[moduleKey];
@@ -43,7 +43,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     private async saveDataStore(dataStoreModule: PersistentTrainingModule) {
         await this.storageClient.saveObjectInCollection(
-            Namespace.TRAINING_MODULES,
+            Namespaces.TRAINING_MODULES,
             dataStoreModule
         );
     }
