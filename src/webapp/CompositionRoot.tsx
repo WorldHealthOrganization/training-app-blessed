@@ -2,6 +2,7 @@ import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingMo
 import { ConfigDataSource } from "../data/sources/config/ConfigDataSource";
 import { Dhis2ConfigDataSource } from "../data/sources/config/Dhis2ConfigDataSource";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
+import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { cache } from "../utils/cache";
@@ -20,6 +21,7 @@ export class CompositionRoot {
         return getExecute({
             listModules: new ListModulesUseCase(this.trainingModuleRepository),
             getModule: new GetModuleUseCase(this.trainingModuleRepository),
+            createModule: new CreateModuleUseCase(this.trainingModuleRepository),
         });
     }
 }

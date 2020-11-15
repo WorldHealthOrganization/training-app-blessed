@@ -29,6 +29,13 @@ export interface TrainingModuleStep {
     pages: string[];
 }
 
+export interface TrainingModuleBuilder {
+    id: string;
+    name: string;
+    title: string;
+    description: string;
+}
+
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
     const match = /^.*-(\d)-(\d)$/.exec(key);
     if (!match) return null;

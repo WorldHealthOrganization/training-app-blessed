@@ -1,6 +1,6 @@
 import { Icon, IconButton, Tooltip } from "@material-ui/core";
 import { ObjectsTable, TableColumn } from "d2-ui-components";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { NamedRef } from "../../../domain/entities/Ref";
 import { TrainingModule } from "../../../domain/entities/TrainingModule";
@@ -14,6 +14,8 @@ export const ModuleListTable: React.FC = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [modules, setModules] = useState<ModuleListItem[]>([]);
+    const [isCreationDialogOpen, setOpenCreationDialog] = useState<boolean>(false);
+    const [refreshKey, setRefreshKey] = useState(Math.random());
 
     const columns: TableColumn<ModuleListItem>[] = useMemo(
         () => [
@@ -28,7 +30,7 @@ export const ModuleListTable: React.FC = () => {
             },
             {
                 name: "value",
-                text: "Content",
+                text: "Preview",
                 getValue: ({ value }) => <StyledStepPreview value={value} />,
             },
             {
@@ -39,16 +41,21 @@ export const ModuleListTable: React.FC = () => {
         []
     );
 
+    const closeCreationDialog = useCallback(() => {
+        setOpenCreationDialog(false);
+        setRefreshKey(Math.random());
+    }, []);
+
     useEffect(() => {
         usecases.listModules().then(modules => {
             setModules(buildListItems(modules));
             setLoading(false);
         });
-    }, [usecases]);
+    }, [usecases, refreshKey]);
 
     return (
-        <TableWrapper>
-            <ModuleCreationDialog />
+        <PageWrapper>
+            {isCreationDialogOpen && <ModuleCreationDialog onClose={closeCreationDialog} />}
 
             <ObjectsTable<ModuleListItem>
                 loading={loading}
@@ -58,13 +65,13 @@ export const ModuleListTable: React.FC = () => {
                 forceSelectionColumn={true}
                 filterComponents={
                     <Tooltip title={"New module"} placement={"right"}>
-                        <IconButton>
+                        <IconButton onClick={() => setOpenCreationDialog(true)}>
                             <Icon>add_box</Icon>
                         </IconButton>
                     </Tooltip>
                 }
             />
-        </TableWrapper>
+        </PageWrapper>
     );
 };
 
@@ -118,7 +125,7 @@ const StyledStepPreview = styled(StepPreview)`
     }
 `;
 
-const TableWrapper = styled.div`
+const PageWrapper = styled.div`
     .MuiTableRow-root {
         background: white;
     }

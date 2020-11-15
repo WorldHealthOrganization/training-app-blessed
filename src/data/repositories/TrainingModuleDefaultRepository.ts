@@ -1,8 +1,10 @@
 import { differenceInMinutes } from "date-fns";
 import _ from "lodash";
+import { Either } from "../../domain/entities/Either";
 import {
     isValidTrainingType,
     TrainingModule,
+    TrainingModuleBuilder,
     TrainingModuleContents,
 } from "../../domain/entities/TrainingModule";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
@@ -56,6 +58,43 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
 
         return this.buildDomainModel(persistedModel);
+    }
+
+    public async create({
+        id,
+        name,
+        title,
+        description,
+    }: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>> {
+        const items = await this.list();
+        const exists = !!items.find(item => item.id === id);
+        if (exists) return Either.error("CODE_EXISTS");
+
+        const newModel = await this.buildPersistedModel({
+            id,
+            name,
+            type: "app",
+            _version: 1,
+            revision: 1,
+            dhisVersionRange: "",
+            dhisAppKey: "",
+            dhisLaunchUrl: "",
+            disabled: false,
+            contents: {
+                welcome: {
+                    title: { key: "module-title", referenceValue: title, translations: {} },
+                    description: {
+                        key: "module-description",
+                        referenceValue: description,
+                        translations: {},
+                    },
+                },
+                steps: [],
+            },
+        });
+
+        await this.saveDataStore(newModel);
+        return Either.success(undefined);
     }
 
     private async getDataStore(key: string): Promise<PersistedTrainingModule | undefined> {

@@ -1,6 +1,8 @@
-import { TrainingModule } from "../entities/TrainingModule";
+import { Either } from "../entities/Either";
+import { TrainingModule, TrainingModuleBuilder } from "../entities/TrainingModule";
 
 export interface TrainingModuleRepository {
     list(): Promise<TrainingModule[]>;
     get(moduleKey: string): Promise<TrainingModule | undefined>;
+    create(builder: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>>;
 }

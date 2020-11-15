@@ -14,7 +14,7 @@ export interface JSONTrainingModule {
 }
 
 export interface JSONTrainingModuleContents {
-    welcome: { title: TranslatableText; description: TranslatableText; };
+    welcome: { title: TranslatableText; description: TranslatableText };
     steps: JSONTrainingModuleStep[];
 }
 
