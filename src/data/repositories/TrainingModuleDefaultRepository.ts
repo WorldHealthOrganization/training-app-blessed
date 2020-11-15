@@ -107,7 +107,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             welcome: {
                 title: translate(contents.welcome.title, uiLocale),
                 description: translate(contents.welcome.description, uiLocale),
-                icon: translate(contents.welcome.icon, uiLocale),
             },
             steps: contents.steps.map(({ title, subtitle, pages }) => ({
                 title: translate(title, uiLocale),

@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import { TrainingModuleWelcome } from "../../../domain/entities/TrainingModule";
 import { MainButton } from "../../components/main-button/MainButton";
+import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import {
     Modal,
     ModalContent,
@@ -29,17 +31,9 @@ export const WelcomePage = () => {
 
     if (!module) return null;
 
-    const { title, description, icon } = module.contents.welcome;
-
     return (
         <StyledModal onClose={toggleClose}>
-            <ModalContent>
-                <ModalTitle big={true}>{title}</ModalTitle>
-                <Image>
-                    <img src={icon} alt="Welcome Illustration" />
-                </Image>
-                <ModalParagraph>{description}</ModalParagraph>
-            </ModalContent>
+            <WelcomePageContent {...module.contents.welcome} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
                     Go Back
@@ -59,7 +53,19 @@ const StyledModal = styled(Modal)`
     transform: translate(-50%, -50%);
 `;
 
-const Image = styled.span`
-    display: block;
-    margin: 18px 0px;
+const Paragraph = styled(MarkdownViewer)`
+    p {
+        text-align: center;
+    }
 `;
+
+export const WelcomePageContent: React.FC<TrainingModuleWelcome> = ({ title, description }) => {
+    return (
+        <ModalContent>
+            <ModalTitle big={true}>{title}</ModalTitle>
+            <ModalParagraph>
+                <Paragraph source={description} />
+            </ModalParagraph>
+        </ModalContent>
+    );
+};

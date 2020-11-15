@@ -69,7 +69,7 @@ const ModalWrapper = styled.div`
     user-select: none;
 `;
 
-const ModalBody = styled.div`
+export const ModalBody = styled.div`
     background-color: #276696;
     border-radius: 18px;
     padding: 18px;

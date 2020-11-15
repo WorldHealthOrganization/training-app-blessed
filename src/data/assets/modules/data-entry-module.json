@@ -24,12 +24,7 @@
             },
             "description": {
                 "key": "module-description",
-                "referenceValue": "The data entry application is used to manually enter routine data that have been recorded for one location on a regular basis, such as weekly, monthly etc. Data is registered for a location, time period and a specific data set.",
-                "translations": {}
-            },
-            "icon": {
-                "key": "module-icon",
-                "referenceValue": "https://user-images.githubusercontent.com/2181866/93660832-454b1700-fa53-11ea-881c-5fe97edb02a3.png",
+                "referenceValue": "![Welcome Illustration](https://user-images.githubusercontent.com/2181866/93660832-454b1700-fa53-11ea-881c-5fe97edb02a3.png)\n\nThe data entry application is used to manually enter routine data that have been recorded for one location on a regular basis, such as weekly, monthly etc. Data is registered for a location, time period and a specific data set.",
                 "translations": {}
             }
         },

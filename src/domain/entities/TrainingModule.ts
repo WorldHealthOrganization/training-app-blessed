@@ -14,8 +14,13 @@ export interface TrainingModule extends SharedRef {
 }
 
 export interface TrainingModuleContents {
-    welcome: { title: string; description: string; icon: string };
+    welcome: TrainingModuleWelcome;
     steps: TrainingModuleStep[];
+}
+
+export interface TrainingModuleWelcome {
+    title: string;
+    description: string;
 }
 
 export interface TrainingModuleStep {
