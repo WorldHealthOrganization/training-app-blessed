@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
 import { MainButton } from "../../components/main-button/MainButton";
@@ -14,9 +15,7 @@ import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
     const { usecases, setAppState } = useAppContext();
-    const [modules, setModules] = useState<
-        { name: string; key: string; progress: number; disabled?: boolean }[]
-    >([]);
+    const [modules, setModules] = useState<TrainingModule[]>([]);
 
     useEffect(() => {
         usecases.listModules().then(setModules);
@@ -40,12 +39,12 @@ export const HomePage = () => {
                 <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
                 <ModalContent>
                     <Cardboard>
-                        {modules.map(({ name, key, progress, disabled }, idx) => (
+                        {modules.map(({ name, id, progress, disabled }, idx) => (
                             <Card
                                 key={`card-${idx}`}
                                 label={name}
                                 progress={progress}
-                                onClick={() => loadModule(key)}
+                                onClick={() => loadModule(id)}
                                 disabled={disabled}
                             />
                         ))}

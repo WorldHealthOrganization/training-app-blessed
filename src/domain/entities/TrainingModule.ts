@@ -5,6 +5,7 @@ export type TrainingModuleType = "app" | "core" | "widget";
 export interface TrainingModule extends SharedRef {
     type: TrainingModuleType;
     disabled: boolean;
+    progress: number;
     contents: TrainingModuleContents;
     revision: number;
     dhisVersionRange: string;

@@ -18,7 +18,7 @@ export class CompositionRoot {
     @cache()
     public get usecases() {
         return getExecute({
-            listModules: new ListModulesUseCase(),
+            listModules: new ListModulesUseCase(this.trainingModuleRepository),
             getModule: new GetModuleUseCase(this.trainingModuleRepository),
         });
     }

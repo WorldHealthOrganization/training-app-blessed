@@ -1,13 +1,22 @@
 import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import { useSnackbar } from "d2-ui-components";
-import React, { useState } from "react";
+import { ObjectsTable, useSnackbar } from "d2-ui-components";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import PermissionsDialog from "../../components/permissions-dialog/PermissionsDialog";
+import { useAppContext } from "../../contexts/app-context";
 
 export const SettingsPage = () => {
+    const { usecases } = useAppContext();
     const snackbar = useSnackbar();
+
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
+    const [modules, setModules] = useState<TrainingModule[]>([]);
+
+    useEffect(() => {
+        usecases.listModules().then(setModules);
+    }, [usecases]);
 
     return (
         <React.Fragment>
@@ -37,6 +46,16 @@ export const SettingsPage = () => {
                     />
                 </ListItem>
             </Group>
+
+            <ObjectsTable<TrainingModule>
+                rows={modules}
+                columns={[
+                    {
+                        name: "name",
+                        text: "Name",
+                    },
+                ]}
+            />
         </React.Fragment>
     );
 };

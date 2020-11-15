@@ -11,6 +11,7 @@ export interface PersistedTrainingModule extends JSONTrainingModule {
     created: string;
     lastUpdated: string;
     lastUpdatedBy: NamedRef;
+    lastTranslationSync: string;
 }
 
 export type TranslationConnection =
