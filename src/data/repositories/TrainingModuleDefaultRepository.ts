@@ -67,8 +67,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async create({
         id,
         name,
-        title,
-        description,
+        welcome,
     }: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>> {
         const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES
@@ -87,14 +86,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             dhisLaunchUrl: "",
             disabled: false,
             contents: {
-                welcome: {
-                    title: { key: "module-title", referenceValue: title, translations: {} },
-                    description: {
-                        key: "module-description",
-                        referenceValue: description,
-                        translations: {},
-                    },
-                },
+                welcome: { key: "module-welcome", referenceValue: welcome, translations: {} },
                 steps: [],
             },
         });
@@ -103,7 +95,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return Either.success(undefined);
     }
 
-    public async edit({ id, name, title, description }: TrainingModuleBuilder): Promise<void> {
+    public async edit({ id, name, welcome }: TrainingModuleBuilder): Promise<void> {
         const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES
         );
@@ -117,14 +109,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 ...item.contents,
                 welcome: {
                     ...item.contents.welcome,
-                    title: {
-                        ...item.contents.welcome.title,
-                        referenceValue: title,
-                    },
-                    description: {
-                        ...item.contents.welcome.description,
-                        referenceValue: description,
-                    },
+                    referenceValue: welcome,
                 },
             },
         };
@@ -189,10 +174,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const validType = isValidTrainingType(type) ? type : "app";
 
         const translatedContents: TrainingModuleContents = {
-            welcome: {
-                title: translate(contents.welcome.title, uiLocale),
-                description: translate(contents.welcome.description, uiLocale),
-            },
+            welcome: translate(contents.welcome, uiLocale),
             steps: contents.steps.map(({ title, subtitle, pages }) => ({
                 title: translate(title, uiLocale),
                 subtitle: subtitle ? translate(subtitle, uiLocale) : undefined,

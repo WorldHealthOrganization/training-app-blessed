@@ -1,15 +1,8 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { TrainingModuleWelcome } from "../../../domain/entities/TrainingModule";
 import { MainButton } from "../../components/main-button/MainButton";
 import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
-import {
-    Modal,
-    ModalContent,
-    ModalFooter,
-    ModalParagraph,
-    ModalTitle,
-} from "../../components/modal";
+import { Modal, ModalContent, ModalFooter } from "../../components/modal";
 import { useAppContext } from "../../contexts/app-context";
 
 export const WelcomePage = () => {
@@ -32,8 +25,8 @@ export const WelcomePage = () => {
     if (!module) return null;
 
     return (
-        <StyledModal onClose={toggleClose}>
-            <WelcomePageContent {...module.contents.welcome} />
+        <StyledModal onClose={toggleClose} centerChildren={true}>
+            <WelcomePageContent welcome={module.contents.welcome} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
                     Go Back
@@ -53,19 +46,10 @@ const StyledModal = styled(Modal)`
     transform: translate(-50%, -50%);
 `;
 
-const Paragraph = styled(MarkdownViewer)`
-    p {
-        text-align: center;
-    }
-`;
-
-export const WelcomePageContent: React.FC<TrainingModuleWelcome> = ({ title, description }) => {
+export const WelcomePageContent: React.FC<{ welcome: string }> = ({ welcome }) => {
     return (
         <ModalContent>
-            <ModalTitle big={true}>{title}</ModalTitle>
-            <ModalParagraph>
-                <Paragraph source={description} />
-            </ModalParagraph>
+            <MarkdownViewer source={welcome} />
         </ModalContent>
     );
 };

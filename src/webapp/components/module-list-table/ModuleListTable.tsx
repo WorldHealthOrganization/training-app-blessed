@@ -60,8 +60,7 @@ export const ModuleListTable: React.FC = () => {
                 setEditModuleCreationDialog({
                     id: row.id,
                     name: row.name,
-                    title: row.contents.welcome.title,
-                    description: row.contents.welcome.description,
+                    welcome: row.contents.welcome,
                 });
                 setOpenCreationDialog(true);
             }
@@ -123,7 +122,11 @@ export const ModuleListTable: React.FC = () => {
                 text: "Preview",
                 sortable: false,
                 getValue: item => {
-                    return item.rowType !== "step" && <StyledStepPreview value={item.value} />;
+                    return (
+                        item.rowType !== "step" && (
+                            <StepPreview value={item.value} rowType={item.rowType} />
+                        )
+                    );
                 },
             },
         ],
@@ -242,7 +245,7 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
         ...module,
         rowType: "module",
         position: moduleIdx,
-        value: `# ${module.contents.welcome.title}\n\n${module.contents.welcome.description}`,
+        value: module.contents.welcome,
         steps: module.contents.steps.map(({ title, pages }, stepIdx) => ({
             id: `step-${stepIdx + 1}`,
             name: `Step ${stepIdx + 1}: ${title}`,
@@ -259,23 +262,22 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
     }));
 };
 
-const StepPreview: React.FC<{ className?: string; value?: string }> = ({ className, value }) => {
+export const StepPreview: React.FC<{
+    className?: string;
+    value?: string;
+    rowType: "module" | "page";
+}> = ({ className, value, rowType }) => {
     if (!value) return null;
 
     return (
-        <ModalBody className={className}>
+        <StyledModalBody className={className} center={rowType === "module"}>
             <MarkdownViewer source={value} escapeHtml={false} />
-        </ModalBody>
+        </StyledModalBody>
     );
 };
 
-const StyledStepPreview = styled(StepPreview)`
+const StyledModalBody = styled(ModalBody)`
     max-width: 600px;
-
-    h1,
-    p {
-        text-align: center;
-    }
 `;
 
 const PageWrapper = styled.div`

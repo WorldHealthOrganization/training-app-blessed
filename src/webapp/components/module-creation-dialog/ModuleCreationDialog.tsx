@@ -2,10 +2,13 @@ import TextField from "@material-ui/core/TextField";
 import { ConfirmationDialog } from "d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useState } from "react";
+import styled from "styled-components";
 import { TrainingModuleBuilder } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { Dictionary } from "../../../types/utils";
 import { useAppContext } from "../../contexts/app-context";
+import { MarkdownEditor } from "../markdown-editor/MarkdownEditor";
+import { StepPreview } from "../module-list-table/ModuleListTable";
 
 export interface ModuleCreationDialogProps {
     builder?: TrainingModuleBuilder;
@@ -15,8 +18,7 @@ export interface ModuleCreationDialogProps {
 const defaultBuilder: TrainingModuleBuilder = {
     id: "",
     name: "",
-    description: "",
-    title: "",
+    welcome: "",
 };
 
 export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
@@ -42,6 +44,16 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
         },
         [setBuilder]
     );
+
+    const onChangeWelcome = useCallback((value: string) => {
+        setBuilder(builder => {
+            return { ...builder, welcome: value };
+        });
+        setErrors(errors => ({
+            ...errors,
+            welcome: !value ? i18n.t("Field must have a value") : undefined,
+        }));
+    }, []);
 
     const onSave = useCallback(async () => {
         const errors = _.reduce(
@@ -81,41 +93,43 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
             onCancel={onClose}
             onSave={onSave}
         >
-            <TextField
-                disabled={!!editBuilder}
-                fullWidth={true}
-                label={"Code *"}
-                value={builder.id}
-                onChange={onChangeField("id")}
-                error={!!errors["id"]}
-                helperText={errors["id"]}
-            />
-            <TextField
-                fullWidth={true}
-                label={"Name *"}
-                value={builder.name}
-                onChange={onChangeField("name")}
-                error={!!errors["name"]}
-                helperText={errors["name"]}
-            />
-            <TextField
-                fullWidth={true}
-                label={"Welcome page title *"}
-                value={builder.title}
-                onChange={onChangeField("title")}
-                error={!!errors["title"]}
-                helperText={errors["title"]}
-            />
-            <TextField
-                fullWidth={true}
-                label={"Welcome page description *"}
-                multiline={true}
-                rows={4}
-                value={builder.description}
-                onChange={onChangeField("description")}
-                error={!!errors["description"]}
-                helperText={errors["description"]}
-            />
+            <Row>
+                <TextField
+                    disabled={!!editBuilder}
+                    fullWidth={true}
+                    label={"Code *"}
+                    value={builder.id}
+                    onChange={onChangeField("id")}
+                    error={!!errors["id"]}
+                    helperText={errors["id"]}
+                />
+            </Row>
+
+            <Row>
+                <TextField
+                    fullWidth={true}
+                    label={"Name *"}
+                    value={builder.name}
+                    onChange={onChangeField("name")}
+                    error={!!errors["name"]}
+                    helperText={errors["name"]}
+                />
+            </Row>
+
+            <Row>
+                <h3>{i18n.t("Welcome page")}</h3>
+                <MarkdownEditor
+                    value={builder.welcome}
+                    onChange={onChangeWelcome}
+                    markdownPreview={(markdown: string) => (
+                        <StepPreview value={markdown} rowType={"module"} />
+                    )}
+                />
+            </Row>
         </ConfirmationDialog>
     );
 };
+
+const Row = styled.div`
+    margin-bottom: 25px;
+`;

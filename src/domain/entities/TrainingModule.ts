@@ -14,13 +14,8 @@ export interface TrainingModule extends SharedRef {
 }
 
 export interface TrainingModuleContents {
-    welcome: TrainingModuleWelcome;
+    welcome: string;
     steps: TrainingModuleStep[];
-}
-
-export interface TrainingModuleWelcome {
-    title: string;
-    description: string;
 }
 
 export interface TrainingModuleStep {
@@ -32,8 +27,7 @@ export interface TrainingModuleStep {
 export interface TrainingModuleBuilder {
     id: string;
     name: string;
-    title: string;
-    description: string;
+    welcome: string;
 }
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
