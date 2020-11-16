@@ -7,6 +7,7 @@ import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
+import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
@@ -20,13 +21,16 @@ export class CompositionRoot {
 
     @cache()
     public get usecases() {
-        return getExecute({
-            listModules: new ListModulesUseCase(this.trainingModuleRepository),
-            getModule: new GetModuleUseCase(this.trainingModuleRepository),
-            createModule: new CreateModuleUseCase(this.trainingModuleRepository),
-            deleteModules: new DeleteModulesUseCase(this.trainingModuleRepository),
-            editModule: new EditModuleUseCase(this.trainingModuleRepository)
-        });
+        return {
+            modules: getExecute({
+                list: new ListModulesUseCase(this.trainingModuleRepository),
+                get: new GetModuleUseCase(this.trainingModuleRepository),
+                create: new CreateModuleUseCase(this.trainingModuleRepository),
+                delete: new DeleteModulesUseCase(this.trainingModuleRepository),
+                edit: new EditModuleUseCase(this.trainingModuleRepository),
+                swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
+            }),
+        };
     }
 }
 

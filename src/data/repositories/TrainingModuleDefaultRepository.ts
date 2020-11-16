@@ -5,7 +5,7 @@ import {
     isValidTrainingType,
     TrainingModule,
     TrainingModuleBuilder,
-    TrainingModuleContents
+    TrainingModuleContents,
 } from "../../domain/entities/TrainingModule";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
@@ -46,7 +46,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async get(key: string): Promise<TrainingModule | undefined> {
-        const persistedModel = await this.getDataStore(key);
+        const dataStoreModel = await this.storageClient.getObjectInCollection<
+            PersistedTrainingModule
+        >(Namespaces.TRAINING_MODULES, key);
+
+        const persistedModel = dataStoreModel ?? (await this.getBuiltin(key));
         if (!persistedModel) return undefined;
 
         // TODO: Add new property, lastTranslationSync
@@ -119,8 +123,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                     },
                     description: {
                         ...item.contents.welcome.description,
-                        referenceValue:
-                            description,
+                        referenceValue: description,
                     },
                 },
             },
@@ -135,12 +138,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
     }
 
-    private async getDataStore(key: string): Promise<PersistedTrainingModule | undefined> {
-        const dataStoreModule = await this.storageClient.getObjectInCollection<
-            PersistedTrainingModule
-        >(Namespaces.TRAINING_MODULES, key);
+    public async swapOrder(id1: string, id2: string): Promise<void> {
+        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES
+        );
 
-        return dataStoreModule ?? this.getBuiltin(key);
+        const index1 = _.findIndex(items, ({ id }) => id === id1);
+        const index2 = _.findIndex(items, ({ id }) => id === id2);
+        if (index1 === -1 || index2 === -1) return;
+
+        [items[index1], items[index2]] = [items[index2], items[index1]];
+        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
     }
 
     private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {

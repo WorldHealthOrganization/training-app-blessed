@@ -40,13 +40,18 @@ export const ModuleListTable: React.FC = () => {
     const deleteModules = useCallback(
         async (ids: string[]) => {
             setLoading(true);
-            await usecases.deleteModules(ids);
+            await usecases.modules.delete(ids);
             setRefreshKey(Math.random());
             setLoading(false);
             setSelection([]);
         },
         [usecases]
     );
+
+    const addModule = useCallback(() => {
+        setEditModuleCreationDialog(undefined);
+        setOpenCreationDialog(true);
+    }, []);
 
     const editModule = useCallback(
         (ids: string[]) => {
@@ -62,6 +67,30 @@ export const ModuleListTable: React.FC = () => {
             }
         },
         [modules]
+    );
+
+    const moveUpModule = useCallback(
+        async (ids: string[]) => {
+            const rowIndex = _.findIndex(modules, ({ id }) => id === ids[0]);
+            if (rowIndex === -1 || rowIndex === 0) return;
+
+            const prevRow = modules[rowIndex - 1];
+            await usecases.modules.swapOrder(ids[0], prevRow.id);
+            setRefreshKey(Math.random());
+        },
+        [modules, usecases]
+    );
+
+    const moveDownModule = useCallback(
+        async (ids: string[]) => {
+            const rowIndex = _.findIndex(modules, ({ id }) => id === ids[0]);
+            if (rowIndex === -1 || rowIndex === modules.length - 1) return;
+
+            const nextRow = modules[rowIndex + 1];
+            await usecases.modules.swapOrder(nextRow.id, ids[0]);
+            setRefreshKey(Math.random());
+        },
+        [modules, usecases]
     );
 
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
@@ -122,12 +151,33 @@ export const ModuleListTable: React.FC = () => {
                     return _.every(rows, item => item.rowType === "module" && item.type !== "core");
                 },
             },
+            {
+                name: "move-up-module",
+                text: i18n.t("Move up"),
+                icon: <Icon>arrow_upwards</Icon>,
+                onClick: moveUpModule,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module" && item.position !== 0);
+                },
+            },
+            {
+                name: "move-down-module",
+                text: i18n.t("Move down"),
+                icon: <Icon>arrow_downwards</Icon>,
+                onClick: moveDownModule,
+                isActive: rows => {
+                    return _.every(
+                        rows,
+                        item => item.rowType === "module" && item.position !== modules.length - 1
+                    );
+                },
+            },
         ],
-        [editModule, deleteModules]
+        [modules, editModule, deleteModules, moveUpModule, moveDownModule]
     );
 
     useEffect(() => {
-        usecases.listModules().then(modules => {
+        usecases.modules.list().then(modules => {
             setModules(buildListItems(modules));
             setLoading(false);
         });
@@ -154,7 +204,7 @@ export const ModuleListTable: React.FC = () => {
                 sorting={{ field: "position", order: "asc" }}
                 filterComponents={
                     <Tooltip title={"New module"} placement={"right"}>
-                        <IconButton onClick={() => setOpenCreationDialog(true)}>
+                        <IconButton onClick={addModule}>
                             <Icon>add_box</Icon>
                         </IconButton>
                     </Tooltip>

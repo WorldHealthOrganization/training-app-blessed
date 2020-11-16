@@ -20,13 +20,13 @@ const defaultBuilder: TrainingModuleBuilder = {
 };
 
 export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
-    builder: editBuilder = defaultBuilder,
+    builder: editBuilder,
     onClose,
 }) => {
     const { usecases } = useAppContext();
 
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
-    const [builder, setBuilder] = useState<TrainingModuleBuilder>(editBuilder);
+    const [builder, setBuilder] = useState<TrainingModuleBuilder>(editBuilder ?? defaultBuilder);
 
     const onChangeField = useCallback(
         (field: keyof TrainingModuleBuilder) => {
@@ -59,10 +59,10 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
         }
 
         if (editBuilder) {
-            await usecases.editModule(builder);
+            await usecases.modules.edit(builder);
             onClose();
         } else {
-            const result = await usecases.createModule(builder);
+            const result = await usecases.modules.create(builder);
             result.match({
                 success: onClose,
                 error: () => {

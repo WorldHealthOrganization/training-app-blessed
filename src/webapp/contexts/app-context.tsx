@@ -42,7 +42,7 @@ export function useAppContext(): UseAppContextResult {
     useEffect(() => {
         if (module) return;
         if (appState.type !== "TRAINING" && appState.type !== "TRAINING_DIALOG") return;
-        compositionRoot.usecases.getModule(appState.module).then(setModule);
+        compositionRoot.usecases.modules.get(appState.module).then(setModule);
     }, [appState, module, compositionRoot, setModule]);
 
     return { appState, setAppState, routes, usecases, module };

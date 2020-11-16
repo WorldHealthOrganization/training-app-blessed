@@ -18,7 +18,7 @@ export const HomePage = () => {
     const [modules, setModules] = useState<TrainingModule[]>([]);
 
     useEffect(() => {
-        usecases.listModules().then(setModules);
+        usecases.modules.list().then(setModules);
     }, [usecases]);
 
     const loadModule = useCallback(
