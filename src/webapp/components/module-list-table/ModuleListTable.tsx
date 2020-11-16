@@ -1,9 +1,17 @@
 import { Icon, IconButton, Tooltip } from "@material-ui/core";
-import { ObjectsTable, TableColumn } from "d2-ui-components";
+import {
+    ObjectsTable,
+    TableAction,
+    TableColumn,
+    TableSelection,
+    TableState,
+} from "d2-ui-components";
+import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { NamedRef } from "../../../domain/entities/Ref";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
+import { TrainingModule, TrainingModuleBuilder } from "../../../domain/entities/TrainingModule";
+import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
@@ -15,8 +23,50 @@ export const ModuleListTable: React.FC = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [modules, setModules] = useState<ListItemModule[]>([]);
+    const [selection, setSelection] = useState<TableSelection[]>([]);
+
+    const [editModuleCreationDialog, setEditModuleCreationDialog] = useState<
+        TrainingModuleBuilder
+    >();
     const [isCreationDialogOpen, setOpenCreationDialog] = useState<boolean>(false);
     const [refreshKey, setRefreshKey] = useState(Math.random());
+
+    const closeCreationDialog = useCallback(() => {
+        setOpenCreationDialog(false);
+        setEditModuleCreationDialog(undefined);
+        setRefreshKey(Math.random());
+    }, []);
+
+    const deleteModules = useCallback(
+        async (ids: string[]) => {
+            setLoading(true);
+            await usecases.deleteModules(ids);
+            setRefreshKey(Math.random());
+            setLoading(false);
+            setSelection([]);
+        },
+        [usecases]
+    );
+
+    const editModule = useCallback(
+        (ids: string[]) => {
+            const row = modules.find(({ id }) => id === ids[0]);
+            if (row) {
+                setEditModuleCreationDialog({
+                    id: row.id,
+                    name: row.name,
+                    title: row.contents.welcome.title,
+                    description: row.contents.welcome.description,
+                });
+                setOpenCreationDialog(true);
+            }
+        },
+        [modules]
+    );
+
+    const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
+        setSelection(selection);
+    }, []);
 
     const columns: TableColumn<ListItem>[] = useMemo(
         () => [
@@ -32,6 +82,14 @@ export const ModuleListTable: React.FC = () => {
                 sortable: false,
             },
             {
+                name: "disabled",
+                text: "Disabled",
+                sortable: false,
+                getValue: item => {
+                    return item.disabled ? i18n.t("Yes") : i18n.t("No");
+                },
+            },
+            {
                 name: "value",
                 text: "Preview",
                 sortable: false,
@@ -43,10 +101,30 @@ export const ModuleListTable: React.FC = () => {
         []
     );
 
-    const closeCreationDialog = useCallback(() => {
-        setOpenCreationDialog(false);
-        setRefreshKey(Math.random());
-    }, []);
+    const actions: TableAction<ListItem>[] = useMemo(
+        () => [
+            {
+                name: "edit-module",
+                text: i18n.t("Edit module"),
+                icon: <Icon>edit</Icon>,
+                onClick: editModule,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module");
+                },
+            },
+            {
+                name: "delete-module",
+                text: i18n.t("Delete module"),
+                icon: <Icon>delete</Icon>,
+                multiple: true,
+                onClick: deleteModules,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module" && item.type !== "core");
+                },
+            },
+        ],
+        [editModule, deleteModules]
+    );
 
     useEffect(() => {
         usecases.listModules().then(modules => {
@@ -57,12 +135,20 @@ export const ModuleListTable: React.FC = () => {
 
     return (
         <PageWrapper>
-            {isCreationDialogOpen && <ModuleCreationDialog onClose={closeCreationDialog} />}
+            {isCreationDialogOpen && (
+                <ModuleCreationDialog
+                    onClose={closeCreationDialog}
+                    builder={editModuleCreationDialog}
+                />
+            )}
 
             <ObjectsTable<ListItem>
                 loading={loading}
                 rows={modules}
                 columns={columns}
+                actions={actions}
+                selection={selection}
+                onChange={onTableChange}
                 childrenKeys={["steps", "pages"]}
                 forceSelectionColumn={true}
                 sorting={{ field: "position", order: "asc" }}
@@ -80,7 +166,7 @@ export const ModuleListTable: React.FC = () => {
 
 type ListItem = FlattenUnion<ListItemModule | ListItemStep | ListItemPage>;
 
-interface ListItemModule extends Omit<TrainingModule, "contents"> {
+interface ListItemModule extends TrainingModule {
     rowType: "module";
     steps: ListItemStep[];
     value: string;
@@ -102,12 +188,12 @@ interface ListItemPage extends NamedRef {
 }
 
 const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
-    return modules.map(({ contents, ...module }, moduleIdx) => ({
+    return modules.map((module, moduleIdx) => ({
         ...module,
         rowType: "module",
         position: moduleIdx,
-        value: `# ${contents.welcome.title}\n\n${contents.welcome.description}`,
-        steps: contents.steps.map(({ title, pages }, stepIdx) => ({
+        value: `# ${module.contents.welcome.title}\n\n${module.contents.welcome.description}`,
+        steps: module.contents.steps.map(({ title, pages }, stepIdx) => ({
             id: `step-${stepIdx + 1}`,
             name: `Step ${stepIdx + 1}: ${title}`,
             rowType: "step",

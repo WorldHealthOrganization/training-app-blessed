@@ -5,4 +5,8 @@ export interface TrainingModuleRepository {
     list(): Promise<TrainingModule[]>;
     get(moduleKey: string): Promise<TrainingModule | undefined>;
     create(builder: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>>;
+    edit(
+        builder: TrainingModuleBuilder
+    ): Promise<void>;
+    delete(ids: string[]): Promise<void>;
 }

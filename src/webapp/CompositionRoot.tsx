@@ -3,6 +3,8 @@ import { ConfigDataSource } from "../data/sources/config/ConfigDataSource";
 import { Dhis2ConfigDataSource } from "../data/sources/config/Dhis2ConfigDataSource";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
+import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
+import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { cache } from "../utils/cache";
@@ -22,6 +24,8 @@ export class CompositionRoot {
             listModules: new ListModulesUseCase(this.trainingModuleRepository),
             getModule: new GetModuleUseCase(this.trainingModuleRepository),
             createModule: new CreateModuleUseCase(this.trainingModuleRepository),
+            deleteModules: new DeleteModulesUseCase(this.trainingModuleRepository),
+            editModule: new EditModuleUseCase(this.trainingModuleRepository)
         });
     }
 }

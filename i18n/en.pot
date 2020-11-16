@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-16T07:24:30.446Z\n"
-"PO-Revision-Date: 2020-11-16T07:24:30.446Z\n"
+"POT-Creation-Date: 2020-11-16T08:08:56.189Z\n"
+"PO-Revision-Date: 2020-11-16T08:08:56.189Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -24,6 +24,21 @@ msgid "Field must have a value"
 msgstr ""
 
 msgid "Code must be unique"
+msgstr ""
+
+msgid "Edit module"
+msgstr ""
+
+msgid "Add module"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Delete module"
 msgstr ""
 
 msgid "Close"

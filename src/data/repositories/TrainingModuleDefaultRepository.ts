@@ -5,7 +5,7 @@ import {
     isValidTrainingType,
     TrainingModule,
     TrainingModuleBuilder,
-    TrainingModuleContents,
+    TrainingModuleContents
 } from "../../domain/entities/TrainingModule";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
@@ -66,7 +66,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         title,
         description,
     }: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>> {
-        const items = await this.list();
+        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES
+        );
         const exists = !!items.find(item => item.id === id);
         if (exists) return Either.error("CODE_EXISTS");
 
@@ -95,6 +97,42 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         await this.saveDataStore(newModel);
         return Either.success(undefined);
+    }
+
+    public async edit({ id, name, title, description }: TrainingModuleBuilder): Promise<void> {
+        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES
+        );
+        const item = items.find(item => item.id === id);
+        if (!item) return;
+
+        const newItem = {
+            ...item,
+            name: name,
+            contents: {
+                ...item.contents,
+                welcome: {
+                    ...item.contents.welcome,
+                    title: {
+                        ...item.contents.welcome.title,
+                        referenceValue: title,
+                    },
+                    description: {
+                        ...item.contents.welcome.description,
+                        referenceValue:
+                            description,
+                    },
+                },
+            },
+        };
+
+        await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, newItem);
+    }
+
+    public async delete(ids: string[]): Promise<void> {
+        for (const id of ids) {
+            await this.storageClient.removeObjectInCollection(Namespaces.TRAINING_MODULES, id);
+        }
     }
 
     private async getDataStore(key: string): Promise<PersistedTrainingModule | undefined> {

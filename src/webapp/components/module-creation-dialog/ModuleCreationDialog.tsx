@@ -8,19 +8,25 @@ import { Dictionary } from "../../../types/utils";
 import { useAppContext } from "../../contexts/app-context";
 
 export interface ModuleCreationDialogProps {
+    builder?: TrainingModuleBuilder;
     onClose: () => void;
 }
 
-export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({ onClose }) => {
+const defaultBuilder: TrainingModuleBuilder = {
+    id: "",
+    name: "",
+    description: "",
+    title: "",
+};
+
+export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
+    builder: editBuilder = defaultBuilder,
+    onClose,
+}) => {
     const { usecases } = useAppContext();
 
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
-    const [builder, setBuilder] = useState<TrainingModuleBuilder>({
-        id: "",
-        name: "",
-        description: "",
-        title: "",
-    });
+    const [builder, setBuilder] = useState<TrainingModuleBuilder>(editBuilder);
 
     const onChangeField = useCallback(
         (field: keyof TrainingModuleBuilder) => {
@@ -52,25 +58,31 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({ onCl
             return;
         }
 
-        const result = await usecases.createModule(builder);
-        result.match({
-            success: onClose,
-            error: () => {
-                setErrors({ id: i18n.t("Code must be unique") });
-            },
-        });
-    }, [onClose, builder, usecases]);
+        if (editBuilder) {
+            await usecases.editModule(builder);
+            onClose();
+        } else {
+            const result = await usecases.createModule(builder);
+            result.match({
+                success: onClose,
+                error: () => {
+                    setErrors({ id: i18n.t("Code must be unique") });
+                },
+            });
+        }
+    }, [onClose, editBuilder, builder, usecases]);
 
     return (
         <ConfirmationDialog
-            title={"Add module"}
+            title={editBuilder ? i18n.t("Edit module") : i18n.t("Add module")}
             isOpen={true}
-            maxWidth={"sm"}
+            maxWidth={"lg"}
             fullWidth={true}
             onCancel={onClose}
             onSave={onSave}
         >
             <TextField
+                disabled={!!editBuilder}
                 fullWidth={true}
                 label={"Code *"}
                 value={builder.id}

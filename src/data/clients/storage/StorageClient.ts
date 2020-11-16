@@ -53,13 +53,19 @@ export abstract class StorageClient {
     }
 
     public async saveObjectInCollection<T extends Ref>(key: Namespace, element: T): Promise<void> {
-        const oldData: Ref[] = (await this.getObject(key)) ?? [];
-        const cleanData = oldData.filter(item => item.id !== element.id);
         const advancedProperties = NamespaceProperties[key];
+        const baseElement = _.omit(element, advancedProperties);
+
+        const oldData: Ref[] = (await this.getObject(key)) ?? [];
+        const foundIndex = _.findIndex(oldData, item => item.id === element.id);
+        const arrayIndex = foundIndex === -1 ? oldData.length : foundIndex;
 
         // Save base element directly into collection: model
-        const baseElement = _.omit(element, advancedProperties);
-        await this.saveObject(key, [...cleanData, baseElement]);
+        await this.saveObject(key, [
+            ...oldData.slice(0, arrayIndex),
+            baseElement,
+            ...oldData.slice(arrayIndex + 1),
+        ]);
 
         // Save advanced properties to its own key: model-id
         if (advancedProperties.length > 0) {
