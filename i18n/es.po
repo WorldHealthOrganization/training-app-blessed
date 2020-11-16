@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-11-15T19:57:40.861Z\n"
+"POT-Creation-Date: 2020-11-16T07:24:30.446Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,10 @@ msgstr ""
 msgid "Minimize window"
 msgstr ""
 
-msgid "Name (*)"
+msgid "Field must have a value"
+msgstr ""
+
+msgid "Code must be unique"
 msgstr ""
 
 msgid "Close"

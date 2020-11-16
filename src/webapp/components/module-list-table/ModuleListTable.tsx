@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { NamedRef } from "../../../domain/entities/Ref";
 import { TrainingModule } from "../../../domain/entities/TrainingModule";
+import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
@@ -13,29 +14,30 @@ export const ModuleListTable: React.FC = () => {
     const { usecases } = useAppContext();
 
     const [loading, setLoading] = useState<boolean>(true);
-    const [modules, setModules] = useState<ModuleListItem[]>([]);
+    const [modules, setModules] = useState<ListItemModule[]>([]);
     const [isCreationDialogOpen, setOpenCreationDialog] = useState<boolean>(false);
     const [refreshKey, setRefreshKey] = useState(Math.random());
 
-    const columns: TableColumn<ModuleListItem>[] = useMemo(
+    const columns: TableColumn<ListItem>[] = useMemo(
         () => [
             {
                 name: "name",
                 text: "Name",
+                sortable: false,
             },
             {
                 name: "id",
                 text: "Code",
                 hidden: true,
+                sortable: false,
             },
             {
                 name: "value",
                 text: "Preview",
-                getValue: ({ value }) => <StyledStepPreview value={value} />,
-            },
-            {
-                name: "disabled",
-                text: "Disabled",
+                sortable: false,
+                getValue: item => {
+                    return item.rowType !== "step" && <StyledStepPreview value={item.value} />;
+                },
             },
         ],
         []
@@ -57,12 +59,13 @@ export const ModuleListTable: React.FC = () => {
         <PageWrapper>
             {isCreationDialogOpen && <ModuleCreationDialog onClose={closeCreationDialog} />}
 
-            <ObjectsTable<ModuleListItem>
+            <ObjectsTable<ListItem>
                 loading={loading}
                 rows={modules}
                 columns={columns}
                 childrenKeys={["steps", "pages"]}
                 forceSelectionColumn={true}
+                sorting={{ field: "position", order: "asc" }}
                 filterComponents={
                     <Tooltip title={"New module"} placement={"right"}>
                         <IconButton onClick={() => setOpenCreationDialog(true)}>
@@ -75,31 +78,45 @@ export const ModuleListTable: React.FC = () => {
     );
 };
 
-interface ModuleListItem extends Omit<TrainingModule, "contents"> {
-    steps: ModuleListStep[];
-    value?: string;
+type ListItem = FlattenUnion<ListItemModule | ListItemStep | ListItemPage>;
+
+interface ListItemModule extends Omit<TrainingModule, "contents"> {
+    rowType: "module";
+    steps: ListItemStep[];
+    value: string;
+    position: number;
 }
 
-interface ModuleListStep {
+interface ListItemStep {
     id: string;
     name: string;
-    pages: ModuleListStepPage[];
+    rowType: "step";
+    pages: ListItemPage[];
+    position: number;
 }
 
-interface ModuleListStepPage extends NamedRef {
+interface ListItemPage extends NamedRef {
+    rowType: "page";
     value: string;
+    position: number;
 }
 
-const buildListItems = (modules: TrainingModule[]): ModuleListItem[] => {
-    return modules.map(({ contents, ...module }) => ({
+const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
+    return modules.map(({ contents, ...module }, moduleIdx) => ({
         ...module,
+        rowType: "module",
+        position: moduleIdx,
         value: `# ${contents.welcome.title}\n\n${contents.welcome.description}`,
         steps: contents.steps.map(({ title, pages }, stepIdx) => ({
             id: `step-${stepIdx + 1}`,
             name: `Step ${stepIdx + 1}: ${title}`,
+            rowType: "step",
+            position: stepIdx,
             pages: pages.map((value, pageIdx) => ({
                 id: `page-${stepIdx + 1}-${stepIdx + 1}`,
                 name: `Page ${pageIdx + 1}`,
+                rowType: "page",
+                position: pageIdx,
                 value,
             })),
         })),

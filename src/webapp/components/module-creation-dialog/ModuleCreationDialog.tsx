@@ -14,7 +14,7 @@ export interface ModuleCreationDialogProps {
 export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({ onClose }) => {
     const { usecases } = useAppContext();
 
-    const [errors, setErrors] = useState<Dictionary<string | undefined >>({});
+    const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
     const [builder, setBuilder] = useState<TrainingModuleBuilder>({
         id: "",
         name: "",
@@ -28,7 +28,10 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({ onCl
                 setBuilder(builder => {
                     return { ...builder, [field]: event.target.value as string };
                 });
-                setErrors(errors => ({ ...errors, [field]: !event.target.value ? i18n.t("Field must have a value") : undefined }));
+                setErrors(errors => ({
+                    ...errors,
+                    [field]: !event.target.value ? i18n.t("Field must have a value") : undefined,
+                }));
             };
         },
         [setBuilder]
@@ -45,7 +48,7 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({ onCl
         );
 
         if (_.values(errors).length > 0) {
-            setErrors(oldErrors => ({...oldErrors, ...errors}));
+            setErrors(oldErrors => ({ ...oldErrors, ...errors }));
             return;
         }
 
