@@ -45,7 +45,7 @@ const Container = styled.div`
     }
 
     .mde-tabs {
-        display: none;
+        display: none !important;
     }
 `;
 
