@@ -203,7 +203,6 @@ export const ModuleListTable: React.FC = () => {
                 selection={selection}
                 onChange={onTableChange}
                 childrenKeys={["steps", "pages"]}
-                forceSelectionColumn={true}
                 sorting={{ field: "position", order: "asc" }}
                 filterComponents={
                     <Tooltip title={"New module"} placement={"right"}>

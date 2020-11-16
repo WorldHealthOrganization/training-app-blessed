@@ -38,8 +38,9 @@ const Container = styled.div`
     display: flex;
     width: 100%;
     justify-content: space-between;
-    
-     textarea, button {
+
+    textarea,
+    button {
         outline: 0px;
     }
 
