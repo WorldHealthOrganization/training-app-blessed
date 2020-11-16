@@ -62,7 +62,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
         const key = `${module.id}-${appState.step}-${appState.content}`;
-        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0].key;
+        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0]?.key;
     }, [appState, module, wizardSteps]);
 
     const onStepChange = useCallback(
