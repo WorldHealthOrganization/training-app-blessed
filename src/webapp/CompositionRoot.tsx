@@ -1,6 +1,6 @@
+import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepository";
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
-import { ConfigDataSource } from "../data/sources/config/ConfigDataSource";
-import { Dhis2ConfigDataSource } from "../data/sources/config/Dhis2ConfigDataSource";
+import { ConfigRepository } from "../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
@@ -12,12 +12,12 @@ import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgress
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
-    private readonly configDataSource: ConfigDataSource;
+    private readonly configRepository: ConfigRepository;
     private readonly trainingModuleRepository: TrainingModuleRepository;
 
     constructor(baseUrl: string) {
-        this.configDataSource = new Dhis2ConfigDataSource(baseUrl);
-        this.trainingModuleRepository = new TrainingModuleDefaultRepository(this.configDataSource);
+        this.configRepository = new Dhis2ConfigRepository(baseUrl);
+        this.trainingModuleRepository = new TrainingModuleDefaultRepository(this.configRepository);
     }
 
     @cache()

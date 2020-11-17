@@ -8,7 +8,7 @@ import { useAppContext } from "../../contexts/app-context";
 import { Label, Line, Step } from "./SummaryStep";
 
 export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) => {
-    const { module, setAppState } = useAppContext();
+    const { module, setAppState, translate } = useAppContext();
 
     const startTutorial = useCallback(() => {
         if (!module) return;
@@ -89,7 +89,7 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
                             <Step key={`step-${idx}`} column={column} row={row} last={last}>
                                 <Line />
                                 <Bullet stepKey={idx + 1} onClick={() => jumpToStep(idx + 1)} />
-                                <Label>{title}</Label>
+                                <Label>{translate(title)}</Label>
                             </Step>
                         );
                     })}

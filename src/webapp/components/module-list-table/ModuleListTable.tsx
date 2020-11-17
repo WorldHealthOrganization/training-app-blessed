@@ -68,7 +68,7 @@ export const ModuleListTable: React.FC = () => {
                 setEditModuleCreationDialog({
                     id: row.id,
                     name: row.name,
-                    welcome: row.contents.welcome,
+                    welcome: row.contents.welcome.referenceValue,
                 });
                 setOpenCreationDialog(true);
             }
@@ -290,14 +290,14 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
                         name: "Welcome dialog",
                         rowType: "dialog",
                         position: 0,
-                        value: module.contents.welcome,
+                        value: module.contents.welcome.referenceValue,
                     },
                 ],
             },
         ],
         steps: module.contents.steps.map(({ title, pages }, stepIdx) => ({
             id: `${module.id}-step-${stepIdx + 1}`,
-            name: `Step ${stepIdx + 1}: ${title}`,
+            name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
             rowType: "step",
             position: stepIdx + 1,
             pages: pages.map((value, pageIdx) => ({
@@ -305,7 +305,7 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
                 name: `Page ${pageIdx + 1}`,
                 rowType: "page",
                 position: pageIdx,
-                value,
+                value: value.referenceValue,
             })),
         })),
     }));

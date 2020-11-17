@@ -7,7 +7,7 @@ import { Modal, ModalContent, ModalFooter } from "../../components/modal";
 import { useAppContext } from "../../contexts/app-context";
 
 export const WelcomePage = () => {
-    const { setAppState, module } = useAppContext();
+    const { setAppState, module, translate } = useAppContext();
 
     const startTutorial = useCallback(() => {
         if (!module) return;
@@ -31,7 +31,7 @@ export const WelcomePage = () => {
 
     return (
         <StyledModal onClose={toggleClose} onGoHome={goHome} centerChildren={true}>
-            <WelcomePageContent welcome={module.contents.welcome} />
+            <WelcomePageContent welcome={translate(module.contents.welcome)} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
                     {i18n.t("Exit Tutorial")}

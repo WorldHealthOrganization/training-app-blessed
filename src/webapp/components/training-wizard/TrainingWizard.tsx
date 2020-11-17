@@ -27,7 +27,7 @@ export interface TrainingWizardStepProps {
 }
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
-    const { appState, setAppState, usecases } = useAppContext();
+    const { appState, setAppState, usecases, translate } = useAppContext();
     const lastStep = useRef<string>();
 
     const minimized = useMemo(
@@ -40,8 +40,8 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         return _.flatMap(module.contents.steps, ({ title, pages }, step) =>
             pages.map((content, position) => {
                 const props: TrainingWizardStepProps = {
-                    title,
-                    content,
+                    title: translate(title),
+                    content: translate(content),
                     stepIndex: step,
                     contentIndex: position,
                     totalSteps: module.contents.steps.length,

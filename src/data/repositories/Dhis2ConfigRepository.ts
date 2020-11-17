@@ -1,11 +1,11 @@
-import { D2Api } from "../../../types/d2-api";
-import { cache } from "../../../utils/cache";
-import { Instance } from "../../entities/Instance";
-import { User } from "../../entities/User";
-import { getD2APiFromInstance, getMajorVersion } from "../../utils/d2-api";
-import { ConfigDataSource } from "./ConfigDataSource";
+import { D2Api } from "../../types/d2-api";
+import { cache } from "../../utils/cache";
+import { Instance } from "../entities/Instance";
+import { User } from "../entities/User";
+import { getD2APiFromInstance, getMajorVersion } from "../utils/d2-api";
+import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 
-export class Dhis2ConfigDataSource implements ConfigDataSource {
+export class Dhis2ConfigRepository implements ConfigRepository {
     private instance: Instance;
     private api: D2Api;
 

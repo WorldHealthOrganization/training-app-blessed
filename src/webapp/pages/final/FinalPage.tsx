@@ -14,7 +14,7 @@ import { Stepper } from "../../components/training-wizard/stepper/Stepper";
 import { useAppContext } from "../../contexts/app-context";
 
 export const FinalPage = () => {
-    const { setAppState, module } = useAppContext();
+    const { setAppState, module, translate } = useAppContext();
 
     const openSummary = useCallback(() => {
         setAppState(appState => {
@@ -49,7 +49,7 @@ export const FinalPage = () => {
 
     const steps = module.contents.steps.map(({ title }, idx) => ({
         key: `step-${idx}`,
-        label: title,
+        label: translate(title),
         component: () => null,
     }));
 

@@ -1,4 +1,4 @@
-import { TranslatableText } from "./TranslatableText";
+import { TrainingModuleContents } from "../../domain/entities/TrainingModule";
 
 export interface JSONTrainingModule {
     _version: number;
@@ -6,20 +6,9 @@ export interface JSONTrainingModule {
     name: string;
     type: string;
     disabled: boolean;
-    contents: JSONTrainingModuleContents;
+    contents: TrainingModuleContents;
     revision: number;
     dhisVersionRange: string;
     dhisAppKey: string;
     dhisLaunchUrl: string;
-}
-
-export interface JSONTrainingModuleContents {
-    welcome: TranslatableText;
-    steps: JSONTrainingModuleStep[];
-}
-
-export interface JSONTrainingModuleStep {
-    title: TranslatableText;
-    subtitle?: TranslatableText;
-    pages: TranslatableText[];
 }

@@ -5,7 +5,6 @@ import {
     isValidTrainingType,
     TrainingModule,
     TrainingModuleBuilder,
-    TrainingModuleContents,
 } from "../../domain/entities/TrainingModule";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
@@ -16,16 +15,15 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
-import { translate } from "../entities/TranslatableText";
 import { UserProgress } from "../entities/UserProgress";
-import { ConfigDataSource } from "../sources/config/ConfigDataSource";
+import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
 
-    constructor(private config: ConfigDataSource) {
+    constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
@@ -180,18 +178,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
 
-        const { created, lastUpdated, type, contents, ...rest } = model;
-        const { uiLocale } = await this.config.getUser();
+        const { created, lastUpdated, type, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
-
-        const translatedContents: TrainingModuleContents = {
-            welcome: translate(contents.welcome, uiLocale),
-            steps: contents.steps.map(({ title, subtitle, pages }) => ({
-                title: translate(title, uiLocale),
-                subtitle: subtitle ? translate(subtitle, uiLocale) : undefined,
-                pages: pages.map(item => translate(item, uiLocale)),
-            })),
-        };
 
         const progress = await this.progressStorageClient.getObjectInCollection<UserProgress>(
             Namespaces.PROGRESS,
@@ -202,7 +190,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             ...rest,
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
-            contents: translatedContents,
             type: validType,
             progress: progress?.percentage ?? 0,
         };

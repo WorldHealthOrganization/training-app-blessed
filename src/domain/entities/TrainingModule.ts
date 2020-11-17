@@ -1,4 +1,5 @@
 import { SharedRef } from "./Ref";
+import { TranslatableText } from "./TranslatableText";
 
 export type TrainingModuleType = "app" | "core" | "widget";
 
@@ -14,14 +15,14 @@ export interface TrainingModule extends SharedRef {
 }
 
 export interface TrainingModuleContents {
-    welcome: string;
+    welcome: TranslatableText;
     steps: TrainingModuleStep[];
 }
 
 export interface TrainingModuleStep {
-    title: string;
-    subtitle?: string;
-    pages: string[];
+    title: TranslatableText;
+    subtitle?: TranslatableText;
+    pages: TranslatableText[];
 }
 
 export interface TrainingModuleBuilder {

@@ -76,12 +76,17 @@ export const routes: AppRoute[] = [
     },
 ];
 
-const App = () => {
+const App: React.FC<{ locale: string }> = ({ locale }) => {
     const { baseUrl } = useConfig();
     const compositionRoot = new CompositionRoot(baseUrl);
 
     return (
-        <AppContextProvider baseUrl={baseUrl} routes={routes} compositionRoot={compositionRoot}>
+        <AppContextProvider
+            baseUrl={baseUrl}
+            routes={routes}
+            compositionRoot={compositionRoot}
+            locale={locale}
+        >
             <StylesProvider injectFirst>
                 <MuiThemeProvider theme={muiTheme}>
                     <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
