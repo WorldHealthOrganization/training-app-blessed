@@ -86,7 +86,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         [setAppState, module, usecases]
     );
 
-    const onMinimize = useCallback(() => {
+    const minimize = useCallback(() => {
         setAppState(appState => {
             if (appState.type !== "TRAINING") return appState;
             const state = appState.state === "MINIMIZED" ? "OPEN" : "MINIMIZED";
@@ -94,12 +94,17 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         });
     }, [setAppState]);
 
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
     if (!module || wizardSteps.length === 0) return null;
 
     return (
         <StyledModal
             onClose={onClose}
-            onMinimize={onMinimize}
+            onGoHome={goHome}
+            onMinimize={minimize}
             minimized={minimized}
             allowDrag={true}
         >

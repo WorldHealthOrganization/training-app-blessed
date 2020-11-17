@@ -37,8 +37,12 @@ export const FinalPage = () => {
         });
     }, [setAppState, module]);
 
-    const exit = useCallback(() => {
+    const goHome = useCallback(() => {
         setAppState({ type: "HOME" });
+    }, [setAppState]);
+
+    const exit = useCallback(() => {
+        setAppState({ type: "EXIT" });
     }, [setAppState]);
 
     if (!module) return null;
@@ -50,7 +54,7 @@ export const FinalPage = () => {
     }));
 
     return (
-        <StyledModal onClose={exit}>
+        <StyledModal onClose={exit} onGoHome={goHome}>
             <ModalContent bigger={true}>
                 <Container>
                     <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>

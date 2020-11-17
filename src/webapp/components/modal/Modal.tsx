@@ -13,6 +13,7 @@ export const Modal: React.FC<ModalProps> = ({
     children,
     onClose,
     onMinimize,
+    onGoHome,
     minimized,
     allowDrag,
     centerChildren,
@@ -40,6 +41,7 @@ export const Modal: React.FC<ModalProps> = ({
                     <ModalHeader
                         minimized={minimized}
                         onClose={onClose}
+                        onGoHome={onGoHome}
                         onMinimize={onMinimize}
                         allowDrag={allowDrag}
                     />
@@ -53,6 +55,7 @@ export const Modal: React.FC<ModalProps> = ({
 export interface ModalProps {
     className?: string;
     onClose?: () => void;
+    onGoHome?: () => void;
     onMinimize?: () => void;
     minimized?: boolean;
     allowDrag?: boolean;

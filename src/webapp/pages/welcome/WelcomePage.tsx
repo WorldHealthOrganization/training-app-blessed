@@ -23,10 +23,14 @@ export const WelcomePage = () => {
         setAppState({ type: "TRAINING", module: module.id, step: 0, content: 0, state: "CLOSED" });
     }, [module, setAppState]);
 
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
     if (!module) return null;
 
     return (
-        <StyledModal onClose={toggleClose} centerChildren={true}>
+        <StyledModal onClose={toggleClose} onGoHome={goHome} centerChildren={true}>
             <WelcomePageContent welcome={module.contents.welcome} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>

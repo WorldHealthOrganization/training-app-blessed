@@ -11,7 +11,7 @@ export const Stepper = ({
     steps,
     currentStepKey,
     markAllCompleted = false,
-    lastClickableStepIndex = -1,
+    lastClickableStepIndex,
 }: StepperProps) => {
     const { setAppState } = useAppContext();
 
@@ -43,7 +43,9 @@ export const Stepper = ({
                         completed={markAllCompleted || index < stepIndex}
                         last={index === totalSteps - 1}
                         onClick={
-                            lastClickableStepIndex >= index ? () => moveStep(index + 1) : undefined
+                            !lastClickableStepIndex || lastClickableStepIndex >= index
+                                ? () => moveStep(index + 1)
+                                : undefined
                         }
                     />
                 </Step>

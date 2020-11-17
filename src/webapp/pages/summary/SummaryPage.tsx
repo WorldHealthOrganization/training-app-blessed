@@ -64,8 +64,16 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
     const prev = completed ? goToFinalPage : goToWelcomePage;
     const next = completed ? endTutorial : startTutorial;
 
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
     return (
-        <StyledModal completed={completed} onClose={completed ? endTutorial : minimize}>
+        <StyledModal
+            completed={completed}
+            onClose={completed ? endTutorial : minimize}
+            onGoHome={goHome}
+        >
             <ContentWrapper>
                 <ModalTitle>{title}</ModalTitle>
                 <ModalContent bigger={true}>
