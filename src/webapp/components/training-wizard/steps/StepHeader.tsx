@@ -17,10 +17,9 @@ const Bullet = styled.span`
     font-weight: 700;
     border: 2px solid #fff;
     padding: 15px;
-    height: 18px;
-    width: 18px;
+    height: 36px;
+    width: 36px;
     border-radius: 100px;
-    line-height: 20px;
     margin-right: 20px;
 `;
 

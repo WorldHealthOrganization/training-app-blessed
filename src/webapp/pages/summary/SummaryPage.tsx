@@ -79,8 +79,8 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
 
                         return (
                             <Step key={`step-${idx}`} column={column} row={row} last={last}>
-                                <Bullet stepKey={idx + 1} onClick={() => jumpToStep(idx + 1)} />
                                 <Line />
+                                <Bullet stepKey={idx + 1} onClick={() => jumpToStep(idx + 1)} />
                                 <Label>{title}</Label>
                             </Step>
                         );
@@ -118,7 +118,7 @@ const StyledModal = styled(Modal)<{ completed?: boolean }>`
 
         ${Bullet} {
             color: white;
-            background-color: transparent;
+            background-color: #276696;
             border: 2px solid white;
         }
     `}

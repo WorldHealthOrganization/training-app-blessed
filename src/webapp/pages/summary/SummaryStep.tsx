@@ -3,9 +3,9 @@ import { Bullet } from "../../components/training-wizard/stepper/Bullet";
 
 export const Line = styled.div`
     position: absolute;
-    top: 80%;
+    top: 50%;
     left: 26px;
-    height: 40%;
+    height: 100%;
     border-left: 3px solid #43cbcb;
 `;
 
@@ -35,6 +35,7 @@ export const Step = styled.div<{ column: "left" | "right"; row: number; last?: b
     }
 
     ${Bullet} {
+        position: relative;
         background-color: #43cbcb;
         border: 3px solid #43cbcb;
     }

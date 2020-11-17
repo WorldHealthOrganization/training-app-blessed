@@ -30,6 +30,7 @@ export const Bullet = styled(BaseBullet)`
     line-height: 20px;
     cursor: ${props => (props.onClick ? "pointer" : "inherit")};
     user-select: none;
+    align-self: center;
 
     color: #276696;
     background-color: ${props => (props.current || props.completed ? "#43cbcb" : "#fff")};
@@ -39,9 +40,8 @@ export const Bullet = styled(BaseBullet)`
         content: "";
         position: absolute;
         bottom: 12px;
-        left: 45px;
         height: 3px;
-        width: calc(82%);
+        width: 100%;
         background-color: #43cbcb;
         margin-left: -4px;
     }
@@ -51,5 +51,4 @@ const StyledDoneIcon = styled(DoneIcon)`
     font-size: 18px !important;
     color: #fff;
     font-weight: bold;
-    margin-right: 8px;
 `;

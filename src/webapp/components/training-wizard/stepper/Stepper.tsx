@@ -7,7 +7,12 @@ import { useAppContext } from "../../../contexts/app-context";
 import { TrainingWizardStepProps } from "../TrainingWizard";
 import { Bullet } from "./Bullet";
 
-export const Stepper = ({ steps, currentStepKey, markAllCompleted = false }: StepperProps) => {
+export const Stepper = ({
+    steps,
+    currentStepKey,
+    markAllCompleted = false,
+    lastClickableStepIndex = -1,
+}: StepperProps) => {
     const { setAppState } = useAppContext();
 
     const moveStep = useCallback(
@@ -37,7 +42,9 @@ export const Stepper = ({ steps, currentStepKey, markAllCompleted = false }: Ste
                         current={index === stepIndex}
                         completed={markAllCompleted || index < stepIndex}
                         last={index === totalSteps - 1}
-                        onClick={() => moveStep(index + 1)}
+                        onClick={
+                            lastClickableStepIndex >= index ? () => moveStep(index + 1) : undefined
+                        }
                     />
                 </Step>
             ))}
