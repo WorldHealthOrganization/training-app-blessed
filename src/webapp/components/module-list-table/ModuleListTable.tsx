@@ -68,7 +68,7 @@ export const ModuleListTable: React.FC = () => {
                 setEditModuleCreationDialog({
                     id: row.id,
                     name: row.name,
-                    welcome: row.contents.welcome.referenceValue,
+                    poEditorProject: row.translation.project ?? "",
                 });
                 setOpenCreationDialog(true);
             }

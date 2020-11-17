@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-17T14:54:04.648Z\n"
-"PO-Revision-Date: 2020-11-17T14:54:04.648Z\n"
+"POT-Creation-Date: 2020-11-17T15:10:29.354Z\n"
+"PO-Revision-Date: 2020-11-17T15:10:29.354Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -39,9 +39,6 @@ msgid "Edit module"
 msgstr ""
 
 msgid "Add module"
-msgstr ""
-
-msgid "Welcome page"
 msgstr ""
 
 msgid "Edit contents of {{name}}"

@@ -4,6 +4,7 @@ import { TranslatableText } from "./TranslatableText";
 export type TrainingModuleType = "app" | "core" | "widget";
 
 export interface TrainingModule extends SharedRef {
+    translation: TranslationConnection;
     type: TrainingModuleType;
     disabled: boolean;
     progress: number;
@@ -28,8 +29,13 @@ export interface TrainingModuleStep {
 export interface TrainingModuleBuilder {
     id: string;
     name: string;
-    welcome: string;
+    poEditorProject: string;
 }
+
+type TranslationConnection = {
+    provider: string;
+    project?: string;
+};
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
     const match = /^.*-(\d*)-(\d*)$/.exec(key);

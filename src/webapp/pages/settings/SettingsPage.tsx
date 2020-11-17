@@ -55,7 +55,9 @@ export const SettingsPage: React.FC = () => {
             )}
 
             <TextField
+                name="token"
                 type="password"
+                autoComplete="new-password"
                 fullWidth={true}
                 label={i18n.t("POEditor token")}
                 value={poEditorToken ?? defaultToken}

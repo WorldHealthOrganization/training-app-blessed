@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-11-17T14:54:04.648Z\n"
+"POT-Creation-Date: 2020-11-17T15:10:29.354Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,10 +40,6 @@ msgstr ""
 
 msgid "Add module"
 msgstr ""
-
-#, fuzzy
-msgid "Welcome page"
-msgstr "Bienvenido"
 
 msgid "Edit contents of {{name}}"
 msgstr ""
@@ -126,6 +122,10 @@ msgstr ""
 #, fuzzy
 msgid "Start Tutorial"
 msgstr "Tutorial"
+
+#, fuzzy
+#~ msgid "Welcome page"
+#~ msgstr "Bienvenido"
 
 #~ msgid "Back"
 #~ msgstr "Volver"

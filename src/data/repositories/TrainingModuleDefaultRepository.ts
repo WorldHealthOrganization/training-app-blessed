@@ -4,8 +4,9 @@ import { Either } from "../../domain/entities/Either";
 import {
     isValidTrainingType,
     TrainingModule,
-    TrainingModuleBuilder,
+    TrainingModuleBuilder
 } from "../../domain/entities/TrainingModule";
+import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
 import { promiseMap } from "../../utils/promises";
@@ -13,12 +14,11 @@ import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { JSONTrainingModule } from "../entities/JSONTrainingModule";
-import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
-import { UserProgress } from "../entities/UserProgress";
-import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { PoEditorTranslationClient } from "../clients/translation/PoEditorTranslationClient";
 import { TranslationClient } from "../clients/translation/TranslationClient";
+import { JSONTrainingModule } from "../entities/JSONTrainingModule";
+import { PersistedTrainingModule, TranslationConnection } from "../entities/PersistedTrainingModule";
+import { UserProgress } from "../entities/UserProgress";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -63,7 +63,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async create({
         id,
         name,
-        welcome,
+        poEditorProject,
     }: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>> {
         const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES
@@ -82,34 +82,32 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             dhisLaunchUrl: "",
             disabled: false,
             contents: {
-                welcome: { key: "module-welcome", referenceValue: welcome, translations: {} },
+                welcome: { key: "module-welcome", referenceValue: "", translations: {} },
                 steps: [],
             },
         });
 
-        await this.saveDataStore(newModel);
+        const translation: TranslationConnection = poEditorProject
+            ? { provider: "poeditor", project: poEditorProject }
+            : { provider: "NONE" };
+
+        await this.saveDataStore({ ...newModel, translation });
         return Either.success(undefined);
     }
 
-    public async edit({ id, name, welcome }: TrainingModuleBuilder): Promise<void> {
+    public async edit({ id, name, poEditorProject }: TrainingModuleBuilder): Promise<void> {
         const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES
         );
+
         const item = items.find(item => item.id === id);
         if (!item) return;
 
-        const newItem = {
-            ...item,
-            name: name,
-            contents: {
-                ...item.contents,
-                welcome: {
-                    ...item.contents.welcome,
-                    referenceValue: welcome,
-                },
-            },
-        };
+        const translation: TranslationConnection = poEditorProject
+            ? { provider: "poeditor", project: poEditorProject }
+            : { provider: "NONE" };
 
+        const newItem = { ...item, name: name, translation };
         await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, newItem);
     }
 

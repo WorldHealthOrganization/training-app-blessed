@@ -7,8 +7,6 @@ import { TrainingModuleBuilder } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { Dictionary } from "../../../types/utils";
 import { useAppContext } from "../../contexts/app-context";
-import { MarkdownEditor } from "../markdown-editor/MarkdownEditor";
-import { StepPreview } from "../module-list-table/ModuleListTable";
 
 export interface ModuleCreationDialogProps {
     builder?: TrainingModuleBuilder;
@@ -18,7 +16,7 @@ export interface ModuleCreationDialogProps {
 const defaultBuilder: TrainingModuleBuilder = {
     id: "",
     name: "",
-    welcome: "",
+    poEditorProject: "",
 };
 
 export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
@@ -44,16 +42,6 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
         },
         [setBuilder]
     );
-
-    const onChangeWelcome = useCallback((value: string) => {
-        setBuilder(builder => {
-            return { ...builder, welcome: value };
-        });
-        setErrors(errors => ({
-            ...errors,
-            welcome: !value ? i18n.t("Field must have a value") : undefined,
-        }));
-    }, []);
 
     const onSave = useCallback(async () => {
         const errors = _.reduce(
@@ -117,13 +105,11 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
             </Row>
 
             <Row>
-                <h3>{i18n.t("Welcome page")}</h3>
-                <MarkdownEditor
-                    value={builder.welcome}
-                    onChange={onChangeWelcome}
-                    markdownPreview={(markdown: string) => (
-                        <StepPreview value={markdown} rowType={"module"} />
-                    )}
+                <TextField
+                    fullWidth={true}
+                    label={"PoEditor Project id *"}
+                    value={builder.poEditorProject}
+                    onChange={onChangeField("poEditorProject")}
                 />
             </Row>
         </ConfirmationDialog>
