@@ -33,7 +33,7 @@ export const HomePage = () => {
     }, [setAppState]);
 
     return (
-        <StyledModal onClose={exitTutorial}>
+        <StyledModal>
             <ContentWrapper>
                 <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
                 <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
