@@ -132,11 +132,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
     }
 
-    public async updateProgress(id: string, progress: number): Promise<void> {
-        const percentage = Math.max(Math.min(progress, 100), 0);
+    public async updateProgress(id: string, lastStep: number): Promise<void> {
         await this.progressStorageClient.saveObjectInCollection<UserProgress>(Namespaces.PROGRESS, {
             id,
-            percentage,
+            lastStep,
         });
     }
 

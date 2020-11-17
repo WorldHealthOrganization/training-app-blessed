@@ -74,9 +74,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
             const result = extractStepFromKey(stepKey);
             if (!result) return;
 
-            const totalSteps = module.contents.steps.length;
-            const progress = (result.step * 100) / totalSteps;
-            await usecases.progress.update(module.id, progress);
+            await usecases.progress.update(module.id, result.step);
 
             setAppState(appState => {
                 if (appState.type !== "TRAINING") return appState;

@@ -1,4 +1,4 @@
 export interface UserProgress {
     id: string;
-    percentage: number;
+    lastStep: number;
 }

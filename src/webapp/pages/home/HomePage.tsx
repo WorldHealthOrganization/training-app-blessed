@@ -23,8 +23,13 @@ export const HomePage = () => {
     }, [usecases]);
 
     const loadModule = useCallback(
-        (module: string) => {
-            setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
+        (module: string, step: number) => {
+            console.log({ module, step })
+            if (step > 0) {
+                setAppState({ type: "TRAINING", state: "OPEN", module, step, content: 1 });
+            } else {
+                setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
+            }
         },
         [setAppState]
     );
@@ -44,12 +49,12 @@ export const HomePage = () => {
                 </ModalParagraph>
                 <ModalContent>
                     <Cardboard>
-                        {modules.map(({ name, id, progress, disabled }, idx) => (
+                        {modules.map(({ name, id, progress, disabled, contents }, idx) => (
                             <Card
                                 key={`card-${idx}`}
                                 label={name}
-                                progress={progress}
-                                onClick={() => loadModule(id)}
+                                progress={Math.round((progress / contents.steps.length) * 100)}
+                                onClick={() => loadModule(id, progress)}
                                 disabled={disabled}
                             />
                         ))}
