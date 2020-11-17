@@ -1,6 +1,6 @@
 import { Wizard } from "d2-ui-components";
 import _ from "lodash";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { extractStepFromKey, TrainingModule } from "../../../domain/entities/TrainingModule";
 import { useAppContext } from "../../contexts/app-context";
@@ -28,6 +28,7 @@ export interface TrainingWizardStepProps {
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
     const { appState, setAppState, usecases } = useAppContext();
+    const lastStep = useRef<string>();
 
     const minimized = useMemo(
         () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
@@ -67,8 +68,11 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
 
     const onStepChange = useCallback(
         async (stepKey: string) => {
+            if (!module || lastStep.current === stepKey) return;
+            lastStep.current = stepKey;
+
             const result = extractStepFromKey(stepKey);
-            if (!result || !module) return;
+            if (!result) return;
 
             const totalSteps = module.contents.steps.length;
             const progress = (result.step * 100) / totalSteps;
