@@ -26,6 +26,7 @@ export const routes: AppRoute[] = [
         paths: ["/"],
         element: <HomePage />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "welcome",
@@ -33,12 +34,14 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key", "/tutorial/:key/welcome"],
         element: <WelcomePage />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "tutorial",
         name: () => i18n.t("Tutorial"),
         paths: ["/tutorial/:key/:step/:content"],
         element: <TutorialPage />,
+        iframe: true,
     },
     {
         key: "contents",
@@ -46,6 +49,7 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key/contents"],
         element: <SummaryPage completed={false} />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "final",
@@ -53,6 +57,7 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key/final"],
         element: <FinalPage />,
         backdrop: true,
+        iframe: true,
     },
     {
         key: "summary",
@@ -60,15 +65,27 @@ export const routes: AppRoute[] = [
         paths: ["/tutorial/:key/summary"],
         element: <SummaryPage completed={true} />,
         backdrop: true,
+        iframe: true,
     },
+    /**{
+        key: "settings",
+        name: () => i18n.t("Settings"),
+        paths: ["/settings"],
+        element: <SettingsPage />,
+    },**/
 ];
 
-const App = () => {
+const App: React.FC<{ locale: string }> = ({ locale }) => {
     const { baseUrl } = useConfig();
-    const compositionRoot = new CompositionRoot();
+    const compositionRoot = new CompositionRoot(baseUrl);
 
     return (
-        <AppContextProvider baseUrl={baseUrl} routes={routes} compositionRoot={compositionRoot}>
+        <AppContextProvider
+            baseUrl={baseUrl}
+            routes={routes}
+            compositionRoot={compositionRoot}
+            locale={locale}
+        >
             <StylesProvider injectFirst>
                 <MuiThemeProvider theme={muiTheme}>
                     <OldMuiThemeProvider muiTheme={muiThemeLegacy}>

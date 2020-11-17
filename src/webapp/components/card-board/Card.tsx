@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { getColor } from "../../themes/colors";
 import { CardIcon } from "./CardIcon";
 import { CardProgress, CardProgressText } from "./CardProgress";
 import { CardTitle } from "./CardTitle";
@@ -31,7 +32,7 @@ export const Card = styled(BaseCard)`
 
 const getCardColor = (progress: number) => {
     if (progress === 0) return "#C6D8E6";
-    else if (progress === 100) return "#43CBCB";
+    else if (progress === 100) return getColor("primary");
     else return "#626262";
 };
 

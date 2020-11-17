@@ -1,39 +1,49 @@
 import { SharedRef } from "./Ref";
+import { TranslatableText } from "./TranslatableText";
 
 export type TrainingModuleType = "app" | "core" | "widget";
 
 export interface TrainingModule extends SharedRef {
-    key: string;
+    translation: TranslationConnection;
     type: TrainingModuleType;
-    details: TrainingModuleDetails;
-    steps: TrainingModuleStep[];
-    versionRange: string;
+    disabled: boolean;
+    progress: number;
+    contents: TrainingModuleContents;
+    revision: number;
     dhisVersionRange: string;
     dhisAppKey: string;
     dhisLaunchUrl: string;
 }
 
+export interface TrainingModuleContents {
+    welcome: TranslatableText;
+    steps: TrainingModuleStep[];
+}
+
 export interface TrainingModuleStep {
-    path: string;
-    title: string;
-    description?: string;
-    contents: TrainingModuleContent[];
+    title: TranslatableText;
+    subtitle?: TranslatableText;
+    pages: TranslatableText[];
 }
 
-export interface TrainingModuleContent {
-    type: "markdown";
-    text: string;
+export interface TrainingModuleBuilder {
+    id: string;
+    name: string;
+    poEditorProject: string;
 }
 
-export interface TrainingModuleDetails {
-    title: string;
-    description: string;
-    icon: string;
-}
+type TranslationConnection = {
+    provider: string;
+    project?: string;
+};
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
-    const match = /^.*-(\d)-(\d)$/.exec(key);
+    const match = /^.*-(\d*)-(\d*)$/.exec(key);
     if (!match) return null;
 
     return { step: parseInt(match[1]), content: parseInt(match[2]) };
+};
+
+export const isValidTrainingType = (type: string): type is TrainingModuleType => {
+    return ["app", "core", "widget"].includes(type);
 };

@@ -8,6 +8,7 @@ export interface AppRoute {
     element: ReactElement;
     paths: string[];
     backdrop?: boolean;
+    iframe?: boolean;
 }
 
 export interface ReactRouterRoute {

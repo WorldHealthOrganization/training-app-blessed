@@ -1,11 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Tooltip: React.FC<TooltipProps> = ({ className, text, children }) => {
+export const Tooltip: React.FC<TooltipProps> = ({
+    className,
+    text,
+    children,
+    placement = "left",
+}) => {
     return (
         <TooltipWrapper className={className}>
             {children}
-            <TooltipText>{text}</TooltipText>
+            <TooltipText placement={placement}>{text}</TooltipText>
         </TooltipWrapper>
     );
 };
@@ -13,9 +18,10 @@ export const Tooltip: React.FC<TooltipProps> = ({ className, text, children }) =
 export interface TooltipProps {
     className?: string;
     text: string;
+    placement?: "right" | "left";
 }
 
-export const TooltipText = styled.span`
+export const TooltipText = styled.span<{ placement: "right" | "left" }>`
     visibility: hidden;
     width: 120px;
     background-color: #fff;
@@ -27,17 +33,21 @@ export const TooltipText = styled.span`
     position: absolute;
     z-index: 1;
     top: -5px;
-    right: 150%;
+    right: ${({ placement }) => (placement === "left" ? "150%" : "unset")};
 
     ::after {
         content: " ";
         position: absolute;
         top: 50%;
-        left: 100%; /* To the right of the tooltip */
+        right: ${({ placement }) => (placement === "right" ? "100%" : "unset")};
+        left: ${({ placement }) => (placement === "left" ? "100%" : "unset")};
         margin-top: -5px;
         border-width: 5px;
         border-style: solid;
-        border-color: transparent transparent transparent white;
+        border-color: ${({ placement }) =>
+            placement === "left"
+                ? "transparent transparent transparent white"
+                : "transparent white transparent transparent"};
     }
 `;
 

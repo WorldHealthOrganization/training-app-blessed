@@ -10,12 +10,12 @@ export const MainButton = styled(Button)`
     border-radius: 100px;
     border: 0px;
 
-    background-color: ${props => getColor(props?.color, "main")};
+    background-color: ${props => getColor(props?.color ?? "primary", "main")};
     text-transform: inherit;
     font-weight: inherit;
     line-height: inherit;
 
     :hover {
-        background-color: ${props => getColor(props?.color, "dark")};
+        background-color: ${props => getColor(props?.color ?? "primary", "dark")};
     }
 `;

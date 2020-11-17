@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { getColor } from "../../themes/colors";
 
 export const CardProgress = styled.progress`
     display: inline-block;
@@ -21,7 +22,7 @@ export const CardProgress = styled.progress`
         height: 12px;
         width: 100%;
         margin: 0 auto;
-        background-color: #43cbcb;
+        background-color: ${getColor("primary")};
         border-radius: 15px;
     }
 
@@ -29,7 +30,7 @@ export const CardProgress = styled.progress`
         float: left;
         height: 12px;
         margin: 0px -10px 0 0;
-        background: #43cbcb;
+        background: ${getColor("primary")};
         border-radius: 12px;
     }
 

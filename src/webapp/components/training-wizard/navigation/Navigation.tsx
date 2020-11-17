@@ -47,8 +47,13 @@ export const Navigation: React.FC<WizardNavigationProps> = ({
 
     return (
         <ModalFooter>
-            <MainButton onClick={prev}>{i18n.t("Previous")}</MainButton>
-
+            {contentIndex - 1 < 0 ? (
+                <MainButton onClick={prev}>{i18n.t("Previous step")}</MainButton>
+            ) : (
+                <MainButton onClick={prev} color="secondary">
+                    {i18n.t("Previous")}
+                </MainButton>
+            )}
             <ProgressBar>
                 {totalContents > 1
                     ? arrayFill(totalContents).map(value => (
@@ -56,8 +61,13 @@ export const Navigation: React.FC<WizardNavigationProps> = ({
                       ))
                     : null}
             </ProgressBar>
-
-            <MainButton onClick={next}>{i18n.t("Next")}</MainButton>
+            {contentIndex + 1 === totalContents ? (
+                <MainButton onClick={next}>{i18n.t("Next step")}</MainButton>
+            ) : (
+                <MainButton onClick={next} color="secondary">
+                    {i18n.t("Next")}
+                </MainButton>
+            )}
         </ModalFooter>
     );
 };
