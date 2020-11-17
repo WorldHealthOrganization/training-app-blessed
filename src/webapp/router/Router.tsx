@@ -49,7 +49,9 @@ export const Router: React.FC = () => {
 
     return (
         <React.Fragment>
-            {hasProperty("iframe") ? <IFrame src={`${baseUrl}${module?.dhisLaunchUrl}`} /> : null}
+            {hasProperty("iframe") && module ? (
+                <IFrame src={`${baseUrl}${module.dhisLaunchUrl}`} />
+            ) : null}
             {hasProperty("backdrop") ? <Backdrop /> : null}
             {element ?? defaultRoute.element}
         </React.Fragment>
