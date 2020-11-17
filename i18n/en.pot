@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-17T15:31:49.612Z\n"
-"PO-Revision-Date: 2020-11-17T15:31:49.612Z\n"
+"POT-Creation-Date: 2020-11-17T18:11:55.901Z\n"
+"PO-Revision-Date: 2020-11-17T18:11:55.901Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -102,6 +102,9 @@ msgid "You’ve completed the {{name}} tutorial!"
 msgstr ""
 
 msgid "Here is your progress on DHIS2 training"
+msgstr ""
+
+msgid "Select one of these tutorials to continue learning:"
 msgstr ""
 
 msgid "Exit Tutorial"

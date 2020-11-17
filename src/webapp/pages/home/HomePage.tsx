@@ -38,7 +38,9 @@ export const HomePage = () => {
             <ContentWrapper>
                 <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
                 <ModalParagraph>
-                    {i18n.t("Select one of these tutorials to continue learning:")}
+                    {i18n.t("Select one of these tutorials to continue learning:", {
+                        nsSeparator: false,
+                    })}
                 </ModalParagraph>
                 <ModalContent>
                     <Cardboard>

@@ -7,7 +7,7 @@ export interface TranslatableText {
 export const buildTranslate = (locale: string): TranslateMethod => {
     return (text: TranslatableText): string => {
         const translations = text.translations ?? {};
-        return translations[locale] ?? text.referenceValue;
+        return translations[locale] || text.referenceValue;
     };
 };
 
