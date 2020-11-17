@@ -54,15 +54,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const persistedModel = dataStoreModel ?? (await this.getBuiltin(key));
         if (!persistedModel) return undefined;
 
-        // TODO: Add new property, lastTranslationSync
-        const lastTranslationSync = new Date(persistedModel.lastTranslationSync);
-        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) > 15) {
-            const updatedModel = await this.updateTranslations(persistedModel);
-            await this.saveDataStore(updatedModel);
-            return this.buildDomainModel(updatedModel);
-        }
-
-        return this.buildDomainModel(persistedModel);
+        const translatedModel = await this.updateTranslations(persistedModel);
+        return this.buildDomainModel(translatedModel);
     }
 
     public async create({
@@ -169,7 +162,16 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     private async updateTranslations(
         model: PersistedTrainingModule
     ): Promise<PersistedTrainingModule> {
-        console.log("TODO: Update translations");
+        if (model.translation.provider === "NONE") return model;
+
+        const lastTranslationSync = new Date(model.lastTranslationSync);
+        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) < 15) {
+            return model;
+        }
+
+        // Update terms in poeditor
+        // Fetch translations and update local model
+
         return model;
     }
 

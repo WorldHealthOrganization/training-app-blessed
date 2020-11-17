@@ -30,12 +30,9 @@ export class Dhis2ConfigRepository implements ConfigRepository {
             })
             .getData();
 
-        const uiLocale = await this.getUiLocale(d2User);
-
         return {
             id: d2User.id,
             name: d2User.displayName,
-            uiLocale,
             ...d2User.userCredentials,
         };
     }
