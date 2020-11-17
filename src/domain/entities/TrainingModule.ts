@@ -31,7 +31,7 @@ export interface TrainingModuleBuilder {
 }
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
-    const match = /^.*-(\d)-(\d)$/.exec(key);
+    const match = /^.*-(\d*)-(\d*)$/.exec(key);
     if (!match) return null;
 
     return { step: parseInt(match[1]), content: parseInt(match[2]) };
