@@ -4,7 +4,7 @@ import { Either } from "../../domain/entities/Either";
 import {
     isValidTrainingType,
     TrainingModule,
-    TrainingModuleBuilder
+    TrainingModuleBuilder,
 } from "../../domain/entities/TrainingModule";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
@@ -17,7 +17,10 @@ import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorTranslationClient } from "../clients/translation/PoEditorTranslationClient";
 import { TranslationClient } from "../clients/translation/TranslationClient";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
-import { PersistedTrainingModule, TranslationConnection } from "../entities/PersistedTrainingModule";
+import {
+    PersistedTrainingModule,
+    TranslationConnection,
+} from "../entities/PersistedTrainingModule";
 import { UserProgress } from "../entities/UserProgress";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
@@ -56,8 +59,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const persistedModel = dataStoreModel ?? (await this.getBuiltin(key));
         if (!persistedModel) return undefined;
 
-        const translatedModel = await this.updateTranslations(persistedModel);
-        return this.buildDomainModel(translatedModel);
+        return this.buildDomainModel(persistedModel);
     }
 
     public async create({
@@ -138,6 +140,23 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
     }
 
+    // TODO: Current status
+    public async updateTranslations(key: string): Promise<void> {
+        const translationClient = await this.getTranslationClient();
+        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES,
+            key
+        );
+
+        if (!model || model.translation.provider === "NONE" || !translationClient) return;
+
+        const project = await translationClient.getProject(model.translation.project);
+        console.log({ project, translationClient });
+
+        // Update terms in poeditor
+        // Fetch translations and update local model
+    }
+
     private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
         const builtinModule = this.builtinModules[key];
         if (!builtinModule) return undefined;
@@ -159,24 +178,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
     }
 
-    private async updateTranslations(
-        model: PersistedTrainingModule
-    ): Promise<PersistedTrainingModule> {
-        if (model.translation.provider === "NONE") return model;
-        const translationClient = await this.getTranslationClient();
-        console.log(translationClient);
-
-        const lastTranslationSync = new Date(model.lastTranslationSync);
-        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) < 15) {
-            return model;
-        }
-
-        // Update terms in poeditor
-        // Fetch translations and update local model
-
-        return model;
-    }
-
     // TODO: Implement multiple providers (other than poeditor)
     private async getTranslationClient(): Promise<TranslationClient | undefined> {
         const token = await this.config.getPoEditorToken();
@@ -195,6 +196,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             Namespaces.PROGRESS,
             model.id
         );
+
+        const lastTranslationSync = new Date(model.lastTranslationSync);
+        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) < 15) {
+            this.updateTranslations(model.id);
+        }
 
         return {
             ...rest,

@@ -9,4 +9,5 @@ export interface TrainingModuleRepository {
     delete(ids: string[]): Promise<void>;
     swapOrder(id1: string, id2: string): Promise<void>;
     updateProgress(id: string, progress: number): Promise<void>;
+    updateTranslations(id: string): Promise<void>;
 }

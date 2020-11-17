@@ -119,6 +119,13 @@ export const ModuleListTable: React.FC = () => {
         [modules]
     );
 
+    const syncTranslations = useCallback(
+        async (ids: string[]) => {
+            await usecases.modules.syncTranslations(ids[0]);
+        },
+        [usecases]
+    );
+
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
         setSelection(selection);
     }, []);
@@ -168,6 +175,18 @@ export const ModuleListTable: React.FC = () => {
                 },
             },
             {
+                name: "sync-translations",
+                text: i18n.t("Sync translations"),
+                icon: <Icon>edit</Icon>,
+                onClick: syncTranslations,
+                isActive: rows => {
+                    return _.every(
+                        rows,
+                        item => item.rowType === "module" && !!item.translation?.project
+                    );
+                },
+            },
+            {
                 name: "delete-module",
                 text: i18n.t("Delete module"),
                 icon: <Icon>delete</Icon>,
@@ -208,7 +227,15 @@ export const ModuleListTable: React.FC = () => {
                 },
             },
         ],
-        [modules, editModule, deleteModules, moveUpModule, moveDownModule, editContents]
+        [
+            modules,
+            editModule,
+            deleteModules,
+            moveUpModule,
+            moveDownModule,
+            editContents,
+            syncTranslations,
+        ]
     );
 
     useEffect(() => {
