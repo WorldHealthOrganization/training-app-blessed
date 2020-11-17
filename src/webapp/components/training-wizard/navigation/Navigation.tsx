@@ -54,7 +54,6 @@ export const Navigation: React.FC<WizardNavigationProps> = ({
                     {i18n.t("Previous")}
                 </MainButton>
             )}
-
             <ProgressBar>
                 {totalContents > 1
                     ? arrayFill(totalContents).map(value => (
@@ -62,7 +61,6 @@ export const Navigation: React.FC<WizardNavigationProps> = ({
                       ))
                     : null}
             </ProgressBar>
-
             {contentIndex + 1 === totalContents ? (
                 <MainButton onClick={next}>{i18n.t("Next step")}</MainButton>
             ) : (

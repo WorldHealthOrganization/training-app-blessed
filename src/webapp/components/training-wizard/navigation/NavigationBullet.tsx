@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { getColor } from "../../../themes/colors";
 
 const SubBullet = (props: { className?: string; completed?: boolean }) => (
     <div className={props.className}></div>
@@ -16,5 +17,6 @@ export const NavigationBullet = styled(SubBullet)`
     display: inline-block;
     line-height: 34px;
 
-    background-color: ${props => (props.completed ? "#43cbcb" : "rgba(255, 255, 255, 0.3)")};
+    background-color: ${props =>
+        props.completed ? getColor("primary") : "rgba(255, 255, 255, 0.3)"};
 `;

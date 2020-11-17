@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import { Bullet } from "../../components/training-wizard/stepper/Bullet";
+import { getColor } from "../../themes/colors";
 
 export const Line = styled.div`
     position: absolute;
     top: 50%;
     left: 26px;
     height: 100%;
-    border-left: 3px solid #43cbcb;
+    border-left: 3px solid ${getColor("primary")};
 `;
 
 export const Label = styled.span`
@@ -36,7 +37,7 @@ export const Step = styled.div<{ column: "left" | "right"; row: number; last?: b
 
     ${Bullet} {
         position: relative;
-        background-color: #43cbcb;
-        border: 3px solid #43cbcb;
+        background-color: ${getColor("primary")};
+        border: 3px solid ${getColor("primary")};
     }
 `;
