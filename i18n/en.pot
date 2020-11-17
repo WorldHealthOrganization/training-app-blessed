@@ -5,10 +5,16 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-16T11:34:51.409Z\n"
-"PO-Revision-Date: 2020-11-16T11:34:51.409Z\n"
+"POT-Creation-Date: 2020-11-17T07:12:00.091Z\n"
+"PO-Revision-Date: 2020-11-17T07:12:00.091Z\n"
 
 msgid "Tutorial"
+msgstr ""
+
+msgid "Edit markdown"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "Move window"
@@ -35,6 +41,9 @@ msgstr ""
 msgid "Welcome page"
 msgstr ""
 
+msgid "Edit contents of {{name}}"
+msgstr ""
+
 msgid "Yes"
 msgstr ""
 
@@ -48,6 +57,9 @@ msgid "Move up"
 msgstr ""
 
 msgid "Move down"
+msgstr ""
+
+msgid "Edit contents"
 msgstr ""
 
 msgid "Close"
