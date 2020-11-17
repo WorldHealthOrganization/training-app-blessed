@@ -1,0 +1,147 @@
+{
+    "_version": 1,
+    "id": "event-capture",
+    "disabled": false,
+    "dhisAppKey": "event-capture",
+    "name": "Event capture",
+    "type": "core",
+    "revision": 1,
+    "dhisVersionRange": "",
+    "dhisLaunchUrl": "/dhis-web-event-capture/index.html",
+    "contents": {
+        "welcome": {
+            "key": "module-welcome",
+            "referenceValue": "# Welcome to the tutorial on Event capture\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99361115-e3235c80-28b1-11eb-96a1-9a0797c6dd97.png)\n\nUse this application to enter data that has been collected several times during the same period and for the same location (e.g. for several patients visiting a facility on the same day, for houses in a village sampled on the same day etc.).",
+            "translations": {}
+        },
+        "steps": [
+            {
+                "title": {
+                    "key": "step-1-title",
+                    "referenceValue": "Select your location",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-1-1",
+                        "translations": {},
+                        "referenceValue": "![Select your location](https://user-images.githubusercontent.com/2181866/99362118-5bd6e880-28b3-11eb-8101-1a50ff5d99d6.gif)\n\nFind the name of the location that you want to enter data for on the drop-down tree menu under 'Registering Organisation Unit'. You can click down to lower geographic levels on the menu by clicking on the arrows next to the location names.\n\nClick on your location name to add it to the field 'Selected registering unit' on the form.\n\n<i>Note: At this point, you may see a message under Program saying 'Some programs are being filtered'. This indicates that not all programs/forms may be available for every location.</i>"
+                    },
+                    {
+                        "key": "step-1-2",
+                        "translations": {},
+                        "referenceValue": "![Select your location](https://user-images.githubusercontent.com/2181866/99362119-5bd6e880-28b3-11eb-8df9-ebdf5107324c.gif)\n\nAnother quick way to find a location is to use the search box above the drop-down tree menu. Start typing the location name where is says 'Search' and click on the location from the drop-down list to enter it into your form."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-2-title",
+                    "referenceValue": "Select your program",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-2-1",
+                        "translations": {},
+                        "referenceValue": "![Select your program](https://user-images.githubusercontent.com/2181866/99362104-58dbf800-28b3-11eb-9324-24ce6d72b18e.gif)\n\nTo select your program, click on the box saying 'Select program' in the 'Program' section and find the name of your program in the drop-down list of data collection forms.\n\nThese may be filtered according to the location that you have selected – not all programs/forms are available at every location.\n\nClick on your program to add it to your data collection form.\n\n<i>Note: At this point, you may see a 'Registered events' summary table. This table and its functionality will be discussed later in this tutorial.</i>"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-3-title",
+                    "referenceValue": "Select other data",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-3-1",
+                        "translations": {},
+                        "referenceValue": "![Select other data](https://user-images.githubusercontent.com/2181866/99362108-5a0d2500-28b3-11eb-9bb9-160e80dd463e.gif)\n\nThere may be additional data categories that you need to select. These will allow you to group your data during the analysis phase and they can be categories such as implementing partner, project, delivery mode, etc.  From the drop-down menus that have appeared, select the appropriate data that will be used to group your data.\n\n<i>Note: At this point, you should see a 'Registered events' summary table. This table and its functionality will be discussed later in this tutorial.</i>"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-4-title",
+                    "referenceValue": "Enter data in a new form",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-4-1",
+                        "translations": {},
+                        "referenceValue": "![Enter data in a new form](https://user-images.githubusercontent.com/2181866/99362109-5a0d2500-28b3-11eb-96d0-066ee33c02de.gif)\n\nTo open a form to start entering your data click on 'New'.\n\nDepending on the form, DHIS2 may prompt you to select a date from a calendar that appears in a drop-down menu. Search for the date of your data by scrolling through months and years on the calendar, and clicking on the day of the month."
+                    },
+                    {
+                        "key": "step-4-2",
+                        "translations": {},
+                        "referenceValue": "![Enter data in a new form](https://user-images.githubusercontent.com/2181866/99362110-5a0d2500-28b3-11eb-9437-e9f951f40218.gif)\n\nComplete your form by filling in the data from the drop-down menus or by manually adding in the values. Mandatory fields are indicated by a red star. You need to fill them in to be able to save and submit the form.\n\nGreyed-out entries are those calculated automatically by DHIS2 system. You do not need to enter anything in them.\n\nIf you type in a value that is not valid or is outside the  acceptable value range, you will get a warning message below the cell telling you what an error has been made. You need to correct these values before submitting your form.\n\n<i>Note: DHIS2 may take some time to calculate the values. Please click 3 - 4 times outside the form to force DHIS2 to calculate these entries.</i>"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-5-title",
+                    "referenceValue": "Mark form as complete",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-5-1",
+                        "translations": {},
+                        "referenceValue": "![Mark form as complete](https://user-images.githubusercontent.com/2181866/99362111-5aa5bb80-28b3-11eb-85cd-e5a793461970.gif)\n\nOnce all your data has been entered on the form, check the box next to 'Complete event' in the 'Status' section of the form to mark that your data is ready to be submitted.\n\nLeave the box unchecked if you need to come back to fill in missing data, or if the data needs to be checked by a another person before submission."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-6-title",
+                    "referenceValue": "Save and submit form",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-6-1",
+                        "translations": {},
+                        "referenceValue": "![Save and submit form](https://user-images.githubusercontent.com/2181866/99362112-5aa5bb80-28b3-11eb-9240-9e8a2ae76cf5.gif)\n\nIf you are satisfied that your data form is complete or if you need to leave to find missing data, you can save your progress and exit. Click on 'Save and exit' and DHIS2 will take you back to the summary table.\n\nAlternatively, if you want to submit the data and continue filling more data  form for the same location and form, click 'Save and add new' from the drop-down menu.\n\nBoth options save the current form to DHIS2, whether it has been completed or not. When you return to the summary table, you will see that the data you have just submitted has been added to the table as a new row."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-7-title",
+                    "referenceValue": "Format and sort table",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-7-1",
+                        "translations": {},
+                        "referenceValue": "![Format and sort table](https://user-images.githubusercontent.com/2181866/99362115-5b3e5200-28b3-11eb-8904-4818ddc68562.gif)\n\nA table should appear showing a summary of the results that have previously been entered into DHIS2 for the specific form that you have selected.\n\nYou can select which data columns you want to see on the table by clicking on the cog icon and selecting data columns from the list.\n\nYou can also rearrange the order of the columns by clicking on the three line icon next to the data category that you would like to move, and dragging it to its new position among the other categories.\n\nRemember to click 'Save' if you have made any changes to your summary table that you would like to keep."
+                    },
+                    {
+                        "key": "step-7-2",
+                        "translations": {},
+                        "referenceValue": "![Format and sort table](https://user-images.githubusercontent.com/2181866/99362116-5b3e5200-28b3-11eb-9363-7063c586e085.gif)\n\nYou can sort the information according to columns in your table by clicking on the column names. This will rearrange the data from the highest to lowest values or vice versa, or alphabetically or vice versa. The green arrow on the column name shows you the order of the sorted data in the column.\n\nYou can add or remove columns to the table by clicking on the cog icon and selecting data columns from the list."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-8-title",
+                    "referenceValue": "Download data",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-8-1",
+                        "translations": {},
+                        "referenceValue": "![Download data](https://user-images.githubusercontent.com/2181866/99362117-5b3e5200-28b3-11eb-9011-80865b220d08.gif)\n\nWhen you are satisfied with the data shown in your table, you can download it by clicking on the three-dot button and selecting 'Download data'. In the new window, you can choose to download your data (with all the filters activated) as different file types including JSON, XML or CSV."
+                    }
+                ]
+            }
+        ]
+    }
+}
