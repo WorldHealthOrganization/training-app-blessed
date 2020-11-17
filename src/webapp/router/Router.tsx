@@ -8,7 +8,7 @@ import { useAppContext } from "../contexts/app-context";
 import { AppRoute, buildRoutes } from "./AppRoute";
 
 export const Router: React.FC = () => {
-    const { appState, routes, setAppState } = useAppContext();
+    const { appState, routes, setAppState, module } = useAppContext();
     const { baseUrl } = useConfig();
     const navigate = useNavigate();
     const location = useLocation();
@@ -49,9 +49,7 @@ export const Router: React.FC = () => {
 
     return (
         <React.Fragment>
-            {hasProperty("iframe") ? (
-                <IFrame src={`${baseUrl}/dhis-web-dataentry/index.action`} />
-            ) : null}
+            {hasProperty("iframe") ? <IFrame src={`${baseUrl}${module?.dhisLaunchUrl}`} /> : null}
             {hasProperty("backdrop") ? <Backdrop /> : null}
             {element ?? defaultRoute.element}
         </React.Fragment>
