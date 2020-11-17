@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import i18n from "../../../locales";
 import { MainButton } from "../../components/main-button/MainButton";
 import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import { Modal, ModalContent, ModalFooter } from "../../components/modal";
@@ -14,7 +15,7 @@ export const WelcomePage = () => {
     }, [module, setAppState]);
 
     const exitTutorial = useCallback(() => {
-        setAppState({ type: "HOME" });
+        setAppState({ type: "EXIT" });
     }, [setAppState]);
 
     const toggleClose = useCallback(() => {
@@ -29,10 +30,10 @@ export const WelcomePage = () => {
             <WelcomePageContent welcome={module.contents.welcome} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
-                    Go Back
+                    {i18n.t("Exit Tutorial")}
                 </MainButton>
                 <MainButton color="primary" onClick={startTutorial}>
-                    Start Tutorial
+                    {i18n.t("Start Tutorial")}
                 </MainButton>
             </ModalFooter>
         </StyledModal>

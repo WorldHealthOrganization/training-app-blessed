@@ -32,8 +32,8 @@ export class CompositionRoot {
                 swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
             }),
             progress: getExecute({
-                update: new UpdateUserProgressUseCase(this.trainingModuleRepository)
-            })
+                update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
+            }),
         };
     }
 }

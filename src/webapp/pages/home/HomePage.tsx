@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule } from "../../../domain/entities/TrainingModule";
+import i18n from "../../../locales";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
 import { MainButton } from "../../components/main-button/MainButton";
@@ -35,8 +36,10 @@ export const HomePage = () => {
     return (
         <StyledModal>
             <ContentWrapper>
-                <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
-                <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
+                <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
+                <ModalParagraph>
+                    {i18n.t("Select one of these tutorials to continue learning:")}
+                </ModalParagraph>
                 <ModalContent>
                     <Cardboard>
                         {modules.map(({ name, id, progress, disabled }, idx) => (
@@ -52,7 +55,7 @@ export const HomePage = () => {
                 </ModalContent>
                 <ModalFooter className="modal-footer">
                     <MainButton color="secondary" onClick={exitTutorial}>
-                        Exit Tutorial
+                        {i18n.t("Exit Tutorial")}
                     </MainButton>
                 </ModalFooter>
             </ContentWrapper>
