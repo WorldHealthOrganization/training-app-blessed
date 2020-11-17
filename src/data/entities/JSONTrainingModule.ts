@@ -7,6 +7,7 @@ export interface JSONTrainingModule {
     type: string;
     disabled: boolean;
     contents: TrainingModuleContents;
+    translation?: { provider: string; project?: string };
     revision: number;
     dhisVersionRange: string;
     dhisAppKey: string;

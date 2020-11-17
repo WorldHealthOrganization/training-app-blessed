@@ -181,6 +181,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     // TODO: Implement multiple providers (other than poeditor)
     private async getTranslationClient(): Promise<TranslationClient | undefined> {
         const token = await this.config.getPoEditorToken();
+        console.log("token", token);
         return token ? new PoEditorTranslationClient(token) : undefined;
     }
 
@@ -198,7 +199,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         );
 
         const lastTranslationSync = new Date(model.lastTranslationSync);
-        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) < 15) {
+        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) > 15) {
             this.updateTranslations(model.id);
         }
 
@@ -215,9 +216,15 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const currentUser = await this.config.getUser();
         const defaultUser = { id: currentUser.id, name: currentUser.name };
 
+        // TODO: This is hard-coded for now
+        const translation: TranslationConnection =
+            model.translation?.provider === "poeditor" && model.translation?.project
+                ? (model.translation as TranslationConnection)
+                : { provider: "NONE" };
+
         return {
             ...model,
-            translation: { provider: "NONE" },
+            translation,
             created: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             publicAccess: "--------",

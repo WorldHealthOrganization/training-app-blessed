@@ -69,8 +69,11 @@ export class Dhis2ConfigRepository implements ConfigRepository {
     }
 
     public async getPoEditorToken(): Promise<string | undefined> {
+        return process.env.REACT_APP_POEDITOR_TOKEN;
+        /** TODO: Settings page
         const { poeditorToken } = await this.getConfig();
         return poeditorToken;
+        */
     }
 
     private async getConfig(): Promise<PersistedConfig> {
