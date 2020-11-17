@@ -58,7 +58,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
                 };
             })
         );
-    }, [module, minimized]);
+    }, [module, minimized, translate]);
 
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
