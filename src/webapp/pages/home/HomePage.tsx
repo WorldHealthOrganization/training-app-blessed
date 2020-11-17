@@ -24,7 +24,6 @@ export const HomePage = () => {
 
     const loadModule = useCallback(
         (module: string, step: number) => {
-            console.log({ module, step })
             if (step > 0) {
                 setAppState({ type: "TRAINING", state: "OPEN", module, step, content: 1 });
             } else {

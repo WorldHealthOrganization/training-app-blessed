@@ -1,4 +1,3 @@
-import { differenceInMinutes } from "date-fns";
 import _ from "lodash";
 import { Either } from "../../domain/entities/Either";
 import {
@@ -58,10 +57,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const model = dataStoreModel ?? (await this.getBuiltin(key));
         if (!model) return undefined;
 
-        const lastTranslationSync = new Date(model.lastTranslationSync);
-        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) > 15) {
-            this.updateTranslations(model.id);
-        }
+        // TODO: Check translation last sync
+        //const lastTranslationSync = new Date(model.lastTranslationSync);
+        this.updateTranslations(model.id);
 
         return this.buildDomainModel(model);
     }
@@ -147,6 +145,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async updateTranslations(key: string): Promise<void> {
         try {
             const token = await this.config.getPoEditorToken();
+            console.log(2, token);
             const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
                 Namespaces.TRAINING_MODULES,
                 key
