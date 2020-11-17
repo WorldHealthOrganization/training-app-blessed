@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import i18n from "../../../locales";
 import Decoration from "../../assets/Decoration.png";
 import { MainButton } from "../../components/main-button/MainButton";
 import {
@@ -22,6 +23,20 @@ export const FinalPage = () => {
         });
     }, [setAppState]);
 
+    const goToLastTutorialStep = useCallback(() => {
+        if (!module) return;
+        const step = module.contents.steps.length;
+        const content = module.contents.steps[step - 1].pages.length;
+
+        setAppState({
+            type: "TRAINING",
+            state: "OPEN",
+            module: module.id,
+            step,
+            content,
+        });
+    }, [setAppState, module]);
+
     const exit = useCallback(() => {
         setAppState({ type: "HOME" });
     }, [setAppState]);
@@ -38,13 +53,16 @@ export const FinalPage = () => {
         <StyledModal onClose={exit}>
             <ModalContent bigger={true}>
                 <Container>
-                    <ModalTitle big={true}>Well done!</ModalTitle>
+                    <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>
                     <ModalParagraph>
-                        You’ve completed the {module.name.toLowerCase()} tutorial!
+                        {i18n.t("You’ve completed the {{name}} tutorial!", {
+                            name: module.name.toLowerCase(),
+                        })}
                     </ModalParagraph>
                     <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
                     <ModalFooter>
-                        <MainButton onClick={openSummary}>Next</MainButton>
+                        <MainButton onClick={goToLastTutorialStep}>{i18n.t("Previous")}</MainButton>
+                        <MainButton onClick={openSummary}>{i18n.t("Next")}</MainButton>
                     </ModalFooter>
                 </Container>
             </ModalContent>
