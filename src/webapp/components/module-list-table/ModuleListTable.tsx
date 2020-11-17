@@ -14,6 +14,10 @@ import { TrainingModule, TrainingModuleBuilder } from "../../../domain/entities/
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
+import {
+    MarkdownEditorDialog,
+    MarkdownEditorDialogProps,
+} from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 import { ModuleCreationDialog } from "../module-creation-dialog/ModuleCreationDialog";
@@ -25,6 +29,10 @@ export const ModuleListTable: React.FC = () => {
     const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
 
+    const [
+        editContentsDialogProps,
+        updateEditContentsDialog,
+    ] = useState<MarkdownEditorDialogProps | null>(null);
     const [editModuleCreationDialog, setEditModuleCreationDialog] = useState<
         TrainingModuleBuilder
     >();
@@ -92,6 +100,25 @@ export const ModuleListTable: React.FC = () => {
         [modules, usecases]
     );
 
+    const editContents = useCallback(
+        (ids: string[]) => {
+            const row = buildChildrenRows(modules).find(({ id }) => id === ids[0]);
+            if (!row) return;
+
+            updateEditContentsDialog({
+                title: i18n.t("Edit contents of {{name}}", row),
+                initialValue: row.value ?? "",
+                onCancel: () => updateEditContentsDialog(null),
+                onSave: value => {
+                    console.log(value);
+                    updateEditContentsDialog(null);
+                },
+                markdownPreview: markdown => <StepPreview value={markdown} rowType={row.rowType} />,
+            });
+        },
+        [modules]
+    );
+
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
         setSelection(selection);
     }, []);
@@ -122,11 +149,7 @@ export const ModuleListTable: React.FC = () => {
                 text: "Preview",
                 sortable: false,
                 getValue: item => {
-                    return (
-                        item.rowType !== "step" && (
-                            <StepPreview value={item.value} rowType={item.rowType} />
-                        )
-                    );
+                    return item.value && <StepPreview value={item.value} rowType={item.rowType} />;
                 },
             },
         ],
@@ -175,8 +198,17 @@ export const ModuleListTable: React.FC = () => {
                     );
                 },
             },
+            {
+                name: "edit-contents",
+                text: i18n.t("Edit contents"),
+                icon: <Icon>edit</Icon>,
+                onClick: editContents,
+                isActive: rows => {
+                    return _.every(rows, item => ["dialog", "page"].includes(item.rowType));
+                },
+            },
         ],
-        [modules, editModule, deleteModules, moveUpModule, moveDownModule]
+        [modules, editModule, deleteModules, moveUpModule, moveDownModule, editContents]
     );
 
     useEffect(() => {
@@ -188,6 +220,8 @@ export const ModuleListTable: React.FC = () => {
 
     return (
         <PageWrapper>
+            {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
+
             {isCreationDialogOpen && (
                 <ModuleCreationDialog
                     onClose={closeCreationDialog}
@@ -202,7 +236,7 @@ export const ModuleListTable: React.FC = () => {
                 actions={actions}
                 selection={selection}
                 onChange={onTableChange}
-                childrenKeys={["steps", "pages"]}
+                childrenKeys={["steps", "welcome", "pages"]}
                 sorting={{ field: "position", order: "asc" }}
                 filterComponents={
                     <Tooltip title={"New module"} placement={"right"}>
@@ -221,7 +255,7 @@ type ListItem = FlattenUnion<ListItemModule | ListItemStep | ListItemPage>;
 interface ListItemModule extends TrainingModule {
     rowType: "module";
     steps: ListItemStep[];
-    value: string;
+    welcome: ListItemStep[];
     position: number;
 }
 
@@ -234,7 +268,7 @@ interface ListItemStep {
 }
 
 interface ListItemPage extends NamedRef {
-    rowType: "page";
+    rowType: "page" | "dialog";
     value: string;
     position: number;
 }
@@ -244,14 +278,30 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
         ...module,
         rowType: "module",
         position: moduleIdx,
-        value: module.contents.welcome,
+        welcome: [
+            {
+                id: `${module.id}-welcome-step`,
+                name: "Welcome page",
+                rowType: "step",
+                position: 0,
+                pages: [
+                    {
+                        id: `${module.id}-welcome-page`,
+                        name: "Welcome dialog",
+                        rowType: "dialog",
+                        position: 0,
+                        value: module.contents.welcome,
+                    },
+                ],
+            },
+        ],
         steps: module.contents.steps.map(({ title, pages }, stepIdx) => ({
-            id: `step-${stepIdx + 1}`,
+            id: `${module.id}-step-${stepIdx + 1}`,
             name: `Step ${stepIdx + 1}: ${title}`,
             rowType: "step",
-            position: stepIdx,
+            position: stepIdx + 1,
             pages: pages.map((value, pageIdx) => ({
-                id: `page-${stepIdx + 1}-${stepIdx + 1}`,
+                id: `${module.id}-page-${stepIdx + 1}-${stepIdx + 1}`,
                 name: `Page ${pageIdx + 1}`,
                 rowType: "page",
                 position: pageIdx,
@@ -261,15 +311,21 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
     }));
 };
 
+const buildChildrenRows = (items: ListItemModule[]): ListItem[] => {
+    const steps = _.flatMap(items, item => [...item.welcome, ...item.steps]);
+    const pages = _.flatMap(steps, step => step.pages);
+    return [...items, ...steps, ...pages];
+};
+
 export const StepPreview: React.FC<{
     className?: string;
     value?: string;
-    rowType: "module" | "page";
+    rowType: "module" | "step" | "page" | "dialog";
 }> = ({ className, value, rowType }) => {
     if (!value) return null;
 
     return (
-        <StyledModalBody className={className} center={rowType === "module"}>
+        <StyledModalBody className={className} center={rowType === "dialog"}>
             <MarkdownViewer source={value} escapeHtml={false} />
         </StyledModalBody>
     );
