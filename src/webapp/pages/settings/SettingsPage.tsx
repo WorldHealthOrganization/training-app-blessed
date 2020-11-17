@@ -30,7 +30,6 @@ export const SettingsPage: React.FC = () => {
 
     const updateToken = useCallback(
         (event: React.ChangeEvent<{ value: string }>) => {
-            console.log(event.target.value);
             usecases.config.savePoEditorToken(event.target.value);
             setPoEditorToken(event.target.value);
         },

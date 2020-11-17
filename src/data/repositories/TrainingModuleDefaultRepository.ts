@@ -6,6 +6,7 @@ import {
     TrainingModule,
     TrainingModuleBuilder,
 } from "../../domain/entities/TrainingModule";
+import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
@@ -14,8 +15,7 @@ import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { PoEditorTranslationClient } from "../clients/translation/PoEditorTranslationClient";
-import { TranslationClient } from "../clients/translation/TranslationClient";
+import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import {
     PersistedTrainingModule,
@@ -140,21 +140,96 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
     }
 
-    // TODO: Current status
+    // TODO: Review in the near future
     public async updateTranslations(key: string): Promise<void> {
-        const translationClient = await this.getTranslationClient();
+        const token = await this.config.getPoEditorToken();
         const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES,
             key
         );
 
-        if (!model || model.translation.provider === "NONE" || !translationClient) return;
+        if (!model || model.translation.provider === "NONE" || !token) return;
+        const api = new PoEditorApi(token);
 
-        const project = await translationClient.getProject(model.translation.project);
-        console.log({ project, translationClient });
+        const project = parseInt(model.translation.project);
+        const translatableItems = this.extractTranslations(model);
 
-        // Update terms in poeditor
+        // Update terms
+        const terms = translatableItems.map(item => ({ term: item.key }));
+        await api.terms.add({ id: project, data: JSON.stringify(terms) });
+
+        // Update reference values
+        const referenceTranslations = translatableItems.map(item => ({
+            term: item.key,
+            translation: { content: item.referenceValue },
+        }));
+        await api.languages.update({
+            id: project,
+            language: "en",
+            data: JSON.stringify(referenceTranslations),
+        });
+
         // Fetch translations and update local model
+        const languagesResponse = await api.languages.list({ id: project });
+        const poeditorLanguages =
+            languagesResponse.value.data?.languages.map(({ code }) => code) ?? [];
+
+        const dictionary = _(
+            await promiseMap(poeditorLanguages, async language => {
+                const translationResponse = await api.terms.list({ id: project, language });
+                return (
+                    translationResponse.value.data?.terms.map(({ term, translation }) => ({
+                        term,
+                        language,
+                        value: translation.content,
+                    })) ?? []
+                );
+            })
+        )
+            .flatten()
+            .groupBy(item => item.term)
+            .mapValues(items => _.fromPairs(items.map(({ language, value }) => [language, value])))
+            .value();
+
+        const translatedModel: PersistedTrainingModule = {
+            ...model,
+            contents: {
+                ...model.contents,
+                welcome: {
+                    ...model.contents.welcome,
+                    translations: dictionary[model.contents.welcome.key] ?? {},
+                },
+                steps: model.contents.steps.map(step => ({
+                    ...step,
+                    title: {
+                        ...step.title,
+                        translations: dictionary[step.title.key] ?? {},
+                    },
+                    subtitle: step.subtitle
+                        ? {
+                              ...step.subtitle,
+                              translations: dictionary[step.subtitle.key] ?? {},
+                          }
+                        : undefined,
+                    pages: step.pages.map(page => ({
+                        ...page,
+                        translations: dictionary[page.key] ?? {},
+                    })),
+                })),
+            },
+        };
+
+        await this.saveDataStore(translatedModel);
+    }
+
+    private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
+        const steps = _.flatMap(model.contents.steps, step => [
+            step.title,
+            step.subtitle,
+            ...step.pages,
+        ]);
+
+        return _.compact([model.contents.welcome, ...steps]);
     }
 
     private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
@@ -178,12 +253,12 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
     }
 
-    // TODO: Implement multiple providers (other than poeditor)
+    /** TODO: Implement multiple providers (other than poeditor)
     private async getTranslationClient(): Promise<TranslationClient | undefined> {
         const token = await this.config.getPoEditorToken();
-        console.log("token", token);
         return token ? new PoEditorTranslationClient(token) : undefined;
     }
+    */
 
     private async buildDomainModel(model: PersistedTrainingModule): Promise<TrainingModule> {
         if (model._version !== 1) {

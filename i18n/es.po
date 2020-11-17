@@ -12,109 +12,106 @@ msgid "Tutorial"
 msgstr "Tutorial"
 
 msgid "Edit markdown"
-msgstr ""
+msgstr "Editar markdown"
 
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 msgid "Home"
-msgstr "Resumen"
+msgstr "Inicio"
 
 msgid "Move window"
-msgstr ""
+msgstr "Mover ventana"
 
 msgid "Expand window"
-msgstr ""
+msgstr "Expandir ventana"
 
 msgid "Minimize window"
-msgstr ""
+msgstr "Minimizar ventana"
 
 msgid "Field must have a value"
-msgstr ""
+msgstr "El campo debe tener un valor"
 
 msgid "Code must be unique"
-msgstr ""
+msgstr "El código debe ser único"
 
 msgid "Edit module"
-msgstr ""
+msgstr "Editar modulo"
 
 msgid "Add module"
-msgstr ""
+msgstr "Añadir modulo"
 
 msgid "Edit contents of {{name}}"
-msgstr ""
+msgstr "Editar contenidos de {{name}}"
 
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 msgid "No"
-msgstr ""
+msgstr "No"
 
 msgid "Sync translations"
-msgstr ""
+msgstr "Sincronizar traducciones"
 
 msgid "Delete module"
-msgstr ""
+msgstr "Eliminar modulo"
 
 msgid "Move up"
-msgstr ""
+msgstr "Mover arriba"
 
 msgid "Move down"
-msgstr ""
+msgstr "Mover abajo"
 
 msgid "Edit contents"
-msgstr ""
+msgstr "Editar contenidos"
 
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
-#, fuzzy
 msgid "Previous step"
-msgstr "Siguiente"
+msgstr "Paso anterior"
 
 msgid "Previous"
-msgstr "Siguiente"
-
-#, fuzzy
-msgid "Next step"
 msgstr "Anterior"
+
+msgid "Next step"
+msgstr "Paso siguiente"
 
 msgid "Next"
-msgstr "Anterior"
+msgstr "Siguiente"
 
 msgid "Welcome"
 msgstr "Bienvenido"
 
 msgid "Contents"
-msgstr ""
+msgstr "Contenidos"
 
 msgid "Final"
-msgstr "Fin"
+msgstr ""
 
 msgid "Summary"
-msgstr "Repaso"
+msgstr "Fin"
 
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
 
 msgid "Well done!"
-msgstr ""
+msgstr "Bien hecho!"
 
 msgid "You’ve completed the {{name}} tutorial!"
-msgstr ""
+msgstr "Has completado el tutorial {{name}}"
 
 msgid "Here is your progress on DHIS2 training"
-msgstr ""
+msgstr "Este es tu progreso en el entrenamiento de DHIS2"
 
-#, fuzzy
 msgid "Exit Tutorial"
-msgstr "Tutorial"
+msgstr "Salir del tutorial"
 
 msgid "Permissions"
-msgstr ""
+msgstr "Permisos"
 
 msgid "POEditor token"
-msgstr ""
+msgstr "Token de POEditor"
 
 msgid "Access to Settings"
 msgstr ""
@@ -122,28 +119,5 @@ msgstr ""
 msgid "Description TODO"
 msgstr ""
 
-#, fuzzy
 msgid "Start Tutorial"
-msgstr "Tutorial"
-
-#, fuzzy
-#~ msgid "Welcome page"
-#~ msgstr "Bienvenido"
-
-#~ msgid "Back"
-#~ msgstr "Volver"
-
-#~ msgid "Help"
-#~ msgstr "Ayuda"
-
-#~ msgid "configuration"
-#~ msgstr "Configuración"
-
-#~ msgid "Add"
-#~ msgstr "Añadir"
-
-#~ msgid "List"
-#~ msgstr "Listar"
-
-#~ msgid "Click to show feedback"
-#~ msgstr "Toca para ver feedback"
+msgstr "Empezar tutorial"

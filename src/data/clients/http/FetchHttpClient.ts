@@ -56,10 +56,17 @@ export class FetchHttpClient implements HttpClient {
 
         const response: Promise<HttpResponse<Data>> = fetchResponse
             .then(async res => {
-                const dataIsJson = (res.headers.get("content-type") || "").includes("json");
-                const data = (await (dataIsJson ? res.json() : res.text())) as Data;
+                const headers = getHeadersRecord(res.headers);
+                const encoding = getCharset(headers);
+                const dataIsJson = (headers["content-type"] || "").includes("json");
+
+                const decoder = new TextDecoder(encoding);
+                const arrayBuffer = await res.arrayBuffer();
+                const content = decoder.decode(arrayBuffer);
+
+                const data = (dataIsJson ? JSON.parse(content) : content) as Data;
                 if (!validateStatus(res.status)) raiseHttpError(options, res, data);
-                return { status: res.status, data: data, headers: getHeadersRecord(res.headers) };
+                return { status: res.status, data, headers };
             })
             .catch(error => {
                 if (error.request) throw error;
@@ -102,6 +109,14 @@ function raiseHttpError(request: HttpRequest, response: Response, body: unknown)
 
 function getHeadersRecord(headers: Headers) {
     return headers ? _.fromPairs(Array.from(headers.entries())) : {};
+}
+
+function getCharset(headers: _.Dictionary<string>): string {
+    const contentType = headers["content-type"];
+    if (!contentType) return "utf-8";
+
+    const contentTypes = _.fromPairs(contentType.split(";").map(type => type.split("=")));
+    return contentTypes["charset"] || "utf-8";
 }
 
 function joinPath(...parts: (string | undefined | null)[]): string {

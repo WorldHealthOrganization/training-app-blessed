@@ -109,8 +109,8 @@ export const ModuleListTable: React.FC = () => {
                 title: i18n.t("Edit contents of {{name}}", row),
                 initialValue: row.value ?? "",
                 onCancel: () => updateEditContentsDialog(null),
-                onSave: value => {
-                    console.log(value);
+                onSave: () => {
+                    // TODO
                     updateEditContentsDialog(null);
                 },
                 markdownPreview: markdown => <StepPreview value={markdown} rowType={row.rowType} />,
