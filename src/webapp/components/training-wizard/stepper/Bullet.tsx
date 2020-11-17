@@ -1,6 +1,7 @@
 import DoneIcon from "@material-ui/icons/Done";
 import React, { MouseEvent } from "react";
 import styled from "styled-components";
+import { getColor } from "../../../themes/colors";
 
 const BaseBullet: React.FC<BulletProps> = ({ className, stepKey, completed, onClick }) => {
     return (
@@ -30,19 +31,19 @@ export const Bullet = styled(BaseBullet)`
     line-height: 20px;
     cursor: ${props => (props.onClick ? "pointer" : "inherit")};
     user-select: none;
+    align-self: center;
 
     color: #276696;
-    background-color: ${props => (props.current || props.completed ? "#43cbcb" : "#fff")};
+    background-color: ${props => (props.current || props.completed ? getColor("primary") : "#fff")};
 
     ::after {
         display: ${props => (props.completed && !props.last ? "inline-block" : "none")};
         content: "";
         position: absolute;
         bottom: 12px;
-        left: 45px;
         height: 3px;
-        width: calc(82%);
-        background-color: #43cbcb;
+        width: 100%;
+        background-color: ${getColor("primary")};
         margin-left: -4px;
     }
 `;
@@ -51,5 +52,4 @@ const StyledDoneIcon = styled(DoneIcon)`
     font-size: 18px !important;
     color: #fff;
     font-weight: bold;
-    margin-right: 8px;
 `;

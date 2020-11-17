@@ -1,12 +1,8 @@
-import { Wizard, WizardStep } from "d2-ui-components";
+import { Wizard } from "d2-ui-components";
 import _ from "lodash";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import styled from "styled-components";
-import {
-    extractStepFromKey,
-    TrainingModule,
-    TrainingModuleContent,
-} from "../../../domain/entities/TrainingModule";
+import { extractStepFromKey, TrainingModule } from "../../../domain/entities/TrainingModule";
 import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
 import { ModalContent } from "../modal/ModalContent";
@@ -22,7 +18,7 @@ export interface TrainingWizardProps {
 export interface TrainingWizardStepProps {
     title?: string;
     description?: string;
-    content?: TrainingModuleContent;
+    content?: string;
     minimized?: boolean;
     stepIndex?: number;
     contentIndex?: number;
@@ -31,54 +27,64 @@ export interface TrainingWizardStepProps {
 }
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
-    const { appState, setAppState } = useAppContext();
+    const { appState, setAppState, usecases, translate } = useAppContext();
+    const lastStep = useRef<string>();
 
     const minimized = useMemo(
         () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
         [appState]
     );
 
-    const wizardSteps: WizardStep[] = useMemo(() => {
+    const wizardSteps = useMemo(() => {
         if (!module) return [];
-        return _.flatMap(module.steps, ({ title, contents }, step) =>
-            contents.map((content, position) => ({
-                key: `${module.key}-${step + 1}-${position + 1}`,
-                module,
-                label: "Select your location",
-                component: MarkdownContentStep,
-                props: {
-                    title,
-                    content,
+        return _.flatMap(module.contents.steps, ({ title, pages }, step) =>
+            pages.map((content, position) => {
+                const props: TrainingWizardStepProps = {
+                    title: translate(title),
+                    content: translate(content),
                     stepIndex: step,
                     contentIndex: position,
-                    totalSteps: module.steps.length,
-                    totalContents: contents.length,
+                    totalSteps: module.contents.steps.length,
+                    totalContents: pages.length,
                     minimized,
-                },
-            }))
+                };
+
+                return {
+                    key: `${module.id}-${step + 1}-${position + 1}`,
+                    module,
+                    label: "Select your location",
+                    component: MarkdownContentStep,
+                    props,
+                };
+            })
         );
-    }, [module, minimized]);
+    }, [module, minimized, translate]);
 
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
-        const key = `${module.key}-${appState.step}-${appState.content}`;
-        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0].key;
+        const key = `${module.id}-${appState.step}-${appState.content}`;
+        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0]?.key;
     }, [appState, module, wizardSteps]);
 
     const onStepChange = useCallback(
-        (stepKey: string) => {
+        async (stepKey: string) => {
+            if (!module || lastStep.current === stepKey) return;
+            lastStep.current = stepKey;
+
             const result = extractStepFromKey(stepKey);
             if (!result) return;
+
+            await usecases.progress.update(module.id, result.step);
 
             setAppState(appState => {
                 if (appState.type !== "TRAINING") return appState;
                 return { ...appState, ...result };
             });
         },
-        [setAppState]
+        [setAppState, module, usecases]
     );
 
-    const onMinimize = useCallback(() => {
+    const minimize = useCallback(() => {
         setAppState(appState => {
             if (appState.type !== "TRAINING") return appState;
             const state = appState.state === "MINIMIZED" ? "OPEN" : "MINIMIZED";
@@ -86,12 +92,17 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         });
     }, [setAppState]);
 
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
     if (!module || wizardSteps.length === 0) return null;
 
     return (
         <StyledModal
             onClose={onClose}
-            onMinimize={onMinimize}
+            onGoHome={goHome}
+            onMinimize={minimize}
             minimized={minimized}
             allowDrag={true}
         >

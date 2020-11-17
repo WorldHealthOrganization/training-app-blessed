@@ -1,50 +1,43 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import i18n from "../../../locales";
 import { MainButton } from "../../components/main-button/MainButton";
-import {
-    Modal,
-    ModalContent,
-    ModalFooter,
-    ModalParagraph,
-    ModalTitle,
-} from "../../components/modal";
+import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
+import { Modal, ModalContent, ModalFooter } from "../../components/modal";
 import { useAppContext } from "../../contexts/app-context";
 
 export const WelcomePage = () => {
-    const { setAppState, module } = useAppContext();
+    const { setAppState, module, translate } = useAppContext();
 
     const startTutorial = useCallback(() => {
         if (!module) return;
-        setAppState({ type: "TRAINING_DIALOG", dialog: "contents", module: module.key });
+        setAppState({ type: "TRAINING_DIALOG", dialog: "contents", module: module.id });
     }, [module, setAppState]);
 
     const exitTutorial = useCallback(() => {
-        setAppState({ type: "HOME" });
+        setAppState({ type: "EXIT" });
     }, [setAppState]);
 
     const toggleClose = useCallback(() => {
         if (!module) return;
-        setAppState({ type: "TRAINING", module: module.key, step: 0, content: 0, state: "CLOSED" });
+        setAppState({ type: "TRAINING", module: module.id, step: 0, content: 0, state: "CLOSED" });
     }, [module, setAppState]);
 
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
     if (!module) return null;
-    const { title, description, icon } = module.details;
 
     return (
-        <StyledModal onClose={toggleClose}>
-            <ModalContent>
-                <ModalTitle big={true}>{title}</ModalTitle>
-                <Image>
-                    <img src={icon} alt="Welcome Illustration" />
-                </Image>
-                <ModalParagraph>{description}</ModalParagraph>
-            </ModalContent>
+        <StyledModal onClose={toggleClose} onGoHome={goHome} centerChildren={true}>
+            <WelcomePageContent welcome={translate(module.contents.welcome)} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
-                    Go Back
+                    {i18n.t("Exit Tutorial")}
                 </MainButton>
                 <MainButton color="primary" onClick={startTutorial}>
-                    Start Tutorial
+                    {i18n.t("Start Tutorial")}
                 </MainButton>
             </ModalFooter>
         </StyledModal>
@@ -58,7 +51,10 @@ const StyledModal = styled(Modal)`
     transform: translate(-50%, -50%);
 `;
 
-const Image = styled.span`
-    display: block;
-    margin: 18px 0px;
-`;
+export const WelcomePageContent: React.FC<{ welcome: string }> = ({ welcome }) => {
+    return (
+        <ModalContent>
+            <MarkdownViewer source={welcome} />
+        </ModalContent>
+    );
+};

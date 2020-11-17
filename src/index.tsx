@@ -43,7 +43,7 @@ async function main() {
 
         ReactDOM.render(
             <Provider config={{ baseUrl, apiVersion: 30 }}>
-                <App />
+                <App locale={userSettings.keyUiLocale} />
             </Provider>,
             document.getElementById("root")
         );

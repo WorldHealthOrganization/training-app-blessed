@@ -5,10 +5,19 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-09-24T07:16:54.558Z\n"
-"PO-Revision-Date: 2020-09-24T07:16:54.558Z\n"
+"POT-Creation-Date: 2020-11-17T18:18:46.551Z\n"
+"PO-Revision-Date: 2020-11-17T18:18:46.551Z\n"
 
 msgid "Tutorial"
+msgstr ""
+
+msgid "Edit markdown"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Home"
 msgstr ""
 
 msgid "Move window"
@@ -20,13 +29,55 @@ msgstr ""
 msgid "Minimize window"
 msgstr ""
 
+msgid "Field must have a value"
+msgstr ""
+
+msgid "Code must be unique"
+msgstr ""
+
+msgid "Edit module"
+msgstr ""
+
+msgid "Add module"
+msgstr ""
+
+msgid "Edit contents of {{name}}"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Sync translations"
+msgstr ""
+
+msgid "Delete module"
+msgstr ""
+
+msgid "Move up"
+msgstr ""
+
+msgid "Move down"
+msgstr ""
+
+msgid "Edit contents"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Previous step"
+msgstr ""
+
 msgid "Previous"
 msgstr ""
 
-msgid "Next"
+msgid "Next step"
 msgstr ""
 
-msgid "Home"
+msgid "Next"
 msgstr ""
 
 msgid "Welcome"
@@ -39,4 +90,43 @@ msgid "Final"
 msgstr ""
 
 msgid "Summary"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Well done!"
+msgstr ""
+
+msgid "You’ve completed the {{name}} tutorial!"
+msgstr ""
+
+msgid "Here is your progress on DHIS2 training"
+msgstr ""
+
+msgid "Select one of these tutorials to continue learning:"
+msgstr ""
+
+msgid "Exit Tutorial"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "POEditor token"
+msgstr ""
+
+msgid "Access to Settings"
+msgstr ""
+
+msgid "Description TODO"
+msgstr ""
+
+msgid "What did you learn in this tutorial?"
+msgstr ""
+
+msgid "What will this tutorial cover?"
+msgstr ""
+
+msgid "Start Tutorial"
 msgstr ""

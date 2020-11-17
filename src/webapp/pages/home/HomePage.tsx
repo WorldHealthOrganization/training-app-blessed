@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { TrainingModule } from "../../../domain/entities/TrainingModule";
+import i18n from "../../../locales";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
 import { MainButton } from "../../components/main-button/MainButton";
@@ -14,17 +16,19 @@ import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
     const { usecases, setAppState } = useAppContext();
-    const [modules, setModules] = useState<
-        { name: string; key: string; progress: number; disabled?: boolean }[]
-    >([]);
+    const [modules, setModules] = useState<TrainingModule[]>([]);
 
     useEffect(() => {
-        usecases.listModules().then(setModules);
+        usecases.modules.list().then(setModules);
     }, [usecases]);
 
     const loadModule = useCallback(
-        (module: string) => {
-            setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
+        (module: string, step: number) => {
+            if (step > 0) {
+                setAppState({ type: "TRAINING", state: "OPEN", module, step, content: 1 });
+            } else {
+                setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
+            }
         },
         [setAppState]
     );
@@ -34,18 +38,22 @@ export const HomePage = () => {
     }, [setAppState]);
 
     return (
-        <StyledModal onClose={exitTutorial}>
+        <StyledModal>
             <ContentWrapper>
-                <ModalTitle>Here is your progress on DHIS2 training</ModalTitle>
-                <ModalParagraph>Select one of these tutorials to continue learning:</ModalParagraph>
+                <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
+                <ModalParagraph>
+                    {i18n.t("Select one of these tutorials to continue learning:", {
+                        nsSeparator: false,
+                    })}
+                </ModalParagraph>
                 <ModalContent>
                     <Cardboard>
-                        {modules.map(({ name, key, progress, disabled }, idx) => (
+                        {modules.map(({ name, id, progress, disabled, contents }, idx) => (
                             <Card
                                 key={`card-${idx}`}
                                 label={name}
-                                progress={progress}
-                                onClick={() => loadModule(key)}
+                                progress={Math.round((progress / contents.steps.length) * 100)}
+                                onClick={() => loadModule(id, progress)}
                                 disabled={disabled}
                             />
                         ))}
@@ -53,7 +61,7 @@ export const HomePage = () => {
                 </ModalContent>
                 <ModalFooter className="modal-footer">
                     <MainButton color="secondary" onClick={exitTutorial}>
-                        Exit Tutorial
+                        {i18n.t("Exit Tutorial")}
                     </MainButton>
                 </ModalFooter>
             </ContentWrapper>

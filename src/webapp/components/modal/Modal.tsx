@@ -13,8 +13,10 @@ export const Modal: React.FC<ModalProps> = ({
     children,
     onClose,
     onMinimize,
+    onGoHome,
     minimized,
     allowDrag,
+    centerChildren,
 }) => {
     const [position, setPosition] = useState<ControlPosition>();
     const dragId = "drag-button";
@@ -35,11 +37,11 @@ export const Modal: React.FC<ModalProps> = ({
             onDrag={clearPosition}
         >
             <ModalWrapper>
-                <ModalBody className={className}>
+                <ModalBody id={dragId} className={className} center={centerChildren}>
                     <ModalHeader
-                        dragId={dragId}
                         minimized={minimized}
                         onClose={onClose}
+                        onGoHome={onGoHome}
                         onMinimize={onMinimize}
                         allowDrag={allowDrag}
                     />
@@ -53,9 +55,11 @@ export const Modal: React.FC<ModalProps> = ({
 export interface ModalProps {
     className?: string;
     onClose?: () => void;
+    onGoHome?: () => void;
     onMinimize?: () => void;
     minimized?: boolean;
     allowDrag?: boolean;
+    centerChildren?: boolean;
 }
 
 const ModalWrapper = styled.div`
@@ -70,13 +74,16 @@ const ModalWrapper = styled.div`
     user-select: none;
 `;
 
-const ModalBody = styled.div`
+export const ModalBody = styled.div<{ center?: boolean }>`
     background-color: #276696;
     border-radius: 18px;
     padding: 18px;
     font-family: "Roboto", sans-serif;
     color: #fff;
     pointer-events: auto;
+    text-align-last: ${props => (props.center ? "center" : "unset")};
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12),
+        0 5px 5px -3px rgba(0, 0, 0, 0.2);
 `;
 
 const CustomDraggable: React.FC<Partial<DraggableProps> & { className?: string }> = ({
