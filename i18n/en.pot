@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-17T13:48:06.631Z\n"
-"PO-Revision-Date: 2020-11-17T13:48:06.631Z\n"
+"POT-Creation-Date: 2020-11-17T14:54:04.648Z\n"
+"PO-Revision-Date: 2020-11-17T14:54:04.648Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -108,6 +108,9 @@ msgid "Exit Tutorial"
 msgstr ""
 
 msgid "Permissions"
+msgstr ""
+
+msgid "POEditor token"
 msgstr ""
 
 msgid "Access to Settings"

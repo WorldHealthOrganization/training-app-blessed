@@ -5,9 +5,8 @@ import { TranslationClient, TranslationError, TranslationProject } from "./Trans
 export class PoEditorTranslationClient implements TranslationClient {
     private api: PoEditorApi;
 
-    constructor() {
-        // TODO: Read from config
-        this.api = new PoEditorApi("c65f9e166fbb540c37b1f8a3cb088ac3");
+    constructor(token: string) {
+        this.api = new PoEditorApi(token);
     }
 
     public async getProject(

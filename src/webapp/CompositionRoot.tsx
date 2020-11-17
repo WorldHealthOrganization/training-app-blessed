@@ -5,8 +5,10 @@ import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleR
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
+import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
+import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { cache } from "../utils/cache";
@@ -33,6 +35,10 @@ export class CompositionRoot {
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
+            }),
+            config: getExecute({
+                savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
+                existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
             }),
         };
     }

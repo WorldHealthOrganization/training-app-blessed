@@ -1,17 +1,23 @@
+import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { D2Api } from "../../types/d2-api";
 import { cache } from "../../utils/cache";
+import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
+import { Namespaces } from "../clients/storage/Namespaces";
+import { StorageClient } from "../clients/storage/StorageClient";
 import { Instance } from "../entities/Instance";
+import { PersistedConfig } from "../entities/PersistedConfig";
 import { User } from "../entities/User";
 import { getD2APiFromInstance, getMajorVersion } from "../utils/d2-api";
-import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 
 export class Dhis2ConfigRepository implements ConfigRepository {
     private instance: Instance;
     private api: D2Api;
+    private storageClient: StorageClient;
 
     constructor(baseUrl: string) {
         this.instance = new Instance({ url: baseUrl });
         this.api = getD2APiFromInstance(this.instance);
+        this.storageClient = new DataStoreStorageClient("global", this.instance);
     }
 
     @cache()
@@ -51,5 +57,25 @@ export class Dhis2ConfigRepository implements ConfigRepository {
 
     public getInstance(): Instance {
         return this.instance;
+    }
+
+    public async setPoEditorToken(token: string): Promise<void> {
+        const config = await this.getConfig();
+
+        await this.storageClient.saveObject<PersistedConfig>(Namespaces.CONFIG, {
+            ...config,
+            poeditorToken: token,
+        });
+    }
+
+    public async getPoEditorToken(): Promise<string | undefined> {
+        const { poeditorToken } = await this.getConfig();
+        return poeditorToken;
+    }
+
+    private async getConfig(): Promise<PersistedConfig> {
+        const config = await this.storageClient.getObject<PersistedConfig>(Namespaces.CONFIG);
+
+        return config ?? {};
     }
 }

@@ -17,6 +17,8 @@ import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { UserProgress } from "../entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
+import { PoEditorTranslationClient } from "../clients/translation/PoEditorTranslationClient";
+import { TranslationClient } from "../clients/translation/TranslationClient";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -163,6 +165,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         model: PersistedTrainingModule
     ): Promise<PersistedTrainingModule> {
         if (model.translation.provider === "NONE") return model;
+        const translationClient = await this.getTranslationClient();
+        console.log(translationClient);
 
         const lastTranslationSync = new Date(model.lastTranslationSync);
         if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) < 15) {
@@ -173,6 +177,12 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         // Fetch translations and update local model
 
         return model;
+    }
+
+    // TODO: Implement multiple providers (other than poeditor)
+    private async getTranslationClient(): Promise<TranslationClient | undefined> {
+        const token = await this.config.getPoEditorToken();
+        return token ? new PoEditorTranslationClient(token) : undefined;
     }
 
     private async buildDomainModel(model: PersistedTrainingModule): Promise<TrainingModule> {

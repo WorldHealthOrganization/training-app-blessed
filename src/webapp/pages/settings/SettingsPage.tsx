@@ -1,14 +1,41 @@
-import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import {
+    FormGroup,
+    Icon,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    TextField,
+} from "@material-ui/core";
 import { useSnackbar } from "d2-ui-components";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
 import { ModuleListTable } from "../../components/module-list-table/ModuleListTable";
 import PermissionsDialog from "../../components/permissions-dialog/PermissionsDialog";
+import { useAppContext } from "../../contexts/app-context";
 
 export const SettingsPage: React.FC = () => {
+    const { usecases } = useAppContext();
     const snackbar = useSnackbar();
+
+    const [poEditorToken, setPoEditorToken] = useState<string>();
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
+    const [existsPoEditorToken, setExistsPoEditorToken] = useState<boolean>(false);
+
+    const defaultToken = existsPoEditorToken ? "HIDDEN_TOKEN" : "";
+
+    useEffect(() => {
+        usecases.config.existsPoEditorToken().then(setExistsPoEditorToken);
+    }, [usecases]);
+
+    const updateToken = useCallback(
+        (event: React.ChangeEvent<{ value: string }>) => {
+            console.log(event.target.value);
+            usecases.config.savePoEditorToken(event.target.value);
+            setPoEditorToken(event.target.value);
+        },
+        [usecases]
+    );
 
     return (
         <React.Fragment>
@@ -26,6 +53,14 @@ export const SettingsPage: React.FC = () => {
                     onClose={() => setPermissionsType(null)}
                 />
             )}
+
+            <TextField
+                type="password"
+                fullWidth={true}
+                label={i18n.t("POEditor token")}
+                value={poEditorToken ?? defaultToken}
+                onChange={updateToken}
+            />
 
             <Group row={true}>
                 <ListItem button onClick={() => setPermissionsType("settings")}>
