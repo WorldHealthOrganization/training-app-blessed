@@ -25,7 +25,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     constructor(private config: ConfigDataSource) {
         this.builtinModules = BuiltinModules;
-        this.storageClient = new DataStoreStorageClient(config.getInstance());
+        this.storageClient = new DataStoreStorageClient("global", config.getInstance());
     }
 
     public async list(): Promise<TrainingModule[]> {
