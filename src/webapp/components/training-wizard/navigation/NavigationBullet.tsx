@@ -18,5 +18,5 @@ export const NavigationBullet = styled(SubBullet)`
     line-height: 34px;
 
     background-color: ${props =>
-        props.completed ? getColor("primary") : "rgba(255, 255, 255, 0.3)"};
+        props.completed ? getColor("secondary") : "rgba(255, 255, 255, 0.3)"};
 `;
