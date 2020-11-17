@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppState } from "../entities/AppState";
 import { TrainingModule } from "../../domain/entities/TrainingModule";
 import { CompositionRoot } from "../CompositionRoot";
@@ -38,11 +38,13 @@ export function useAppContext(): UseAppContextResult {
 
     const { compositionRoot, routes, appState, setAppState, module, setModule } = context;
     const { usecases } = compositionRoot;
+    const stateModule = useRef<string>();
 
     useEffect(() => {
-        if (module) return;
+        if (module && stateModule.current === module.id) return;
         if (appState.type !== "TRAINING" && appState.type !== "TRAINING_DIALOG") return;
         compositionRoot.usecases.modules.get(appState.module).then(setModule);
+        stateModule.current = appState.module;
     }, [appState, module, compositionRoot, setModule]);
 
     return { appState, setAppState, routes, usecases, module };
