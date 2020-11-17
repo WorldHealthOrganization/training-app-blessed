@@ -17,15 +17,18 @@ import { StorageClient } from "../clients/storage/StorageClient";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { translate } from "../entities/TranslatableText";
+import { UserProgress } from "../entities/UserProgress";
 import { ConfigDataSource } from "../sources/config/ConfigDataSource";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
+    private progressStorageClient: StorageClient;
 
     constructor(private config: ConfigDataSource) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
+        this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
     }
 
     public async list(): Promise<TrainingModule[]> {
@@ -136,6 +139,14 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
     }
 
+    public async updateProgress(id: string, progress: number): Promise<void> {
+        const percentage = Math.max(Math.min(progress, 100), 0);
+        await this.progressStorageClient.saveObjectInCollection<UserProgress>(Namespaces.PROGRESS, {
+            id,
+            percentage,
+        });
+    }
+
     private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
         const builtinModule = this.builtinModules[key];
         if (!builtinModule) return undefined;
@@ -182,13 +193,18 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             })),
         };
 
+        const progress = await this.progressStorageClient.getObjectInCollection<UserProgress>(
+            Namespaces.PROGRESS,
+            model.id
+        );
+
         return {
             ...rest,
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             contents: translatedContents,
             type: validType,
-            progress: 0,
+            progress: progress?.percentage ?? 0,
         };
     }
 

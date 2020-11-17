@@ -8,6 +8,7 @@ import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
+import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { cache } from "../utils/cache";
 
 export class CompositionRoot {
@@ -30,6 +31,9 @@ export class CompositionRoot {
                 edit: new EditModuleUseCase(this.trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
             }),
+            progress: getExecute({
+                update: new UpdateUserProgressUseCase(this.trainingModuleRepository)
+            })
         };
     }
 }

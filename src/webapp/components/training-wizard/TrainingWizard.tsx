@@ -27,7 +27,7 @@ export interface TrainingWizardStepProps {
 }
 
 export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
-    const { appState, setAppState } = useAppContext();
+    const { appState, setAppState, usecases } = useAppContext();
 
     const minimized = useMemo(
         () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
@@ -66,16 +66,20 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
     }, [appState, module, wizardSteps]);
 
     const onStepChange = useCallback(
-        (stepKey: string) => {
+        async (stepKey: string) => {
             const result = extractStepFromKey(stepKey);
-            if (!result) return;
+            if (!result || !module) return;
+
+            const totalSteps = module.contents.steps.length;
+            const progress = (result.step * 100) / totalSteps;
+            await usecases.progress.update(module.id, progress);
 
             setAppState(appState => {
                 if (appState.type !== "TRAINING") return appState;
                 return { ...appState, ...result };
             });
         },
-        [setAppState]
+        [setAppState, module, usecases]
     );
 
     const onMinimize = useCallback(() => {
