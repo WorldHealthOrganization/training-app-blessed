@@ -58,8 +58,8 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
     );
 
     const title = completed
-        ? "What did you learn in this tutorial?"
-        : "What will this tutorial cover?";
+        ? i18n.t("What did you learn in this tutorial?")
+        : i18n.t("What will this tutorial cover?");
 
     const prev = completed ? goToFinalPage : goToWelcomePage;
     const next = completed ? endTutorial : startTutorial;
