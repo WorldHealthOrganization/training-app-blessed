@@ -12,7 +12,7 @@
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Event capture\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99361115-e3235c80-28b1-11eb-96a1-9a0797c6dd97.png)\n\nUse this application to enter data that has been collected several times during the same period and for the same location (e.g. for several patients visiting a facility on the same day, for houses in a village sampled on the same day etc.).",
+            "referenceValue": "# Welcome to the tutorial on Event capture\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99418795-aaa87080-28fb-11eb-8c81-450250a77a0b.png)\n\nUse this application to enter data that has been collected several times during the same period and for the same location (e.g. for several patients visiting a facility on the same day, for houses in a village sampled on the same day etc.).",
             "translations": {}
         },
         "steps": [

@@ -12,7 +12,7 @@
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Exploring and creating dashboards\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99354729-478cee80-28a7-11eb-9159-c7acae0041eb.png)\n\nYour dashboard shows a combination of data charts, tables, maps that you have created on a particular topic. This tutorial takes you through the steps of creating new dashboards and navigating through their features to explore your data.",
+            "referenceValue": "# Welcome to the tutorial on Exploring and creating dashboards\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99418889-c1e75e00-28fb-11eb-90ea-607e0ba43c57.png)\n\nYour dashboard shows a combination of data charts, tables, maps that you have created on a particular topic. This tutorial takes you through the steps of creating new dashboards and navigating through their features to explore your data.",
             "translations": {}
         },
         "steps": [
