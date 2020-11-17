@@ -22,7 +22,7 @@ export const MarkdownEditorDialog: React.FC<MarkdownEditorDialogProps> = ({
 
     const onFinish = useCallback(() => {
         onSave(value);
-    }, [onSave]);
+    }, [onSave, value]);
 
     return (
         <ConfirmationDialog
