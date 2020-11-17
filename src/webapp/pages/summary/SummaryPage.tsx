@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import i18n from "../../../locales";
 import { MainButton } from "../../components/main-button/MainButton";
 import { Modal, ModalContent, ModalFooter, ModalTitle } from "../../components/modal";
 import { Bullet } from "../../components/training-wizard/stepper/Bullet";
@@ -17,6 +18,24 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
             module: module.id,
             step: 1,
             content: 1,
+        });
+    }, [setAppState, module]);
+
+    const goToWelcomePage = useCallback(() => {
+        if (!module) return;
+        setAppState({
+            type: "TRAINING_DIALOG",
+            dialog: "welcome",
+            module: module.id,
+        });
+    }, [setAppState, module]);
+
+    const goToFinalPage = useCallback(() => {
+        if (!module) return;
+        setAppState({
+            type: "TRAINING_DIALOG",
+            dialog: "final",
+            module: module.id,
         });
     }, [setAppState, module]);
 
@@ -42,7 +61,8 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         ? "What did you learn in this tutorial?"
         : "What will this tutorial cover?";
 
-    const action = completed ? endTutorial : startTutorial;
+    const prev = completed ? goToFinalPage : goToWelcomePage;
+    const next = completed ? endTutorial : startTutorial;
 
     return (
         <StyledModal completed={completed} onClose={completed ? endTutorial : minimize}>
@@ -67,7 +87,8 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
                     })}
                 </ModalContent>
                 <ModalFooter>
-                    <MainButton onClick={action}>Next</MainButton>
+                    <MainButton onClick={prev}>{i18n.t("Previous")}</MainButton>
+                    <MainButton onClick={next}>{i18n.t("Next")}</MainButton>
                 </ModalFooter>
             </ContentWrapper>
         </StyledModal>
