@@ -6,7 +6,6 @@ import {
     TrainingModule,
     TrainingModuleBuilder,
 } from "../../domain/entities/TrainingModule";
-import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
@@ -56,10 +55,15 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             PersistedTrainingModule
         >(Namespaces.TRAINING_MODULES, key);
 
-        const persistedModel = dataStoreModel ?? (await this.getBuiltin(key));
-        if (!persistedModel) return undefined;
+        const model = dataStoreModel ?? (await this.getBuiltin(key));
+        if (!model) return undefined;
 
-        return this.buildDomainModel(persistedModel);
+        const lastTranslationSync = new Date(model.lastTranslationSync);
+        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) > 15) {
+            this.updateTranslations(model.id);
+        }
+
+        return this.buildDomainModel(model);
     }
 
     public async create({
@@ -141,86 +145,77 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     // TODO: Review in the near future
     public async updateTranslations(key: string): Promise<void> {
-        const token = await this.config.getPoEditorToken();
-        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES,
-            key
-        );
+        try {
+            const token = await this.config.getPoEditorToken();
+            const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+                Namespaces.TRAINING_MODULES,
+                key
+            );
 
-        if (!model || model.translation.provider === "NONE" || !token) return;
-        const api = new PoEditorApi(token);
+            if (!model || model.translation.provider === "NONE" || !token) return;
+            const api = new PoEditorApi(token);
 
-        const project = parseInt(model.translation.project);
-        const translatableItems = this.extractTranslations(model);
+            const project = parseInt(model.translation.project);
 
-        // Update terms
-        const terms = translatableItems.map(item => ({ term: item.key }));
-        await api.terms.add({ id: project, data: JSON.stringify(terms) });
+            // Fetch translations and update local model
+            const languagesResponse = await api.languages.list({ id: project });
+            const poeditorLanguages =
+                languagesResponse.value.data?.languages.map(({ code }) => code) ?? [];
 
-        // Update reference values
-        const referenceTranslations = translatableItems.map(item => ({
-            term: item.key,
-            translation: { content: item.referenceValue },
-        }));
-        await api.languages.update({
-            id: project,
-            language: "en",
-            data: JSON.stringify(referenceTranslations),
-        });
+            const dictionary = _(
+                await promiseMap(poeditorLanguages, async language => {
+                    const translationResponse = await api.terms.list({ id: project, language });
+                    return (
+                        translationResponse.value.data?.terms.map(({ term, translation }) => ({
+                            term,
+                            language,
+                            value: translation.content,
+                        })) ?? []
+                    );
+                })
+            )
+                .flatten()
+                .groupBy(item => item.term)
+                .mapValues(items =>
+                    _.fromPairs(items.map(({ language, value }) => [language, value]))
+                )
+                .value();
 
-        // Fetch translations and update local model
-        const languagesResponse = await api.languages.list({ id: project });
-        const poeditorLanguages =
-            languagesResponse.value.data?.languages.map(({ code }) => code) ?? [];
-
-        const dictionary = _(
-            await promiseMap(poeditorLanguages, async language => {
-                const translationResponse = await api.terms.list({ id: project, language });
-                return (
-                    translationResponse.value.data?.terms.map(({ term, translation }) => ({
-                        term,
-                        language,
-                        value: translation.content,
-                    })) ?? []
-                );
-            })
-        )
-            .flatten()
-            .groupBy(item => item.term)
-            .mapValues(items => _.fromPairs(items.map(({ language, value }) => [language, value])))
-            .value();
-
-        const translatedModel: PersistedTrainingModule = {
-            ...model,
-            contents: {
-                ...model.contents,
-                welcome: {
-                    ...model.contents.welcome,
-                    translations: dictionary[model.contents.welcome.key] ?? {},
-                },
-                steps: model.contents.steps.map(step => ({
-                    ...step,
-                    title: {
-                        ...step.title,
-                        translations: dictionary[step.title.key] ?? {},
+            const translatedModel: PersistedTrainingModule = {
+                ...model,
+                contents: {
+                    ...model.contents,
+                    welcome: {
+                        ...model.contents.welcome,
+                        translations: dictionary[model.contents.welcome.key] ?? {},
                     },
-                    subtitle: step.subtitle
-                        ? {
-                              ...step.subtitle,
-                              translations: dictionary[step.subtitle.key] ?? {},
-                          }
-                        : undefined,
-                    pages: step.pages.map(page => ({
-                        ...page,
-                        translations: dictionary[page.key] ?? {},
+                    steps: model.contents.steps.map(step => ({
+                        ...step,
+                        title: {
+                            ...step.title,
+                            translations: dictionary[step.title.key] ?? {},
+                        },
+                        subtitle: step.subtitle
+                            ? {
+                                  ...step.subtitle,
+                                  translations: dictionary[step.subtitle.key] ?? {},
+                              }
+                            : undefined,
+                        pages: step.pages.map(page => ({
+                            ...page,
+                            translations: dictionary[page.key] ?? {},
+                        })),
                     })),
-                })),
-            },
-        };
+                },
+            };
 
-        await this.saveDataStore(translatedModel);
+            await this.saveDataStore(translatedModel);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
+    /** TODO: Build term list on create project
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
         const steps = _.flatMap(model.contents.steps, step => [
             step.title,
@@ -229,7 +224,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         ]);
 
         return _.compact([model.contents.welcome, ...steps]);
-    }
+    }**/
 
     private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
         const builtinModule = this.builtinModules[key];
@@ -272,17 +267,12 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             model.id
         );
 
-        const lastTranslationSync = new Date(model.lastTranslationSync);
-        if (Math.abs(differenceInMinutes(new Date(), lastTranslationSync)) > 15) {
-            this.updateTranslations(model.id);
-        }
-
         return {
             ...rest,
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,
-            progress: progress?.percentage ?? 0,
+            progress: progress?.lastStep ?? 0,
         };
     }
 
