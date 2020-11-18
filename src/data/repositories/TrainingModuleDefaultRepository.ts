@@ -145,7 +145,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async updateTranslations(key: string): Promise<void> {
         try {
             const token = await this.config.getPoEditorToken();
-            console.log(2, token);
             const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
                 Namespaces.TRAINING_MODULES,
                 key
