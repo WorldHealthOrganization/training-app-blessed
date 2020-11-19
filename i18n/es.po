@@ -1,0 +1,132 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: i18next-conv\n"
+"POT-Creation-Date: 2020-11-17T18:18:46.551Z\n"
+"PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "Tutorial"
+msgstr "Tutorial"
+
+msgid "Edit markdown"
+msgstr "Editar markdown"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Move window"
+msgstr "Mover ventana"
+
+msgid "Expand window"
+msgstr "Expandir ventana"
+
+msgid "Minimize window"
+msgstr "Minimizar ventana"
+
+msgid "Field must have a value"
+msgstr "El campo debe tener un valor"
+
+msgid "Code must be unique"
+msgstr "El código debe ser único"
+
+msgid "Edit module"
+msgstr "Editar modulo"
+
+msgid "Add module"
+msgstr "Añadir modulo"
+
+msgid "Edit contents of {{name}}"
+msgstr "Editar contenidos de {{name}}"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "No"
+msgstr "No"
+
+msgid "Sync translations"
+msgstr "Sincronizar traducciones"
+
+msgid "Delete module"
+msgstr "Eliminar modulo"
+
+msgid "Move up"
+msgstr "Mover arriba"
+
+msgid "Move down"
+msgstr "Mover abajo"
+
+msgid "Edit contents"
+msgstr "Editar contenidos"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Previous step"
+msgstr "Paso anterior"
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Next step"
+msgstr "Paso siguiente"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Welcome"
+msgstr "Bienvenido"
+
+msgid "Contents"
+msgstr "Contenidos"
+
+msgid "Final"
+msgstr ""
+
+msgid "Summary"
+msgstr "Fin"
+
+msgid "Settings"
+msgstr "Ajustes"
+
+msgid "Well done!"
+msgstr "Bien hecho!"
+
+msgid "You’ve completed the {{name}} tutorial!"
+msgstr "Has completado el tutorial {{name}}"
+
+msgid "Here is your progress on DHIS2 training"
+msgstr "Este es tu progreso en el entrenamiento de DHIS2"
+
+msgid "Select one of these tutorials to continue learning:"
+msgstr "Seleccione uno de los tutoriales para continuar aprendiendo"
+
+msgid "Exit Tutorial"
+msgstr "Salir del tutorial"
+
+msgid "Permissions"
+msgstr "Permisos"
+
+msgid "POEditor token"
+msgstr "Token de POEditor"
+
+msgid "Access to Settings"
+msgstr ""
+
+msgid "Description TODO"
+msgstr ""
+
+msgid "What did you learn in this tutorial?"
+msgstr "¿Qué ha aprendido en este tutorial?"
+
+msgid "What will this tutorial cover?"
+msgstr "¿Qué cubrirá este tutorial?"
+
+msgid "Start Tutorial"
+msgstr "Empezar tutorial"
