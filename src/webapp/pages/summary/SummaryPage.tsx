@@ -89,7 +89,9 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
                             <Step key={`step-${idx}`} column={column} row={row} last={last}>
                                 <Line />
                                 <Bullet stepKey={idx + 1} onClick={() => jumpToStep(idx + 1)} />
-                                <Label>{translate(title)}</Label>
+                                <Label onClick={() => jumpToStep(idx + 1)}>
+                                    {translate(title)}
+                                </Label>
                             </Step>
                         );
                     })}

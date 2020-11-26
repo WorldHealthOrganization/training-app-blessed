@@ -28,7 +28,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
                 </DragButton>
             ) : null}
             {onClose ? (
-                <CloseButton>
+                <CloseButton text={i18n.t("Exit tutorial")}>
                     <CloseIcon onClick={onClose} />
                 </CloseButton>
             ) : null}
@@ -74,7 +74,7 @@ const DragButton = styled(Tooltip)`
     }
 `;
 
-const CloseButton = styled.div`
+const CloseButton = styled(Tooltip)`
     float: right;
     cursor: pointer;
 

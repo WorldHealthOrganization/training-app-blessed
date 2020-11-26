@@ -27,7 +27,7 @@ export const TooltipText = styled.span<{ placement: "right" | "left" }>`
     background-color: #fff;
     color: #276696;
     text-align: center;
-    padding: 5px 0;
+    padding: 5px 10px;
     border-radius: 6px;
 
     position: absolute;
