@@ -5,6 +5,7 @@ import EventVisualizerModule from "./04-event-visualizer-module.json";
 import DataVisualizerModule from "./05-data-visualizer-module.json";
 import PivotTablesModule from "./06-pivot-tables-module.json";
 import MapsModule from "./07-maps-module.json";
+import BulkLoadModule from "./08-bulk-load-module.json";
 
 export const BuiltinModules = {
     dashboards: DashboardModule,
@@ -14,4 +15,5 @@ export const BuiltinModules = {
     "data-visualizer": DataVisualizerModule,
     "pivot-tables": PivotTablesModule,
     maps: MapsModule,
+    "bulk-load": BulkLoadModule,
 };

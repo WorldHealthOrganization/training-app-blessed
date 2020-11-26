@@ -11,7 +11,7 @@
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Maps\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100338563-06988680-2fd9-11eb-96ff-7ae5b539b15d.png)\n\nThis is a map-builder application. It allows you to produce maps based on the data you have collected in DHIS2. You can layer maps on top of each other and apply legends and filters to them.",
+            "referenceValue": "# Welcome to the tutorial on Maps\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100339299-fc2abc80-2fd9-11eb-8f6b-59bfb64383d1.png)\n\nThis is a map-builder application. It allows you to produce maps based on the data you have collected in DHIS2. You can layer maps on top of each other and apply legends and filters to them.",
             "translations": {}
         },
         "steps": [
