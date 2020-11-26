@@ -45,7 +45,7 @@
                     {
                         "key": "step-2-1",
                         "translations": {},
-                        "referenceValue": "![Select your program](https://user-images.githubusercontent.com/2181866/99362104-58dbf800-28b3-11eb-9324-24ce6d72b18e.gif)\n\nTo select your program, click on the box saying 'Select program' in the 'Program' section and find the name of your program in the drop-down list of data collection forms.\n\nThese may be filtered according to the location that you have selected – not all programs/forms are available at every location.\n\nClick on your program to add it to your data collection form.\n\n<i>Note: At this point, you may see a 'Registered events' summary table. This table and its functionality will be discussed later in this tutorial.</i>"
+                        "referenceValue": "![Select your program](https://user-images.githubusercontent.com/2181866/99362104-58dbf800-28b3-11eb-9324-24ce6d72b18e.gif)\n\nTo select your program, click on the box saying 'Select program' in the 'Program' section and find the name of your program in the drop-down list of data collection forms.\n\nThese may be filtered according to the location that you have selected - not all programs/forms are available at every location.\n\nClick on your program to add it to your data collection form.\n\n<i>Note: At this point, you may see a 'Registered events' summary table. This table and its functionality will be discussed later in this tutorial.</i>"
                     }
                 ]
             },

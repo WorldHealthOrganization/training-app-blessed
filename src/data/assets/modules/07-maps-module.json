@@ -1,0 +1,185 @@
+{
+    "_version": 1,
+    "id": "maps",
+    "disabled": false,
+    "dhisAppKey": "maps",
+    "name": "Maps",
+    "type": "core",
+    "revision": 1,
+    "dhisVersionRange": "",
+    "dhisLaunchUrl": "/dhis-web-maps/index.html",
+    "contents": {
+        "welcome": {
+            "key": "module-welcome",
+            "referenceValue": "# Welcome to the tutorial on Maps\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100339299-fc2abc80-2fd9-11eb-8f6b-59bfb64383d1.png)\n\nThis is a map-builder application. It allows you to produce maps based on the data you have collected in DHIS2. You can layer maps on top of each other and apply legends and filters to them.",
+            "translations": {}
+        },
+        "steps": [
+            {
+                "title": {
+                    "key": "step-1-title",
+                    "referenceValue": "Select base map",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-1-1",
+                        "translations": {},
+                        "referenceValue": "![Select base map](https://user-images.githubusercontent.com/2181866/100337899-38f5b400-2fd8-11eb-92c2-86ee4d7832d0.gif)\n\nFrom the list of base maps, select the map type to be used as the background or foundation for your visualisation. You can change the transparency of this background map using the slider next to the eye icon."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-2-title",
+                    "referenceValue": "Select map layer",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-2-1",
+                        "translations": {},
+                        "referenceValue": "![Select map layer](https://user-images.githubusercontent.com/2181866/100337901-38f5b400-2fd8-11eb-9170-4c68935dc3f5.gif)\n\nTo create your first layer, click on 'Add layer' to open the menu of different layer types that are available and select a map. The layer types have different functions:\n\n- Boundary maps are simple, displaying the geographic borders of different organisation  units (e.g. country, provinces, district etc.)\n\n- Thematic maps are used to visualise data as heat maps\n\n- Events maps visualise event data using bubble and point charts\n\n- Facilities allow you to map the location where you collect data  (only those for which coordinates have been entered in DHIS2)\n\n- Additional layers to map temperature, rainfall, land cover, etc. are available."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-3-title",
+                    "referenceValue": "Select data type",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-3-1",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100337902-398e4a80-2fd8-11eb-9b57-782b1b9ed680.gif)\n\nThe most complex map types (thematic and events) will require you to select the type of data you want to display on the layer. On the 'Data' tab, click on the Item type (the type of data) that you would like to display in your map. There are several for you to choose from, including:\n\n- Indicators: Calculated using a combination of data variables\n\n- Data elements: Variables whose data are actually recorded through DHIS2 forms (e.g. number of malaria cases in < 5y etc.)\n\n- Reporting rates: The % of reports registered as complete for a particular dataset based on the number of expected reports.\n\n- Event data items: Data elements that are part of a program and represent captured events\n\n- Program indicators: Calculated formulae based on data elements in a program that represent events."
+                    },
+                    {
+                        "key": "step-3-2",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100337904-398e4a80-2fd8-11eb-938b-5ca24d467315.gif)\n\nDepending on which data you have selected, the next section requires you to select a 'group'. You will see 'Select indicator group' if you have selected Indicators or 'Select data element group' if you have selected data elements. Click on the drop-down menu to search for you data group.\n\nThese groups have been created to make it easier to find specific variables within your data. If your data type does not have data groups, you can select [All indicators] or [All data elements] to view the full list.\n\nFor Data Elements, you will be able to select between data 'Totals' or 'Details'. Totals will display aggregated data (e.g. average, sum etc.), while Details will show the breakdown of each variable into its categories (e.g. age group, sex)."
+                    },
+                    {
+                        "key": "step-3-3",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100337905-398e4a80-2fd8-11eb-97ef-f8b08e0d0bd7.gif)\n\nBy now you should see a section labelled 'Data element' or 'Indicator' depending on which data type you selected. This contains a list of variables within the data group that you have selected. Select which variable to include in your map by clicking on the list items. You can only select one variable per layer on the map.\n\nClicking on 'Aggregation type' opens a menu with options for aggregating your data. Click on the option that you would like to select.  By default, 'By data element' is selected, meaning that the data shown on the map is aggregated across the data element/indicator that you have selected and is not showing data for each sampled individual (e.g. house, village or mosquito)."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-4-title",
+                    "referenceValue": "Select time period",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-4-1",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/100337906-3a26e100-2fd8-11eb-88ab-e3c17b89c417.gif)\n\nClick on the 'Period' tab to select the period for which you want to plot data in the map. From the drop-down menu under 'Period type', select if you would like to use relative or fixed (with defined start/end dates) time periods or a specific time frequency (daily, weekly, monthly etc.).\n\nDepending on the period type that you have selected, you should then select specific time periods in the 'Period' section.\n\nFor specific frequency periods, select the relevant dates that you are interested in."
+                    },
+                    {
+                        "key": "step-4-2",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/100337909-3a26e100-2fd8-11eb-9e0b-7f7145235da2.gif)\n\n- For relative time periods, you must select a period that is relative to the current date, and how you would like to display your periods. The options include:\n\n    - Single (aggregate): Shows aggregate values (sum, average etc.) for the period selected\n\n    - Timeline: Includes a timeline allowing you to step through the periods. Only one timeline layer can be added per map.\n\n    - Split map views: Creates multiple maps allowing you to compare different periods side by side. This cannot be combined with other layer types.\n\n- For fixed periods (start/end dates), select your start and end dates from the calendar picker"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-5-title",
+                    "referenceValue": "Select location",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-5-1",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100337910-3abf7780-2fd8-11eb-8057-34822ca41561.gif)\n\nClick on the 'Org Units' tab to open the locations menu. Find your location name in the tree menu and click on the name to select it. Click down to lower geographic levels on the menu by clicking on the grey arrow next to the location names.\n\nYou can select multiple locations from across different geographic levels by pressing the Ctrl key (or Cmd on Mac) and clicking on all the location names that you would like to add to your map."
+                    },
+                    {
+                        "key": "step-5-2",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100337911-3abf7780-2fd8-11eb-9a6f-dcde08caa6ec.gif)\n\nAnother way to select organisational units is by clicking on the 'Level' drop-down menu and selecting an appropriate level (or several). This will select all locations at one or more geographic levels (e.g. Country, Province, District).\n\nFor example, selecting 'District' will select all locations that are districts from your drop-down tree menu. If you click on a province name after this step, it will only select all districts within that province."
+                    },
+                    {
+                        "key": "step-5-3",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100337913-3b580e00-2fd8-11eb-97c6-8ff54b5e6cd7.gif)\n\nAlternatively, if your locations are divided into groups (such as facilities, hospitals, sentinel sites etc.),  you can select a group from the 'Group' drop-down menu. Click on one or more of the groups to select all locations inside these selected groups.\n\nYou can also select one of the 'User organisation units' which are pre-defined groups of the locations in your country, determined by your administrator. 'Main' refers to the country, 'Below' refers to the next level (e.g. Province), and '2 x below' refers to the third level (e.g. Districts). Selecting one or more of these units will select all locations that occur in these levels (e.g. all provinces if 'Below' is selected).\n\n<i>Note: It is not possible to select locations from the tree and from the user organisation units.</i>"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-6-title",
+                    "referenceValue": "Add data filter",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-6-1",
+                        "translations": {},
+                        "referenceValue": "![Add data filter](https://user-images.githubusercontent.com/2181866/100337889-372bf080-2fd8-11eb-8991-ce5c46e95c28.gif)\n\nClick on the 'Filter' tab to filter the data on your map. Click on 'Add filter' and select an available data item from the 'Dimension' drop-down menu. Another drop-down menu will appear where you can select specific dimension items to add to your map.\n\nYou can add multiple filters to your map. Use the red bin icon to delete filters."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-7-title",
+                    "referenceValue": "Define map style",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-7-1",
+                        "translations": {},
+                        "referenceValue": "![Define map style](https://user-images.githubusercontent.com/2181866/100337891-37c48700-2fd8-11eb-87b1-1429a926910c.gif)\n\nClick on the 'Style' tab to format and style your map. You can choose to add a legend to your map by selecting either 'Automatic' or 'Predefined'. The Automatic legend type will create a legend for you based on the items that you select on the menu, including:\n\n- Classification: Choose either Equal intervals (where your data values will be divided into equal value intervals, e.g. steps of 1-5, 5-10, 10-15) or Equal counts (where intervals are created so that the same number of records fall into each value interval).\n\n- Classes: Select the number of intervals on your legend\n\n- Choose the colour palette of the legend\n\n- Low and high sizes: Define maximum and minimum radius values for including data on the map.\n\nYou can also choose to add labels to your map by selecting the 'Labels' checkbox. You will only be able to select 'Predefined' legends if your DHIS2 administrator has created custom legends in the system."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-8-title",
+                    "referenceValue": "Create and edit your map",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-8-1",
+                        "translations": {},
+                        "referenceValue": "![Create and edit your map](https://user-images.githubusercontent.com/2181866/100337894-37c48700-2fd8-11eb-9c37-f973554607d9.gif)\n\nClick on 'Add layer' to add the data that you have selected as a layer on your map.\n\nThe details of the layer are shown on the left-hand menu bar, including the legend. To edit your map, click the three dot menu and select 'Edit layer'. You can also delete your map by selecting 'Remove layer' or download your selected data as a JSON file by clicking 'Download data'.\n\nYou can also add additional layers to your map by clicking on 'Add layer' and defining the dimensions of the new layers.\n\nYou can change the transparency of each layer using the slider next to the eye icon."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-9-title",
+                    "referenceValue": "Save, share and access",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-9-1",
+                        "translations": {},
+                        "referenceValue": "![Save, share and access](https://user-images.githubusercontent.com/2181866/100337895-385d1d80-2fd8-11eb-8ba6-94d73d42621f.gif)\n\nFrom the 'File' drop-down menu, select 'Save as' to give your map a name and description. Save your map by clicking 'Save'.  On this menu, you can also share the map with other DHIS2 users if you have the rights to do so.\n\nWhen you want to work on this map again, you can access it from the 'File' menu by selecting 'Open' and finding the name of your file."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-10-title",
+                    "referenceValue": "Download your map",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-10-1",
+                        "translations": {},
+                        "referenceValue": "![Download your map](https://user-images.githubusercontent.com/2181866/100337898-385d1d80-2fd8-11eb-9d88-3263a979bdf7.gif)\n\nClick on 'Download'; from the 'Download map' window, you can choose to download your map with its name and legend displayed."
+                    }
+                ]
+            }
+        ]
+    }
+}
