@@ -5,6 +5,7 @@ export class UpdateUserProgressUseCase implements UseCase {
     constructor(private trainingModuleRepository: TrainingModuleRepository) {}
 
     public async execute(moduleId: string, progress: number): Promise<void> {
-        return this.trainingModuleRepository.updateProgress(moduleId, progress);
+        if (progress < 0) return;
+        return this.trainingModuleRepository.updateProgress(moduleId, progress, false);
     }
 }

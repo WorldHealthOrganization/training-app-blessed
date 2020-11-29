@@ -2,6 +2,7 @@ import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepositor
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { ConfigRepository } from "../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
+import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
@@ -35,6 +36,7 @@ export class CompositionRoot {
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
+                complete: new CompleteUserProgressUseCase(this.trainingModuleRepository),
             }),
             config: getExecute({
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),

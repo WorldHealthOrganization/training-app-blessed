@@ -76,7 +76,9 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
             const result = extractStepFromKey(stepKey);
             if (!result) return;
 
-            await usecases.progress.update(module.id, result.step);
+            if (!module.progress.completed) {
+                await usecases.progress.update(module.id, result.step - 1);
+            }
 
             setAppState(appState => {
                 if (appState.type !== "TRAINING") return appState;

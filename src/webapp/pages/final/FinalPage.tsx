@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
 import Decoration from "../../assets/Decoration.png";
@@ -14,7 +14,7 @@ import { Stepper } from "../../components/training-wizard/stepper/Stepper";
 import { useAppContext } from "../../contexts/app-context";
 
 export const FinalPage = () => {
-    const { setAppState, module, translate } = useAppContext();
+    const { usecases, setAppState, module, translate } = useAppContext();
 
     const openSummary = useCallback(() => {
         setAppState(appState => {
@@ -44,6 +44,10 @@ export const FinalPage = () => {
     const exit = useCallback(() => {
         setAppState({ type: "EXIT" });
     }, [setAppState]);
+
+    useEffect(() => {
+        if (module) usecases.progress.complete(module.id);
+    }, [module, usecases]);
 
     if (!module) return null;
 
