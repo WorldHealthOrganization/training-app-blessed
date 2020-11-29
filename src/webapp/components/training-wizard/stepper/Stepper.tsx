@@ -30,8 +30,8 @@ export const Stepper = ({
     const index = _(steps).findIndex(step => step.key === currentStepKey);
     const currentStepIndex = index >= 0 ? index : 0;
 
-    const { props = {} } = steps[currentStepIndex];
-    const { stepIndex = currentStepIndex, totalSteps = steps.length } = props;
+    const { props } = steps[currentStepIndex];
+    const { stepIndex = currentStepIndex, totalSteps = steps.length } = props ?? {};
 
     return (
         <ProgressBar>
