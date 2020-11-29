@@ -44,9 +44,18 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const missingModules = await promiseMap(missingModuleKeys, key => this.getBuiltin(key));
 
-        return promiseMap(_.compact([...dataStoreModules, ...missingModules]), module =>
-            this.buildDomainModel(module)
+        const progress = await this.progressStorageClient.getObject<UserProgress[]>(
+            Namespaces.PROGRESS
         );
+
+        return promiseMap(_.compact([...dataStoreModules, ...missingModules]), async module => {
+            const model = await this.buildDomainModel(module);
+
+            return {
+                ...model,
+                progress: progress?.find(({ id }) => id === module.id)?.lastStep ?? 0,
+            };
+        });
     }
 
     public async get(key: string): Promise<TrainingModule | undefined> {
@@ -57,11 +66,16 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const model = dataStoreModel ?? (await this.getBuiltin(key));
         if (!model) return undefined;
 
-        // TODO: Check translation last sync
-        //const lastTranslationSync = new Date(model.lastTranslationSync);
-        this.updateTranslations(model.id);
+        const progress = await this.progressStorageClient.getObject<UserProgress[]>(
+            Namespaces.PROGRESS
+        );
 
-        return this.buildDomainModel(model);
+        const domainModel = await this.buildDomainModel(model);
+
+        return {
+            ...domainModel,
+            progress: progress?.find(({ id }) => id === module.id)?.lastStep ?? 0,
+        };
     }
 
     public async create({
@@ -252,7 +266,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
     */
 
-    private async buildDomainModel(model: PersistedTrainingModule): Promise<TrainingModule> {
+    private async buildDomainModel(
+        model: PersistedTrainingModule
+    ): Promise<Omit<TrainingModule, "progress">> {
         if (model._version !== 1) {
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
@@ -260,17 +276,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const { created, lastUpdated, type, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
 
-        const progress = await this.progressStorageClient.getObjectInCollection<UserProgress>(
-            Namespaces.PROGRESS,
-            model.id
-        );
-
         return {
             ...rest,
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,
-            progress: progress?.lastStep ?? 0,
         };
     }
 

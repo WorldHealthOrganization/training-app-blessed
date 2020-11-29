@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
@@ -12,15 +11,12 @@ import {
     ModalParagraph,
     ModalTitle,
 } from "../../components/modal";
+import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const { usecases, setAppState } = useAppContext();
-    const [modules, setModules] = useState<TrainingModule[]>([]);
-
-    useEffect(() => {
-        usecases.modules.list().then(setModules);
-    }, [usecases]);
+    const { setAppState, modules, reload } = useAppContext();
+    const [loading, setLoading] = useState(true);
 
     const loadModule = useCallback(
         (module: string, step: number) => {
@@ -37,6 +33,10 @@ export const HomePage = () => {
         setAppState({ type: "EXIT" });
     }, [setAppState]);
 
+    useEffect(() => {
+        reload().then(() => setLoading(false));
+    }, [reload]);
+
     return (
         <StyledModal centerChildren={true}>
             <ContentWrapper>
@@ -47,17 +47,23 @@ export const HomePage = () => {
                     })}
                 </ModalParagraph>
                 <ModalContent>
-                    <Cardboard>
-                        {modules.map(({ name, id, progress, disabled, contents }, idx) => (
-                            <Card
-                                key={`card-${idx}`}
-                                label={name}
-                                progress={Math.round((progress / contents.steps.length) * 100)}
-                                onClick={() => loadModule(id, progress)}
-                                disabled={disabled}
-                            />
-                        ))}
-                    </Cardboard>
+                    {loading ? (
+                        <SpinnerWrapper>
+                            <Spinner />
+                        </SpinnerWrapper>
+                    ) : (
+                        <Cardboard>
+                            {modules.map(({ name, id, progress, disabled, contents }, idx) => (
+                                <Card
+                                    key={`card-${idx}`}
+                                    label={name}
+                                    progress={Math.round((progress / contents.steps.length) * 100)}
+                                    onClick={() => loadModule(id, progress)}
+                                    disabled={disabled}
+                                />
+                            ))}
+                        </Cardboard>
+                    )}
                 </ModalContent>
                 <ModalFooter className="modal-footer">
                     <MainButton color="secondary" onClick={exitTutorial}>
@@ -86,4 +92,11 @@ const StyledModal = styled(Modal)`
 
 const ContentWrapper = styled.div`
     padding: 15px;
+`;
+
+const SpinnerWrapper = styled.div`
+    height: 150px;
+    display: flex;
+    place-content: center;
+    align-items: center;
 `;
