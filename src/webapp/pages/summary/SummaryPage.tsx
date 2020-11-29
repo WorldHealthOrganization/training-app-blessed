@@ -73,6 +73,7 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
             completed={completed}
             onClose={completed ? endTutorial : minimize}
             onGoHome={goHome}
+            centerChildren={true}
         >
             <ContentWrapper>
                 <ModalTitle>{title}</ModalTitle>

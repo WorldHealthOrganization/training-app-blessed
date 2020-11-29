@@ -38,7 +38,7 @@ export const HomePage = () => {
     }, [setAppState]);
 
     return (
-        <StyledModal>
+        <StyledModal centerChildren={true}>
             <ContentWrapper>
                 <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
                 <ModalParagraph>
