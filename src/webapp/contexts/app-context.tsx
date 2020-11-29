@@ -4,6 +4,7 @@ import { buildTranslate, TranslateMethod } from "../../domain/entities/Translata
 import { CompositionRoot } from "../CompositionRoot";
 import { AppState } from "../entities/AppState";
 import { AppRoute } from "../router/AppRoute";
+import { cacheImages } from "../utils/image-cache";
 
 const AppContext = React.createContext<AppContextState | null>(null);
 
@@ -21,10 +22,11 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     const reload = useCallback(async () => {
         const modules = await compositionRoot.usecases.modules.list();
         setModules(modules);
+        return modules;
     }, [compositionRoot]);
 
     useEffect(() => {
-        reload();
+        reload().then(modules => cacheImages(JSON.stringify(modules)));
     }, [reload]);
 
     return (
@@ -71,7 +73,7 @@ export function useAppContext(): UseAppContextResult {
 }
 
 type AppStateUpdateMethod = (oldState: AppState) => AppState;
-type ReloadMethod = () => Promise<void>;
+type ReloadMethod = () => Promise<TrainingModule[]>;
 
 export interface AppContextProviderProps {
     baseUrl: string;
