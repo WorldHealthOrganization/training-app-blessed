@@ -37,6 +37,7 @@ const Bullet = styled.span`
     border-radius: 100px;
     margin-right: 20px;
     place-self: center;
+    text-align: center;
 `;
 
 const Title = styled.span`
