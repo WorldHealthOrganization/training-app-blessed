@@ -81,7 +81,7 @@
                 },
                 "subtitle": {
                     "key": "step-4-subtitle",
-                    "referenceValue": "* Does not apply to all forms",
+                    "referenceValue": "<p style='color:#43CBCB'><i>* Does not apply to all forms</i></p>",
                     "translations": {}
                 },
                 "pages": [
@@ -128,7 +128,7 @@
                 },
                 "subtitle": {
                     "key": "step-7-subtitle",
-                    "referenceValue": "* Does not apply in all cases",
+                    "referenceValue": "<p style='color:#43CBCB'><i>* Does not apply in all cases</i></p>",
                     "translations": {}
                 },
                 "pages": [
