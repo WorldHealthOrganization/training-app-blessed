@@ -54,7 +54,7 @@ export const FinalPage = () => {
     }));
 
     return (
-        <StyledModal onClose={exit} onGoHome={goHome}>
+        <StyledModal onClose={exit} onGoHome={goHome} centerChildren={true}>
             <ModalContent bigger={true}>
                 <Container>
                     <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>
