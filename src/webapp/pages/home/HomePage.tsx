@@ -53,15 +53,22 @@ export const HomePage = () => {
                         </SpinnerWrapper>
                     ) : (
                         <Cardboard>
-                            {modules.map(({ name, id, progress, disabled, contents }, idx) => (
-                                <Card
-                                    key={`card-${idx}`}
-                                    label={name}
-                                    progress={Math.round((progress / contents.steps.length) * 100)}
-                                    onClick={() => loadModule(id, progress)}
-                                    disabled={disabled}
-                                />
-                            ))}
+                            {modules.map(({ name, id, progress, disabled, contents }, idx) => {
+                                const { lastStep, completed } = progress;
+                                const percentage = Math.round(
+                                    (lastStep / contents.steps.length) * 100
+                                );
+
+                                return (
+                                    <Card
+                                        key={`card-${idx}`}
+                                        label={name}
+                                        progress={completed ? 100 : percentage}
+                                        onClick={() => loadModule(id, completed ? 0 : lastStep + 1)}
+                                        disabled={disabled}
+                                    />
+                                );
+                            })}
                         </Cardboard>
                     )}
                 </ModalContent>

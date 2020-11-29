@@ -19,7 +19,7 @@ import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
-import { UserProgress } from "../entities/UserProgress";
+import { UserProgress } from "../../domain/entities/UserProgress";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -53,7 +53,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
             return {
                 ...model,
-                progress: progress?.find(({ id }) => id === module.id)?.lastStep ?? 0,
+                progress: progress?.find(({ id }) => id === module.id) ?? {
+                    id: module.id,
+                    lastStep: 0,
+                    completed: false,
+                },
             };
         });
     }
@@ -74,7 +78,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return {
             ...domainModel,
-            progress: progress?.find(({ id }) => id === module.id)?.lastStep ?? 0,
+            progress: progress?.find(({ id }) => id === module.id) ?? {
+                id: module.id,
+                lastStep: 0,
+                completed: false,
+            },
         };
     }
 
@@ -148,10 +156,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
     }
 
-    public async updateProgress(id: string, lastStep: number): Promise<void> {
+    public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
         await this.progressStorageClient.saveObjectInCollection<UserProgress>(Namespaces.PROGRESS, {
             id,
             lastStep,
+            completed,
         });
     }
 
