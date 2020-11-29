@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
@@ -15,12 +14,7 @@ import {
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const { usecases, setAppState } = useAppContext();
-    const [modules, setModules] = useState<TrainingModule[]>([]);
-
-    useEffect(() => {
-        usecases.modules.list().then(setModules);
-    }, [usecases]);
+    const { setAppState, modules, reload } = useAppContext();
 
     const loadModule = useCallback(
         (module: string, step: number) => {
@@ -36,6 +30,10 @@ export const HomePage = () => {
     const exitTutorial = useCallback(() => {
         setAppState({ type: "EXIT" });
     }, [setAppState]);
+
+    useEffect(() => {
+        reload();
+    }, [reload]);
 
     return (
         <StyledModal>

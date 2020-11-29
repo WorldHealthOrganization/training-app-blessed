@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { TrainingModule } from "../../domain/entities/TrainingModule";
 import { buildTranslate, TranslateMethod } from "../../domain/entities/TranslatableText";
 import { CompositionRoot } from "../CompositionRoot";
@@ -15,8 +15,15 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     locale,
 }) => {
     const [appState, setAppState] = useState<AppState>({ type: "UNKNOWN" });
-    const [module, setModule] = useState<TrainingModule>();
+    const [modules, setModules] = useState<TrainingModule[]>([]);
+    const [refreshKey, setRefreshKey] = useState(Math.random());
     const translate = buildTranslate(locale);
+
+    const reload = useCallback(() => setRefreshKey(Math.random()), []);
+
+    useEffect(() => {
+        compositionRoot.usecases.modules.list().then(setModules);
+    }, [compositionRoot, refreshKey]);
 
     return (
         <AppContext.Provider
@@ -26,9 +33,9 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
                 compositionRoot,
                 appState,
                 setAppState,
-                module,
-                setModule,
+                modules,
                 translate,
+                reload,
             }}
         >
             {children}
@@ -40,27 +47,29 @@ export function useAppContext(): UseAppContextResult {
     const context = useContext(AppContext);
     if (!context) throw new Error("Context not initialized");
 
-    const {
-        compositionRoot,
-        routes,
-        appState,
-        setAppState,
-        module,
-        setModule,
-        translate,
-    } = context;
+    const { compositionRoot, routes, appState, setAppState, modules, translate, reload } = context;
     const { usecases } = compositionRoot;
-    const stateModule = useRef<string>();
+    const [module, setCurrentModule] = useState<TrainingModule>();
 
     useEffect(() => {
-        if (module && stateModule.current === module.id) return;
         if (appState.type !== "TRAINING" && appState.type !== "TRAINING_DIALOG") return;
-        compositionRoot.usecases.modules.get(appState.module).then(setModule);
-        stateModule.current = appState.module;
-    }, [appState, module, compositionRoot, setModule]);
+        setCurrentModule(modules.find(({ id }) => id === appState.module));
+    }, [appState, modules]);
 
-    return { appState, setAppState, routes, usecases, module, translate };
+    return {
+        appState,
+        setAppState,
+        routes,
+        usecases,
+        modules,
+        module,
+        translate,
+        reload,
+    };
 }
+
+type AppStateUpdateMethod = (oldState: AppState) => AppState;
+type ReloadMethod = () => void;
 
 export interface AppContextProviderProps {
     baseUrl: string;
@@ -72,21 +81,21 @@ export interface AppContextProviderProps {
 export interface AppContextState {
     appState: AppState;
     setAppState: (appState: AppState | AppStateUpdateMethod) => void;
-    module?: TrainingModule;
-    setModule: (module: TrainingModule) => void;
+    modules: TrainingModule[];
     baseUrl: string;
     routes: AppRoute[];
     compositionRoot: CompositionRoot;
     translate: TranslateMethod;
+    reload: ReloadMethod;
 }
-
-type AppStateUpdateMethod = (oldState: AppState) => AppState;
 
 interface UseAppContextResult {
     appState: AppState;
     setAppState: (appState: AppState | AppStateUpdateMethod) => void;
     routes: AppRoute[];
     usecases: CompositionRoot["usecases"];
+    modules: TrainingModule[];
     module?: TrainingModule;
     translate: TranslateMethod;
+    reload: ReloadMethod;
 }
