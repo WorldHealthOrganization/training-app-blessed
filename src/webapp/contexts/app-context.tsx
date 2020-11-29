@@ -16,14 +16,16 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
 }) => {
     const [appState, setAppState] = useState<AppState>({ type: "UNKNOWN" });
     const [modules, setModules] = useState<TrainingModule[]>([]);
-    const [refreshKey, setRefreshKey] = useState(Math.random());
     const translate = buildTranslate(locale);
 
-    const reload = useCallback(() => setRefreshKey(Math.random()), []);
+    const reload = useCallback(async () => {
+        const modules = await compositionRoot.usecases.modules.list();
+        setModules(modules);
+    }, [compositionRoot]);
 
     useEffect(() => {
-        compositionRoot.usecases.modules.list().then(setModules);
-    }, [compositionRoot, refreshKey]);
+        reload();
+    }, [reload]);
 
     return (
         <AppContext.Provider
@@ -69,7 +71,7 @@ export function useAppContext(): UseAppContextResult {
 }
 
 type AppStateUpdateMethod = (oldState: AppState) => AppState;
-type ReloadMethod = () => void;
+type ReloadMethod = () => Promise<void>;
 
 export interface AppContextProviderProps {
     baseUrl: string;
