@@ -18,10 +18,11 @@ export const StepHeader: React.FC<StepHeaderProps> = ({ index, title, subtitle }
 const Wrapper = styled.div`
     display: flex;
     padding: 10px 35px 0px;
+    margin: 10px;
 `;
 
 const Content = styled.div`
-    margin: 10px;
+    place-self: center;
 `;
 
 const Bullet = styled.span`
@@ -41,7 +42,7 @@ const Bullet = styled.span`
 const Title = styled.span`
     color: white;
     font-size: 32px;
-    line-height: 47px;
+    line-height: 40px;
     font-weight: 300;
     margin: 0px 0px 30px 0px;
 `;
