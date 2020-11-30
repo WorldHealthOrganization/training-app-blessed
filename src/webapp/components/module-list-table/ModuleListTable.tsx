@@ -119,13 +119,6 @@ export const ModuleListTable: React.FC = () => {
         [modules]
     );
 
-    const syncTranslations = useCallback(
-        async (ids: string[]) => {
-            await usecases.modules.syncTranslations(ids[0]);
-        },
-        [usecases]
-    );
-
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
         setSelection(selection);
     }, []);
@@ -175,25 +168,14 @@ export const ModuleListTable: React.FC = () => {
                 },
             },
             {
-                name: "sync-translations",
-                text: i18n.t("Sync translations"),
-                icon: <Icon>edit</Icon>,
-                onClick: syncTranslations,
-                isActive: rows => {
-                    return _.every(
-                        rows,
-                        item => item.rowType === "module" && !!item.translation?.project
-                    );
-                },
-            },
-            {
                 name: "delete-module",
                 text: i18n.t("Delete module"),
                 icon: <Icon>delete</Icon>,
                 multiple: true,
                 onClick: deleteModules,
-                isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module" && item.type !== "core");
+                isActive: _rows => {
+                    // TODO: Action is disabled for now
+                    return false;
                 },
             },
             {
@@ -222,20 +204,13 @@ export const ModuleListTable: React.FC = () => {
                 text: i18n.t("Edit contents"),
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
-                isActive: rows => {
-                    return _.every(rows, item => ["dialog", "page"].includes(item.rowType));
+                isActive: _rows => {
+                    // TODO: Action is disabled for now
+                    return false;
                 },
             },
         ],
-        [
-            modules,
-            editModule,
-            deleteModules,
-            moveUpModule,
-            moveDownModule,
-            editContents,
-            syncTranslations,
-        ]
+        [modules, editModule, deleteModules, moveUpModule, moveDownModule, editContents]
     );
 
     useEffect(() => {

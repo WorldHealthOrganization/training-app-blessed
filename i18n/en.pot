@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-30T07:52:24.730Z\n"
-"PO-Revision-Date: 2020-11-30T07:52:24.730Z\n"
+"POT-Creation-Date: 2020-11-30T08:04:07.296Z\n"
+"PO-Revision-Date: 2020-11-30T08:04:07.296Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -54,9 +54,6 @@ msgid "Yes"
 msgstr ""
 
 msgid "No"
-msgstr ""
-
-msgid "Sync translations"
 msgstr ""
 
 msgid "Delete module"
@@ -148,13 +145,16 @@ msgstr ""
 msgid "Permissions"
 msgstr ""
 
-msgid "POEditor token"
-msgstr ""
-
 msgid "Access to Settings"
 msgstr ""
 
 msgid "Description TODO"
+msgstr ""
+
+msgid "POEditor token"
+msgstr ""
+
+msgid "Training modules"
 msgstr ""
 
 msgid "What did you learn in this tutorial?"

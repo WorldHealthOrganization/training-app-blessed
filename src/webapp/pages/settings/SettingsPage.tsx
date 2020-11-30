@@ -76,17 +76,17 @@ export const SettingsPage: React.FC = () => {
                     </ListItem>
                 </Group>
 
-                    <form>
-                        <TextField
-                            name="token"
-                            type="password"
-                            autoComplete="new-password"
-                            fullWidth={true}
-                            label={i18n.t("POEditor token")}
-                            value={poEditorToken ?? defaultToken}
-                            onChange={updateToken}
-                        />
-                    </form>
+                <form>
+                    <TextField
+                        name="token"
+                        type="password"
+                        autoComplete="new-password"
+                        fullWidth={true}
+                        label={i18n.t("POEditor token")}
+                        value={poEditorToken ?? defaultToken}
+                        onChange={updateToken}
+                    />
+                </form>
 
                 <Title>{i18n.t("Training modules")}</Title>
 

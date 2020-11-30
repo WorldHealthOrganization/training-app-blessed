@@ -10,7 +10,6 @@ import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTok
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
-import { SyncTranslationsUseCase } from "../domain/usecases/SyncTranslationsUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { cache } from "../utils/cache";
 
@@ -32,7 +31,6 @@ export class CompositionRoot {
                 delete: new DeleteModulesUseCase(this.trainingModuleRepository),
                 edit: new EditModuleUseCase(this.trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
-                syncTranslations: new SyncTranslationsUseCase(this.trainingModuleRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
