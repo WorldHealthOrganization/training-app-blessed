@@ -12,6 +12,7 @@ import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
+import { ExitPage } from "./exit/ExitPage";
 import { FinalPage } from "./final/FinalPage";
 import { HomePage } from "./home/HomePage";
 import { SummaryPage } from "./summary/SummaryPage";
@@ -66,6 +67,12 @@ export const routes: AppRoute[] = [
         element: <SummaryPage completed={true} />,
         backdrop: true,
         iframe: true,
+    },
+    {
+        key: "exit",
+        name: () => i18n.t("Exit"),
+        paths: ["/exit"],
+        element: <ExitPage />,
     },
     /**{
         key: "settings",

@@ -30,7 +30,7 @@ export const HomePage = () => {
     );
 
     const exitTutorial = useCallback(() => {
-        setAppState({ type: "EXIT" });
+        setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
     useEffect(() => {

@@ -42,7 +42,7 @@ export const FinalPage = () => {
     }, [setAppState]);
 
     const exit = useCallback(() => {
-        setAppState({ type: "EXIT" });
+        setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
     useEffect(() => {

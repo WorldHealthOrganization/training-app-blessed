@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-11-29T19:29:42.394Z\n"
+"POT-Creation-Date: 2020-11-30T06:51:47.236Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,8 +98,31 @@ msgstr ""
 msgid "Summary"
 msgstr "Fin"
 
+msgid "Exit"
+msgstr ""
+
 msgid "Settings"
 msgstr "Ajustes"
+
+msgid "Continue Tutorial"
+msgstr "Continuar el tutorial"
+
+msgid "Exit Tutorial"
+msgstr "Salir del tutorial"
+
+msgid "Are you sure you want to exit?"
+msgstr ""
+
+msgid ""
+"If you are sure you want to exit, select 'Exit tutorial'. You can relaunch "
+"the training tutorial again at any time from the applications menu."
+msgstr ""
+
+msgid ""
+"If you would like to continue with training, select 'Continue tutorial' "
+"below or if you would like to select a different tutorial, click on the "
+"'Home' button."
+msgstr ""
 
 msgid "Well done!"
 msgstr "Bien hecho!"
@@ -112,9 +135,6 @@ msgstr "Este es tu progreso en el entrenamiento de DHIS2"
 
 msgid "Select one of these tutorials to continue learning:"
 msgstr "Seleccione uno de los tutoriales para continuar aprendiendo"
-
-msgid "Exit Tutorial"
-msgstr "Salir del tutorial"
 
 msgid "Permissions"
 msgstr "Permisos"
