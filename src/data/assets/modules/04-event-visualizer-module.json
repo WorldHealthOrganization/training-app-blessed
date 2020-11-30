@@ -8,6 +8,7 @@
     "revision": 1,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-event-visualizer/index.html",
+    "translation": { "provider": "poeditor", "project": "394099" },
     "contents": {
         "welcome": {
             "key": "module-welcome",

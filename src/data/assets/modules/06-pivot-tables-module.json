@@ -8,6 +8,7 @@
     "revision": 1,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-pivot/index.html",
+    "translation": { "provider": "poeditor", "project": "394103" },
     "contents": {
         "welcome": {
             "key": "module-welcome",

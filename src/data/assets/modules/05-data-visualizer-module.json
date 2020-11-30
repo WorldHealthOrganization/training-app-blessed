@@ -7,7 +7,8 @@
     "type": "core",
     "revision": 1,
     "dhisVersionRange": "",
-    "dhisLaunchUrl": "/dhis-web-visualizer/index.html",
+    "dhisLaunchUrl": "/dhis-web-data-visualizer/index.html",
+    "translation": { "provider": "poeditor", "project": "394101" },
     "contents": {
         "welcome": {
             "key": "module-welcome",

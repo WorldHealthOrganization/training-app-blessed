@@ -7,7 +7,7 @@
     "type": "core",
     "revision": 1,
     "dhisVersionRange": "",
-    "dhisLaunchUrl": "/dhis-web-event-capture/index.html",
+    "dhisLaunchUrl": "/dhis-web-capture/index.html",
     "translation": { "provider": "poeditor", "project": "390495" },
     "contents": {
         "welcome": {
