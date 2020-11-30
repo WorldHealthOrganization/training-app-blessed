@@ -48,6 +48,14 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         setAppState(appState => ({ ...appState, minimized: true }));
     }, [setAppState]);
 
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
+    const exitTutorial = useCallback(() => {
+        setAppState(appState => ({ ...appState, exit: true }));
+    }, [setAppState]);
+
     const jumpToStep = useCallback(
         (step: number) => {
             if (!module) return;
@@ -62,14 +70,6 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
 
     const prev = completed ? goToFinalPage : goToWelcomePage;
     const next = completed ? endTutorial : startTutorial;
-
-    const goHome = useCallback(() => {
-        setAppState({ type: "HOME" });
-    }, [setAppState]);
-
-    const exitTutorial = useCallback(() => {
-        setAppState(appState => ({ ...appState, exit: true }));
-    }, [setAppState]);
 
     return (
         <StyledModal
