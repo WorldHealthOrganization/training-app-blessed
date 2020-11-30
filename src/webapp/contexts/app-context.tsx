@@ -10,7 +10,6 @@ const AppContext = React.createContext<AppContextState | null>(null);
 
 export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     children,
-    baseUrl,
     routes,
     compositionRoot,
     locale,
@@ -32,7 +31,6 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     return (
         <AppContext.Provider
             value={{
-                baseUrl,
                 routes,
                 compositionRoot,
                 appState,
@@ -76,7 +74,6 @@ type AppStateUpdateMethod = (oldState: AppState) => AppState;
 type ReloadMethod = () => Promise<TrainingModule[]>;
 
 export interface AppContextProviderProps {
-    baseUrl: string;
     routes: AppRoute[];
     compositionRoot: CompositionRoot;
     locale: string;
@@ -86,7 +83,6 @@ export interface AppContextState {
     appState: AppState;
     setAppState: (appState: AppState | AppStateUpdateMethod) => void;
     modules: TrainingModule[];
-    baseUrl: string;
     routes: AppRoute[];
     compositionRoot: CompositionRoot;
     translate: TranslateMethod;

@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-29T19:29:42.394Z\n"
-"PO-Revision-Date: 2020-11-29T19:29:42.394Z\n"
+"POT-Creation-Date: 2020-11-30T06:51:47.236Z\n"
+"PO-Revision-Date: 2020-11-30T06:51:47.236Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -98,7 +98,30 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
+msgid "Exit"
+msgstr ""
+
 msgid "Settings"
+msgstr ""
+
+msgid "Continue Tutorial"
+msgstr ""
+
+msgid "Exit Tutorial"
+msgstr ""
+
+msgid "Are you sure you want to exit?"
+msgstr ""
+
+msgid ""
+"If you are sure you want to exit, select 'Exit tutorial'. You can relaunch "
+"the training tutorial again at any time from the applications menu."
+msgstr ""
+
+msgid ""
+"If you would like to continue with training, select 'Continue tutorial' "
+"below or if you would like to select a different tutorial, click on the "
+"'Home' button."
 msgstr ""
 
 msgid "Well done!"
@@ -111,9 +134,6 @@ msgid "Here is your progress on DHIS2 training"
 msgstr ""
 
 msgid "Select one of these tutorials to continue learning:"
-msgstr ""
-
-msgid "Exit Tutorial"
 msgstr ""
 
 msgid "Permissions"

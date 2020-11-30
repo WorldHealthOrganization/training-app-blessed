@@ -12,6 +12,7 @@ import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
+import { ExitPage } from "./exit/ExitPage";
 import { FinalPage } from "./final/FinalPage";
 import { HomePage } from "./home/HomePage";
 import { SettingsPage } from "./settings/SettingsPage";
@@ -69,6 +70,12 @@ export const routes: AppRoute[] = [
         iframe: true,
     },
     {
+        key: "exit",
+        name: () => i18n.t("Exit"),
+        paths: ["/exit"],
+        element: <ExitPage />,
+    },
+    {
         key: "settings",
         name: () => i18n.t("Settings"),
         paths: ["/settings"],
@@ -81,12 +88,7 @@ const App: React.FC<{ locale: string }> = ({ locale }) => {
     const compositionRoot = new CompositionRoot(baseUrl);
 
     return (
-        <AppContextProvider
-            baseUrl={baseUrl}
-            routes={routes}
-            compositionRoot={compositionRoot}
-            locale={locale}
-        >
+        <AppContextProvider routes={routes} compositionRoot={compositionRoot} locale={locale}>
             <StylesProvider injectFirst>
                 <MuiThemeProvider theme={muiTheme}>
                     <OldMuiThemeProvider muiTheme={muiThemeLegacy}>

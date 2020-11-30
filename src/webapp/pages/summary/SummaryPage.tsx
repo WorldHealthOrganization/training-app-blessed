@@ -45,9 +45,16 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
     }, [setAppState, module]);
 
     const minimize = useCallback(() => {
-        if (!module) return;
-        setAppState({ type: "TRAINING", module: module.id, step: 0, content: 0, state: "CLOSED" });
-    }, [module, setAppState]);
+        setAppState(appState => ({ ...appState, minimized: true }));
+    }, [setAppState]);
+
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
+    const exitTutorial = useCallback(() => {
+        setAppState(appState => ({ ...appState, exit: true }));
+    }, [setAppState]);
 
     const jumpToStep = useCallback(
         (step: number) => {
@@ -64,14 +71,11 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
     const prev = completed ? goToFinalPage : goToWelcomePage;
     const next = completed ? endTutorial : startTutorial;
 
-    const goHome = useCallback(() => {
-        setAppState({ type: "HOME" });
-    }, [setAppState]);
-
     return (
         <StyledModal
             completed={completed}
-            onClose={completed ? endTutorial : minimize}
+            onClose={exitTutorial}
+            onMinimize={minimize}
             onGoHome={goHome}
             centerChildren={true}
         >
