@@ -16,6 +16,7 @@ export const Label = styled.span`
     font-size: 20px;
     text-align: left;
     align-self: center;
+    cursor: ${props => (props.onClick ? "pointer" : "inherit")};
 `;
 
 export const Step = styled.div<{ column: "left" | "right"; row: number; last?: boolean }>`

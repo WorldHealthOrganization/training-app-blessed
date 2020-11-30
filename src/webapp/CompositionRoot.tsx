@@ -2,11 +2,11 @@ import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepositor
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { ConfigRepository } from "../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
+import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
-import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
@@ -28,7 +28,6 @@ export class CompositionRoot {
         return {
             modules: getExecute({
                 list: new ListModulesUseCase(this.trainingModuleRepository),
-                get: new GetModuleUseCase(this.trainingModuleRepository),
                 create: new CreateModuleUseCase(this.trainingModuleRepository),
                 delete: new DeleteModulesUseCase(this.trainingModuleRepository),
                 edit: new EditModuleUseCase(this.trainingModuleRepository),
@@ -37,6 +36,7 @@ export class CompositionRoot {
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
+                complete: new CompleteUserProgressUseCase(this.trainingModuleRepository),
             }),
             config: getExecute({
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),

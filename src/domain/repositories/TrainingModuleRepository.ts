@@ -8,6 +8,6 @@ export interface TrainingModuleRepository {
     edit(builder: TrainingModuleBuilder): Promise<void>;
     delete(ids: string[]): Promise<void>;
     swapOrder(id1: string, id2: string): Promise<void>;
-    updateProgress(id: string, lastStep: number): Promise<void>;
+    updateProgress(id: string, lastStep: number, completed: boolean): Promise<void>;
     updateTranslations(id: string): Promise<void>;
 }

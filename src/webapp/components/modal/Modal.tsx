@@ -36,8 +36,8 @@ export const Modal: React.FC<ModalProps> = ({
             position={position}
             onDrag={clearPosition}
         >
-            <ModalWrapper>
-                <ModalBody id={dragId} className={className} center={centerChildren}>
+            <ModalWrapper center={centerChildren}>
+                <ModalBody id={dragId} className={className}>
                     <ModalHeader
                         minimized={minimized}
                         onClose={onClose}
@@ -62,7 +62,7 @@ export interface ModalProps {
     centerChildren?: boolean;
 }
 
-const ModalWrapper = styled.div`
+const ModalWrapper = styled.div<{ center?: boolean }>`
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -70,18 +70,17 @@ const ModalWrapper = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    text-align: center;
+    text-align: ${props => (props.center ? "center" : "unset")};
     user-select: none;
 `;
 
-export const ModalBody = styled.div<{ center?: boolean }>`
+export const ModalBody = styled.div`
     background-color: #276696;
     border-radius: 18px;
     padding: 18px;
     font-family: "Roboto", sans-serif;
     color: #fff;
     pointer-events: auto;
-    text-align-last: ${props => (props.center ? "center" : "unset")};
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12),
         0 5px 5px -3px rgba(0, 0, 0, 0.2);
 `;

@@ -352,8 +352,8 @@ export const StepPreview: React.FC<{
     if (!value) return null;
 
     return (
-        <StyledModalBody className={className} center={rowType === "dialog"}>
-            <MarkdownViewer source={value} escapeHtml={false} />
+        <StyledModalBody className={className}>
+            <MarkdownViewer source={value} center={rowType === "dialog"} />
         </StyledModalBody>
     );
 };

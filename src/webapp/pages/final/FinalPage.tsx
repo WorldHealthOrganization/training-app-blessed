@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
 import Decoration from "../../assets/Decoration.png";
@@ -14,7 +14,7 @@ import { Stepper } from "../../components/training-wizard/stepper/Stepper";
 import { useAppContext } from "../../contexts/app-context";
 
 export const FinalPage = () => {
-    const { setAppState, module, translate } = useAppContext();
+    const { usecases, setAppState, module, translate } = useAppContext();
 
     const openSummary = useCallback(() => {
         setAppState(appState => {
@@ -45,6 +45,10 @@ export const FinalPage = () => {
         setAppState({ type: "EXIT" });
     }, [setAppState]);
 
+    useEffect(() => {
+        if (module) usecases.progress.complete(module.id);
+    }, [module, usecases]);
+
     if (!module) return null;
 
     const steps = module.contents.steps.map(({ title }, idx) => ({
@@ -54,7 +58,7 @@ export const FinalPage = () => {
     }));
 
     return (
-        <StyledModal onClose={exit} onGoHome={goHome}>
+        <StyledModal onClose={exit} onGoHome={goHome} centerChildren={true}>
             <ModalContent bigger={true}>
                 <Container>
                     <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>

@@ -54,7 +54,7 @@ const StyledModal = styled(Modal)`
 export const WelcomePageContent: React.FC<{ welcome: string }> = ({ welcome }) => {
     return (
         <ModalContent>
-            <MarkdownViewer source={welcome} />
+            <MarkdownViewer source={welcome} center={true} />
         </ModalContent>
     );
 };

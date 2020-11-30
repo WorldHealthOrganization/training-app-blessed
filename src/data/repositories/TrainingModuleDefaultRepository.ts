@@ -19,7 +19,7 @@ import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
-import { UserProgress } from "../entities/UserProgress";
+import { UserProgress } from "../../domain/entities/UserProgress";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -44,9 +44,22 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const missingModules = await promiseMap(missingModuleKeys, key => this.getBuiltin(key));
 
-        return promiseMap(_.compact([...dataStoreModules, ...missingModules]), module =>
-            this.buildDomainModel(module)
+        const progress = await this.progressStorageClient.getObject<UserProgress[]>(
+            Namespaces.PROGRESS
         );
+
+        return promiseMap(_.compact([...dataStoreModules, ...missingModules]), async module => {
+            const model = await this.buildDomainModel(module);
+
+            return {
+                ...model,
+                progress: progress?.find(({ id }) => id === module.id) ?? {
+                    id: module.id,
+                    lastStep: 0,
+                    completed: false,
+                },
+            };
+        });
     }
 
     public async get(key: string): Promise<TrainingModule | undefined> {
@@ -57,11 +70,20 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const model = dataStoreModel ?? (await this.getBuiltin(key));
         if (!model) return undefined;
 
-        // TODO: Check translation last sync
-        //const lastTranslationSync = new Date(model.lastTranslationSync);
-        this.updateTranslations(model.id);
+        const progress = await this.progressStorageClient.getObject<UserProgress[]>(
+            Namespaces.PROGRESS
+        );
 
-        return this.buildDomainModel(model);
+        const domainModel = await this.buildDomainModel(model);
+
+        return {
+            ...domainModel,
+            progress: progress?.find(({ id }) => id === module.id) ?? {
+                id: module.id,
+                lastStep: 0,
+                completed: false,
+            },
+        };
     }
 
     public async create({
@@ -134,10 +156,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
     }
 
-    public async updateProgress(id: string, lastStep: number): Promise<void> {
+    public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
         await this.progressStorageClient.saveObjectInCollection<UserProgress>(Namespaces.PROGRESS, {
             id,
             lastStep,
+            completed,
         });
     }
 
@@ -252,7 +275,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
     */
 
-    private async buildDomainModel(model: PersistedTrainingModule): Promise<TrainingModule> {
+    private async buildDomainModel(
+        model: PersistedTrainingModule
+    ): Promise<Omit<TrainingModule, "progress">> {
         if (model._version !== 1) {
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
@@ -260,17 +285,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const { created, lastUpdated, type, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
 
-        const progress = await this.progressStorageClient.getObjectInCollection<UserProgress>(
-            Namespaces.PROGRESS,
-            model.id
-        );
-
         return {
             ...rest,
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,
-            progress: progress?.lastStep ?? 0,
         };
     }
 

@@ -81,7 +81,7 @@
                 },
                 "subtitle": {
                     "key": "step-4-subtitle",
-                    "referenceValue": "* Does not apply to all forms",
+                    "referenceValue": "<p style='color:#43CBCB'><i>* Does not apply to all forms</i></p>",
                     "translations": {}
                 },
                 "pages": [
@@ -102,7 +102,7 @@
                     {
                         "key": "step-5-1",
                         "translations": {},
-                        "referenceValue": "![Enter data in the form](https://user-images.githubusercontent.com/2181866/98086577-44ddd280-1e7f-11eb-8bb4-7f37dda5e6a2.gif)\n\nStart entering data by clicking inside the first cell and selecting data from the dropdown menus, typing values in manually or clicking on check boxes.\n\n<i>Note: Your browser may sometimes suggest values that are not built into the DHIS2 forms but have been stored in your browser cache from other websites. You can remove these values using the 'Browser Cache Cleaner' on the applications menu.</i>\n\nThe cells will turn yellow when you are adding in your data and will turn green when the data has been approved and saved to the system. Grey fields are those that are completed automatically by the DHIS2 system.\n\n![Enter data in the form](https://user-images.githubusercontent.com/2181866/98086580-45766900-1e7f-11eb-9959-a5823c5c9a02.gif)\n\nRed cells indicate that there is a problem with the data you have entered – it is either an invalid value or outside an acceptable range. You will get a pop-up window explaining the problem. Click on the cell and correct the data. The cell will turn green once you have entered the correct value."
+                        "referenceValue": "![Enter data in the form](https://user-images.githubusercontent.com/2181866/98086577-44ddd280-1e7f-11eb-8bb4-7f37dda5e6a2.gif)\n\nStart entering data by clicking inside the first cell and selecting data from the dropdown menus, typing values in manually or clicking on check boxes.\n\n<i>Note: Your browser may sometimes suggest values that are not built into the DHIS2 forms but have been stored in your browser cache from other websites. You can remove these values using the 'Browser Cache Cleaner' on the applications menu.</i>\n\nThe cells will turn yellow when you are adding in your data and will turn green when the data has been approved and saved to the system. Grey fields are those that are completed automatically by the DHIS2 system.\n\n![Enter data in the form](https://user-images.githubusercontent.com/2181866/98086580-45766900-1e7f-11eb-9959-a5823c5c9a02.gif)\n\nRed cells indicate that there is a problem with the data you have entered - it is either an invalid value or outside an acceptable range. You will get a pop-up window explaining the problem. Click on the cell and correct the data. The cell will turn green once you have entered the correct value."
                     }
                 ]
             },
@@ -128,7 +128,7 @@
                 },
                 "subtitle": {
                     "key": "step-7-subtitle",
-                    "referenceValue": "* Does not apply in all cases",
+                    "referenceValue": "<p style='color:#43CBCB'><i>* Does not apply in all cases</i></p>",
                     "translations": {}
                 },
                 "pages": [
