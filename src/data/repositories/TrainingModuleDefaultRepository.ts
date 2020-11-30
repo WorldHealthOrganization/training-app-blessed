@@ -34,33 +34,37 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async list(): Promise<TrainingModule[]> {
-        const dataStoreModules = await this.storageClient.listObjectsInCollection<
-            PersistedTrainingModule
-        >(Namespaces.TRAINING_MODULES);
+        try {
+            const dataStoreModules = await this.storageClient.listObjectsInCollection<
+                PersistedTrainingModule
+            >(Namespaces.TRAINING_MODULES);
 
-        const missingModuleKeys = _(this.builtinModules)
-            .keys()
-            .difference(dataStoreModules.map(({ id }) => id))
-            .value();
+            const missingModuleKeys = _(this.builtinModules)
+                .keys()
+                .difference(dataStoreModules.map(({ id }) => id))
+                .value();
 
-        const missingModules = await promiseMap(missingModuleKeys, key => this.getBuiltin(key));
+            const missingModules = await promiseMap(missingModuleKeys, key => this.getBuiltin(key));
 
-        const progress = await this.progressStorageClient.getObject<UserProgress[]>(
-            Namespaces.PROGRESS
-        );
+            const progress = await this.progressStorageClient.getObject<UserProgress[]>(
+                Namespaces.PROGRESS
+            );
 
-        return promiseMap(_.compact([...dataStoreModules, ...missingModules]), async module => {
-            const model = await this.buildDomainModel(module);
+            return promiseMap(_.compact([...dataStoreModules, ...missingModules]), async module => {
+                const model = await this.buildDomainModel(module);
 
-            return {
-                ...model,
-                progress: progress?.find(({ id }) => id === module.id) ?? {
-                    id: module.id,
-                    lastStep: 0,
-                    completed: false,
-                },
-            };
-        });
+                return {
+                    ...model,
+                    progress: progress?.find(({ id }) => id === module.id) ?? {
+                        id: module.id,
+                        lastStep: 0,
+                        completed: false,
+                    },
+                };
+            });
+        } catch (error) {
+            return [];
+        }
     }
 
     public async get(key: string): Promise<TrainingModule | undefined> {
