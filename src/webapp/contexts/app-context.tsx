@@ -33,6 +33,10 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
         compositionRoot.usecases.user.checkSuperUser().then(setIsSuperUser);
     }, [compositionRoot]);
 
+    useEffect(() => {
+        compositionRoot.usecases.translations.fetch().then(() => reload());
+    }, [compositionRoot, reload]);
+
     return (
         <AppContext.Provider
             value={{
