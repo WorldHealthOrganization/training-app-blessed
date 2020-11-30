@@ -1,3 +1,5 @@
+//@ts-ignore
+import { HeaderBar } from "@dhis2/ui-widgets";
 import {
     FormGroup,
     Icon,
@@ -38,6 +40,7 @@ export const SettingsPage: React.FC = () => {
 
     return (
         <React.Fragment>
+            <HeaderBar appName={i18n.t("Training app")} />
             <Title>{i18n.t("Permissions")}</Title>
 
             {!!permissionsType && (
