@@ -16,7 +16,6 @@ export const ExitPage = () => {
     }, [setAppState]);
 
     const exitTutorial = useCallback(() => {
-        // TODO: Retain iframe url
         window.location.href = module ? `${baseUrl}${module.dhisLaunchUrl}` : baseUrl;
     }, [baseUrl, module]);
 
