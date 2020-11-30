@@ -4,5 +4,10 @@ export interface User {
     id: string;
     name: string;
     username: string;
-    userRoles: NamedRef[];
+    userRoles: UserRole[];
+    userGroups: NamedRef[];
+}
+
+export interface UserRole extends NamedRef {
+    authorities: string[];
 }

@@ -1,11 +1,10 @@
 import { UseCase } from "../../webapp/CompositionRoot";
-import { TrainingModule } from "../entities/TrainingModule";
 import { TrainingModuleRepository } from "../repositories/TrainingModuleRepository";
 
-export class ListModulesUseCase implements UseCase {
+export class CompleteUserProgressUseCase implements UseCase {
     constructor(private trainingModuleRepository: TrainingModuleRepository) {}
 
-    public async execute(): Promise<TrainingModule[]> {
-        return this.trainingModuleRepository.list();
+    public async execute(moduleId: string): Promise<void> {
+        return this.trainingModuleRepository.updateProgress(moduleId, 0, true);
     }
 }

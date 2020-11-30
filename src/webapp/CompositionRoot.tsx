@@ -2,17 +2,21 @@ import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepositor
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { ConfigRepository } from "../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
+import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSettingsPermissionsUseCase";
+import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
-import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
+import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
+import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
-import { SyncTranslationsUseCase } from "../domain/usecases/SyncTranslationsUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { cache } from "../utils/cache";
+import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
+import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 
 export class CompositionRoot {
     private readonly configRepository: ConfigRepository;
@@ -28,19 +32,29 @@ export class CompositionRoot {
         return {
             modules: getExecute({
                 list: new ListModulesUseCase(this.trainingModuleRepository),
-                get: new GetModuleUseCase(this.trainingModuleRepository),
                 create: new CreateModuleUseCase(this.trainingModuleRepository),
                 delete: new DeleteModulesUseCase(this.trainingModuleRepository),
                 edit: new EditModuleUseCase(this.trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
-                syncTranslations: new SyncTranslationsUseCase(this.trainingModuleRepository),
+            }),
+            translations: getExecute({
+                fetch: new FetchTranslationsUseCase(this.trainingModuleRepository),
+                publishTerms: new InitializeTranslationsUseCase(this.trainingModuleRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
+                complete: new CompleteUserProgressUseCase(this.trainingModuleRepository),
             }),
             config: getExecute({
+                getSettingsPermissions: new GetSettingsPermissionsUseCase(this.configRepository),
+                updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(
+                    this.configRepository
+                ),
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
+            }),
+            user: getExecute({
+                checkSuperUser: new CheckSettingsPermissionsUseCase(this.configRepository),
             }),
         };
     }

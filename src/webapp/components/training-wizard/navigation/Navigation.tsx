@@ -75,6 +75,7 @@ export const Navigation: React.FC<WizardNavigationProps> = ({
 const ModalFooter = styled.div`
     overflow: hidden;
     margin: 20px 0px 20px;
+    text-align: center;
 `;
 
 const ProgressBar = styled.div`

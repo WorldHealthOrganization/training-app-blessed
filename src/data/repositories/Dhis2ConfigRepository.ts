@@ -1,3 +1,4 @@
+import { Permission } from "../../domain/entities/Permission";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { D2Api } from "../../types/d2-api";
 import { cache } from "../../utils/cache";
@@ -27,9 +28,10 @@ export class Dhis2ConfigRepository implements ConfigRepository {
                 fields: {
                     id: true,
                     displayName: true,
+                    userGroups: { id: true, name: true },
                     userCredentials: {
                         username: true,
-                        userRoles: { id: true, name: true },
+                        userRoles: { id: true, name: true, authorities: true },
                     },
                     settings: { keyUiLocale: true },
                 },
@@ -39,6 +41,7 @@ export class Dhis2ConfigRepository implements ConfigRepository {
         return {
             id: d2User.id,
             name: d2User.displayName,
+            userGroups: d2User.userGroups,
             ...d2User.userCredentials,
         };
     }
@@ -69,11 +72,27 @@ export class Dhis2ConfigRepository implements ConfigRepository {
     }
 
     public async getPoEditorToken(): Promise<string | undefined> {
-        return process.env.REACT_APP_POEDITOR_TOKEN;
-        /** TODO: Settings page
         const { poeditorToken } = await this.getConfig();
         return poeditorToken;
-        */
+    }
+
+    public async getSettingsPermissions(): Promise<Permission> {
+        const config = await this.getConfig();
+        const { users = [], userGroups = [] } = config.settingsPermissions ?? {};
+        return { users, userGroups };
+    }
+
+    public async updateSettingsPermissions(update: Partial<Permission>): Promise<void> {
+        const config = await this.getConfig();
+        const { users = [], userGroups = [] } = config.settingsPermissions ?? {};
+
+        await this.storageClient.saveObject<PersistedConfig>(Namespaces.CONFIG, {
+            ...config,
+            settingsPermissions: {
+                users: update.users ?? users,
+                userGroups: update.userGroups ?? userGroups,
+            },
+        });
     }
 
     private async getConfig(): Promise<PersistedConfig> {

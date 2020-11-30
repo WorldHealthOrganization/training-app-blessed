@@ -1,0 +1,164 @@
+{
+    "_version": 1,
+    "id": "event-visualizer",
+    "disabled": false,
+    "dhisAppKey": "event-visualizer",
+    "name": "Event visualizer",
+    "type": "core",
+    "revision": 1,
+    "dhisVersionRange": "",
+    "dhisLaunchUrl": "/dhis-web-event-visualizer/index.html",
+    "translation": { "provider": "poeditor", "project": "394099" },
+    "contents": {
+        "welcome": {
+            "key": "module-welcome",
+            "referenceValue": "# Welcome to the tutorial on Event visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99499212-d584da00-2978-11eb-9d6f-507cfc449bb6.png)\n\nUse this application to visualize data collected through Event Capture (i.e. forms that can be filled in multiple times for the same location and time period). A variety of different chart types are available for you to select from, depending on your needs.",
+            "translations": {}
+        },
+        "steps": [
+            {
+                "title": {
+                    "key": "step-1-title",
+                    "referenceValue": "Select chart type",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-1-1",
+                        "translations": {},
+                        "referenceValue": "![Select chart type](https://user-images.githubusercontent.com/2181866/99498333-91dda080-2977-11eb-9929-c1ed7b403d08.gif)\n\nSelect the type of chart that you would like to build from the row of available options next to 'Type'."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-2-title",
+                    "referenceValue": "Select data type",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-2-1",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/99498334-91dda080-2977-11eb-9532-2540d424cf47.gif)\n\nIn the 'Data' tab, click on 'Select program' to access the drop-down menu of programs to select from. The programs available depend on which programs you have access to in your DHIS2 implementation.\n\nClick on the drop down menu under 'Stage' and choose the stage of your selected program that you want to plot data for."
+                    },
+                    {
+                        "key": "step-2-2",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/99498336-92763700-2977-11eb-898d-965f7c9a3bd4.gif)\n\nNext to the icon of the lens, click to open the drop-down menu and search for the relevant data type for your analysis. There are several available for you to choose from, including data elements, event data items, program indicators and 'All'."
+                    },
+                    {
+                        "key": "step-2-3",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/99498338-92763700-2977-11eb-892c-e8e0e1e4f70f.gif)\n\nBy now you should see a list of variables in the 'Available' section below. Select which variables from the list to include in your chart by double clicking on them. This will move the variables to the 'Selected data items' section below.\n\nYou can also select multiple variables by holding the Ctrl key (or Cmd on Mac) and clicking on several items to highlight them, and clicking the single arrow pointing downwards."
+                    },
+                    {
+                        "key": "step-2-4",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/99498341-92763700-2977-11eb-8861-c9807ff96f33.gif)\n\nFor each variable selected, you can specify the range of values that you would like to include in your chart by selecting options from the drop-down menus."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-3-title",
+                    "referenceValue": "Select time period",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-3-1",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99498342-930ecd80-2977-11eb-80ef-507a4463e5e2.gif)\n\nClick on the 'Periods' tab to open the time period menu.\n\nYou can select time periods which are relative to the current date using the check boxes in the section at the bottom of this section below.\n\n<i>Note: You can select more than one relative period.</i>"
+                    },
+                    {
+                        "key": "step-3-2",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99498343-930ecd80-2977-11eb-95e7-67d7cd911eb3.gif)\n\nIn addition to relative time periods, you can select fixed time periods. For 'Fixed and relative periods', the drop down menu under 'Select period type' includes a variety of reporting frequencies (e.g. daily, weekly etc.). Selecting from this list will create a list of time periods in the left-hand 'Available' column.\n\nThe current year is the default year for the available time periods in the list. You can toggle between years by clicking on the 'Prev year' and 'Next year' buttons.\n\nMake sure to deselect any relative periods in the check box section otherwise your chart will have a mix of time periods that may not make sense."
+                    },
+                    {
+                        "key": "step-3-3",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99498344-930ecd80-2977-11eb-82a1-7e6940f23f29.gif)\n\nSelect the time periods that you would like to display in your chart by double clicking on the periods, or clicking the periods and moving them over to the right 'Selected' column using the single arrow."
+                    },
+                    {
+                        "key": "step-3-4",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99498321-8ee2b000-2977-11eb-8907-d099d339a65d.gif)\n\nFrom the 'Fixed and relative periods' drop-down menu, you can also choose to define your own time period by selecting 'Start/end dates'. Choose the start and end dates for you data by selecting from the calendar picker."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-4-title",
+                    "referenceValue": "Select location",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-4-1",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/99498324-9013dd00-2977-11eb-8212-6eb6ef6cf88b.gif)\n\nClick on the 'Organisation units' tab to open the locations menu. You can select any number of locations to display on the chart. Click down to lower geographic levels on the menu by clicking on the + symbol next to the location names.\n\nClick on the location name to select it. You can select multiple locations from across different geographic levels by pressing the Ctrl key (or Cmd on Mac) and clicking on all the location names that you would like to add to your chart."
+                    },
+                    {
+                        "key": "step-4-2",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/99498326-9013dd00-2977-11eb-8fce-939fe2557806.gif)\n\nAnother way to select locations is by clicking on the cog icon and choosing an option from the 'Selection mode' drop-down menu. If you choose 'Select levels', you can select all locations at one or more geographic levels (e.g. Country, Province, District).\n\nSelect a level from the 'Select Organisation Unit levels' drop-down menu. For example, selecting 'District' from the menu will select all districts under the location you have selected in the location tree."
+                    },
+                    {
+                        "key": "step-4-3",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/99498327-9013dd00-2977-11eb-9fb1-2f4214e3924b.gif)\n\nThe same applies if you choose 'Select groups' from the 'Selection mode' drop-down menu. In the 'Select organisation unit groups', click on one or more of the available group names. This will select all the locations inside these groups."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-5-title",
+                    "referenceValue": "Create and format chart",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-5-1",
+                        "translations": {},
+                        "referenceValue": "![Create and format chart](https://user-images.githubusercontent.com/2181866/99498329-90ac7380-2977-11eb-9d73-c40169e7d554.gif)\n\nClick on the 'Update' button to create a chart with the data that you have selected.\n\nClick on the 'Layout' tab to open the chart layout menu. This shows how the data are arranged in your chart, according to filter, rows and columns. The filter determines which data appears in your chart. Category dimensions define what appears on the x-axis (for bar and line charts) and series dimensions define the colour coding on the chart.\n\nYou can move the data around by clicking, dragging and dropping the data into the different positions. Click 'Update' to view the new layout of your chart.\n\nNote: The values of the variables will be aggregated based on the aggregation defined when the variable was created. For numeric variables the aggregation will commonly be average or sum."
+                    },
+                    {
+                        "key": "step-5-2",
+                        "translations": {},
+                        "referenceValue": "![Create and format chart](https://user-images.githubusercontent.com/2181866/99498330-90ac7380-2977-11eb-9034-a62ea0d50bae.gif)\n\nClick on the 'Options' tab to open the chart settings menu. This menu provides a list of options for you to:\n\n- Define which values should appear in the chart (e.g. only completed events, hide NA values)\n\n- Adjust axes ranges\n\n- Apply and style a legend for your chart\n\n- Define titles and subtitles"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-6-title",
+                    "referenceValue": "Save and share chart",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-6-1",
+                        "translations": {},
+                        "referenceValue": "![Save and share chart](https://user-images.githubusercontent.com/2181866/99498331-91450a00-2977-11eb-8328-77301bd3a987.gif)\n\nFrom the 'Favourites' drop-down menu, select 'Save as' to save your chart with a name and description. Save your chart by clicking 'Save'. From the drop down menu, you can also share the chart with other DHIS2 users, and write interpretations on your chart.\n\nWhen you want to work on this chart again, you can access it from the 'Favourites' menu by selecting 'Open' and finding the name of your file. You can also add your chart to your dashboards to view it easily and shift between data visualisation types."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-7-title",
+                    "referenceValue": "Download your chart",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-7-1",
+                        "translations": {},
+                        "referenceValue": "![Download your chart](https://user-images.githubusercontent.com/2181866/99498332-91450a00-2977-11eb-9d97-606f50688a24.gif)\n\nClick on 'Downloads'; from the drop-down menu, you can choose to download your chart or the data that was used to produce it in different formats according to your need e.g. for further analysis or to share in a report.\n\nTo download your chart as you are seeing in on the screen, chose from one of the three options under 'Graphics' on the drop-down menu.\n\nTo download the data used in the chart, click one of the options under 'Plain data source'."
+                    }
+                ]
+            }
+        ]
+    }
+}

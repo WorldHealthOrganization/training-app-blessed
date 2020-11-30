@@ -2,9 +2,11 @@ import { useConfig } from "@dhis2/app-runtime";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import styled from "styled-components";
-import { buildPathFromState, buildStateFromPath } from "../entities/AppState";
+import { ActionButton } from "../components/action-button/ActionButton";
 import { IFrame } from "../components/iframe/IFrame";
 import { useAppContext } from "../contexts/app-context";
+import { buildPathFromState, buildStateFromPath } from "../entities/AppState";
+import { ExitPage } from "../pages/exit/ExitPage";
 import { AppRoute, buildRoutes } from "./AppRoute";
 
 export const Router: React.FC = () => {
@@ -29,12 +31,26 @@ export const Router: React.FC = () => {
         [routes, routerRoutes, location.pathname]
     );
 
+    const mainComponent = useMemo(() => {
+        if (appState.exit) {
+            return <ExitPage />;
+        }
+
+        if (appState.minimized) {
+            return (
+                <ActionButton
+                    onClick={() => setAppState(appState => ({ ...appState, minimized: false }))}
+                />
+            );
+        }
+
+        return element ?? defaultRoute.element;
+    }, [appState, setAppState, element, defaultRoute]);
+
     // Update path on state change
     useEffect(() => {
         if (appState.type === "UNKNOWN") {
             return;
-        } else if (appState.type === "EXIT") {
-            window.location.href = appState.url ?? baseUrl;
         } else {
             const path = buildPathFromState(appState);
             if (path !== location.pathname) navigate(path);
@@ -49,11 +65,9 @@ export const Router: React.FC = () => {
 
     return (
         <React.Fragment>
-            {hasProperty("iframe") && module ? (
-                <IFrame src={`${baseUrl}${module.dhisLaunchUrl}`} />
-            ) : null}
-            {hasProperty("backdrop") ? <Backdrop /> : null}
-            {element ?? defaultRoute.element}
+            {hasProperty("iframe") && <IFrame src={`${baseUrl}${module?.dhisLaunchUrl ?? ""}`} />}
+            {hasProperty("backdrop") && !appState.minimized ? <Backdrop /> : null}
+            {mainComponent}
         </React.Fragment>
     );
 };

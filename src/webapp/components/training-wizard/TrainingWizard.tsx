@@ -17,6 +17,7 @@ export interface TrainingWizardProps {
 
 export interface TrainingWizardStepProps {
     title?: string;
+    subtitle?: string;
     description?: string;
     content?: string;
     minimized?: boolean;
@@ -37,10 +38,11 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
 
     const wizardSteps = useMemo(() => {
         if (!module) return [];
-        return _.flatMap(module.contents.steps, ({ title, pages }, step) =>
+        return _.flatMap(module.contents.steps, ({ title, subtitle, pages }, step) =>
             pages.map((content, position) => {
                 const props: TrainingWizardStepProps = {
                     title: translate(title),
+                    subtitle: subtitle ? translate(subtitle) : undefined,
                     content: translate(content),
                     stepIndex: step,
                     contentIndex: position,
@@ -74,7 +76,9 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
             const result = extractStepFromKey(stepKey);
             if (!result) return;
 
-            await usecases.progress.update(module.id, result.step);
+            if (!module.progress.completed) {
+                await usecases.progress.update(module.id, result.step - 1);
+            }
 
             setAppState(appState => {
                 if (appState.type !== "TRAINING") return appState;

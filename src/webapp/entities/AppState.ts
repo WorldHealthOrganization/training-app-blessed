@@ -1,29 +1,20 @@
 import { ReactRouterMatch } from "../router/AppRoute";
 
-export type TrainingStateType = "CLOSED" | "OPEN" | "MINIMIZED";
-export type AppStateType =
-    | "HOME"
-    | "TRAINING"
-    | "TRAINING_DIALOG"
-    | "EXIT"
-    | "UNKNOWN"
-    | "SETTINGS";
+export type TrainingStateType = "OPEN" | "MINIMIZED";
+export type AppStateType = "HOME" | "TRAINING" | "TRAINING_DIALOG" | "UNKNOWN" | "SETTINGS";
 
 interface BaseAppState {
     type: AppStateType;
-}
-
-interface HomeAppState extends BaseAppState {
-    type: "HOME";
-}
-
-interface ExitAppState extends BaseAppState {
-    type: "EXIT";
-    url?: string;
+    exit?: boolean;
+    minimized?: boolean;
 }
 
 interface UnknownAppState extends BaseAppState {
     type: "UNKNOWN";
+}
+
+interface HomeAppState extends BaseAppState {
+    type: "HOME";
 }
 
 interface TrainingAppState extends BaseAppState {
@@ -45,21 +36,20 @@ interface SettingsAppState extends BaseAppState {
 }
 
 export type AppState =
-    | HomeAppState
-    | SettingsAppState
-    | ExitAppState
     | UnknownAppState
+    | HomeAppState
     | TrainingAppState
-    | TrainingDialogAppState;
+    | TrainingDialogAppState
+    | SettingsAppState;
 
 export const buildPathFromState = (state: AppState): string => {
     switch (state.type) {
         case "HOME":
             return `/`;
-        case "TRAINING_DIALOG":
-            return `/tutorial/${state.module}/${state.dialog}`;
         case "TRAINING":
             return `/tutorial/${state.module}/${state.step}/${state.content}`;
+        case "TRAINING_DIALOG":
+            return `/tutorial/${state.module}/${state.dialog}`;
         case "SETTINGS":
             return `/settings`;
         default:
@@ -72,8 +62,6 @@ export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
         switch (match.route.path) {
             case "/":
                 return { type: "HOME" };
-            case "/settings":
-                return { type: "SETTINGS" };
             case "/tutorial/:key":
             case "/tutorial/:key/welcome":
                 return { type: "TRAINING_DIALOG", dialog: "welcome", module: match.params.key };
@@ -91,6 +79,8 @@ export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
                     content: parseInt(match.params.content),
                     state: "OPEN",
                 };
+            case "/settings":
+                return { type: "SETTINGS" };
         }
     }
     return { type: "HOME" };
