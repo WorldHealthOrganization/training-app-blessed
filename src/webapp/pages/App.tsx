@@ -87,12 +87,7 @@ const App: React.FC<{ locale: string }> = ({ locale }) => {
     const compositionRoot = new CompositionRoot(baseUrl);
 
     return (
-        <AppContextProvider
-            baseUrl={baseUrl}
-            routes={routes}
-            compositionRoot={compositionRoot}
-            locale={locale}
-        >
+        <AppContextProvider routes={routes} compositionRoot={compositionRoot} locale={locale}>
             <StylesProvider injectFirst>
                 <MuiThemeProvider theme={muiTheme}>
                     <OldMuiThemeProvider muiTheme={muiThemeLegacy}>
