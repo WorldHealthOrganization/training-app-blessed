@@ -16,6 +16,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
 }) => {
     const [appState, setAppState] = useState<AppState>({ type: "UNKNOWN" });
     const [modules, setModules] = useState<TrainingModule[]>([]);
+    const [isSuperUser, setIsSuperUser] = useState(false);
     const translate = buildTranslate(locale);
 
     const reload = useCallback(async () => {
@@ -28,6 +29,10 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
         reload().then(modules => cacheImages(JSON.stringify(modules)));
     }, [reload]);
 
+    useEffect(() => {
+        compositionRoot.usecases.user.checkSuperUser().then(setIsSuperUser);
+    }, [compositionRoot]);
+
     return (
         <AppContext.Provider
             value={{
@@ -38,6 +43,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
                 modules,
                 translate,
                 reload,
+                isSuperUser,
             }}
         >
             {children}
@@ -49,7 +55,16 @@ export function useAppContext(): UseAppContextResult {
     const context = useContext(AppContext);
     if (!context) throw new Error("Context not initialized");
 
-    const { compositionRoot, routes, appState, setAppState, modules, translate, reload } = context;
+    const {
+        compositionRoot,
+        routes,
+        appState,
+        setAppState,
+        modules,
+        translate,
+        reload,
+        isSuperUser,
+    } = context;
     const { usecases } = compositionRoot;
     const [module, setCurrentModule] = useState<TrainingModule>();
 
@@ -67,6 +82,7 @@ export function useAppContext(): UseAppContextResult {
         module,
         translate,
         reload,
+        isSuperUser,
     };
 }
 
@@ -87,6 +103,7 @@ export interface AppContextState {
     compositionRoot: CompositionRoot;
     translate: TranslateMethod;
     reload: ReloadMethod;
+    isSuperUser: boolean;
 }
 
 interface UseAppContextResult {
@@ -98,4 +115,5 @@ interface UseAppContextResult {
     module?: TrainingModule;
     translate: TranslateMethod;
     reload: ReloadMethod;
+    isSuperUser: boolean;
 }

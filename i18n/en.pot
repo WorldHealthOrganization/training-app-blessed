@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-30T08:04:07.296Z\n"
-"PO-Revision-Date: 2020-11-30T08:04:07.296Z\n"
+"POT-Creation-Date: 2020-11-30T08:26:17.671Z\n"
+"PO-Revision-Date: 2020-11-30T08:26:17.671Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -139,6 +139,12 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
+msgid "Connection with POEditor"
+msgstr ""
+
+msgid "POEditor token"
+msgstr ""
+
 msgid "Training app"
 msgstr ""
 
@@ -148,10 +154,10 @@ msgstr ""
 msgid "Access to Settings"
 msgstr ""
 
-msgid "Description TODO"
+msgid "Give settings access permissions to non-administrative users"
 msgstr ""
 
-msgid "POEditor token"
+msgid "Connect the application with POEditor to sync translations"
 msgstr ""
 
 msgid "Training modules"

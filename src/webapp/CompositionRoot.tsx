@@ -2,6 +2,7 @@ import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepositor
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { ConfigRepository } from "../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
+import { CheckSuperUserUseCase } from "../domain/usecases/CheckSuperUserUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
@@ -39,6 +40,9 @@ export class CompositionRoot {
             config: getExecute({
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
+            }),
+            user: getExecute({
+                checkSuperUser: new CheckSuperUserUseCase(this.configRepository),
             }),
         };
     }
