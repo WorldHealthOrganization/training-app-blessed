@@ -5,11 +5,22 @@ import { CardIcon } from "./CardIcon";
 import { CardProgress, CardProgressText } from "./CardProgress";
 import { CardTitle } from "./CardTitle";
 
-const BaseCard: React.FC<CardProps> = ({ className, label, progress, onClick, disabled }) => {
+const BaseCard: React.FC<CardProps> = ({
+    className,
+    label,
+    progress,
+    onClick,
+    onContextMenu,
+    disabled,
+}) => {
     const normalizedProgress = normalizeProgress(progress);
 
     return (
-        <div className={className} onClick={disabled ? undefined : onClick}>
+        <div
+            className={className}
+            onClick={disabled ? undefined : onClick}
+            onContextMenu={onContextMenu}
+        >
             {progress >= 100 ? <CardIcon>done</CardIcon> : null}
             <CardTitle>{label}</CardTitle>
             <CardProgressText>{`${normalizedProgress}%`}</CardProgressText>
@@ -44,6 +55,7 @@ export interface CardProps {
     className?: string;
     label: string;
     progress: number;
-    onClick?: () => void;
+    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    onContextMenu?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     disabled?: boolean;
 }
