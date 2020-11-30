@@ -56,6 +56,24 @@ export const SettingsPage: React.FC = () => {
         [usecases]
     );
 
+    const buildSharingDescription = useCallback(() => {
+        const users = settingsPermissions?.users?.length ?? 0;
+        const userGroups = settingsPermissions?.userGroups?.length ?? 0;
+
+        if (users > 0 && userGroups > 0) {
+            return i18n.t("Accessible to {{users}} users and {{userGroups}} user groups", {
+                users,
+                userGroups,
+            });
+        } else if (users > 0) {
+            return i18n.t("Accessible to {{users}} users", { users });
+        } else if (userGroups > 0) {
+            return i18n.t("Accessible to {{userGroups}} user groups", { userGroups });
+        } else {
+            return i18n.t("Only accessible to system administrators");
+        }
+    }, [settingsPermissions]);
+
     useEffect(() => {
         usecases.config.existsPoEditorToken().then(setExistsPoEditorToken);
     }, [usecases]);
@@ -121,9 +139,7 @@ export const SettingsPage: React.FC = () => {
                         </ListItemIcon>
                         <ListItemText
                             primary={i18n.t("Access to Settings")}
-                            secondary={i18n.t(
-                                "Give settings access permissions to non-administrative users"
-                            )}
+                            secondary={buildSharingDescription()}
                         />
                     </ListItem>
                     <ListItem button onClick={() => setPOEditorDialogOpen(true)}>
