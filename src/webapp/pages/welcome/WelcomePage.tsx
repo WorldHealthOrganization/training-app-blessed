@@ -15,13 +15,12 @@ export const WelcomePage = () => {
     }, [module, setAppState]);
 
     const exitTutorial = useCallback(() => {
-        setAppState({ type: "EXIT" });
+        setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
-    const toggleClose = useCallback(() => {
-        if (!module) return;
-        setAppState({ type: "TRAINING", module: module.id, step: 0, content: 0, state: "CLOSED" });
-    }, [module, setAppState]);
+    const minimize = useCallback(() => {
+        setAppState(appState => ({ ...appState, minimized: true }));
+    }, [setAppState]);
 
     const goHome = useCallback(() => {
         setAppState({ type: "HOME" });
@@ -30,7 +29,12 @@ export const WelcomePage = () => {
     if (!module) return null;
 
     return (
-        <StyledModal onClose={toggleClose} onGoHome={goHome} centerChildren={true}>
+        <StyledModal
+            onMinimize={minimize}
+            onClose={exitTutorial}
+            onGoHome={goHome}
+            centerChildren={true}
+        >
             <WelcomePageContent welcome={translate(module.contents.welcome)} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
@@ -54,7 +58,7 @@ const StyledModal = styled(Modal)`
 export const WelcomePageContent: React.FC<{ welcome: string }> = ({ welcome }) => {
     return (
         <ModalContent>
-            <MarkdownViewer source={welcome} />
+            <MarkdownViewer source={welcome} center={true} />
         </ModalContent>
     );
 };

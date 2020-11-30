@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-17T18:18:46.551Z\n"
-"PO-Revision-Date: 2020-11-17T18:18:46.551Z\n"
+"POT-Creation-Date: 2020-11-30T21:34:45.742Z\n"
+"PO-Revision-Date: 2020-11-30T21:34:45.742Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -20,7 +20,13 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
+msgid "Settings"
+msgstr ""
+
 msgid "Move window"
+msgstr ""
+
+msgid "Exit tutorial"
 msgstr ""
 
 msgid "Expand window"
@@ -44,13 +50,10 @@ msgstr ""
 msgid "Edit contents of {{name}}"
 msgstr ""
 
-msgid "Yes"
+msgid "Initialize project in POEditor"
 msgstr ""
 
-msgid "No"
-msgstr ""
-
-msgid "Sync translations"
+msgid "Push local translations to POEditor"
 msgstr ""
 
 msgid "Delete module"
@@ -80,6 +83,9 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+msgid "Sub step {{position}} of {{total}}"
+msgstr ""
+
 msgid "Welcome"
 msgstr ""
 
@@ -92,7 +98,27 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-msgid "Settings"
+msgid "Exit"
+msgstr ""
+
+msgid "Continue Tutorial"
+msgstr ""
+
+msgid "Exit Tutorial"
+msgstr ""
+
+msgid "Are you sure you want to exit?"
+msgstr ""
+
+msgid ""
+"If you are sure you want to exit, select 'Exit tutorial'. You can relaunch "
+"the training tutorial again at any time from the applications menu."
+msgstr ""
+
+msgid ""
+"If you would like to continue with training, select 'Continue tutorial' "
+"below or if you would like to select a different tutorial, click on the "
+"'Home' button."
 msgstr ""
 
 msgid "Well done!"
@@ -101,31 +127,70 @@ msgstr ""
 msgid "You’ve completed the {{name}} tutorial!"
 msgstr ""
 
+msgid "Back to tutorial"
+msgstr ""
+
+msgid "Finish"
+msgstr ""
+
+msgid "Reset progress"
+msgstr ""
+
 msgid "Here is your progress on DHIS2 training"
 msgstr ""
 
 msgid "Select one of these tutorials to continue learning:"
 msgstr ""
 
-msgid "Exit Tutorial"
+msgid "Back"
 msgstr ""
 
-msgid "Permissions"
+msgid "Help"
+msgstr ""
+
+msgid "Accessible to {{users}} users and {{userGroups}} user groups"
+msgstr ""
+
+msgid "Accessible to {{users}} users"
+msgstr ""
+
+msgid "Accessible to {{userGroups}} user groups"
+msgstr ""
+
+msgid "Only accessible to system administrators"
+msgstr ""
+
+msgid "Connection with POEditor"
 msgstr ""
 
 msgid "POEditor token"
 msgstr ""
 
+msgid "Training app"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
 msgid "Access to Settings"
 msgstr ""
 
-msgid "Description TODO"
+msgid "Connect the application with POEditor to sync translations"
+msgstr ""
+
+msgid "Training modules"
 msgstr ""
 
 msgid "What did you learn in this tutorial?"
 msgstr ""
 
 msgid "What will this tutorial cover?"
+msgstr ""
+
+msgid "Take another tutorial"
+msgstr ""
+
+msgid "Start"
 msgstr ""
 
 msgid "Start Tutorial"

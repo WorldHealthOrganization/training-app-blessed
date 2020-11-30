@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { Icon } from "@material-ui/core";
+import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
+import { ContextualMenu } from "../../components/contextual-menu/ContextualMenu";
 import { MainButton } from "../../components/main-button/MainButton";
 import {
     Modal,
@@ -12,19 +13,20 @@ import {
     ModalParagraph,
     ModalTitle,
 } from "../../components/modal";
+import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const { usecases, setAppState } = useAppContext();
-    const [modules, setModules] = useState<TrainingModule[]>([]);
-
-    useEffect(() => {
-        usecases.modules.list().then(setModules);
-    }, [usecases]);
+    const { usecases, setAppState, modules, reload, hasSettingsAccess } = useAppContext();
+    const [loading, setLoading] = useState(true);
+    const [contextMenuTarget, setContextMenuTarget] = useState<{
+        id: string;
+        pos: number[];
+    } | null>(null);
 
     const loadModule = useCallback(
         (module: string, step: number) => {
-            if (step > 0) {
+            if (step > 1) {
                 setAppState({ type: "TRAINING", state: "OPEN", module, step, content: 1 });
             } else {
                 setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
@@ -33,39 +35,116 @@ export const HomePage = () => {
         [setAppState]
     );
 
-    const exitTutorial = useCallback(() => {
-        setAppState({ type: "EXIT" });
+    const openSettings = useCallback(() => {
+        setAppState({ type: "SETTINGS" });
     }, [setAppState]);
 
+    const minimize = useCallback(() => {
+        setAppState(appState => ({ ...appState, minimized: true }));
+    }, [setAppState]);
+
+    const exitTutorial = useCallback(() => {
+        setAppState(appState => ({ ...appState, exit: true }));
+    }, [setAppState]);
+
+    const resetProgress = useCallback(
+        async (id: string) => {
+            setLoading(true);
+            await usecases.progress.update(id, 0);
+            await reload();
+            setLoading(false);
+        },
+        [usecases, reload]
+    );
+
+    const contextMenuActions = useMemo(() => {
+        return [
+            {
+                name: "reset-progress",
+                text: i18n.t("Reset progress"),
+                icon: <Icon>refresh</Icon>,
+                onClick: resetProgress,
+            },
+        ];
+    }, [resetProgress]);
+
+    useEffect(() => {
+        reload().then(() => setLoading(false));
+    }, [reload]);
+
     return (
-        <StyledModal>
-            <ContentWrapper>
-                <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
-                <ModalParagraph>
-                    {i18n.t("Select one of these tutorials to continue learning:", {
-                        nsSeparator: false,
-                    })}
-                </ModalParagraph>
-                <ModalContent>
-                    <Cardboard>
-                        {modules.map(({ name, id, progress, disabled, contents }, idx) => (
-                            <Card
-                                key={`card-${idx}`}
-                                label={name}
-                                progress={Math.round((progress / contents.steps.length) * 100)}
-                                onClick={() => loadModule(id, progress)}
-                                disabled={disabled}
-                            />
-                        ))}
-                    </Cardboard>
-                </ModalContent>
-                <ModalFooter className="modal-footer">
-                    <MainButton color="secondary" onClick={exitTutorial}>
-                        {i18n.t("Exit Tutorial")}
-                    </MainButton>
-                </ModalFooter>
-            </ContentWrapper>
-        </StyledModal>
+        <React.Fragment>
+            {contextMenuTarget && (
+                <ContextualMenu
+                    id={contextMenuTarget.id}
+                    isOpen={!!contextMenuTarget}
+                    actions={contextMenuActions}
+                    positionLeft={contextMenuTarget.pos[0]}
+                    positionTop={contextMenuTarget.pos[1]}
+                    onClose={() => setContextMenuTarget(null)}
+                />
+            )}
+
+            <StyledModal
+                onSettings={hasSettingsAccess ? openSettings : undefined}
+                onMinimize={minimize}
+                centerChildren={true}
+            >
+                <ContentWrapper>
+                    <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
+                    <ModalParagraph>
+                        {i18n.t("Select one of these tutorials to continue learning:", {
+                            nsSeparator: false,
+                        })}
+                    </ModalParagraph>
+                    <ModalContent>
+                        {loading ? (
+                            <SpinnerWrapper>
+                                <Spinner />
+                            </SpinnerWrapper>
+                        ) : (
+                            <Cardboard>
+                                {modules.map(({ name, id, progress, disabled, contents }, idx) => {
+                                    const { lastStep, completed } = progress;
+                                    const percentage = Math.round(
+                                        (lastStep / contents.steps.length) * 100
+                                    );
+
+                                    const handleClick = () => {
+                                        loadModule(id, completed ? 0 : lastStep + 1);
+                                    };
+
+                                    const handleContextMenu = (event: MouseEvent<unknown>) => {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        setContextMenuTarget({
+                                            id,
+                                            pos: [event.clientX, event.clientY],
+                                        });
+                                    };
+
+                                    return (
+                                        <Card
+                                            key={`card-${idx}`}
+                                            label={name}
+                                            progress={completed ? 100 : percentage}
+                                            onClick={handleClick}
+                                            onContextMenu={handleContextMenu}
+                                            disabled={disabled}
+                                        />
+                                    );
+                                })}
+                            </Cardboard>
+                        )}
+                    </ModalContent>
+                    <ModalFooter className="modal-footer">
+                        <MainButton color="secondary" onClick={exitTutorial}>
+                            {i18n.t("Exit Tutorial")}
+                        </MainButton>
+                    </ModalFooter>
+                </ContentWrapper>
+            </StyledModal>
+        </React.Fragment>
     );
 };
 
@@ -86,4 +165,11 @@ const StyledModal = styled(Modal)`
 
 const ContentWrapper = styled.div`
     padding: 15px;
+`;
+
+const SpinnerWrapper = styled.div`
+    height: 150px;
+    display: flex;
+    place-content: center;
+    align-items: center;
 `;

@@ -1,10 +1,11 @@
-import { Icon, IconButton, Tooltip } from "@material-ui/core";
+import { Icon } from "@material-ui/core";
 import {
     ObjectsTable,
     TableAction,
     TableColumn,
     TableSelection,
     TableState,
+    useLoading,
 } from "d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -24,8 +25,9 @@ import { ModuleCreationDialog } from "../module-creation-dialog/ModuleCreationDi
 
 export const ModuleListTable: React.FC = () => {
     const { usecases } = useAppContext();
+    const loading = useLoading();
 
-    const [loading, setLoading] = useState<boolean>(true);
+    const [tableLoading, setTableLoading] = useState<boolean>(true);
     const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
 
@@ -47,19 +49,14 @@ export const ModuleListTable: React.FC = () => {
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
-            setLoading(true);
+            setTableLoading(true);
             await usecases.modules.delete(ids);
             setRefreshKey(Math.random());
-            setLoading(false);
+            setTableLoading(false);
             setSelection([]);
         },
         [usecases]
     );
-
-    const addModule = useCallback(() => {
-        setEditModuleCreationDialog(undefined);
-        setOpenCreationDialog(true);
-    }, []);
 
     const editModule = useCallback(
         (ids: string[]) => {
@@ -119,11 +116,13 @@ export const ModuleListTable: React.FC = () => {
         [modules]
     );
 
-    const syncTranslations = useCallback(
+    const publishTranslations = useCallback(
         async (ids: string[]) => {
-            await usecases.modules.syncTranslations(ids[0]);
+            loading.show(true, i18n.t("Initialize project in POEditor"));
+            await usecases.translations.publishTerms(ids[0]);
+            loading.reset();
         },
-        [usecases]
+        [usecases, loading]
     );
 
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
@@ -142,14 +141,6 @@ export const ModuleListTable: React.FC = () => {
                 text: "Code",
                 hidden: true,
                 sortable: false,
-            },
-            {
-                name: "disabled",
-                text: "Disabled",
-                sortable: false,
-                getValue: item => {
-                    return item.disabled ? i18n.t("Yes") : i18n.t("No");
-                },
             },
             {
                 name: "value",
@@ -175,15 +166,12 @@ export const ModuleListTable: React.FC = () => {
                 },
             },
             {
-                name: "sync-translations",
-                text: i18n.t("Sync translations"),
-                icon: <Icon>edit</Icon>,
-                onClick: syncTranslations,
+                name: "push-translations",
+                text: i18n.t("Push local translations to POEditor"),
+                icon: <Icon>publish</Icon>,
+                onClick: publishTranslations,
                 isActive: rows => {
-                    return _.every(
-                        rows,
-                        item => item.rowType === "module" && !!item.translation?.project
-                    );
+                    return _.every(rows, item => item.rowType === "module");
                 },
             },
             {
@@ -192,8 +180,9 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>delete</Icon>,
                 multiple: true,
                 onClick: deleteModules,
-                isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module" && item.type !== "core");
+                isActive: _rows => {
+                    // TODO: Action is disabled for now
+                    return false;
                 },
             },
             {
@@ -222,8 +211,9 @@ export const ModuleListTable: React.FC = () => {
                 text: i18n.t("Edit contents"),
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
-                isActive: rows => {
-                    return _.every(rows, item => ["dialog", "page"].includes(item.rowType));
+                isActive: _rows => {
+                    // TODO: Action is disabled for now
+                    return false;
                 },
             },
         ],
@@ -234,14 +224,14 @@ export const ModuleListTable: React.FC = () => {
             moveUpModule,
             moveDownModule,
             editContents,
-            syncTranslations,
+            publishTranslations,
         ]
     );
 
     useEffect(() => {
         usecases.modules.list().then(modules => {
             setModules(buildListItems(modules));
-            setLoading(false);
+            setTableLoading(false);
         });
     }, [usecases, refreshKey]);
 
@@ -257,7 +247,7 @@ export const ModuleListTable: React.FC = () => {
             )}
 
             <ObjectsTable<ListItem>
-                loading={loading}
+                loading={tableLoading}
                 rows={modules}
                 columns={columns}
                 actions={actions}
@@ -265,13 +255,6 @@ export const ModuleListTable: React.FC = () => {
                 onChange={onTableChange}
                 childrenKeys={["steps", "welcome", "pages"]}
                 sorting={{ field: "position", order: "asc" }}
-                filterComponents={
-                    <Tooltip title={"New module"} placement={"right"}>
-                        <IconButton onClick={addModule}>
-                            <Icon>add_box</Icon>
-                        </IconButton>
-                    </Tooltip>
-                }
             />
         </PageWrapper>
     );
@@ -352,8 +335,8 @@ export const StepPreview: React.FC<{
     if (!value) return null;
 
     return (
-        <StyledModalBody className={className} center={rowType === "dialog"}>
-            <MarkdownViewer source={value} escapeHtml={false} />
+        <StyledModalBody className={className}>
+            <MarkdownViewer source={value} center={rowType === "dialog"} />
         </StyledModalBody>
     );
 };

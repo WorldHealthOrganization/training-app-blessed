@@ -30,24 +30,22 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         });
     }, [setAppState, module]);
 
-    const goToFinalPage = useCallback(() => {
-        if (!module) return;
-        setAppState({
-            type: "TRAINING_DIALOG",
-            dialog: "final",
-            module: module.id,
-        });
-    }, [setAppState, module]);
-
     const endTutorial = useCallback(() => {
         if (!module) return;
         setAppState({ type: "HOME" });
     }, [setAppState, module]);
 
     const minimize = useCallback(() => {
-        if (!module) return;
-        setAppState({ type: "TRAINING", module: module.id, step: 0, content: 0, state: "CLOSED" });
-    }, [module, setAppState]);
+        setAppState(appState => ({ ...appState, minimized: true }));
+    }, [setAppState]);
+
+    const goHome = useCallback(() => {
+        setAppState({ type: "HOME" });
+    }, [setAppState]);
+
+    const exitTutorial = useCallback(() => {
+        setAppState(appState => ({ ...appState, exit: true }));
+    }, [setAppState]);
 
     const jumpToStep = useCallback(
         (step: number) => {
@@ -61,18 +59,19 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         ? i18n.t("What did you learn in this tutorial?")
         : i18n.t("What will this tutorial cover?");
 
-    const prev = completed ? goToFinalPage : goToWelcomePage;
+    const prev = completed ? startTutorial : goToWelcomePage;
     const next = completed ? endTutorial : startTutorial;
 
-    const goHome = useCallback(() => {
-        setAppState({ type: "HOME" });
-    }, [setAppState]);
+    const prevText = completed ? i18n.t("Back to tutorial") : i18n.t("Previous");
+    const nextText = completed ? i18n.t("Take another tutorial") : i18n.t("Start");
 
     return (
         <StyledModal
             completed={completed}
-            onClose={completed ? endTutorial : minimize}
+            onClose={exitTutorial}
+            onMinimize={minimize}
             onGoHome={goHome}
+            centerChildren={true}
         >
             <ContentWrapper>
                 <ModalTitle>{title}</ModalTitle>
@@ -89,14 +88,16 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
                             <Step key={`step-${idx}`} column={column} row={row} last={last}>
                                 <Line />
                                 <Bullet stepKey={idx + 1} onClick={() => jumpToStep(idx + 1)} />
-                                <Label>{translate(title)}</Label>
+                                <Label onClick={() => jumpToStep(idx + 1)}>
+                                    {translate(title)}
+                                </Label>
                             </Step>
                         );
                     })}
                 </ModalContent>
                 <ModalFooter>
-                    <MainButton onClick={prev}>{i18n.t("Previous")}</MainButton>
-                    <MainButton onClick={next}>{i18n.t("Next")}</MainButton>
+                    <MainButton onClick={prev}>{prevText}</MainButton>
+                    <MainButton onClick={next}>{nextText}</MainButton>
                 </ModalFooter>
             </ContentWrapper>
         </StyledModal>

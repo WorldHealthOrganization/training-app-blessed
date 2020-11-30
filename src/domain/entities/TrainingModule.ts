@@ -1,5 +1,6 @@
 import { SharedRef } from "./Ref";
 import { TranslatableText } from "./TranslatableText";
+import { UserProgress } from "./UserProgress";
 
 export type TrainingModuleType = "app" | "core" | "widget";
 
@@ -7,7 +8,7 @@ export interface TrainingModule extends SharedRef {
     translation: TranslationConnection;
     type: TrainingModuleType;
     disabled: boolean;
-    progress: number;
+    progress: UserProgress;
     contents: TrainingModuleContents;
     revision: number;
     dhisVersionRange: string;

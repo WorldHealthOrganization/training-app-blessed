@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
 import Decoration from "../../assets/Decoration.png";
@@ -14,7 +14,7 @@ import { Stepper } from "../../components/training-wizard/stepper/Stepper";
 import { useAppContext } from "../../contexts/app-context";
 
 export const FinalPage = () => {
-    const { setAppState, module, translate } = useAppContext();
+    const { usecases, setAppState, module, translate } = useAppContext();
 
     const openSummary = useCallback(() => {
         setAppState(appState => {
@@ -41,9 +41,17 @@ export const FinalPage = () => {
         setAppState({ type: "HOME" });
     }, [setAppState]);
 
-    const exit = useCallback(() => {
-        setAppState({ type: "EXIT" });
+    const minimize = useCallback(() => {
+        setAppState(appState => ({ ...appState, minimized: true }));
     }, [setAppState]);
+
+    const exit = useCallback(() => {
+        setAppState(appState => ({ ...appState, exit: true }));
+    }, [setAppState]);
+
+    useEffect(() => {
+        if (module) usecases.progress.complete(module.id);
+    }, [module, usecases]);
 
     if (!module) return null;
 
@@ -54,7 +62,7 @@ export const FinalPage = () => {
     }));
 
     return (
-        <StyledModal onClose={exit} onGoHome={goHome}>
+        <StyledModal onClose={exit} onMinimize={minimize} onGoHome={goHome} centerChildren={true}>
             <ModalContent bigger={true}>
                 <Container>
                     <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>
@@ -65,8 +73,10 @@ export const FinalPage = () => {
                     </ModalParagraph>
                     <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
                     <ModalFooter>
-                        <MainButton onClick={goToLastTutorialStep}>{i18n.t("Previous")}</MainButton>
-                        <MainButton onClick={openSummary}>{i18n.t("Next")}</MainButton>
+                        <MainButton onClick={goToLastTutorialStep}>
+                            {i18n.t("Back to tutorial")}
+                        </MainButton>
+                        <MainButton onClick={openSummary}>{i18n.t("Finish")}</MainButton>
                     </ModalFooter>
                 </Container>
             </ModalContent>

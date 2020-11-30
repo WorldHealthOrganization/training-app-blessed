@@ -1,0 +1,153 @@
+{
+    "_version": 1,
+    "id": "bulk-load",
+    "disabled": false,
+    "dhisAppKey": "bulk-load",
+    "name": "Bulk Load",
+    "type": "app",
+    "revision": 1,
+    "dhisVersionRange": "",
+    "dhisLaunchUrl": "/api/apps/Bulk-Load/index.html",
+    "translation": { "provider": "poeditor", "project": "394107" },
+    "contents": {
+        "welcome": {
+            "key": "module-welcome",
+            "referenceValue": "# Welcome to the tutorial on Bulk Load\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100341143-778d6d80-2fdc-11eb-8079-eb27c1556f1b.png)\n\nThis application allows you to import and export data from DHIS2. You can export an excel template that corresponds to one of your data collection forms in DHIS2, fill it in with new data and import it into DHIS2. You can also download an excel template populated with existing data. You can make corrections and import the revised data back into the system, or simply take the data with you to conduct analysis using external software tools.",
+            "translations": {}
+        },
+        "steps": [
+            {
+                "title": {
+                    "key": "step-1-title",
+                    "referenceValue": "Select template type",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-1-1",
+                        "translations": {},
+                        "referenceValue": "![Select template type](https://user-images.githubusercontent.com/2181866/100340660-cf77a480-2fdb-11eb-8320-9842f9894846.gif)\n\nOn the 'Download template' tab, you will see the Template menu.\n\nChoose the type of form that you would like to download from the 'Select template to export…' drop-down menu.\n\nThe 'Data Model' drop-down menu allows you to filter the options in the template menu by the type of data to be entered. If you know whether your form is of type 'Data Set' or 'Program', you can use it to find your template faster."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-2-title",
+                    "referenceValue": "Select location",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-2-1",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100340663-cf77a480-2fdb-11eb-9ec1-baf806e3ad65.gif)\n\nTo select the locations that you want to include in your template, check the box 'Select available organisation units to include in the template'.  They will appear as drop-down menus in your template.\n\nFind your location name in the tree menu and click on the name to select it. Click down to lower geographic levels on the menu by clicking on the arrow symbol next to the location names.\n\nYou can select multiple locations from across different geographic levels by ticking the boxes next to the locations’ names. Some locations will not be eligible (they won’t have a tick box).This means that the type of data in your template is not collected at these locations."
+                    },
+                    {
+                        "key": "step-2-2",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100340642-cc7cb400-2fdb-11eb-875d-440fc1262d79.gif)\n\nAnother way to select organisational units is by clicking on the 'Organisation Unit Level' drop-down menu and selecting an appropriate level (or several). This will select all locations at one or more geographic levels (e.g. Country, Province, District).\n\nFor example, selecting 'District' will select all locations that are districts from your drop-down tree menu. If you click on a province name after this step, it will only select all districts within that province.\n\nRemember to click 'Select' to include all the locations that you have chosen from DHIS2. The total number of these locations will appear next to the Country name. To deselect specific locations, uncheck the boxes next to their names on the tree menu. To deselect all locations at your chosen level, click 'Deselect'."
+                    },
+                    {
+                        "key": "step-2-3",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100340646-cd154a80-2fdb-11eb-9b13-483d6f46af49.gif)\n\nAlternatively, if your locations are divided into groups (such as facilities, hospitals, sentinel sites etc.),  you can select a group from the 'Organisation Unit Group' drop-down menu. Click on one or more of the groups to select all locations inside these selected groups.\n\nRemember to click 'Select' to include all the locations that you have chosen from DHIS2. The total number of these locations will appear next to the Country name. To deselect specific locations, uncheck the boxes next to their names on the tree menu. To deselect all locations in your chosen group, click 'Deselect'."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-3-title",
+                    "referenceValue": "Select language and theme",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-3-1",
+                        "translations": {},
+                        "referenceValue": "![Select language and theme](https://user-images.githubusercontent.com/2181866/100340647-cdade100-2fdb-11eb-8507-ef757f398f59.gif)\n\nSelect the language for your template from the 'Language' drop-down menu. The default language is English. If your DHIS2 implementation is not translated in other languages, Bulk Load will download an English template even if you select another language. If you need translations for your templates, please make sure that you ask your administration to implement these translations in DHIS2 first.\n\nIf your DHIS2 administrator has created a style for your template, you will be able to chose it from the 'Theme' drop-down menu. If there are no styles created for your template,  leave this section blank."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-4-title",
+                    "referenceValue": "Populate template with data",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-4-1",
+                        "translations": {},
+                        "referenceValue": "![Populate template with data](https://user-images.githubusercontent.com/2181866/100340648-cdade100-2fdb-11eb-8124-1cfc08fd9f77.gif)\n\nTo include existing data from DHIS2 in your template, check the 'Populate template with data' box. You can correct data that was previously entered into DHIS2 and import it back to DHIS2, share the data with external partners or use the data in third party software tools for further analysis. Do not check this box if you want to download an empty template."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-5-title",
+                    "referenceValue": "Download template",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-5-1",
+                        "translations": {},
+                        "referenceValue": "![Download template](https://user-images.githubusercontent.com/2181866/100340649-cdade100-2fdb-11eb-81a3-97c373b59d79.gif)\n\nTo download the Excel template, click 'Download template'. The time to download may depend on how much data you are downloading from DHIS2. Be patient!"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-6-title",
+                    "referenceValue": "Enter or change data on template",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-6-1",
+                        "translations": {},
+                        "referenceValue": "![Enter or change data on template](https://user-images.githubusercontent.com/2181866/100340651-ce467780-2fdb-11eb-8c17-570a425df89a.gif)\n\nIn your template, you will see that all the variables that you selected in the download window are now shown as data columns. If you are entering new data, you should do so in the first blank row, which may be after several rows if you downloaded your template with data. Click into each cell to either select data from a drop-down menu of options or manually enter your values by typing.\n\nWhen entering new data, if you see 'Event ID', leave it blank as DHIS2 will automatically assign this ID when the data is uploaded to the system."
+                    },
+                    {
+                        "key": "step-6-2",
+                        "translations": {},
+                        "referenceValue": "![Enter or change data on template](https://user-images.githubusercontent.com/2181866/100340653-ce467780-2fdb-11eb-86c5-578c3fe1d7f1.gif)\n\nIf you are changing any of the data that was downloaded with your template, make sure to leave the Event ID the same so that DHIS2 recognises this data as an existing entry that needs to be updated.\n\nIf you need to enter data for locations that do not exist yet in the system, you need to ask your administrator to create them in the system first. In the meantime, you can download a template without any Organisation Units and start populating data for your new location typing the location name under the 'Org Unit' column.\n\n<i>Note: To upload data for new locations, you need to fill in one template per location. Data from several new locations cannot be combined in the same template.</i>"
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-7-title",
+                    "referenceValue": "Save and import data",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-7-1",
+                        "translations": {},
+                        "referenceValue": "![Save and import data](https://user-images.githubusercontent.com/2181866/100340654-cedf0e00-2fdb-11eb-85b1-4615dd6cb9be.gif)\n\nWhen you have finished entering new data and changing old data, remember to save your Excel sheet. Upload your data to DHIS2 by dragging and dropping the Excel file from your computer into the 'Import data' window on DHIS2."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-8-title",
+                    "referenceValue": "Check warning messages",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-8-1",
+                        "translations": {},
+                        "referenceValue": "![Check warning messages](https://user-images.githubusercontent.com/2181866/100340657-cedf0e00-2fdb-11eb-8f08-74bd551ec504.gif)\n\nAfter processing your data, DHIS2 will show you a message saying how many new values will be created and how many will be updated for each row. Check the message  to make sure that it is consistent with the content of your template. If you do not detect any inconsistencies, you can import the data by clicking 'Import data'."
+                    },
+                    {
+                        "key": "step-8-2",
+                        "translations": {},
+                        "referenceValue": "![Check warning messages](https://user-images.githubusercontent.com/2181866/100340658-cf77a480-2fdb-11eb-8a50-46a38f87377c.gif)\n\nIf DHIS2 has detected that your data contains duplicates of the data that exists already in the DHIS2 system, it will present a warning message explaining this. You can choose to import only the new data, cancel the import or import everything anyway using the buttons at the bottom of the window. Importing everything is not recommended since it will create duplicates in DHIS2 that may skew your analysis and visualisations."
+                    }
+                ]
+            }
+        ]
+    }
+}
