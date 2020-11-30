@@ -5,6 +5,8 @@ import {
     TrainingModule,
     TrainingModuleBuilder,
 } from "../../domain/entities/TrainingModule";
+import { TranslatableText } from "../../domain/entities/TranslatableText";
+import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
@@ -19,7 +21,6 @@ import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
-import { UserProgress } from "../../domain/entities/UserProgress";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -164,7 +165,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
     }
 
-    // TODO: Review in the near future
     public async updateTranslations(key: string): Promise<void> {
         try {
             const token = await this.config.getPoEditorToken();
@@ -175,7 +175,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
             if (!model || model.translation.provider === "NONE" || !token) return;
             const api = new PoEditorApi(token);
-
             const project = parseInt(model.translation.project);
 
             // Fetch translations and update local model
@@ -236,7 +235,40 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
     }
 
-    /** TODO: Build term list on create project
+    public async initializeTranslation(key: string): Promise<void> {
+        const token = await this.config.getPoEditorToken();
+        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES,
+            key
+        );
+
+        if (!model || model.translation.provider === "NONE" || !token) return;
+        const api = new PoEditorApi(token);
+        const project = parseInt(model.translation.project);
+
+        const translatableItems = this.extractTranslations(model);
+
+        const terms = translatableItems.map(item => ({ term: item.key }));
+        const referenceTranslations = translatableItems.map(item => ({
+            term: item.key,
+            translation: { content: item.referenceValue },
+        }));
+
+        // Update terms
+        await api.terms.add({ id: project, data: JSON.stringify(terms) });
+
+        // Update reference values
+        await api.languages.add({ id: project, language: "en" });
+        await api.languages.update({
+            id: project,
+            language: "en",
+            data: JSON.stringify(referenceTranslations),
+        });
+
+        // Update reference language
+        await api.projects.update({ id: project, reference_language: "en" });
+    }
+
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
         const steps = _.flatMap(model.contents.steps, step => [
             step.title,
@@ -245,7 +277,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         ]);
 
         return _.compact([model.contents.welcome, ...steps]);
-    }**/
+    }
 
     private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
         const builtinModule = this.builtinModules[key];

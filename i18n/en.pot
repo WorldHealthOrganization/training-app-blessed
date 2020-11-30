@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-30T08:26:17.671Z\n"
-"PO-Revision-Date: 2020-11-30T08:26:17.671Z\n"
+"POT-Creation-Date: 2020-11-30T09:49:30.808Z\n"
+"PO-Revision-Date: 2020-11-30T09:49:30.808Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -50,10 +50,10 @@ msgstr ""
 msgid "Edit contents of {{name}}"
 msgstr ""
 
-msgid "Yes"
+msgid "Initialize project in POEditor"
 msgstr ""
 
-msgid "No"
+msgid "Push local translations to POEditor"
 msgstr ""
 
 msgid "Delete module"
