@@ -1,4 +1,4 @@
-import { Icon, IconButton, Tooltip } from "@material-ui/core";
+import { Icon } from "@material-ui/core";
 import {
     ObjectsTable,
     TableAction,
@@ -57,11 +57,6 @@ export const ModuleListTable: React.FC = () => {
         },
         [usecases]
     );
-
-    const addModule = useCallback(() => {
-        setEditModuleCreationDialog(undefined);
-        setOpenCreationDialog(true);
-    }, []);
 
     const editModule = useCallback(
         (ids: string[]) => {
@@ -260,13 +255,6 @@ export const ModuleListTable: React.FC = () => {
                 onChange={onTableChange}
                 childrenKeys={["steps", "welcome", "pages"]}
                 sorting={{ field: "position", order: "asc" }}
-                filterComponents={
-                    <Tooltip title={"New module"} placement={"right"}>
-                        <IconButton onClick={addModule}>
-                            <Icon>add_box</Icon>
-                        </IconButton>
-                    </Tooltip>
-                }
             />
         </PageWrapper>
     );
