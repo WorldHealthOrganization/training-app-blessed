@@ -15,7 +15,7 @@ import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const { setAppState, modules, reload } = useAppContext();
+    const { setAppState, modules, reload, isSuperUser } = useAppContext();
     const [loading, setLoading] = useState(true);
 
     const loadModule = useCallback(
@@ -28,6 +28,10 @@ export const HomePage = () => {
         },
         [setAppState]
     );
+
+    const openSettings = useCallback(() => {
+        setAppState({ type: "SETTINGS" });
+    }, [setAppState]);
 
     const minimize = useCallback(() => {
         setAppState(appState => ({ ...appState, minimized: true }));
@@ -42,7 +46,11 @@ export const HomePage = () => {
     }, [reload]);
 
     return (
-        <StyledModal onMinimize={minimize} centerChildren={true}>
+        <StyledModal
+            onSettings={isSuperUser ? openSettings : undefined}
+            onMinimize={minimize}
+            centerChildren={true}
+        >
             <ContentWrapper>
                 <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
                 <ModalParagraph>

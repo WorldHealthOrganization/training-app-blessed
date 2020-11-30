@@ -2,6 +2,7 @@ import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepositor
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { ConfigRepository } from "../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
+import { CheckSuperUserUseCase } from "../domain/usecases/CheckSuperUserUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
@@ -10,7 +11,6 @@ import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTok
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
-import { SyncTranslationsUseCase } from "../domain/usecases/SyncTranslationsUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { cache } from "../utils/cache";
 
@@ -32,7 +32,6 @@ export class CompositionRoot {
                 delete: new DeleteModulesUseCase(this.trainingModuleRepository),
                 edit: new EditModuleUseCase(this.trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
-                syncTranslations: new SyncTranslationsUseCase(this.trainingModuleRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
@@ -41,6 +40,9 @@ export class CompositionRoot {
             config: getExecute({
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
+            }),
+            user: getExecute({
+                checkSuperUser: new CheckSuperUserUseCase(this.configRepository),
             }),
         };
     }

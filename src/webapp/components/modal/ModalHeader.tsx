@@ -3,6 +3,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import HomeIcon from "@material-ui/icons/Home";
 import MinimizeIcon from "@material-ui/icons/Minimize";
+import SettingsIcon from "@material-ui/icons/Settings";
 import React from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
@@ -10,10 +11,11 @@ import { Tooltip, TooltipText, TooltipWrapper } from "../tooltip/Tooltip";
 
 export const ModalHeader: React.FC<ModalHeaderProps> = ({
     allowDrag,
+    minimized,
     onClose,
     onGoHome,
-    minimized,
     onMinimize,
+    onSettings,
 }) => {
     return (
         <div>
@@ -21,6 +23,11 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
                 <HomeButton text={i18n.t("Home")} placement={"right"}>
                     <HomeIcon onClick={onGoHome} />
                 </HomeButton>
+            ) : null}
+            {onSettings ? (
+                <SettingsButton text={i18n.t("Settings")} placement={"right"}>
+                    <SettingsIcon onClick={onSettings} />
+                </SettingsButton>
             ) : null}
             {allowDrag ? (
                 <DragButton text={i18n.t("Move window")}>
@@ -47,10 +54,11 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
 
 export interface ModalHeaderProps {
     allowDrag?: boolean;
+    minimized?: boolean;
     onClose?: () => void;
     onGoHome?: () => void;
-    minimized?: boolean;
     onMinimize?: () => void;
+    onSettings?: () => void;
 }
 
 const DragButton = styled(Tooltip)`
@@ -121,5 +129,20 @@ const ExpandButton = styled(Tooltip)`
     svg {
         font-size: 18px !important;
         font-weight: bold;
+    }
+`;
+
+const SettingsButton = styled(Tooltip)`
+    float: left;
+    cursor: pointer;
+
+    svg {
+        font-size: 20px !important;
+        font-weight: bold;
+        margin-right: 8px;
+    }
+
+    ${TooltipWrapper}: {
+        float: right;
     }
 `;

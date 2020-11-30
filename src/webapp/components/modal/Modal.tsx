@@ -6,7 +6,7 @@ import Draggable, {
     DraggableProps,
 } from "react-draggable";
 import styled from "styled-components";
-import { ModalHeader } from "./ModalHeader";
+import { ModalHeader, ModalHeaderProps } from "./ModalHeader";
 
 export const Modal: React.FC<ModalProps> = ({
     className,
@@ -14,6 +14,7 @@ export const Modal: React.FC<ModalProps> = ({
     onClose,
     onMinimize,
     onGoHome,
+    onSettings,
     minimized,
     allowDrag,
     centerChildren,
@@ -42,6 +43,7 @@ export const Modal: React.FC<ModalProps> = ({
                         minimized={minimized}
                         onClose={onClose}
                         onGoHome={onGoHome}
+                        onSettings={onSettings}
                         onMinimize={onMinimize}
                         allowDrag={allowDrag}
                     />
@@ -52,13 +54,8 @@ export const Modal: React.FC<ModalProps> = ({
     );
 };
 
-export interface ModalProps {
+export interface ModalProps extends ModalHeaderProps {
     className?: string;
-    onClose?: () => void;
-    onGoHome?: () => void;
-    onMinimize?: () => void;
-    minimized?: boolean;
-    allowDrag?: boolean;
     centerChildren?: boolean;
 }
 

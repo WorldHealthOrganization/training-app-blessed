@@ -15,6 +15,7 @@ import "./App.css";
 import { ExitPage } from "./exit/ExitPage";
 import { FinalPage } from "./final/FinalPage";
 import { HomePage } from "./home/HomePage";
+import { SettingsPage } from "./settings/SettingsPage";
 import { SummaryPage } from "./summary/SummaryPage";
 import { TutorialPage } from "./tutorial/TutorialPage";
 import { WelcomePage } from "./welcome/WelcomePage";
@@ -74,12 +75,12 @@ export const routes: AppRoute[] = [
         paths: ["/exit"],
         element: <ExitPage />,
     },
-    /**{
+    {
         key: "settings",
         name: () => i18n.t("Settings"),
         paths: ["/settings"],
         element: <SettingsPage />,
-    },**/
+    },
 ];
 
 const App: React.FC<{ locale: string }> = ({ locale }) => {

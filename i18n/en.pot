@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-30T06:51:47.236Z\n"
-"PO-Revision-Date: 2020-11-30T06:51:47.236Z\n"
+"POT-Creation-Date: 2020-11-30T08:26:17.671Z\n"
+"PO-Revision-Date: 2020-11-30T08:26:17.671Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -18,6 +18,9 @@ msgid "Save"
 msgstr ""
 
 msgid "Home"
+msgstr ""
+
+msgid "Settings"
 msgstr ""
 
 msgid "Move window"
@@ -51,9 +54,6 @@ msgid "Yes"
 msgstr ""
 
 msgid "No"
-msgstr ""
-
-msgid "Sync translations"
 msgstr ""
 
 msgid "Delete module"
@@ -101,9 +101,6 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
-msgid "Settings"
-msgstr ""
-
 msgid "Continue Tutorial"
 msgstr ""
 
@@ -136,16 +133,34 @@ msgstr ""
 msgid "Select one of these tutorials to continue learning:"
 msgstr ""
 
-msgid "Permissions"
+msgid "Back"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Connection with POEditor"
 msgstr ""
 
 msgid "POEditor token"
 msgstr ""
 
+msgid "Training app"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
 msgid "Access to Settings"
 msgstr ""
 
-msgid "Description TODO"
+msgid "Give settings access permissions to non-administrative users"
+msgstr ""
+
+msgid "Connect the application with POEditor to sync translations"
+msgstr ""
+
+msgid "Training modules"
 msgstr ""
 
 msgid "What did you learn in this tutorial?"

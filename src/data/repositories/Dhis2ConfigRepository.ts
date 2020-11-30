@@ -29,7 +29,7 @@ export class Dhis2ConfigRepository implements ConfigRepository {
                     displayName: true,
                     userCredentials: {
                         username: true,
-                        userRoles: { id: true, name: true },
+                        userRoles: { id: true, name: true, authorities: true },
                     },
                     settings: { keyUiLocale: true },
                 },

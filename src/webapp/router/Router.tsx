@@ -65,9 +65,7 @@ export const Router: React.FC = () => {
 
     return (
         <React.Fragment>
-            {hasProperty("iframe") && module ? (
-                <IFrame src={`${baseUrl}${module.dhisLaunchUrl}`} />
-            ) : null}
+            {hasProperty("iframe") && <IFrame src={`${baseUrl}${module?.dhisLaunchUrl ?? ""}`} />}
             {hasProperty("backdrop") && !appState.minimized ? <Backdrop /> : null}
             {mainComponent}
         </React.Fragment>
