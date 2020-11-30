@@ -30,15 +30,6 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         });
     }, [setAppState, module]);
 
-    const goToFinalPage = useCallback(() => {
-        if (!module) return;
-        setAppState({
-            type: "TRAINING_DIALOG",
-            dialog: "final",
-            module: module.id,
-        });
-    }, [setAppState, module]);
-
     const endTutorial = useCallback(() => {
         if (!module) return;
         setAppState({ type: "HOME" });
@@ -68,8 +59,11 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         ? i18n.t("What did you learn in this tutorial?")
         : i18n.t("What will this tutorial cover?");
 
-    const prev = completed ? goToFinalPage : goToWelcomePage;
+    const prev = completed ? startTutorial : goToWelcomePage;
     const next = completed ? endTutorial : startTutorial;
+
+    const prevText = completed ? i18n.t("Back to tutorial") : i18n.t("Previous");
+    const nextText = completed ? i18n.t("Take another tutorial") : i18n.t("Start");
 
     return (
         <StyledModal
@@ -102,8 +96,8 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
                     })}
                 </ModalContent>
                 <ModalFooter>
-                    <MainButton onClick={prev}>{i18n.t("Previous")}</MainButton>
-                    <MainButton onClick={next}>{i18n.t("Next")}</MainButton>
+                    <MainButton onClick={prev}>{prevText}</MainButton>
+                    <MainButton onClick={next}>{nextText}</MainButton>
                 </ModalFooter>
             </ContentWrapper>
         </StyledModal>

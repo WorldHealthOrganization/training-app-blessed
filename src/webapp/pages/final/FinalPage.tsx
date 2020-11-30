@@ -73,8 +73,10 @@ export const FinalPage = () => {
                     </ModalParagraph>
                     <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
                     <ModalFooter>
-                        <MainButton onClick={goToLastTutorialStep}>{i18n.t("Previous")}</MainButton>
-                        <MainButton onClick={openSummary}>{i18n.t("Next")}</MainButton>
+                        <MainButton onClick={goToLastTutorialStep}>
+                            {i18n.t("Back to tutorial")}
+                        </MainButton>
+                        <MainButton onClick={openSummary}>{i18n.t("Finish")}</MainButton>
                     </ModalFooter>
                 </Container>
             </ModalContent>

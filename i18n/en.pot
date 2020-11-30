@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2020-11-30T21:14:07.461Z\n"
-"PO-Revision-Date: 2020-11-30T21:14:07.461Z\n"
+"POT-Creation-Date: 2020-11-30T21:34:45.742Z\n"
+"PO-Revision-Date: 2020-11-30T21:34:45.742Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -127,6 +127,12 @@ msgstr ""
 msgid "You’ve completed the {{name}} tutorial!"
 msgstr ""
 
+msgid "Back to tutorial"
+msgstr ""
+
+msgid "Finish"
+msgstr ""
+
 msgid "Reset progress"
 msgstr ""
 
@@ -179,6 +185,12 @@ msgid "What did you learn in this tutorial?"
 msgstr ""
 
 msgid "What will this tutorial cover?"
+msgstr ""
+
+msgid "Take another tutorial"
+msgstr ""
+
+msgid "Start"
 msgstr ""
 
 msgid "Start Tutorial"
