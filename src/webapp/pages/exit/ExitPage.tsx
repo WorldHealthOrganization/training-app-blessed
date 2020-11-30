@@ -16,7 +16,7 @@ export const ExitPage = () => {
     }, [setAppState]);
 
     const exitTutorial = useCallback(() => {
-        window.location.href = module ? `${baseUrl}${module.dhisLaunchUrl}` : baseUrl;
+        window.location.href = `${baseUrl}${module?.dhisLaunchUrl ?? ""}`;
     }, [baseUrl, module]);
 
     const goHome = useCallback(() => {
