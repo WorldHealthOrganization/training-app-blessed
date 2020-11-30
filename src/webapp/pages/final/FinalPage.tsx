@@ -41,8 +41,12 @@ export const FinalPage = () => {
         setAppState({ type: "HOME" });
     }, [setAppState]);
 
+    const minimize = useCallback(() => {
+        setAppState(appState => ({ ...appState, minimized: true }));
+    }, [setAppState]);
+
     const exit = useCallback(() => {
-        setAppState({ type: "EXIT" });
+        setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
     useEffect(() => {
@@ -58,7 +62,7 @@ export const FinalPage = () => {
     }));
 
     return (
-        <StyledModal onClose={exit} onGoHome={goHome} centerChildren={true}>
+        <StyledModal onClose={exit} onMinimize={minimize} onGoHome={goHome} centerChildren={true}>
             <ModalContent bigger={true}>
                 <Container>
                     <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>

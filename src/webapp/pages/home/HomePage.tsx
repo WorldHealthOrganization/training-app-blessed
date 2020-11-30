@@ -29,8 +29,12 @@ export const HomePage = () => {
         [setAppState]
     );
 
+    const minimize = useCallback(() => {
+        setAppState(appState => ({ ...appState, minimized: true }));
+    }, [setAppState]);
+
     const exitTutorial = useCallback(() => {
-        setAppState({ type: "EXIT" });
+        setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
     useEffect(() => {
@@ -38,7 +42,7 @@ export const HomePage = () => {
     }, [reload]);
 
     return (
-        <StyledModal centerChildren={true}>
+        <StyledModal onMinimize={minimize} centerChildren={true}>
             <ContentWrapper>
                 <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
                 <ModalParagraph>
