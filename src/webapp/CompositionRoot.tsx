@@ -15,6 +15,8 @@ import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUs
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { cache } from "../utils/cache";
+import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
+import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 
 export class CompositionRoot {
     private readonly configRepository: ConfigRepository;
@@ -44,6 +46,10 @@ export class CompositionRoot {
                 complete: new CompleteUserProgressUseCase(this.trainingModuleRepository),
             }),
             config: getExecute({
+                getSettingsPermissions: new GetSettingsPermissionsUseCase(this.configRepository),
+                updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(
+                    this.configRepository
+                ),
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
             }),

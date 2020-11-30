@@ -1,3 +1,4 @@
+import { Permission } from "../../domain/entities/Permission";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { D2Api } from "../../types/d2-api";
 import { cache } from "../../utils/cache";
@@ -71,6 +72,25 @@ export class Dhis2ConfigRepository implements ConfigRepository {
     public async getPoEditorToken(): Promise<string | undefined> {
         const { poeditorToken } = await this.getConfig();
         return poeditorToken;
+    }
+
+    public async getSettingsPermissions(): Promise<Permission> {
+        const config = await this.getConfig();
+        const { users = [], userGroups = [] } = config.settingsPermissions ?? {};
+        return { users, userGroups };
+    }
+
+    public async updateSettingsPermissions(update: Partial<Permission>): Promise<void> {
+        const config = await this.getConfig();
+        const { users = [], userGroups = [] } = config.settingsPermissions ?? {};
+
+        await this.storageClient.saveObject<PersistedConfig>(Namespaces.CONFIG, {
+            ...config,
+            settingsPermissions: {
+                users: update.users ?? users,
+                userGroups: update.userGroups ?? userGroups,
+            },
+        });
     }
 
     private async getConfig(): Promise<PersistedConfig> {
