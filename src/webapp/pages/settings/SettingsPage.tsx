@@ -8,7 +8,7 @@ import {
     ListItemText,
     TextField,
 } from "@material-ui/core";
-import { useSnackbar } from "d2-ui-components";
+import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
@@ -24,6 +24,7 @@ export const SettingsPage: React.FC = () => {
     const [poEditorToken, setPoEditorToken] = useState<string>();
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
     const [existsPoEditorToken, setExistsPoEditorToken] = useState<boolean>(false);
+    const [isPOEditorDialogOpen, setPOEditorDialogOpen] = useState(false);
 
     const defaultToken = existsPoEditorToken ? "HIDDEN_TOKEN" : "";
 
@@ -58,6 +59,27 @@ export const SettingsPage: React.FC = () => {
                 />
             )}
 
+            <ConfirmationDialog
+                isOpen={isPOEditorDialogOpen}
+                title={i18n.t("Connection with POEditor")}
+                onCancel={() => setPOEditorDialogOpen(false)}
+                cancelText={i18n.t("Close")}
+                maxWidth={"md"}
+                fullWidth={true}
+            >
+                <form>
+                    <TextField
+                        name="token"
+                        type="password"
+                        autoComplete="new-password"
+                        fullWidth={true}
+                        label={i18n.t("POEditor token")}
+                        value={poEditorToken ?? defaultToken}
+                        onChange={updateToken}
+                    />
+                </form>
+            </ConfirmationDialog>
+
             <HeaderBar appName={i18n.t("Training app")} />
             <Header title={i18n.t("Settings")} onBackClick={openTraining} />
 
@@ -71,22 +93,23 @@ export const SettingsPage: React.FC = () => {
                         </ListItemIcon>
                         <ListItemText
                             primary={i18n.t("Access to Settings")}
-                            secondary={i18n.t("Description TODO")}
+                            secondary={i18n.t(
+                                "Give settings access permissions to non-administrative users"
+                            )}
+                        />
+                    </ListItem>
+                    <ListItem button onClick={() => setPOEditorDialogOpen(true)}>
+                        <ListItemIcon>
+                            <Icon>translate</Icon>
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={i18n.t("Connection with POEditor")}
+                            secondary={i18n.t(
+                                "Connect the application with POEditor to sync translations"
+                            )}
                         />
                     </ListItem>
                 </Group>
-
-                <form>
-                    <TextField
-                        name="token"
-                        type="password"
-                        autoComplete="new-password"
-                        fullWidth={true}
-                        label={i18n.t("POEditor token")}
-                        value={poEditorToken ?? defaultToken}
-                        onChange={updateToken}
-                    />
-                </form>
 
                 <Title>{i18n.t("Training modules")}</Title>
 
