@@ -2,7 +2,7 @@ import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepositor
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { ConfigRepository } from "../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
-import { CheckSuperUserUseCase } from "../domain/usecases/CheckSuperUserUseCase";
+import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSettingsPermissionsUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
@@ -15,6 +15,8 @@ import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUs
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { cache } from "../utils/cache";
+import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
+import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 
 export class CompositionRoot {
     private readonly configRepository: ConfigRepository;
@@ -44,11 +46,15 @@ export class CompositionRoot {
                 complete: new CompleteUserProgressUseCase(this.trainingModuleRepository),
             }),
             config: getExecute({
+                getSettingsPermissions: new GetSettingsPermissionsUseCase(this.configRepository),
+                updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(
+                    this.configRepository
+                ),
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
             }),
             user: getExecute({
-                checkSuperUser: new CheckSuperUserUseCase(this.configRepository),
+                checkSuperUser: new CheckSettingsPermissionsUseCase(this.configRepository),
             }),
         };
     }

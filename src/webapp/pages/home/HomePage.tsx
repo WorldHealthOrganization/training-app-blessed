@@ -17,7 +17,7 @@ import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const { usecases, setAppState, modules, reload, isSuperUser } = useAppContext();
+    const { usecases, setAppState, modules, reload, hasSettingsAccess } = useAppContext();
     const [loading, setLoading] = useState(true);
     const [contextMenuTarget, setContextMenuTarget] = useState<{
         id: string;
@@ -86,7 +86,7 @@ export const HomePage = () => {
             )}
 
             <StyledModal
-                onSettings={isSuperUser ? openSettings : undefined}
+                onSettings={hasSettingsAccess ? openSettings : undefined}
                 onMinimize={minimize}
                 centerChildren={true}
             >

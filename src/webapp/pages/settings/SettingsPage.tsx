@@ -8,23 +8,26 @@ import {
     ListItemText,
     TextField,
 } from "@material-ui/core";
-import { ConfirmationDialog, useSnackbar } from "d2-ui-components";
+import { ConfirmationDialog } from "d2-ui-components";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import { Permission } from "../../../domain/entities/Permission";
 import i18n from "../../../locales";
 import { ModuleListTable } from "../../components/module-list-table/ModuleListTable";
-import PermissionsDialog from "../../components/permissions-dialog/PermissionsDialog";
+import PermissionsDialog, {
+    SharedUpdate,
+} from "../../components/permissions-dialog/PermissionsDialog";
 import { useAppContext } from "../../contexts/app-context";
 import { PageHeader } from "./PageHeader";
 
 export const SettingsPage: React.FC = () => {
     const { usecases, setAppState } = useAppContext();
-    const snackbar = useSnackbar();
 
     const [poEditorToken, setPoEditorToken] = useState<string>();
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
     const [existsPoEditorToken, setExistsPoEditorToken] = useState<boolean>(false);
     const [isPOEditorDialogOpen, setPOEditorDialogOpen] = useState(false);
+    const [settingsPermissions, setSettingsPermissions] = useState<Permission>();
 
     const defaultToken = existsPoEditorToken ? "HIDDEN_TOKEN" : "";
 
@@ -40,8 +43,25 @@ export const SettingsPage: React.FC = () => {
         setAppState({ type: "HOME" });
     }, [setAppState]);
 
+    const updateSettingsPermissions = useCallback(
+        async ({ userAccesses, userGroupAccesses }: SharedUpdate) => {
+            await usecases.config.updateSettingsPermissions({
+                users: userAccesses?.map(({ id, name }) => ({ id, name })),
+                userGroups: userGroupAccesses?.map(({ id, name }) => ({ id, name })),
+            });
+
+            const newSettings = await usecases.config.getSettingsPermissions();
+            setSettingsPermissions(newSettings);
+        },
+        [usecases]
+    );
+
     useEffect(() => {
         usecases.config.existsPoEditorToken().then(setExistsPoEditorToken);
+    }, [usecases]);
+
+    useEffect(() => {
+        usecases.config.getSettingsPermissions().then(setSettingsPermissions);
     }, [usecases]);
 
     return (
@@ -51,10 +71,18 @@ export const SettingsPage: React.FC = () => {
                     object={{
                         name: "Access to settings",
                         publicAccess: "--------",
-                        userAccesses: [],
-                        userGroupAccesses: [],
+                        userAccesses:
+                            settingsPermissions?.users?.map(ref => ({
+                                ...ref,
+                                access: "rw----",
+                            })) ?? [],
+                        userGroupAccesses:
+                            settingsPermissions?.userGroups?.map(ref => ({
+                                ...ref,
+                                access: "rw----",
+                            })) ?? [],
                     }}
-                    onChange={async () => snackbar.info("Changed")}
+                    onChange={updateSettingsPermissions}
                     onClose={() => setPermissionsType(null)}
                 />
             )}

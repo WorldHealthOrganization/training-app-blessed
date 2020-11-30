@@ -5,6 +5,7 @@ export interface User {
     name: string;
     username: string;
     userRoles: UserRole[];
+    userGroups: NamedRef[];
 }
 
 export interface UserRole extends NamedRef {

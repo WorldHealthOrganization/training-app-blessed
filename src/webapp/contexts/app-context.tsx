@@ -16,7 +16,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
 }) => {
     const [appState, setAppState] = useState<AppState>({ type: "UNKNOWN" });
     const [modules, setModules] = useState<TrainingModule[]>([]);
-    const [isSuperUser, setIsSuperUser] = useState(false);
+    const [hasSettingsAccess, setHasSettingsAccess] = useState(false);
     const translate = buildTranslate(locale);
 
     const reload = useCallback(async () => {
@@ -30,7 +30,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     }, [reload]);
 
     useEffect(() => {
-        compositionRoot.usecases.user.checkSuperUser().then(setIsSuperUser);
+        compositionRoot.usecases.user.checkSuperUser().then(setHasSettingsAccess);
     }, [compositionRoot]);
 
     useEffect(() => {
@@ -47,7 +47,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
                 modules,
                 translate,
                 reload,
-                isSuperUser,
+                hasSettingsAccess,
             }}
         >
             {children}
@@ -67,7 +67,7 @@ export function useAppContext(): UseAppContextResult {
         modules,
         translate,
         reload,
-        isSuperUser,
+        hasSettingsAccess,
     } = context;
     const { usecases } = compositionRoot;
     const [module, setCurrentModule] = useState<TrainingModule>();
@@ -86,7 +86,7 @@ export function useAppContext(): UseAppContextResult {
         module,
         translate,
         reload,
-        isSuperUser,
+        hasSettingsAccess,
     };
 }
 
@@ -107,7 +107,7 @@ export interface AppContextState {
     compositionRoot: CompositionRoot;
     translate: TranslateMethod;
     reload: ReloadMethod;
-    isSuperUser: boolean;
+    hasSettingsAccess: boolean;
 }
 
 interface UseAppContextResult {
@@ -119,5 +119,5 @@ interface UseAppContextResult {
     module?: TrainingModule;
     translate: TranslateMethod;
     reload: ReloadMethod;
-    isSuperUser: boolean;
+    hasSettingsAccess: boolean;
 }
