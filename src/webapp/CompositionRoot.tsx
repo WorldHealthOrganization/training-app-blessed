@@ -10,6 +10,7 @@ import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
+import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
@@ -36,6 +37,7 @@ export class CompositionRoot {
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(this.trainingModuleRepository),
+                publishTerms: new InitializeTranslationsUseCase(this.trainingModuleRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
