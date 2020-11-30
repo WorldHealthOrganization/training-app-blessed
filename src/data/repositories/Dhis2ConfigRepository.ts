@@ -28,6 +28,7 @@ export class Dhis2ConfigRepository implements ConfigRepository {
                 fields: {
                     id: true,
                     displayName: true,
+                    userGroups: { id: true, name: true },
                     userCredentials: {
                         username: true,
                         userRoles: { id: true, name: true, authorities: true },
@@ -40,6 +41,7 @@ export class Dhis2ConfigRepository implements ConfigRepository {
         return {
             id: d2User.id,
             name: d2User.displayName,
+            userGroups: d2User.userGroups,
             ...d2User.userCredentials,
         };
     }
