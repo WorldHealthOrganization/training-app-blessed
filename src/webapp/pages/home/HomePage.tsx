@@ -29,6 +29,10 @@ export const HomePage = () => {
         [setAppState]
     );
 
+    const openSettings = useCallback(() => {
+        setAppState({ type: "SETTINGS" });
+    }, [setAppState]);
+
     const minimize = useCallback(() => {
         setAppState(appState => ({ ...appState, minimized: true }));
     }, [setAppState]);
@@ -42,7 +46,7 @@ export const HomePage = () => {
     }, [reload]);
 
     return (
-        <StyledModal onMinimize={minimize} centerChildren={true}>
+        <StyledModal onSettings={openSettings} onMinimize={minimize} centerChildren={true}>
             <ContentWrapper>
                 <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
                 <ModalParagraph>

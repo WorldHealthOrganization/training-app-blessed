@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-11-30T06:51:47.236Z\n"
+"POT-Creation-Date: 2020-11-30T07:38:12.003Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,6 +19,9 @@ msgstr "Guardar"
 
 msgid "Home"
 msgstr "Inicio"
+
+msgid "Settings"
+msgstr "Ajustes"
 
 msgid "Move window"
 msgstr "Mover ventana"
@@ -100,9 +103,6 @@ msgstr "Fin"
 
 msgid "Exit"
 msgstr ""
-
-msgid "Settings"
-msgstr "Ajustes"
 
 msgid "Continue Tutorial"
 msgstr "Continuar el tutorial"
