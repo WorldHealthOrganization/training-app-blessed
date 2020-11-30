@@ -9,7 +9,7 @@ import { useAppContext } from "../../contexts/app-context";
 
 export const ExitPage = () => {
     const { baseUrl } = useConfig();
-    const { setAppState } = useAppContext();
+    const { setAppState, module } = useAppContext();
 
     const continueTutorial = useCallback(() => {
         setAppState(appState => ({ ...appState, exit: false }));
@@ -17,8 +17,8 @@ export const ExitPage = () => {
 
     const exitTutorial = useCallback(() => {
         // TODO: Retain iframe url
-        window.location.href = baseUrl;
-    }, [baseUrl]);
+        window.location.href = module ? `${baseUrl}${module.dhisLaunchUrl}` : baseUrl;
+    }, [baseUrl, module]);
 
     const goHome = useCallback(() => {
         setAppState({ type: "HOME" });
