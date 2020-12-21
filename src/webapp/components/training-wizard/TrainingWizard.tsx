@@ -71,18 +71,22 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
     const onStepChange = useCallback(
         async (stepKey: string) => {
             if (!module || lastStep.current === stepKey) return;
-            lastStep.current = stepKey;
 
-            const result = extractStepFromKey(stepKey);
-            if (!result) return;
+            const currentStep = extractStepFromKey(stepKey);
+            if (!currentStep) return;
 
-            if (!module.progress.completed) {
-                await usecases.progress.update(module.id, result.step - 1);
+            const prevStep = extractStepFromKey(lastStep?.current ?? "");
+            const isOneStepChange = !!prevStep && Math.abs(currentStep.step - prevStep.step) === 1;
+            const shouldUpdateProgress = isOneStepChange && !module.progress.completed;
+
+            if (shouldUpdateProgress) {
+                await usecases.progress.update(module.id, currentStep.step - 1);
             }
 
+            lastStep.current = stepKey;
             setAppState(appState => {
                 if (appState.type !== "TRAINING") return appState;
-                return { ...appState, ...result };
+                return { ...appState, ...currentStep };
             });
         },
         [setAppState, module, usecases]
