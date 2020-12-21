@@ -17,7 +17,15 @@ import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const { usecases, setAppState, modules, reload, hasSettingsAccess } = useAppContext();
+    const {
+        usecases,
+        setAppState,
+        modules,
+        reload,
+        hasSettingsAccess,
+        translate,
+    } = useAppContext();
+
     const [loading, setLoading] = useState(true);
     const [contextMenuTarget, setContextMenuTarget] = useState<{
         id: string;
@@ -131,7 +139,7 @@ export const HomePage = () => {
                                     return (
                                         <Card
                                             key={`card-${idx}`}
-                                            label={name}
+                                            label={translate(name)}
                                             progress={completed ? 100 : percentage}
                                             onClick={handleClick}
                                             onContextMenu={isDebug ? handleContextMenu : noop}

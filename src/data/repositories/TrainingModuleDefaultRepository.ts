@@ -124,7 +124,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const newModel = await this.buildPersistedModel({
             id,
-            name,
+            name: { key: "module-name", referenceValue: name, translations: {} },
             type: "app",
             _version: 1,
             revision: 1,
@@ -228,6 +228,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
             const translatedModel: PersistedTrainingModule = {
                 ...model,
+                name: {
+                    ...model.name,
+                    translations: dictionary[model.name.key],
+                },
                 contents: {
                     ...model.contents,
                     welcome: {
@@ -262,10 +266,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async initializeTranslation(key: string): Promise<void> {
         const token = await this.config.getPoEditorToken();
-        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES,
-            key
-        );
+        const builtInModule = this.builtinModules[key];
+        if (!builtInModule) return;
+        const model = await this.buildPersistedModel(builtInModule);
 
         if (!model || model.translation.provider === "NONE" || !token) return;
         const api = new PoEditorApi(token);
@@ -288,6 +291,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             id: project,
             language: "en",
             data: JSON.stringify(referenceTranslations),
+            fuzzy_trigger: 1,
         });
 
         // Update reference language
@@ -301,7 +305,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             ...step.pages,
         ]);
 
-        return _.compact([model.contents.welcome, ...steps]);
+        return _.compact([model.name, model.contents.welcome, ...steps]);
     }
 
     private async createBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {

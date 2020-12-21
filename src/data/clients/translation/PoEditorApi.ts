@@ -15,7 +15,7 @@ export class PoEditorApi {
         const HttpClientImpl = backend === "fetch" ? FetchHttpClient : AxiosHttpClient;
 
         this.client = new HttpClientImpl({
-            baseUrl: `https://cors-anywhere.herokuapp.com/https://api.poeditor.com/v${apiVersion}/`,
+            baseUrl: `https://cors.taris.sferadev.com/https://api.poeditor.com/v${apiVersion}/`,
             credentials: "ignore",
         });
     }
