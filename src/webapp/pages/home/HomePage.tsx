@@ -17,7 +17,15 @@ import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const { usecases, setAppState, modules, reload, hasSettingsAccess } = useAppContext();
+    const {
+        usecases,
+        setAppState,
+        modules,
+        reload,
+        hasSettingsAccess,
+        translate,
+    } = useAppContext();
+
     const [loading, setLoading] = useState(true);
     const [contextMenuTarget, setContextMenuTarget] = useState<{
         id: string;
@@ -123,13 +131,18 @@ export const HomePage = () => {
                                         });
                                     };
 
+                                    const noop = (event: MouseEvent<unknown>) => {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    };
+
                                     return (
                                         <Card
                                             key={`card-${idx}`}
-                                            label={name}
+                                            label={translate(name)}
                                             progress={completed ? 100 : percentage}
                                             onClick={handleClick}
-                                            onContextMenu={handleContextMenu}
+                                            onContextMenu={isDebug ? handleContextMenu : noop}
                                             disabled={disabled}
                                         />
                                     );
@@ -173,3 +186,5 @@ const SpinnerWrapper = styled.div`
     place-content: center;
     align-items: center;
 `;
+
+const isDebug = process.env.NODE_ENV === "development";
