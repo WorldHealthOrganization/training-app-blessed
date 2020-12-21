@@ -40,17 +40,28 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             >(Namespaces.TRAINING_MODULES);
 
             const missingModuleKeys = _(this.builtinModules)
-                .keys()
-                .difference(dataStoreModules.map(({ id }) => id))
+                .values()
+                .compact()
+                .differenceBy(dataStoreModules, ({ id, revision }: JSONTrainingModule) =>
+                    [id, revision].join("-")
+                )
+                .map(({ id }) => id)
                 .value();
 
-            const missingModules = await promiseMap(missingModuleKeys, key => this.getBuiltin(key));
+            const missingModules = await promiseMap(missingModuleKeys, key =>
+                this.createBuiltin(key)
+            );
 
             const progress = await this.progressStorageClient.getObject<UserProgress[]>(
                 Namespaces.PROGRESS
             );
 
-            return promiseMap(_.compact([...dataStoreModules, ...missingModules]), async module => {
+            const modules = _([...dataStoreModules, ...missingModules])
+                .compact()
+                .uniqBy("id")
+                .value();
+
+            return promiseMap(modules, async module => {
                 const model = await this.buildDomainModel(module);
 
                 return {
@@ -72,7 +83,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             PersistedTrainingModule
         >(Namespaces.TRAINING_MODULES, key);
 
-        const model = dataStoreModel ?? (await this.getBuiltin(key));
+        const model = dataStoreModel ?? (await this.createBuiltin(key));
         if (!model) return undefined;
 
         const progress = await this.progressStorageClient.getObject<UserProgress[]>(
@@ -283,7 +294,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return _.compact([model.contents.welcome, ...steps]);
     }
 
-    private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
+    private async createBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
         const builtinModule = this.builtinModules[key];
         if (!builtinModule) return undefined;
 
