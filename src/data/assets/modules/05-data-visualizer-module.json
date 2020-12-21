@@ -3,16 +3,17 @@
     "id": "data-visualizer",
     "disabled": false,
     "dhisAppKey": "data-visualizer",
-    "name": "Data visualizer",
+    "name": "Data Visualizer",
     "type": "core",
     "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-data-visualizer/index.html",
+    "dhisAuthorities": ["M_dhis-web-data-visualizer"],
     "translation": { "provider": "poeditor", "project": "394101" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Data visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99974598-758b9a80-2da1-11eb-9410-62708a1697a3.png)\n\nThis application is used to visualize the data that you have entered at regular intervals using the Data Entry application. A variety of different chart types are available for you to choose from.",
+            "referenceValue": "# Welcome to the tutorial on Data Visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99974598-758b9a80-2da1-11eb-9410-62708a1697a3.png)\n\nThis application is used to visualize the data that you have entered at regular intervals using the Data Entry application. A variety of different chart types are available for you to choose from.",
             "translations": {}
         },
         "steps": [

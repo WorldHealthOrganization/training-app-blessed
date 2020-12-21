@@ -8,6 +8,7 @@
     "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-capture/index.html",
+    "dhisAuthorities": ["M_dhis-web-capture"],
     "translation": { "provider": "poeditor", "project": "390495" },
     "contents": {
         "welcome": {

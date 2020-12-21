@@ -56,9 +56,18 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 Namespaces.PROGRESS
             );
 
+            const currentUser = await this.config.getUser();
+
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
                 .uniqBy("id")
+                .filter(({ dhisAuthorities }) =>
+                    _.every(dhisAuthorities, authority =>
+                        currentUser.userRoles
+                            .flatMap(({ authorities }) => authorities)
+                            .includes(authority)
+                    )
+                )
                 .value();
 
             return promiseMap(modules, async module => {
@@ -122,6 +131,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             dhisVersionRange: "",
             dhisAppKey: "",
             dhisLaunchUrl: "",
+            dhisAuthorities: [],
             disabled: false,
             contents: {
                 welcome: { key: "module-welcome", referenceValue: "", translations: {} },
