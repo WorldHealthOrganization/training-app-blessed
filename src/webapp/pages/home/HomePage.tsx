@@ -123,13 +123,18 @@ export const HomePage = () => {
                                         });
                                     };
 
+                                    const noop = (event: MouseEvent<unknown>) => {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    };
+
                                     return (
                                         <Card
                                             key={`card-${idx}`}
                                             label={name}
                                             progress={completed ? 100 : percentage}
                                             onClick={handleClick}
-                                            onContextMenu={handleContextMenu}
+                                            onContextMenu={isDebug ? handleContextMenu : noop}
                                             disabled={disabled}
                                         />
                                     );
@@ -173,3 +178,5 @@ const SpinnerWrapper = styled.div`
     place-content: center;
     align-items: center;
 `;
+
+const isDebug = process.env.NODE_ENV === "development";
