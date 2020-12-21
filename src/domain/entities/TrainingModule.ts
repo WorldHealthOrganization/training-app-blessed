@@ -4,7 +4,8 @@ import { UserProgress } from "./UserProgress";
 
 export type TrainingModuleType = "app" | "core" | "widget";
 
-export interface TrainingModule extends SharedRef {
+export interface TrainingModule extends Omit<SharedRef, "name"> {
+    name: TranslatableText;
     translation: TranslationConnection;
     type: TrainingModuleType;
     disabled: boolean;

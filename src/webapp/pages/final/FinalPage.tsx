@@ -67,8 +67,8 @@ export const FinalPage = () => {
                 <Container>
                     <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>
                     <ModalParagraph>
-                        {i18n.t("You’ve completed the {{name}} tutorial!", {
-                            name: module.name.toLowerCase(),
+                        {i18n.t("You've completed the {{name}} tutorial!", {
+                            name: translate(module.name),
                         })}
                     </ModalParagraph>
                     <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />

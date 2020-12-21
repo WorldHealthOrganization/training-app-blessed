@@ -1,9 +1,10 @@
 import { TrainingModuleContents } from "../../domain/entities/TrainingModule";
+import { TranslatableText } from "../../domain/entities/TranslatableText";
 
 export interface JSONTrainingModule {
     _version: number;
     id: string;
-    name: string;
+    name: TranslatableText;
     type: string;
     disabled: boolean;
     contents: TrainingModuleContents;
@@ -12,4 +13,5 @@ export interface JSONTrainingModule {
     dhisVersionRange: string;
     dhisAppKey: string;
     dhisLaunchUrl: string;
+    dhisAuthorities: string[];
 }

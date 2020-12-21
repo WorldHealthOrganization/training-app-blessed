@@ -3,16 +3,17 @@
     "id": "data-visualizer",
     "disabled": false,
     "dhisAppKey": "data-visualizer",
-    "name": "Data visualizer",
+    "name": { "key": "module-name", "referenceValue": "Data Visualizer", "translations": {} },
     "type": "core",
-    "revision": 1,
+    "revision": 3,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-data-visualizer/index.html",
+    "dhisAuthorities": ["M_dhis-web-data-visualizer"],
     "translation": { "provider": "poeditor", "project": "394101" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Data visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99974598-758b9a80-2da1-11eb-9410-62708a1697a3.png)\n\nThis application is used to visualize the data that you have entered at regular intervals using the Data Entry application. A variety of different chart types are available for you to choose from.",
+            "referenceValue": "# Welcome to the tutorial on Data Visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99974598-758b9a80-2da1-11eb-9410-62708a1697a3.png)\n\nThis application is used to visualize the data that you have entered at regular intervals using the Data Entry application. A variety of different chart types are available for you to choose from.",
             "translations": {}
         },
         "steps": [
@@ -26,7 +27,7 @@
                     {
                         "key": "step-1-1",
                         "translations": {},
-                        "referenceValue": "![Select chart type](https://user-images.githubusercontent.com/2181866/99977211-a15c4f80-2da4-11eb-8242-83f5c5f2ec06.gif)\n\nClick on the chart drop-down menu ('Column' is selected by default) and select the chart that you would like to use to visualise your data.<i>Note: You can also create Pivot tables in this application by selecting 'Pivot tables' from the menu. Selecting 'Open as map' will open the Maps application.</i>"
+                        "referenceValue": "![Select chart type](https://user-images.githubusercontent.com/2181866/99977211-a15c4f80-2da4-11eb-8242-83f5c5f2ec06.gif)\n\nClick on the chart drop-down menu ('Column' is selected by default) and select the chart that you would like to use to visualise your data.\n\n<i>Note: You can also create Pivot tables in this application by selecting 'Pivot tables' from the menu. Selecting 'Open as map' will open the Maps application.</i>"
                     }
                 ]
             },
@@ -74,7 +75,7 @@
                     {
                         "key": "step-3-2",
                         "translations": {},
-                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99977221-a3261300-2da4-11eb-8f02-606a872deb78.gif)\n\nIn addition to relative time periods, you can select fixed time periods on the 'Fixed periods' tab. The menu will give you the option to select the period frequency (weekly, monthly, annually etc.) from the 'Period type' drop-down menu. Choose the year(s) that you are interested in from the 'Year' drop-down menu."
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99977221-a3261300-2da4-11eb-8f02-606a872deb78.gif)\n\nIn addition to relative time periods, you can select fixed time periods on the 'Fixed periods' tab. The menu will give you the option to select the period frequency (weekly, monthly, annually etc.) from the 'Period type' drop-down menu.\n\nChoose the year(s) that you are interested in from the 'Year' drop-down menu."
                     },
                     {
                         "key": "step-3-3",
@@ -84,7 +85,7 @@
                     {
                         "key": "step-3-4",
                         "translations": {},
-                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99977227-a3bea980-2da4-11eb-884d-960d297e2145.gif)\n\nClick on 'Update' to add the data that you have selected to your chart.\n\nNote: The chart will be updated to show the data and time period that you have selected but you should not forget to select the correct location for your data. See next steps."
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/99977227-a3bea980-2da4-11eb-884d-960d297e2145.gif)\n\nClick on 'Update' to add the data that you have selected to your chart.\n\n<i>Note: The chart will be updated to show the data and time period that you have selected but you should not forget to select the correct location for your data. See next steps.</i>"
                     }
                 ]
             },
@@ -155,7 +156,7 @@
                     {
                         "key": "step-7-1",
                         "translations": {},
-                        "referenceValue": "![Download your chart](https://user-images.githubusercontent.com/2181866/99977207-a0c3b900-2da4-11eb-9bb3-92eaa8775e39.gif)\n\nClick on 'Download'; from the drop-down menu, you can choose to download your chart in different formats according to your need e.g. for further analysis or to share in a report. To download your chart as you are seeing in on the screen, choose from one of the three options under 'Graphics' on the drop-down menu."
+                        "referenceValue": "![Download your chart](https://user-images.githubusercontent.com/2181866/99977207-a0c3b900-2da4-11eb-9bb3-92eaa8775e39.gif)\n\nClick on 'Download'; from the drop-down menu, you can choose to download your chart in different formats according to your need e.g. for further analysis or to share in a report.\n\nTo download your chart as you are seeing in on the screen, choose from one of the three options under 'Graphics' on the drop-down menu."
                     }
                 ]
             }

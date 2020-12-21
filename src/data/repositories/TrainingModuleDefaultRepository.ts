@@ -40,17 +40,41 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             >(Namespaces.TRAINING_MODULES);
 
             const missingModuleKeys = _(this.builtinModules)
-                .keys()
-                .difference(dataStoreModules.map(({ id }) => id))
+                .values()
+                .compact()
+                .differenceBy(dataStoreModules, ({ id, revision }: JSONTrainingModule) =>
+                    [id, revision].join("-")
+                )
+                .map(({ id }) => id)
                 .value();
 
-            const missingModules = await promiseMap(missingModuleKeys, key => this.getBuiltin(key));
+            const missingModules = await promiseMap(missingModuleKeys, key =>
+                this.createBuiltin(key)
+            );
 
             const progress = await this.progressStorageClient.getObject<UserProgress[]>(
                 Namespaces.PROGRESS
             );
 
-            return promiseMap(_.compact([...dataStoreModules, ...missingModules]), async module => {
+            const currentUser = await this.config.getUser();
+
+            const modules = _([...dataStoreModules, ...missingModules])
+                .compact()
+                .uniqBy("id")
+                .filter(({ dhisAuthorities }) => {
+                    const userAuthorities = currentUser.userRoles.flatMap(
+                        ({ authorities }) => authorities
+                    );
+
+                    return _.every(
+                        dhisAuthorities,
+                        authority =>
+                            userAuthorities.includes("ALL") || userAuthorities.includes(authority)
+                    );
+                })
+                .value();
+
+            return promiseMap(modules, async module => {
                 const model = await this.buildDomainModel(module);
 
                 return {
@@ -72,7 +96,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             PersistedTrainingModule
         >(Namespaces.TRAINING_MODULES, key);
 
-        const model = dataStoreModel ?? (await this.getBuiltin(key));
+        const model = dataStoreModel ?? (await this.createBuiltin(key));
         if (!model) return undefined;
 
         const progress = await this.progressStorageClient.getObject<UserProgress[]>(
@@ -104,13 +128,14 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const newModel = await this.buildPersistedModel({
             id,
-            name,
+            name: { key: "module-name", referenceValue: name, translations: {} },
             type: "app",
             _version: 1,
             revision: 1,
             dhisVersionRange: "",
             dhisAppKey: "",
             dhisLaunchUrl: "",
+            dhisAuthorities: [],
             disabled: false,
             contents: {
                 welcome: { key: "module-welcome", referenceValue: "", translations: {} },
@@ -207,6 +232,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
             const translatedModel: PersistedTrainingModule = {
                 ...model,
+                name: {
+                    ...model.name,
+                    translations: dictionary[model.name.key],
+                },
                 contents: {
                     ...model.contents,
                     welcome: {
@@ -241,10 +270,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async initializeTranslation(key: string): Promise<void> {
         const token = await this.config.getPoEditorToken();
-        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES,
-            key
-        );
+        const builtInModule = this.builtinModules[key];
+        if (!builtInModule) return;
+        const model = await this.buildPersistedModel(builtInModule);
 
         if (!model || model.translation.provider === "NONE" || !token) return;
         const api = new PoEditorApi(token);
@@ -267,6 +295,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             id: project,
             language: "en",
             data: JSON.stringify(referenceTranslations),
+            fuzzy_trigger: 1,
         });
 
         // Update reference language
@@ -280,10 +309,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             ...step.pages,
         ]);
 
-        return _.compact([model.contents.welcome, ...steps]);
+        return _.compact([model.name, model.contents.welcome, ...steps]);
     }
 
-    private async getBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
+    private async createBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
         const builtinModule = this.builtinModules[key];
         if (!builtinModule) return undefined;
 

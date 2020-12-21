@@ -3,16 +3,17 @@
     "id": "dashboards",
     "disabled": false,
     "dhisAppKey": "dashboards",
-    "name": "Dashboards",
+    "name": { "key": "module-name", "referenceValue": "Dashboards", "translations": {} },
     "type": "core",
-    "revision": 1,
+    "revision": 3,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-dashboard",
+    "dhisAuthorities": ["M_dhis-web-dashboard"],
     "translation": { "provider": "poeditor", "project": "390493" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Exploring and creating dashboards\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99418889-c1e75e00-28fb-11eb-90ea-607e0ba43c57.png)\n\nYour dashboard shows a combination of data charts, tables, maps that you have created on a particular topic. This tutorial takes you through the steps of creating new dashboards and navigating through their features to explore your data.",
+            "referenceValue": "# Welcome to the tutorial on Dashboards\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99418889-c1e75e00-28fb-11eb-90ea-607e0ba43c57.png)\n\nYour dashboard shows a combination of data charts, tables, maps that you have created on a particular topic. This tutorial takes you through the steps of creating new dashboards and navigating through their features to explore your data.",
             "translations": {}
         },
         "steps": [
@@ -64,7 +65,7 @@
                     {
                         "key": "step-3-2",
                         "translations": {},
-                        "referenceValue": "![Explore interactive chart features](https://user-images.githubusercontent.com/2181866/99355245-38f30700-28a8-11eb-94f3-2468e92dfb00.gif)\n\nOn maps, zoom in and out by double clicking or using the zoom buttons on the map menu. You can also pan across the map by clicking and dragging.\n\nOpen the legend on the map menu to see what data is being shown. Click on the data shown on maps to view more information about the individual data points."
+                        "referenceValue": "![Explore interactive chart features](https://user-images.githubusercontent.com/2181866/99355245-38f30700-28a8-11eb-94f3-2468e92dfb00.gif)\n\nOn maps, zoom in and out by double clicking or using the zoom buttons on the map menu. You can also pan across the map by clicking and dragging.\n\nOpen the legend on the map menu to see what data is being shown.\n\nClick on the data shown on maps to view more information about the individual data points."
                     },
                     {
                         "key": "step-3-3",
@@ -83,7 +84,7 @@
                     {
                         "key": "step-4-1",
                         "translations": {},
-                        "referenceValue": "![Change data visualisation type](https://user-images.githubusercontent.com/2181866/99355250-38f30700-28a8-11eb-8019-659cba9d8423.gif)\n\nClick on the button with three dots in the top right corner of any data visualisation. The options on this menu allow you to view your data as different visualisation types (see options to 'View as Table', 'View as Map' or 'View as Chart').\n\nYou can also click on the 'Open in Data Visualizer app' to edit your visualisations.\n\nClicking 'Show interpretations and details' from the menu allows you to leave comments and interpretations of the data in each visualisation, and review comments from other DHIS2 users."
+                        "referenceValue": "![Change data visualisation type](https://user-images.githubusercontent.com/2181866/99355250-38f30700-28a8-11eb-8019-659cba9d8423.gif)\n\nClick on the button with three dots in the top right corner of any data visualisation. The options on this menu allow you to view your data as different visualisation types (see options to 'View as Table', 'View as Map' or 'View as Chart').\n\nYou can also click on the 'Open in Data Visualizer app' to edit your visualisations.\n\nSelect 'Show interpretations and details' to add comments on the visualisations, and review comments from other users."
                     }
                 ]
             },
@@ -97,7 +98,7 @@
                     {
                         "key": "step-5-1",
                         "translations": {},
-                        "referenceValue": "![Filter data across charts](https://user-images.githubusercontent.com/2181866/99355253-398b9d80-28a8-11eb-8003-01f488075b9c.gif)\n\nWhen you click 'Add filter', you can choose to filter the data on the dashboard to only show a specific location (also called an Organisation Unit), time period or other category. The filters that you select apply across all the data visualisations in your dashboard."
+                        "referenceValue": "![Filter data across charts](https://user-images.githubusercontent.com/2181866/99355253-398b9d80-28a8-11eb-8003-01f488075b9c.gif)\n\nWhen you click 'Filter', you can choose to filter the data on the dashboard to only show a specific location (also called an Organisation Unit), time period or other category. The filters that you select apply across all the data visualisations in your dashboard."
                     }
                 ]
             },
