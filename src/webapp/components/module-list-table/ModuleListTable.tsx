@@ -170,7 +170,7 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>publish</Icon>,
                 onClick: publishTranslations,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module");
+                    return isDebug && _.every(rows, item => item.rowType === "module");
                 },
             },
             {
@@ -353,3 +353,5 @@ const PageWrapper = styled.div`
         background: white;
     }
 `;
+
+const isDebug = process.env.NODE_ENV === "development";

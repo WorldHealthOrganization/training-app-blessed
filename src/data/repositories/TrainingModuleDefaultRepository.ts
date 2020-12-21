@@ -262,10 +262,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async initializeTranslation(key: string): Promise<void> {
         const token = await this.config.getPoEditorToken();
-        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES,
-            key
-        );
+        const builtInModule = this.builtinModules[key];
+        if (!builtInModule) return;
+        const model = await this.buildPersistedModel(builtInModule);
 
         if (!model || model.translation.provider === "NONE" || !token) return;
         const api = new PoEditorApi(token);
@@ -288,6 +287,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             id: project,
             language: "en",
             data: JSON.stringify(referenceTranslations),
+            fuzzy_trigger: 1,
         });
 
         // Update reference language
