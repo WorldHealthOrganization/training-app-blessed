@@ -5,7 +5,7 @@
     "dhisAppKey": "bulk-load",
     "name": "Bulk Load",
     "type": "app",
-    "revision": 1,
+    "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/api/apps/Bulk-Load/index.html",
     "translation": { "provider": "poeditor", "project": "394107" },
@@ -26,7 +26,7 @@
                     {
                         "key": "step-1-1",
                         "translations": {},
-                        "referenceValue": "![Select template type](https://user-images.githubusercontent.com/2181866/100340660-cf77a480-2fdb-11eb-8320-9842f9894846.gif)\n\nOn the 'Download template' tab, you will see the Template menu.\n\nChoose the type of form that you would like to download from the 'Select template to export…' drop-down menu.\n\nThe 'Data Model' drop-down menu allows you to filter the options in the template menu by the type of data to be entered. If you know whether your form is of type 'Data Set' or 'Program', you can use it to find your template faster."
+                        "referenceValue": "![Select template type](https://user-images.githubusercontent.com/2181866/100340660-cf77a480-2fdb-11eb-8320-9842f9894846.gif)\n\nOn the 'Download template' tab, you will see the Template menu.\n\nChoose the type of form that you would like to download from the 'Select template to export...' drop-down menu.\n\nThe 'Data Model' drop-down menu allows you to filter the options in the template menu by the type of data to be entered. If you know whether your form is of type 'Data Set' or 'Program', you can use it to find your template faster."
                     }
                 ]
             },
@@ -40,7 +40,7 @@
                     {
                         "key": "step-2-1",
                         "translations": {},
-                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100340663-cf77a480-2fdb-11eb-9ec1-baf806e3ad65.gif)\n\nTo select the locations that you want to include in your template, check the box 'Select available organisation units to include in the template'.  They will appear as drop-down menus in your template.\n\nFind your location name in the tree menu and click on the name to select it. Click down to lower geographic levels on the menu by clicking on the arrow symbol next to the location names.\n\nYou can select multiple locations from across different geographic levels by ticking the boxes next to the locations’ names. Some locations will not be eligible (they won’t have a tick box).This means that the type of data in your template is not collected at these locations."
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100340663-cf77a480-2fdb-11eb-9ec1-baf806e3ad65.gif)\n\nTo select the locations that you want to include in your template, check the box 'Select available organisation units to include in the template'.  They will appear as drop-down menus in your template.\n\nFind your location name in the tree menu and click on the name to select it. Click down to lower geographic levels on the menu by clicking on the arrow symbol next to the location names.\n\nYou can select multiple locations from across different geographic levels by ticking the boxes next to the locations' names. Some locations will not be eligible (they won't have a tick box).This means that the type of data in your template is not collected at these locations."
                     },
                     {
                         "key": "step-2-2",

@@ -67,7 +67,7 @@ export const FinalPage = () => {
                 <Container>
                     <ModalTitle big={true}>{i18n.t("Well done!")}</ModalTitle>
                     <ModalParagraph>
-                        {i18n.t("You’ve completed the {{name}} tutorial!", {
+                        {i18n.t("You've completed the {{name}} tutorial!", {
                             name: module.name.toLowerCase(),
                         })}
                     </ModalParagraph>

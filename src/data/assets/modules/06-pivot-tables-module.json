@@ -3,16 +3,16 @@
     "id": "pivot-tables",
     "disabled": false,
     "dhisAppKey": "pivot-tables",
-    "name": "Pivot tables",
+    "name": "Pivot Tables",
     "type": "core",
-    "revision": 1,
+    "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-pivot/index.html",
     "translation": { "provider": "poeditor", "project": "394103" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Pivot tables\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100328140-79e7cb80-2fcc-11eb-81bc-9f39f8030fa6.png)\n\nUse this application to visualise your data in pivot tables. This tutorial takes you through all the steps to create pivot tables and use them to quickly summarize and arrange your data in a meaningful way.",
+            "referenceValue": "# Welcome to the tutorial on Pivot Tables\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100328140-79e7cb80-2fcc-11eb-81bc-9f39f8030fa6.png)\n\nUse this application to visualise your data in pivot tables. This tutorial takes you through all the steps to create pivot tables and use them to quickly summarize and arrange your data in a meaningful way.",
             "translations": {}
         },
         "steps": [

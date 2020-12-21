@@ -3,16 +3,16 @@
     "id": "event-visualizer",
     "disabled": false,
     "dhisAppKey": "event-visualizer",
-    "name": "Event visualizer",
+    "name": "Event Visualizer",
     "type": "core",
-    "revision": 1,
+    "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-event-visualizer/index.html",
     "translation": { "provider": "poeditor", "project": "394099" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Event visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99499212-d584da00-2978-11eb-9d6f-507cfc449bb6.png)\n\nUse this application to visualize data collected through Event Capture (i.e. forms that can be filled in multiple times for the same location and time period). A variety of different chart types are available for you to select from, depending on your needs.",
+            "referenceValue": "# Welcome to the tutorial on Event Visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99499212-d584da00-2978-11eb-9d6f-507cfc449bb6.png)\n\nUse this application to visualize data collected through Event Capture (i.e. forms that can be filled in multiple times for the same location and time period). A variety of different chart types are available for you to select from, depending on your needs.",
             "translations": {}
         },
         "steps": [

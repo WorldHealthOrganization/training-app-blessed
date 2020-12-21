@@ -3,16 +3,16 @@
     "id": "data-entry",
     "disabled": false,
     "dhisAppKey": "data-entry",
-    "name": "Data entry",
+    "name": "Data Entry",
     "type": "core",
-    "revision": 1,
+    "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-dataentry/index.action",
     "translation": { "provider": "poeditor", "project": "390491" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Data entry\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/93660832-454b1700-fa53-11ea-881c-5fe97edb02a3.png)\n\nThe data entry application is used to manually enter routine data that have been recorded for one location on a regular basis, such as weekly, monthly etc. Data is registered for a location, time period and a specific data set.",
+            "referenceValue": "# Welcome to the tutorial on Data Entry\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/93660832-454b1700-fa53-11ea-881c-5fe97edb02a3.png)\n\nThe Data Entry application is used to manually enter routine data that have been recorded for one location on a regular basis, such as weekly, monthly etc. Data is registered for a location, time period and a specific data set.",
             "translations": {}
         },
         "steps": [
@@ -64,7 +64,7 @@
                     {
                         "key": "step-3-1",
                         "translations": {},
-                        "referenceValue": "![Select a period to register data](https://user-images.githubusercontent.com/2181866/98086571-44453c00-1e7f-11eb-89cb-448bf8313a4c.gif)\n\nSelect a period for which to register data. The available periods are determined by the reporting frequency required for the selected form.\n\n<i>Note: (Select period) is not an option you can select from the drop-down menu</i>\n\n<i>Note: If data has already been submitted for the period that you have selected, the data will appear automatically in the form.</i>"
+                        "referenceValue": "![Select a period to register data](https://user-images.githubusercontent.com/2181866/98086571-44453c00-1e7f-11eb-89cb-448bf8313a4c.gif)\n\nSelect a period for which to register data. The available periods are determined by the reporting frequency required for the selected form.\n\n<i>Note: [Select period] is not an option you can select from the drop-down menu</i>\n\n<i>Note: If data has already been submitted for the period that you have selected, the data will appear automatically in the form.</i>"
                     },
                     {
                         "key": "step-3-2",
