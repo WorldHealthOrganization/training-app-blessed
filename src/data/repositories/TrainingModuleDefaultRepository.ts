@@ -61,13 +61,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
                 .uniqBy("id")
-                .filter(({ dhisAuthorities }) =>
-                    _.every(dhisAuthorities, authority =>
-                        currentUser.userRoles
-                            .flatMap(({ authorities }) => authorities)
-                            .includes(authority)
-                    )
-                )
+                .filter(({ dhisAuthorities }) => {
+                    const userAuthorities = currentUser.userRoles.flatMap(
+                        ({ authorities }) => authorities
+                    );
+
+                    return _.every(
+                        dhisAuthorities,
+                        authority =>
+                            userAuthorities.includes("ALL") || userAuthorities.includes(authority)
+                    );
+                })
                 .value();
 
             return promiseMap(modules, async module => {
