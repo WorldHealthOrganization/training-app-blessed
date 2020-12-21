@@ -12,4 +12,5 @@ export interface JSONTrainingModule {
     dhisVersionRange: string;
     dhisAppKey: string;
     dhisLaunchUrl: string;
+    dhisAuthorities: string[];
 }
