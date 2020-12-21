@@ -5,7 +5,7 @@
     "dhisAppKey": "tracker-capture",
     "name": { "key": "module-name", "referenceValue": "Tracker Capture", "translations": {} },
     "type": "core",
-    "revision": 3,
+    "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-tracker-capture/index.html",
     "dhisAuthorities": ["M_dhis-web-tracker-capture"],
@@ -93,7 +93,7 @@
                     {
                         "key": "step-4-4",
                         "translations": {},
-                        "referenceValue": "The dashboard has many boxes ('widgets') displaying different information about your individual.\n\nYou will see two boxes (Profile and Enrollment) display the data that you entered during registration.\n\nThe 'Profile' box provides a summary of the individual that is being tracked, with all the identifying information that you added.\n\n![Register new individual](https://user-images.githubusercontent.com/2181866/102776404-f2089d80-438e-11eb-97f1-d78cb6ccba2f.jpg)\n\nThe 'Enrollment' box presents information about when the individual was enrolled in the program and by which organisation unit. This window may include other information that was submitted for this individual during registration.\n\n![Register new individual](https://user-images.githubusercontent.com/2181866/102776370-eae18f80-438e-11eb-8cd1-243aa5020138.jpg)"
+                        "referenceValue": "The dashboard has many boxes ('widgets') displaying different information about your individual.\n\nYou will see two boxes (Profile and Enrollment) display the data that you entered during registration.\n\nThe 'Profile' box provides a summary of the individual that is being tracked, with all the identifying information that you added.\n\n![Register new individual](https://user-images.githubusercontent.com/2181866/102776370-eae18f80-438e-11eb-8cd1-243aa5020138.jpg)\n\nThe 'Enrollment' box presents information about when the individual was enrolled in the program and by which organisation unit. This window may include other information that was submitted for this individual during registration.\n\n![Register new individual](https://user-images.githubusercontent.com/2181866/102776404-f2089d80-438e-11eb-97f1-d78cb6ccba2f.jpg)"
                     }
                 ]
             },

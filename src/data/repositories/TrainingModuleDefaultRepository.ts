@@ -228,6 +228,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
             const translatedModel: PersistedTrainingModule = {
                 ...model,
+                name: {
+                    ...model.name,
+                    translations: dictionary[model.name.key],
+                },
                 contents: {
                     ...model.contents,
                     welcome: {
@@ -301,7 +305,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             ...step.pages,
         ]);
 
-        return _.compact([model.contents.welcome, ...steps]);
+        return _.compact([model.name, model.contents.welcome, ...steps]);
     }
 
     private async createBuiltin(key: string): Promise<PersistedTrainingModule | undefined> {
