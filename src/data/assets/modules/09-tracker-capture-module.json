@@ -9,6 +9,7 @@
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-tracker-capture/index.html",
     "dhisAuthorities": ["M_dhis-web-tracker-capture"],
+    "translation": { "provider": "poeditor", "project": "399449" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
