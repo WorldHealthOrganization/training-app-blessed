@@ -5,7 +5,7 @@
     "dhisAppKey": "maps",
     "name": "Maps",
     "type": "core",
-    "revision": 1,
+    "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-maps/index.html",
     "translation": { "provider": "poeditor", "project": "394105" },
@@ -64,7 +64,7 @@
                     {
                         "key": "step-3-3",
                         "translations": {},
-                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100337905-398e4a80-2fd8-11eb-97ef-f8b08e0d0bd7.gif)\n\nBy now you should see a section labelled 'Data element' or 'Indicator' depending on which data type you selected. This contains a list of variables within the data group that you have selected. Select which variable to include in your map by clicking on the list items. You can only select one variable per layer on the map.\n\nClicking on 'Aggregation type' opens a menu with options for aggregating your data. Click on the option that you would like to select.  By default, 'By data element' is selected, meaning that the data shown on the map is aggregated across the data element/indicator that you have selected and is not showing data for each sampled individual (e.g. house, village or mosquito)."
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100337905-398e4a80-2fd8-11eb-97ef-f8b08e0d0bd7.gif)\n\nBy now you should see a section labelled 'Data element' or 'Indicator' depending on which data type you selected. This contains a list of variables within the data group that you have selected.\n\nSelect which variable to include in your map by clicking on the list items. You can only select one variable per layer on the map.\n\nClicking on 'Aggregation type' opens a menu with options for aggregating your data. Click on the option that you would like to select.\n\nBy default, 'By data element' is selected, meaning that the aggregation set by the element is used. All other aggregation types will override this aggregation set by the data element with count, average, etc."
                     }
                 ]
             },
@@ -107,7 +107,7 @@
                     {
                         "key": "step-5-3",
                         "translations": {},
-                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100337913-3b580e00-2fd8-11eb-97c6-8ff54b5e6cd7.gif)\n\nAlternatively, if your locations are divided into groups (such as facilities, hospitals, sentinel sites etc.),  you can select a group from the 'Group' drop-down menu. Click on one or more of the groups to select all locations inside these selected groups.\n\nYou can also select one of the 'User organisation units' which are pre-defined groups of the locations in your country, determined by your administrator. 'Main' refers to the country, 'Below' refers to the next level (e.g. Province), and '2 x below' refers to the third level (e.g. Districts). Selecting one or more of these units will select all locations that occur in these levels (e.g. all provinces if 'Below' is selected).\n\n<i>Note: It is not possible to select locations from the tree and from the user organisation units.</i>"
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100337913-3b580e00-2fd8-11eb-97c6-8ff54b5e6cd7.gif)\n\nAlternatively, if your locations are divided into groups (such as facilities, hospitals, sentinel sites etc.), you can select a group from the 'Group' drop-down menu. Click on one or more of the groups to select all locations inside these selected groups.\n\nYou can also select one of the 'User organisation units' which are pre-defined groups of the locations in your country, determined by your administrator.\n\n'Main' refers to the country, 'Below' refers to the next level (e.g. Province), and '2 x below' refers to the third level (e.g. Districts). Selecting one or more of these units will select all locations that occur in these levels (e.g. all provinces if 'Below' is selected).\n\n<i>Note: It is not possible to select locations from the tree and from the user organisation units.</i>"
                     }
                 ]
             },

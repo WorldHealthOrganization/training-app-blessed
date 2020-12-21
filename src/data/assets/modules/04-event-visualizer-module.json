@@ -12,7 +12,7 @@
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Event Visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99499212-d584da00-2978-11eb-9d6f-507cfc449bb6.png)\n\nUse this application to visualize data collected through Event Capture (i.e. forms that can be filled in multiple times for the same location and time period). A variety of different chart types are available for you to select from, depending on your needs.",
+            "referenceValue": "# Welcome to the tutorial on Event Visualizer\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/99499212-d584da00-2978-11eb-9d6f-507cfc449bb6.png)\n\nUse this application to visualize data collected through Capture (i.e. forms that can be filled in multiple times for the same location and time period). A variety of different chart types are available for you to select from, depending on your needs.",
             "translations": {}
         },
         "steps": [
@@ -122,7 +122,7 @@
                     {
                         "key": "step-5-1",
                         "translations": {},
-                        "referenceValue": "![Create and format chart](https://user-images.githubusercontent.com/2181866/99498329-90ac7380-2977-11eb-9d73-c40169e7d554.gif)\n\nClick on the 'Update' button to create a chart with the data that you have selected.\n\nClick on the 'Layout' tab to open the chart layout menu. This shows how the data are arranged in your chart, according to filter, rows and columns. The filter determines which data appears in your chart. Category dimensions define what appears on the x-axis (for bar and line charts) and series dimensions define the colour coding on the chart.\n\nYou can move the data around by clicking, dragging and dropping the data into the different positions. Click 'Update' to view the new layout of your chart.\n\nNote: The values of the variables will be aggregated based on the aggregation defined when the variable was created. For numeric variables the aggregation will commonly be average or sum."
+                        "referenceValue": "![Create and format chart](https://user-images.githubusercontent.com/2181866/99498329-90ac7380-2977-11eb-9d73-c40169e7d554.gif)\n\nClick on the 'Update' button to create a chart with the data that you have selected.\n\nClick on the 'Layout' tab to open the chart layout menu. This shows how the data are arranged in your chart, according to filter, rows and columns. The filter determines which data appears in your chart. Category dimensions define what appears on the x-axis (for bar and line charts) and series dimensions define the colour coding on the chart.\n\nYou can move the data around by clicking, dragging and dropping the data into the different positions. Click 'Update' to view the new layout of your chart.\n\n<i>Note: The values of the variables will be aggregated based on the aggregation defined when the variable was created. For numeric variables the aggregation will commonly be average or sum.</i>"
                     },
                     {
                         "key": "step-5-2",
@@ -141,7 +141,7 @@
                     {
                         "key": "step-6-1",
                         "translations": {},
-                        "referenceValue": "![Save and share chart](https://user-images.githubusercontent.com/2181866/99498331-91450a00-2977-11eb-8328-77301bd3a987.gif)\n\nFrom the 'Favourites' drop-down menu, select 'Save as' to save your chart with a name and description. Save your chart by clicking 'Save'. From the drop down menu, you can also share the chart with other DHIS2 users, and write interpretations on your chart.\n\nWhen you want to work on this chart again, you can access it from the 'Favourites' menu by selecting 'Open' and finding the name of your file. You can also add your chart to your dashboards to view it easily and shift between data visualisation types."
+                        "referenceValue": "![Save and share chart](https://user-images.githubusercontent.com/2181866/99498331-91450a00-2977-11eb-8328-77301bd3a987.gif)\n\nFrom the 'Favourites' drop-down menu, select 'Save as' to save your chart with a name and description. Save your chart by clicking 'Save'.\n\nFrom the drop down menu, you can also share the chart with other DHIS2 users, and write interpretations on your chart.\n\nWhen you want to work on this chart again, you can access it from the 'Favourites' menu by selecting 'Open' and finding the name of your file."
                     }
                 ]
             },
