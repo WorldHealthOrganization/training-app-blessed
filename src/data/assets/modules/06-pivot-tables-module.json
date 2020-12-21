@@ -3,16 +3,16 @@
     "id": "pivot-tables",
     "disabled": false,
     "dhisAppKey": "pivot-tables",
-    "name": "Pivot tables",
+    "name": "Pivot Tables",
     "type": "core",
-    "revision": 1,
+    "revision": 2,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-pivot/index.html",
     "translation": { "provider": "poeditor", "project": "394103" },
     "contents": {
         "welcome": {
             "key": "module-welcome",
-            "referenceValue": "# Welcome to the tutorial on Pivot tables\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100328140-79e7cb80-2fcc-11eb-81bc-9f39f8030fa6.png)\n\nUse this application to visualise your data in pivot tables. This tutorial takes you through all the steps to create pivot tables and use them to quickly summarize and arrange your data in a meaningful way.",
+            "referenceValue": "# Welcome to the tutorial on Pivot Tables\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100328140-79e7cb80-2fcc-11eb-81bc-9f39f8030fa6.png)\n\nUse this application to visualise your data in pivot tables. This tutorial takes you through all the steps to create pivot tables and use them to quickly summarize and arrange your data in a meaningful way.",
             "translations": {}
         },
         "steps": [
@@ -117,7 +117,7 @@
                     {
                         "key": "step-5-1",
                         "translations": {},
-                        "referenceValue": "![Save and share your table](https://user-images.githubusercontent.com/2181866/100326918-dcd86300-2fca-11eb-999b-83d3fbb70140.gif)\n\nFrom the 'Favourites' drop-down menu, select 'Save as' to save your table with a name and description. Save your table by clicking 'Save'. From the drop down menu, you can also share the table with other DHIS2 users, and write interpretations on your table.\n\nWhen you want to work on this table again, you can access it from the 'Favourites' menu by selecting 'Open' and finding the name of your file. You can also add your table to your dashboards to view it easily and shift between the data visualisation types."
+                        "referenceValue": "![Save and share your table](https://user-images.githubusercontent.com/2181866/100326918-dcd86300-2fca-11eb-999b-83d3fbb70140.gif)\n\nFrom the 'Favourites' drop-down menu, select 'Save as' to save your table with a name and description. Save your table by clicking 'Save'. From the drop down menu, you can also share the table with other DHIS2 users, and write interpretations on your table.\n\nWhen you want to work on this table again, you can access it from the 'Favourites' menu by selecting 'Open' and finding the name of your file."
                     }
                 ]
             },
@@ -131,7 +131,7 @@
                     {
                         "key": "step-6-1",
                         "translations": {},
-                        "referenceValue": "![Download your table](https://user-images.githubusercontent.com/2181866/100326920-dcd86300-2fca-11eb-8eb3-b57776602215.gif)\n\nClick on 'Downloads'; from the drop-down menu, you can choose to download your table in different formats according to your need e.g. for further analysis or to share in a report. To download your table as you are seeing in on the screen, chose from one of the three options under 'Table layout' on the drop-down menu."
+                        "referenceValue": "![Download your table](https://user-images.githubusercontent.com/2181866/100326920-dcd86300-2fca-11eb-8eb3-b57776602215.gif)\n\nClick on 'Downloads'; from the drop-down menu, you can choose to download your table in different formats according to your need e.g. for further analysis or to share in a report.\n\nTo download your table as you are seeing in on the screen, chose from one of the three options under 'Table layout' on the drop-down menu."
                     }
                 ]
             }
