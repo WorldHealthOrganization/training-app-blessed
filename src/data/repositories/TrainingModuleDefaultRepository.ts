@@ -124,7 +124,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const newModel = await this.buildPersistedModel({
             id,
-            name,
+            name: { key: "module-name", referenceValue: name, translations: {} },
             type: "app",
             _version: 1,
             revision: 1,

@@ -95,6 +95,7 @@ export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
 
             <Row>
                 <TextField
+                    disabled={!!editBuilder}
                     fullWidth={true}
                     label={"Name *"}
                     value={builder.name}

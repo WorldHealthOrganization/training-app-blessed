@@ -10,7 +10,6 @@ import {
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { NamedRef } from "../../../domain/entities/Ref";
 import { TrainingModule, TrainingModuleBuilder } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
@@ -262,7 +261,8 @@ export const ModuleListTable: React.FC = () => {
 
 type ListItem = FlattenUnion<ListItemModule | ListItemStep | ListItemPage>;
 
-interface ListItemModule extends TrainingModule {
+interface ListItemModule extends Omit<TrainingModule, "name"> {
+    name: string;
     rowType: "module";
     steps: ListItemStep[];
     welcome: ListItemStep[];
@@ -277,7 +277,9 @@ interface ListItemStep {
     position: number;
 }
 
-interface ListItemPage extends NamedRef {
+interface ListItemPage {
+    id: string;
+    name: string;
     rowType: "page" | "dialog";
     value: string;
     position: number;
@@ -286,6 +288,7 @@ interface ListItemPage extends NamedRef {
 const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
     return modules.map((module, moduleIdx) => ({
         ...module,
+        name: module.name.referenceValue,
         rowType: "module",
         position: moduleIdx,
         welcome: [
