@@ -17,6 +17,7 @@ import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgress
 import { cache } from "../utils/cache";
 import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
+import { UploadFileUseCase } from "../domain/usecases/UploadFileUseCase";
 
 export class CompositionRoot {
     private readonly configRepository: ConfigRepository;
@@ -55,6 +56,10 @@ export class CompositionRoot {
             }),
             user: getExecute({
                 checkSuperUser: new CheckSettingsPermissionsUseCase(this.configRepository),
+            }),
+            content: getExecute({
+                uploadFile: new UploadFileUseCase(this.trainingModuleRepository),
+
             }),
         };
     }
