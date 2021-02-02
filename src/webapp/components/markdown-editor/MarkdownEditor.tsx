@@ -7,14 +7,26 @@ import styled from "styled-components";
 export interface MarkdownEditorProps {
     value: string;
     onChange: (value: string) => void;
+    onUpload?: (data: ArrayBuffer) => Promise<string | undefined>;
     markdownPreview?: (markdown: string) => React.ReactNode;
 }
 
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     value,
     onChange,
+    onUpload,
     markdownPreview = defaultPreviewMarkdown,
 }) => {
+    const saveImage = async function* (data: ArrayBuffer) {
+        if (!onUpload) return false;
+
+        const url = await onUpload(data);
+        if (!url) return false;
+
+        yield url;
+        return true;
+    };
+
     return (
         <Container>
             <Children>
@@ -22,6 +34,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     value={value}
                     onChange={onChange}
                     selectedTab={"write"}
+                    paste={onUpload ? { saveImage } : undefined}
                     childProps={{
                         writeButton: {
                             tabIndex: -1,

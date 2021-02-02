@@ -24,6 +24,12 @@ export const MarkdownEditorDialog: React.FC<MarkdownEditorDialogProps> = ({
         onSave(value);
     }, [onSave, value]);
 
+    const onUpload = useCallback(async (data: ArrayBuffer) => {
+        // TODO: Call a usecase here
+        console.log("upload", data);
+        return "https://test.com/foo.png";
+    }, []);
+
     return (
         <ConfirmationDialog
             title={title}
@@ -34,7 +40,12 @@ export const MarkdownEditorDialog: React.FC<MarkdownEditorDialogProps> = ({
             onSave={onFinish}
             saveText={i18n.t("Save")}
         >
-            <MarkdownEditor value={value} onChange={onChange} markdownPreview={markdownPreview} />
+            <MarkdownEditor
+                value={value}
+                onChange={onChange}
+                markdownPreview={markdownPreview}
+                onUpload={onUpload}
+            />
         </ConfirmationDialog>
     );
 };

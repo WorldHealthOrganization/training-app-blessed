@@ -210,6 +210,12 @@ export const ModuleListTable: React.FC = () => {
                 text: i18n.t("Edit contents"),
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
+                isActive: rows => {
+                    return _.every(
+                        rows,
+                        item => item.rowType === "page" || item.rowType === "dialog"
+                    );
+                },
             },
         ],
         [
