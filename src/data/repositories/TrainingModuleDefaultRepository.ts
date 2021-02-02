@@ -1,3 +1,4 @@
+import { D2Api } from "d2-api/2.32";
 import _ from "lodash";
 import { Either } from "../../domain/entities/Either";
 import {
@@ -17,20 +18,24 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
+import { getD2APiFromInstance} from "../utils/d2-api";
 import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
 
+
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
+    private api: D2Api;
 
     constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
+        this.api = getD2APiFromInstance(config.getInstance());
     }
 
     public async list(): Promise<TrainingModule[]> {
@@ -300,6 +305,47 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         // Update reference language
         await api.projects.update({ id: project, reference_language: "en" });
+    }
+
+    public async uploadFile(file: File): Promise<String>{
+        
+        const formdata = new FormData();
+        formdata.append("file", file);
+        formdata.append("filename", file.name);
+        const url = URL.createObjectURL(file);
+        this.api.post(
+            url,
+            file);
+
+        /*const fetchOptions: RequestInit = {
+            method: "POST",
+            headers: { ...authHeaders },
+            body: formdata,
+            //credentials: auth ? "omit" : ("include" as const),
+        };
+        
+        const response = await fetch(
+            new URL('/api/fileResources', ).href,
+            fetchOptions
+        );
+        
+        if(!response.ok){
+            const responseBody = JSON.parse(await response.text());
+            const bodyError = responseBody.message ? ': ${responseBody.message}' : "";
+            throw Error("An error ocurred uploading the image " + '${file.name}');
+        }else{
+            const apiResponse = JSON.parse(await response.text());
+            return apiResponse;
+        }*/
+
+        /*const p = axios.post('/api/fileResources', formdata).then(resp =>{
+            //const apiResponse = JSON.parse(resp.data);
+            //this.setS
+        })
+        .catch(error =>{
+
+        });     */
+        
     }
 
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
