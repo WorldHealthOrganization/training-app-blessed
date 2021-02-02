@@ -210,10 +210,6 @@ export const ModuleListTable: React.FC = () => {
                 text: i18n.t("Edit contents"),
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
-                isActive: _rows => {
-                    // TODO: Action is disabled for now
-                    return false;
-                },
             },
         ],
         [
