@@ -21,24 +21,54 @@ import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
+//added
+import { D2Api } from "../../types/d2-api";
+import { getD2APiFromInstance } from "../utils/d2-api";
+
+interface ModuleResponse {
+    data: string;
+    headers: Headers;
+    status: number;
+}
+
+interface Headers {
+    cacheControl: string;
+    contentType: string;
+    etag: string;
+    lastModified: Date;
+}
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
+    //added
+    private api: D2Api;
 
     constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
+        //added
+        this.api = getD2APiFromInstance(config.getInstance());
     }
-
     public async list(): Promise<TrainingModule[]> {
         try {
             const dataStoreModules = await this.storageClient.listObjectsInCollection<
                 PersistedTrainingModule
             >(Namespaces.TRAINING_MODULES);
 
+            dataStoreModules.forEach(async module => {
+                try{
+                    await this.api.baseConnection.request<ModuleResponse>({ method: "get", url: module.dhisLaunchUrl }).response
+                    .then(() =>  module.installed = true);
+                }
+                catch(e) {
+                    console.log(e.response);
+                    module.installed = false;
+                }
+            });
+            
             const missingModuleKeys = _(this.builtinModules)
                 .values()
                 .compact()
@@ -57,7 +87,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             );
 
             const currentUser = await this.config.getUser();
-
+            //I think this show all the modules on the main screen 
+            //We would filter by the modules that have TrainingModule.installed === true 
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
                 .uniqBy("id")
@@ -348,8 +379,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
 
         const { created, lastUpdated, type, ...rest } = model;
+        console.log(model);
         const validType = isValidTrainingType(type) ? type : "app";
-
         return {
             ...rest,
             created: new Date(created),
@@ -379,6 +410,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             user: defaultUser,
             lastUpdatedBy: defaultUser,
             lastTranslationSync: new Date().toISOString(),
+            //idk about this
+            installed: true,
         };
     }
 }

@@ -228,6 +228,7 @@ export const ModuleListTable: React.FC = () => {
     );
 
     useEffect(() => {
+        //when calling list, also call the API here?
         usecases.modules.list().then(modules => {
             setModules(buildListItems(modules));
             setTableLoading(false);
