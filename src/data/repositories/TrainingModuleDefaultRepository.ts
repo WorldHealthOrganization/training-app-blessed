@@ -317,26 +317,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async uploadFile(file: File): Promise<String>{
+        const auth = this.instance.auth;
+        const authHeaders: Record<string, string> = this.getAuthHeaders(auth);
+
         const formdata = new FormData();
         formdata.append("file", file);
         formdata.append("filename", file.name);
         
-        const auth = this.instance.auth;
-        const authHeaders: Record<string, string> = this.getAuthHeaders(auth);
-
-        /*const url = new URL("api/fileResources/", this.api.baseUrl);
-        const response = await this.api.post(url.toString(),
-            {
-                method: "POST",
-                body: json
-            });
-            if(response){
-                 return this.api.baseUrl;
-            }
-            else{
-                throw Error("An Error ocurred uploading the image");
-            }*/
-
         const fetchOptions: RequestInit = {
             method: "POST",
             headers: { ...authHeaders },
@@ -350,17 +337,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             url,
             fetchOptions
         );
-        /*.then(response => 
-            //console.log(JSON.parse(await response.text()))
-                {return response.json}
-            )
-        .catch(()=>
-            console.log("An error ocurrer uploading the image.\nCan’t access " + url )
-            );*/
- 
         if(!response.ok){
-            //const responseBody = JSON.parse(await response.text());
-            //const bodyError = responseBody.message ? ': ${responseBody.message}' : "";
             throw Error("An error ocurred uploading the image " + '${file.name}');
         }else{
             const apiResponse: SaveApiResponse = JSON.parse(await response.text());
