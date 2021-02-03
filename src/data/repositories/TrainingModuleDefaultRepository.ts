@@ -95,7 +95,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
                 return {
                     ...model,
-                    installed: await this.validateModuleAppInstalled(model.dhisLaunchUrl),
                     progress: progress?.find(({ id }) => id === module.id) ?? {
                         id: module.id,
                         lastStep: 0,
