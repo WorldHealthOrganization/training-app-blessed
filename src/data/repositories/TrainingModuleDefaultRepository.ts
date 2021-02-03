@@ -24,7 +24,13 @@ import {
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
 
-
+interface SaveApiResponse {
+    response: {
+        fileResource: {
+            id: string;
+        };
+    };
+}
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
@@ -308,44 +314,64 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async uploadFile(file: File): Promise<String>{
-        
         const formdata = new FormData();
         formdata.append("file", file);
         formdata.append("filename", file.name);
-        const url = URL.createObjectURL(file);
-        this.api.post(
-            url,
-            file);
 
-        /*const fetchOptions: RequestInit = {
+        const auth = {username: "luisa", password: "C)*@B!8sV"};
+        const authHeaders: Record<string, string> = this.getAuthHeaders(auth);
+
+
+        /*const url = new URL("api/fileResources/", this.api.baseUrl);
+        const response = await this.api.post(url.toString(),
+            {
+                method: "POST",
+                body: json
+            });
+            if(response){
+                 return this.api.baseUrl;
+            }
+            else{
+                throw Error("An Error ocurred uploading the image");
+            }*/
+
+        const fetchOptions: RequestInit = {
             method: "POST",
             headers: { ...authHeaders },
             body: formdata,
-            //credentials: auth ? "omit" : ("include" as const),
+            credentials: auth ? "omit" : ("include" as const),
         };
-        
+
+        const url = new URL('/who-new-dev/api/fileResources/', this.api.baseUrl).href
+
         const response = await fetch(
-            new URL('/api/fileResources', ).href,
+            url,
             fetchOptions
         );
-        
+        /*.then(response => 
+            //console.log(JSON.parse(await response.text()))
+                {return response.json}
+            )
+        .catch(()=>
+            console.log("An error ocurrer uploading the image.\nCan’t access " + url )
+            );*/
+ 
         if(!response.ok){
-            const responseBody = JSON.parse(await response.text());
-            const bodyError = responseBody.message ? ': ${responseBody.message}' : "";
+            //const responseBody = JSON.parse(await response.text());
+            //const bodyError = responseBody.message ? ': ${responseBody.message}' : "";
             throw Error("An error ocurred uploading the image " + '${file.name}');
         }else{
-            const apiResponse = JSON.parse(await response.text());
-            return apiResponse;
-        }*/
-
-        /*const p = axios.post('/api/fileResources', formdata).then(resp =>{
-            //const apiResponse = JSON.parse(resp.data);
-            //this.setS
-        })
-        .catch(error =>{
-
-        });     */
+            const apiResponse: SaveApiResponse = JSON.parse(await response.text());
+            const resource = url + apiResponse.response.fileResource.id;
+            return resource;
+        }
         
+    }
+
+    private getAuthHeaders(
+        auth: { username: string; password: string } | undefined
+    ): Record<string, string> {
+        return auth ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) } : {};
     }
 
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
