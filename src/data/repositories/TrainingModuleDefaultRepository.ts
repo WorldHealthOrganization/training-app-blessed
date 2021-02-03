@@ -9,6 +9,7 @@ import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
+import { D2Api } from "../../types/d2-api";
 import { Dictionary } from "../../types/utils";
 import { promiseMap } from "../../utils/promises";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
@@ -21,8 +22,6 @@ import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
-//added
-import { D2Api } from "../../types/d2-api";
 import { getD2APiFromInstance } from "../utils/d2-api";
 
 interface ModuleResponse {
@@ -42,33 +41,21 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
-    //added
     private api: D2Api;
 
     constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
-        //added
         this.api = getD2APiFromInstance(config.getInstance());
     }
+
     public async list(): Promise<TrainingModule[]> {
         try {
             const dataStoreModules = await this.storageClient.listObjectsInCollection<
                 PersistedTrainingModule
             >(Namespaces.TRAINING_MODULES);
 
-            dataStoreModules.forEach(async module => {
-                try{
-                    await this.api.baseConnection.request<ModuleResponse>({ method: "get", url: module.dhisLaunchUrl }).response
-                    .then(() =>  module.installed = true);
-                }
-                catch(e) {
-                    console.log(e.response);
-                    module.installed = false;
-                }
-            });
-            
             const missingModuleKeys = _(this.builtinModules)
                 .values()
                 .compact()
@@ -87,8 +74,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             );
 
             const currentUser = await this.config.getUser();
-            //I think this show all the modules on the main screen 
-            //We would filter by the modules that have TrainingModule.installed === true 
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
                 .uniqBy("id")
@@ -110,6 +95,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
                 return {
                     ...model,
+                    installed: await this.validateModuleAppInstalled(model.dhisLaunchUrl),
                     progress: progress?.find(({ id }) => id === module.id) ?? {
                         id: module.id,
                         lastStep: 0,
@@ -333,6 +319,18 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await api.projects.update({ id: project, reference_language: "en" });
     }
 
+    private async validateModuleAppInstalled(launchUrl: string): Promise<boolean> {
+        try {
+            await this.api.baseConnection
+                .request<ModuleResponse>({ method: "get", url: launchUrl })
+                .getData();
+        } catch (error) {
+            return false;
+        }
+
+        return true;
+    }
+
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
         const steps = _.flatMap(model.contents.steps, step => [
             step.title,
@@ -379,10 +377,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
 
         const { created, lastUpdated, type, ...rest } = model;
-        console.log(model);
         const validType = isValidTrainingType(type) ? type : "app";
+
         return {
             ...rest,
+            installed: await this.validateModuleAppInstalled(model.dhisLaunchUrl),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,
@@ -410,8 +409,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             user: defaultUser,
             lastUpdatedBy: defaultUser,
             lastTranslationSync: new Date().toISOString(),
-            //idk about this
-            installed: true,
         };
     }
 }
