@@ -23,6 +23,7 @@ import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
+import { Instance } from "../entities/Instance";
 
 interface SaveApiResponse {
     response: {
@@ -36,12 +37,14 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
     private api: D2Api;
+    private instance: Instance; 
 
     constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
         this.api = getD2APiFromInstance(config.getInstance());
+        this.instance = config.getInstance();
     }
 
     public async list(): Promise<TrainingModule[]> {
@@ -317,10 +320,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const formdata = new FormData();
         formdata.append("file", file);
         formdata.append("filename", file.name);
-
-        const auth = {username: "luisa", password: "C)*@B!8sV"};
+        
+        const auth = this.instance.auth;
         const authHeaders: Record<string, string> = this.getAuthHeaders(auth);
-
 
         /*const url = new URL("api/fileResources/", this.api.baseUrl);
         const response = await this.api.post(url.toString(),
