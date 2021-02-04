@@ -10,6 +10,7 @@ import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
+import { InstallAppModulesUseCase } from "../domain/usecases/InstallAppModulesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
@@ -36,6 +37,7 @@ export class CompositionRoot {
                 delete: new DeleteModulesUseCase(this.trainingModuleRepository),
                 edit: new EditModuleUseCase(this.trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
+                installApp: new InstallAppModulesUseCase(this.trainingModuleRepository),
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(this.trainingModuleRepository),

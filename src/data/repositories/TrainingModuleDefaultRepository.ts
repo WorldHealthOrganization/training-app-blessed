@@ -55,6 +55,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             const dataStoreModules = await this.storageClient.listObjectsInCollection<
                 PersistedTrainingModule
             >(Namespaces.TRAINING_MODULES);
+            
 
             const missingModuleKeys = _(this.builtinModules)
                 .values()
@@ -202,6 +203,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
     }
 
+    public async installApp(appId: string): Promise<boolean> {
+        try {
+            await (await this.api.baseConnection
+                .request({ method: "post", url: `api/appHub/${appId}` }).response).status;
+        } catch (error) {
+            return false;
+        }
+
+        return true;
+    }
+
     public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
         await this.progressStorageClient.saveObjectInCollection<UserProgress>(Namespaces.PROGRESS, {
             id,
@@ -329,6 +341,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return true;
     }
+
+    
 
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
         const steps = _.flatMap(model.contents.steps, step => [

@@ -112,7 +112,7 @@ export const HomePage = () => {
                             </SpinnerWrapper>
                         ) : (
                             <Cardboard>
-                                {modules.map(({ name, id, progress, disabled, contents }, idx) => {
+                                {modules.filter(module => module.installed === true).map(({ name, id, progress, disabled, contents }, idx) => {
                                     const { lastStep, completed } = progress;
                                     const percentage = Math.round(
                                         (lastStep / contents.steps.length) * 100
