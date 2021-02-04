@@ -17,13 +17,14 @@ import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClien
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorApi } from "../clients/translation/PoEditorApi";
+import { Instance } from "../entities/Instance";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
-import { getD2APiFromInstance} from "../utils/d2-api";
 import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
-import { Instance } from "../entities/Instance";
+import { getD2APiFromInstance } from "../utils/d2-api";
+import { generateUid } from "../utils/uid";
 
 interface SaveApiResponse {
     response: {
@@ -37,7 +38,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
     private api: D2Api;
-    private instance: Instance; 
+    private instance: Instance;
 
     constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
@@ -316,14 +317,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await api.projects.update({ id: project, reference_language: "en" });
     }
 
-    public async uploadFile(file: File): Promise<String>{
+    public async uploadFile(data: ArrayBuffer): Promise<string> {
+        const documentId = generateUid();
+
         const auth = this.instance.auth;
         const authHeaders: Record<string, string> = this.getAuthHeaders(auth);
 
         const formdata = new FormData();
-        formdata.append("file", file);
-        formdata.append("filename", file.name);
-        
+        const blob = new Blob([data], { type: "image/jpeg" });
+        formdata.append("file", blob, "file.jpg");
+        formdata.append("domain", "DOCUMENT");
+
         const fetchOptions: RequestInit = {
             method: "POST",
             headers: { ...authHeaders },
@@ -331,20 +335,23 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             credentials: auth ? "omit" : ("include" as const),
         };
 
-        const url = new URL('/who-new-dev/api/fileResources/', this.api.baseUrl).href
-
-        const response = await fetch(
-            url,
-            fetchOptions
-        );
-        if(!response.ok){
-            throw Error("An error ocurred uploading the image " + '${file.name}');
-        }else{
-            const apiResponse: SaveApiResponse = JSON.parse(await response.text());
-            const resource = url + apiResponse.response.fileResource.id;
-            return resource;
+        const response = await fetch(`${this.api.apiPath}/fileResources`, fetchOptions);
+        if (!response.ok) {
+            throw Error(`An error ocurred uploading the image`);
         }
-        
+
+        const apiResponse: SaveApiResponse = JSON.parse(await response.text());
+        const { id: fileResourceId } = apiResponse.response.fileResource;
+
+        await this.api.models.documents
+            .post({
+                id: documentId,
+                name: `[Training App] Uploaded file ${fileResourceId}`,
+                url: fileResourceId,
+            })
+            .getData();
+
+        return `${this.api.apiPath}/documents/${documentId}/data`;
     }
 
     private getAuthHeaders(

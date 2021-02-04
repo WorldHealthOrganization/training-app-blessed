@@ -59,7 +59,6 @@ export class CompositionRoot {
             }),
             content: getExecute({
                 uploadFile: new UploadFileUseCase(this.trainingModuleRepository),
-
             }),
         };
     }
