@@ -1,5 +1,5 @@
-import { Icon } from "@material-ui/core";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import { Icon, Tooltip, IconButton } from "@material-ui/core";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import {
     ObjectsTable,
     TableAction,
@@ -7,9 +7,8 @@ import {
     TableSelection,
     TableState,
     useLoading,
-    useSnackbar
+    useSnackbar,
 } from "d2-ui-components";
-import { Tooltip, IconButton } from "@material-ui/core";
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
@@ -118,19 +117,21 @@ export const ModuleListTable: React.FC = () => {
         },
         [modules]
     );
-    
+
     const installApp = useCallback(
         async (ids: string[]) => {
             const row = buildChildrenRows(modules).find(({ id }) => id === ids[0]);
             if (!row) return;
-            const appStoreClient = new FetchHttpClient({baseUrl: "https://apps.dhis2.org"});
-            const AllAppsResponse = await appStoreClient.request<App[]>({
-                method: "get",
-                url: "/api/apps"
-            }).getData();
+            const appStoreClient = new FetchHttpClient({ baseUrl: "https://apps.dhis2.org" });
+            const AllAppsResponse = await appStoreClient
+                .request<App[]>({
+                    method: "get",
+                    url: "/api/apps",
+                })
+                .getData();
             const appId = AllAppsResponse.filter(app => app.name === row.name)[0].versions[0].id;
             const isAppInstalled = await usecases.modules.installApp(appId);
-            if(isAppInstalled) {
+            if (isAppInstalled) {
                 row.installed = true;
                 snackbar.success("Successfully installed app");
             } else {
@@ -159,22 +160,23 @@ export const ModuleListTable: React.FC = () => {
                 name: "name",
                 text: "Name",
                 sortable: false,
-                getValue: item => !item.installed && item.rowType === "module" 
-                    ? 
+                getValue: item =>
+                    !item.installed && item.rowType === "module" ? (
                         <div>
-                            {item.name} 
+                            {item.name}
                             <Tooltip title={i18n.t("App is not installed")} placement="top">
                                 <IconButton
-                                    onClick={(event) => {
-                                        console.log("clicked!!!" + event)
+                                    onClick={event => {
+                                        console.log("clicked!!!" + event);
                                     }}
                                 >
-                                <Icon color="error">warning</Icon>
+                                    <Icon color="error">warning</Icon>
                                 </IconButton>
                             </Tooltip>
                         </div>
-                    : 
+                    ) : (
                         <div>{item.name}</div>
+                    ),
             },
             {
                 name: "id",
@@ -259,13 +261,10 @@ export const ModuleListTable: React.FC = () => {
             {
                 name: "install-app",
                 text: i18n.t("Install app"),
-                icon: <GetAppIcon/>,
+                icon: <GetAppIcon />,
                 onClick: installApp,
                 isActive: rows => {
-                    return _.every(
-                        rows,
-                        item => item.rowType === "module" && !item.installed
-                    );
+                    return _.every(rows, item => item.rowType === "module" && !item.installed);
                 },
             },
         ],
@@ -338,7 +337,6 @@ interface ListItemPage {
     rowType: "page" | "dialog";
     value: string;
     position: number;
-    
 }
 
 const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
@@ -441,7 +439,7 @@ interface Version {
 interface Developer {
     address: string;
     email: string;
-    name: string; 
+    name: string;
     organization: string;
 }
 interface Image {
@@ -453,4 +451,3 @@ interface Image {
     lastUpdated: Date;
     logo: boolean;
 }
-

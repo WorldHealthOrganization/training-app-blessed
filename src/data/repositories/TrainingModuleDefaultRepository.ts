@@ -55,7 +55,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             const dataStoreModules = await this.storageClient.listObjectsInCollection<
                 PersistedTrainingModule
             >(Namespaces.TRAINING_MODULES);
-            
 
             const missingModuleKeys = _(this.builtinModules)
                 .values()
@@ -205,8 +204,12 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async installApp(appId: string): Promise<boolean> {
         try {
-            await (await this.api.baseConnection
-                .request({ method: "post", url: `api/appHub/${appId}` }).response).status;
+            await (
+                await this.api.baseConnection.request({
+                    method: "post",
+                    url: `api/appHub/${appId}`,
+                }).response
+            ).status;
         } catch (error) {
             return false;
         }
@@ -341,8 +344,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return true;
     }
-
-    
 
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
         const steps = _.flatMap(model.contents.steps, step => [
