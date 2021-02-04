@@ -29,7 +29,6 @@ export const ModuleListTable: React.FC = () => {
     const { usecases } = useAppContext();
     const loading = useLoading();
     const snackbar = useSnackbar();
-
     const [tableLoading, setTableLoading] = useState<boolean>(true);
     const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
@@ -164,12 +163,8 @@ export const ModuleListTable: React.FC = () => {
                     !item.installed && item.rowType === "module" ? (
                         <div>
                             {item.name}
-                            <Tooltip title={i18n.t("App is not installed")} placement="top">
-                                <IconButton
-                                    onClick={event => {
-                                        console.log("clicked!!!" + event);
-                                    }}
-                                >
+                            <Tooltip title={i18n.t("App is not installed. Click install app within Actions to install app.")} placement="top">
+                                <IconButton>
                                     <Icon color="error">warning</Icon>
                                 </IconButton>
                             </Tooltip>
@@ -282,8 +277,7 @@ export const ModuleListTable: React.FC = () => {
 
     useEffect(() => {
         usecases.modules.list().then(modules => {
-            const build = buildListItems(modules);
-            setModules(build);
+            setModules(buildListItems(modules));
             setTableLoading(false);
         });
     }, [usecases, refreshKey]);
