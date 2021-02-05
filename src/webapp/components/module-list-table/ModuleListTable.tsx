@@ -29,6 +29,7 @@ export const ModuleListTable: React.FC = () => {
     const { usecases } = useAppContext();
     const loading = useLoading();
     const snackbar = useSnackbar();
+
     const [tableLoading, setTableLoading] = useState<boolean>(true);
     const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
@@ -55,8 +56,9 @@ export const ModuleListTable: React.FC = () => {
             setRefreshKey(Math.random());
             setTableLoading(false);
             setSelection([]);
+            snackbar.info("Logic not implemented yet");
         },
-        [usecases]
+        [usecases, snackbar]
     );
 
     const editModule = useCallback(
@@ -219,7 +221,8 @@ export const ModuleListTable: React.FC = () => {
                 onClick: deleteModules,
                 isActive: _rows => {
                     // TODO: Action is disabled for now
-                    return false;
+                    //return false;
+                    return _.every(_rows, item => item.rowType === "module");
                 },
             },
             {
