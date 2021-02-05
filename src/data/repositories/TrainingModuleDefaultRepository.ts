@@ -1,15 +1,15 @@
-import { D2Api } from "d2-api/2.32";
 import _ from "lodash";
 import { Either } from "../../domain/entities/Either";
 import {
     isValidTrainingType,
     TrainingModule,
-    TrainingModuleBuilder,
+    TrainingModuleBuilder
 } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
+import { D2Api } from "../../types/d2-api";
 import { Dictionary } from "../../types/utils";
 import { promiseMap } from "../../utils/promises";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
@@ -21,10 +21,23 @@ import { Instance } from "../entities/Instance";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import {
     PersistedTrainingModule,
-    TranslationConnection,
+    TranslationConnection
 } from "../entities/PersistedTrainingModule";
 import { getD2APiFromInstance } from "../utils/d2-api";
 import { generateUid } from "../utils/uid";
+
+interface ModuleResponse {
+    data: string;
+    headers: Headers;
+    status: number;
+}
+
+interface Headers {
+    cacheControl: string;
+    contentType: string;
+    etag: string;
+    lastModified: Date;
+}
 
 interface SaveApiResponse {
     response: {
@@ -72,7 +85,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             );
 
             const currentUser = await this.config.getUser();
-
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
                 .uniqBy("id")
@@ -199,6 +211,21 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         [items[index1], items[index2]] = [items[index2], items[index1]];
         await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
+    }
+
+    public async installApp(appId: string): Promise<boolean> {
+        try {
+            await (
+                await this.api.baseConnection.request({
+                    method: "post",
+                    url: `api/appHub/${appId}`,
+                }).response
+            ).status;
+        } catch (error) {
+            return false;
+        }
+
+        return true;
     }
 
     public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
@@ -360,6 +387,18 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return auth ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) } : {};
     }
 
+    private async validateModuleAppInstalled(launchUrl: string): Promise<boolean> {
+        try {
+            await this.api.baseConnection
+                .request<ModuleResponse>({ method: "get", url: launchUrl })
+                .getData();
+        } catch (error) {
+            return false;
+        }
+
+        return true;
+    }
+
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
         const steps = _.flatMap(model.contents.steps, step => [
             step.title,
@@ -410,6 +449,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return {
             ...rest,
+            installed: await this.validateModuleAppInstalled(model.dhisLaunchUrl),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,

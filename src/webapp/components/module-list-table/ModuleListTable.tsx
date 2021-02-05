@@ -1,4 +1,5 @@
-import { Icon } from "@material-ui/core";
+import { Icon, Tooltip, IconButton } from "@material-ui/core";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import {
     ObjectsTable,
     TableAction,
@@ -22,6 +23,7 @@ import {
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 import { ModuleCreationDialog } from "../module-creation-dialog/ModuleCreationDialog";
+import { FetchHttpClient } from "../../../data/clients/http/FetchHttpClient";
 
 export const ModuleListTable: React.FC = () => {
     const { usecases } = useAppContext();
@@ -31,7 +33,6 @@ export const ModuleListTable: React.FC = () => {
     const [tableLoading, setTableLoading] = useState<boolean>(true);
     const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
-
     const [
         editContentsDialogProps,
         updateEditContentsDialog,
@@ -118,6 +119,29 @@ export const ModuleListTable: React.FC = () => {
         [modules]
     );
 
+    const installApp = useCallback(
+        async (ids: string[]) => {
+            const row = buildChildrenRows(modules).find(({ id }) => id === ids[0]);
+            if (!row) return;
+            const appStoreClient = new FetchHttpClient({ baseUrl: "https://apps.dhis2.org" });
+            const AllAppsResponse = await appStoreClient
+                .request<App[]>({
+                    method: "get",
+                    url: "/api/apps",
+                })
+                .getData();
+            const appId = AllAppsResponse.filter(app => app.name === row.name)[0].versions[0].id;
+            const isAppInstalled = await usecases.modules.installApp(appId);
+            if (isAppInstalled) {
+                row.installed = true;
+                snackbar.success("Successfully installed app");
+            } else {
+                snackbar.error("Error installing app");
+            }
+        },
+        [modules]
+    );
+
     const publishTranslations = useCallback(
         async (ids: string[]) => {
             loading.show(true, i18n.t("Initialize project in POEditor"));
@@ -137,6 +161,19 @@ export const ModuleListTable: React.FC = () => {
                 name: "name",
                 text: "Name",
                 sortable: false,
+                getValue: item =>
+                    !item.installed && item.rowType === "module" ? (
+                        <div>
+                            {item.name}
+                            <Tooltip title={i18n.t("App is not installed. Click install app within Actions to install app.")} placement="top">
+                                <IconButton>
+                                    <Icon color="error">warning</Icon>
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                    ) : (
+                        <div>{item.name}</div>
+                    ),
             },
             {
                 name: "id",
@@ -221,6 +258,15 @@ export const ModuleListTable: React.FC = () => {
                     );
                 },
             },
+            {
+                name: "install-app",
+                text: i18n.t("Install app"),
+                icon: <GetAppIcon />,
+                onClick: installApp,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module" && !item.installed);
+                },
+            },
         ],
         [
             modules,
@@ -229,6 +275,7 @@ export const ModuleListTable: React.FC = () => {
             moveUpModule,
             moveDownModule,
             editContents,
+            installApp,
             publishTranslations,
         ]
     );
@@ -361,3 +408,45 @@ const PageWrapper = styled.div`
 `;
 
 const isDebug = process.env.NODE_ENV === "development";
+
+interface App {
+    appType: string;
+    created: Date;
+    description: string;
+    developer: Developer;
+    id: string;
+    images: Image[];
+    lastUpdated: Date;
+    name: string;
+    owner: string;
+    reviews: [];
+    sourceUrl: string;
+    status: string;
+    versions: Version[];
+}
+interface Version {
+    channel: string;
+    created: Date;
+    demoUrl: string;
+    downloadUrl: string;
+    id: string;
+    lastUpdated: Date;
+    maxDhisVersion: string;
+    minDhisVersion: string;
+    version: string;
+}
+interface Developer {
+    address: string;
+    email: string;
+    name: string;
+    organization: string;
+}
+interface Image {
+    caption: string;
+    created: Date;
+    description: string;
+    id: string;
+    imageUrl: string;
+    lastUpdated: Date;
+    logo: boolean;
+}
