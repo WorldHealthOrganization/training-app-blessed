@@ -139,7 +139,7 @@ export const ModuleListTable: React.FC = () => {
                 snackbar.error("Error installing app");
             }
         },
-        [modules]
+        [modules, snackbar, usecases]
     );
 
     const publishTranslations = useCallback(
