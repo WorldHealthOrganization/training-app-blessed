@@ -13,7 +13,7 @@ import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTok
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
-import { InstallAppModulesUseCase } from "../domain/usecases/InstallAppModulesUseCase";
+import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
@@ -65,7 +65,7 @@ export class CompositionRoot {
             }),
             instance: getExecute({
                 uploadFile: new UploadFileUseCase(this.instanceRepository),
-                installApp: new InstallAppModulesUseCase(this.instanceRepository),
+                installApp: new InstallAppUseCase(this.instanceRepository, this.trainingModuleRepository),
             }),
         };
     }

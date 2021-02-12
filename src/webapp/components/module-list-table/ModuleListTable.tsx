@@ -1,5 +1,3 @@
-import { Icon, Tooltip, IconButton } from "@material-ui/core";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import {
     ObjectsTable,
     TableAction,
@@ -9,6 +7,8 @@ import {
     useLoading,
     useSnackbar,
 } from "@eyeseetea/d2-ui-components";
+import { Icon } from "@material-ui/core";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
@@ -16,11 +16,11 @@ import { TrainingModule, TrainingModuleBuilder } from "../../../domain/entities/
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
+import { AlertIcon } from "../alert-icon/AlertIcon";
 import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 import { ModuleCreationDialog } from "../module-creation-dialog/ModuleCreationDialog";
-import { FetchHttpClient } from "../../../data/clients/http/FetchHttpClient";
 
 export const ModuleListTable: React.FC = () => {
     const { usecases } = useAppContext();
@@ -118,23 +118,19 @@ export const ModuleListTable: React.FC = () => {
 
     const installApp = useCallback(
         async (ids: string[]) => {
-            const row = buildChildrenRows(modules).find(({ id }) => id === ids[0]);
-            if (!row) return;
-            const appStoreClient = new FetchHttpClient({ baseUrl: "https://apps.dhis2.org" });
-            const AllAppsResponse = await appStoreClient
-                .request<App[]>({
-                    method: "get",
-                    url: "/api/apps",
-                })
-                .getData();
-            const appId = AllAppsResponse.filter(app => app.name === row.name)[0]?.versions[0]?.id ?? "";
-            const isAppInstalled = await usecases.instance.installApp(appId);
-            if (isAppInstalled) {
-                row.installed = true;
-                snackbar.success("Successfully installed app");
-            } else {
+            if (!ids[0]) return;
+
+            loading.show(true, i18n.t("Initialize project in POEditor"));
+            const installed = await usecases.instance.installApp(ids[0]);
+            loading.reset();
+
+            if (!installed) {
                 snackbar.error("Error installing app");
+                return;
             }
+
+            snackbar.success("Successfully installed app");
+            setRefreshKey(Math.random());
         },
         [modules, snackbar, usecases]
     );
@@ -142,6 +138,7 @@ export const ModuleListTable: React.FC = () => {
     const publishTranslations = useCallback(
         async (ids: string[]) => {
             if (!ids[0]) return;
+
             loading.show(true, i18n.t("Initialize project in POEditor"));
             await usecases.translations.publishTerms(ids[0]);
             loading.reset();
@@ -159,22 +156,14 @@ export const ModuleListTable: React.FC = () => {
                 name: "name",
                 text: "Name",
                 sortable: false,
-                getValue: item =>
-                    !item.installed && item.rowType === "module" ? (
-                        <div>
-                            {item.name}
-                            <Tooltip
-                                title={i18n.t("App is not installed. Click install app within Actions to install app.")}
-                                placement="top"
-                            >
-                                <IconButton>
-                                    <Icon color="error">warning</Icon>
-                                </IconButton>
-                            </Tooltip>
-                        </div>
-                    ) : (
-                        <div>{item.name}</div>
-                    ),
+                getValue: item => (
+                    <div>
+                        {item.name}
+                        {!item.installed && item.rowType === "module" ? (
+                            <AlertIcon tooltip={i18n.t("App is not installed in this instance")} />
+                        ) : null}
+                    </div>
+                ),
             },
             {
                 name: "id",
@@ -399,45 +388,3 @@ const PageWrapper = styled.div`
 `;
 
 const isDebug = process.env.NODE_ENV === "development";
-
-interface App {
-    appType: string;
-    created: Date;
-    description: string;
-    developer: Developer;
-    id: string;
-    images: Image[];
-    lastUpdated: Date;
-    name: string;
-    owner: string;
-    reviews: [];
-    sourceUrl: string;
-    status: string;
-    versions: Version[];
-}
-interface Version {
-    channel: string;
-    created: Date;
-    demoUrl: string;
-    downloadUrl: string;
-    id: string;
-    lastUpdated: Date;
-    maxDhisVersion: string;
-    minDhisVersion: string;
-    version: string;
-}
-interface Developer {
-    address: string;
-    email: string;
-    name: string;
-    organization: string;
-}
-interface Image {
-    caption: string;
-    created: Date;
-    description: string;
-    id: string;
-    imageUrl: string;
-    lastUpdated: Date;
-    logo: boolean;
-}

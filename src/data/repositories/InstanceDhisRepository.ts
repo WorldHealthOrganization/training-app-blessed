@@ -1,17 +1,22 @@
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
+import { FetchHttpClient } from "../clients/http/FetchHttpClient";
+import { HttpClient } from "../clients/http/HttpClient";
 import { Instance } from "../entities/Instance";
+import { StoreApp } from "../entities/StoreApp";
 import { getD2APiFromInstance } from "../utils/d2-api";
 import { generateUid } from "../utils/uid";
 
 export class InstanceDhisRepository implements InstanceRepository {
     private instance: Instance;
     private api: D2Api;
+    private appStore: HttpClient;
 
     constructor(config: ConfigRepository) {
         this.instance = config.getInstance();
         this.api = getD2APiFromInstance(config.getInstance());
+        this.appStore = new FetchHttpClient({ baseUrl: "https://apps.dhis2.org" });
     }
 
     public async uploadFile(data: ArrayBuffer): Promise<string> {
@@ -51,14 +56,19 @@ export class InstanceDhisRepository implements InstanceRepository {
         return `${this.api.apiPath}/documents/${documentId}/data`;
     }
 
-    public async installApp(appId: string): Promise<boolean> {
+    public async installApp(appName: string): Promise<boolean> {
+        const storeApps = await this.listStoreApps();
+        const { versions = [] } = storeApps.find(({ name }) => name === appName) ?? {};
+        const latestVersion = versions[0]?.id;
+        if (!latestVersion) return false;
+
         try {
-            await (
-                await this.api.baseConnection.request({
+            await this.api.baseConnection
+                .request({
                     method: "post",
-                    url: `api/appHub/${appId}`,
-                }).response
-            ).status;
+                    url: `api/appHub/${latestVersion}`,
+                })
+                .getData();
         } catch (error) {
             return false;
         }
@@ -76,6 +86,19 @@ export class InstanceDhisRepository implements InstanceRepository {
         }
 
         return true;
+    }
+
+    private async listStoreApps(): Promise<StoreApp[]> {
+        try {
+            const apps = await this.appStore
+                .request<StoreApp[]>({ method: "get", url: "/api/apps" })
+                .getData();
+
+            return apps;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
     }
 
     private getAuthHeaders(auth: { username: string; password: string } | undefined): Record<string, string> {
