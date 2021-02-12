@@ -64,7 +64,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-push": "yarn prettify && yarn lint && yarn update-po && yarn test",
+            "pre-push": "yarn prettify && yarn lint && yarn update-po",
             "post-merge": "./.githooks/dep-check"
         }
     },

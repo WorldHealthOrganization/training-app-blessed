@@ -9,6 +9,7 @@ import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
+import { D2Api } from "../../types/d2-api";
 import { Dictionary } from "../../types/utils";
 import { promiseMap } from "../../utils/promises";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
@@ -21,16 +22,32 @@ import {
     PersistedTrainingModule,
     TranslationConnection,
 } from "../entities/PersistedTrainingModule";
+import { getD2APiFromInstance } from "../utils/d2-api";
+
+interface ModuleResponse {
+    data: string;
+    headers: Headers;
+    status: number;
+}
+
+interface Headers {
+    cacheControl: string;
+    contentType: string;
+    etag: string;
+    lastModified: Date;
+}
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
+    private api: D2Api;
 
     constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
+        this.api = getD2APiFromInstance(config.getInstance());
     }
 
     public async list(): Promise<TrainingModule[]> {
@@ -57,7 +74,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             );
 
             const currentUser = await this.config.getUser();
-
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
                 .uniqBy("id")
@@ -186,6 +202,21 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
     }
 
+    public async installApp(appId: string): Promise<boolean> {
+        try {
+            await (
+                await this.api.baseConnection.request({
+                    method: "post",
+                    url: `api/appHub/${appId}`,
+                }).response
+            ).status;
+        } catch (error) {
+            return false;
+        }
+
+        return true;
+    }
+
     public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
         await this.progressStorageClient.saveObjectInCollection<UserProgress>(Namespaces.PROGRESS, {
             id,
@@ -302,6 +333,18 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await api.projects.update({ id: project, reference_language: "en" });
     }
 
+    private async validateModuleAppInstalled(launchUrl: string): Promise<boolean> {
+        try {
+            await this.api.baseConnection
+                .request<ModuleResponse>({ method: "get", url: launchUrl })
+                .getData();
+        } catch (error) {
+            return false;
+        }
+
+        return true;
+    }
+
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
         const steps = _.flatMap(model.contents.steps, step => [
             step.title,
@@ -352,6 +395,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return {
             ...rest,
+            installed: await this.validateModuleAppInstalled(model.dhisLaunchUrl),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,

@@ -112,41 +112,43 @@ export const HomePage = () => {
                             </SpinnerWrapper>
                         ) : (
                             <Cardboard>
-                                {modules.map(({ name, id, progress, disabled, contents }, idx) => {
-                                    const { lastStep, completed } = progress;
-                                    const percentage = Math.round(
-                                        (lastStep / contents.steps.length) * 100
-                                    );
+                                {modules
+                                    .filter(module => module.installed === true)
+                                    .map(({ name, id, progress, disabled, contents }, idx) => {
+                                        const { lastStep, completed } = progress;
+                                        const percentage = Math.round(
+                                            (lastStep / contents.steps.length) * 100
+                                        );
 
-                                    const handleClick = () => {
-                                        loadModule(id, completed ? 0 : lastStep + 1);
-                                    };
+                                        const handleClick = () => {
+                                            loadModule(id, completed ? 0 : lastStep + 1);
+                                        };
 
-                                    const handleContextMenu = (event: MouseEvent<unknown>) => {
-                                        event.preventDefault();
-                                        event.stopPropagation();
-                                        setContextMenuTarget({
-                                            id,
-                                            pos: [event.clientX, event.clientY],
-                                        });
-                                    };
+                                        const handleContextMenu = (event: MouseEvent<unknown>) => {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            setContextMenuTarget({
+                                                id,
+                                                pos: [event.clientX, event.clientY],
+                                            });
+                                        };
 
-                                    const noop = (event: MouseEvent<unknown>) => {
-                                        event.preventDefault();
-                                        event.stopPropagation();
-                                    };
+                                        const noop = (event: MouseEvent<unknown>) => {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                        };
 
-                                    return (
-                                        <Card
-                                            key={`card-${idx}`}
-                                            label={translate(name)}
-                                            progress={completed ? 100 : percentage}
-                                            onClick={handleClick}
-                                            onContextMenu={isDebug ? handleContextMenu : noop}
-                                            disabled={disabled}
-                                        />
-                                    );
-                                })}
+                                        return (
+                                            <Card
+                                                key={`card-${idx}`}
+                                                label={translate(name)}
+                                                progress={completed ? 100 : percentage}
+                                                onClick={handleClick}
+                                                onContextMenu={isDebug ? handleContextMenu : noop}
+                                                disabled={disabled}
+                                            />
+                                        );
+                                    })}
                             </Cardboard>
                         )}
                     </ModalContent>

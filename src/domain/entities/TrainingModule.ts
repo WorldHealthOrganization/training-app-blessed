@@ -15,6 +15,7 @@ export interface TrainingModule extends Omit<SharedRef, "name"> {
     dhisVersionRange: string;
     dhisAppKey: string;
     dhisLaunchUrl: string;
+    installed: boolean;
 }
 
 export interface TrainingModuleContents {
