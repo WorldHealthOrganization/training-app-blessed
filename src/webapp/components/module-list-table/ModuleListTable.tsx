@@ -131,7 +131,7 @@ export const ModuleListTable: React.FC = () => {
                 })
                 .getData();
             const appId = AllAppsResponse.filter(app => app.name === row.name)[0].versions[0].id;
-            const isAppInstalled = await usecases.modules.installApp(appId);
+            const isAppInstalled = await usecases.instance.installApp(appId);
             if (isAppInstalled) {
                 row.installed = true;
                 snackbar.success("Successfully installed app");

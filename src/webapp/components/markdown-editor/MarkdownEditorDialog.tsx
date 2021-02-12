@@ -26,13 +26,9 @@ export const MarkdownEditorDialog: React.FC<MarkdownEditorDialogProps> = ({
         onSave(value);
     }, [onSave, value]);
 
-    const onUpload = useCallback(
-        async (data: ArrayBuffer) => {
-            const url = await usecases.content.uploadFile(data);
-            return url;
-        },
-        [usecases]
-    );
+    const onUpload = useCallback(async (data: ArrayBuffer) => usecases.instance.uploadFile(data), [
+        usecases,
+    ]);
 
     return (
         <ConfirmationDialog
