@@ -56,9 +56,7 @@ export class CompositionRoot {
             }),
             config: getExecute({
                 getSettingsPermissions: new GetSettingsPermissionsUseCase(this.configRepository),
-                updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(
-                    this.configRepository
-                ),
+                updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(this.configRepository),
                 savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
             }),

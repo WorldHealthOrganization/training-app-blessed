@@ -1,5 +1,5 @@
 import TextField from "@material-ui/core/TextField";
-import { ConfirmationDialog } from "d2-ui-components";
+import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
@@ -19,10 +19,7 @@ const defaultBuilder: TrainingModuleBuilder = {
     poEditorProject: "",
 };
 
-export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({
-    builder: editBuilder,
-    onClose,
-}) => {
+export const ModuleCreationDialog: React.FC<ModuleCreationDialogProps> = ({ builder: editBuilder, onClose }) => {
     const { usecases } = useAppContext();
 
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});

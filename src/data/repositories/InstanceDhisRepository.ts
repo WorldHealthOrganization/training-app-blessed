@@ -78,9 +78,7 @@ export class InstanceDhisRepository implements InstanceRepository {
         return true;
     }
 
-    private getAuthHeaders(
-        auth: { username: string; password: string } | undefined
-    ): Record<string, string> {
+    private getAuthHeaders(auth: { username: string; password: string } | undefined): Record<string, string> {
         return auth ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) } : {};
     }
 }

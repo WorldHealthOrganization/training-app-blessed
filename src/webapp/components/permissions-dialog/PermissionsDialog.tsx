@@ -1,5 +1,5 @@
 import { useConfig } from "@dhis2/app-runtime";
-import { ConfirmationDialog, ShareUpdate, Sharing, SharingRule } from "d2-ui-components";
+import { ConfirmationDialog, ShareUpdate, Sharing, SharingRule } from "@eyeseetea/d2-ui-components";
 import React, { useCallback } from "react";
 import { SharedRef, SharingSetting } from "../../../domain/entities/Ref";
 import i18n from "../../../locales";
@@ -13,9 +13,7 @@ interface PermissionsDialogProps {
     onClose: () => void;
 }
 
-export type SharedUpdate = Partial<
-    Pick<SharedRef, "userAccesses" | "userGroupAccesses" | "publicAccess">
->;
+export type SharedUpdate = Partial<Pick<SharedRef, "userAccesses" | "userGroupAccesses" | "publicAccess">>;
 
 export default function PermissionsDialog({
     object,
@@ -56,12 +54,7 @@ export default function PermissionsDialog({
     );
 
     return (
-        <ConfirmationDialog
-            isOpen={true}
-            fullWidth={true}
-            onCancel={onClose}
-            cancelText={i18n.t("Close")}
-        >
+        <ConfirmationDialog isOpen={true} fullWidth={true} onCancel={onClose} cancelText={i18n.t("Close")}>
             <Sharing
                 meta={metaObject}
                 showOptions={{

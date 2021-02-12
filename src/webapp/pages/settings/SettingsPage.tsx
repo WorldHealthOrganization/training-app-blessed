@@ -1,22 +1,13 @@
 //@ts-ignore
 import { HeaderBar } from "@dhis2/ui-widgets";
-import {
-    FormGroup,
-    Icon,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    TextField,
-} from "@material-ui/core";
-import { ConfirmationDialog } from "d2-ui-components";
+import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
+import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
 import i18n from "../../../locales";
 import { ModuleListTable } from "../../components/module-list-table/ModuleListTable";
-import PermissionsDialog, {
-    SharedUpdate,
-} from "../../components/permissions-dialog/PermissionsDialog";
+import PermissionsDialog, { SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
 import { useAppContext } from "../../contexts/app-context";
 import { PageHeader } from "./PageHeader";
 
@@ -137,10 +128,7 @@ export const SettingsPage: React.FC = () => {
                         <ListItemIcon>
                             <Icon>settings</Icon>
                         </ListItemIcon>
-                        <ListItemText
-                            primary={i18n.t("Access to Settings")}
-                            secondary={buildSharingDescription()}
-                        />
+                        <ListItemText primary={i18n.t("Access to Settings")} secondary={buildSharingDescription()} />
                     </ListItem>
                     <ListItem button onClick={() => setPOEditorDialogOpen(true)}>
                         <ListItemIcon>
@@ -148,9 +136,7 @@ export const SettingsPage: React.FC = () => {
                         </ListItemIcon>
                         <ListItemText
                             primary={i18n.t("Connection with POEditor")}
-                            secondary={i18n.t(
-                                "Connect the application with POEditor to sync translations"
-                            )}
+                            secondary={i18n.t("Connect the application with POEditor to sync translations")}
                         />
                     </ListItem>
                 </Group>

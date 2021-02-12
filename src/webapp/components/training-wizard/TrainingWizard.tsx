@@ -1,4 +1,4 @@
-import { Wizard } from "d2-ui-components";
+import { Wizard } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useMemo, useRef } from "react";
 import styled from "styled-components";
@@ -31,10 +31,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
     const { appState, setAppState, usecases, translate } = useAppContext();
     const lastStep = useRef<string>();
 
-    const minimized = useMemo(
-        () => appState.type === "TRAINING" && appState.state === "MINIMIZED",
-        [appState]
-    );
+    const minimized = useMemo(() => appState.type === "TRAINING" && appState.state === "MINIMIZED", [appState]);
 
     const wizardSteps = useMemo(() => {
         if (!module) return [];
@@ -107,18 +104,12 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
     if (!module || wizardSteps.length === 0) return null;
 
     return (
-        <StyledModal
-            onClose={onClose}
-            onGoHome={goHome}
-            onMinimize={minimize}
-            minimized={minimized}
-            allowDrag={true}
-        >
+        <StyledModal onClose={onClose} onGoHome={goHome} onMinimize={minimize} minimized={minimized} allowDrag={true}>
             <StyledWizard
                 steps={wizardSteps}
                 stepKey={stepKey}
                 onStepChange={onStepChange}
-                initialStepKey={wizardSteps[0].key}
+                initialStepKey={wizardSteps[0]?.key}
                 StepperComponent={minimized ? EmptyComponent : Stepper}
                 NavigationComponent={minimized ? EmptyComponent : Navigation}
             />

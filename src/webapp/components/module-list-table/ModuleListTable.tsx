@@ -8,7 +8,7 @@ import {
     TableState,
     useLoading,
     useSnackbar,
-} from "d2-ui-components";
+} from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
@@ -16,10 +16,7 @@ import { TrainingModule, TrainingModuleBuilder } from "../../../domain/entities/
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
-import {
-    MarkdownEditorDialog,
-    MarkdownEditorDialogProps,
-} from "../markdown-editor/MarkdownEditorDialog";
+import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 import { ModuleCreationDialog } from "../module-creation-dialog/ModuleCreationDialog";
@@ -33,13 +30,8 @@ export const ModuleListTable: React.FC = () => {
     const [tableLoading, setTableLoading] = useState<boolean>(true);
     const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
-    const [
-        editContentsDialogProps,
-        updateEditContentsDialog,
-    ] = useState<MarkdownEditorDialogProps | null>(null);
-    const [editModuleCreationDialog, setEditModuleCreationDialog] = useState<
-        TrainingModuleBuilder
-    >();
+    const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
+    const [editModuleCreationDialog, setEditModuleCreationDialog] = useState<TrainingModuleBuilder>();
     const [isCreationDialogOpen, setOpenCreationDialog] = useState<boolean>(false);
     const [refreshKey, setRefreshKey] = useState(Math.random());
 
@@ -81,8 +73,11 @@ export const ModuleListTable: React.FC = () => {
             const rowIndex = _.findIndex(modules, ({ id }) => id === ids[0]);
             if (rowIndex === -1 || rowIndex === 0) return;
 
-            const prevRow = modules[rowIndex - 1];
-            await usecases.modules.swapOrder(ids[0], prevRow.id);
+            const { id: prevRowId } = modules[rowIndex - 1] ?? {};
+            if (prevRowId && ids[0]) {
+                await usecases.modules.swapOrder(ids[0], prevRowId);
+            }
+
             setRefreshKey(Math.random());
         },
         [modules, usecases]
@@ -93,8 +88,11 @@ export const ModuleListTable: React.FC = () => {
             const rowIndex = _.findIndex(modules, ({ id }) => id === ids[0]);
             if (rowIndex === -1 || rowIndex === modules.length - 1) return;
 
-            const nextRow = modules[rowIndex + 1];
-            await usecases.modules.swapOrder(nextRow.id, ids[0]);
+            const { id: nextRowId } = modules[rowIndex + 1] ?? {};
+            if (nextRowId && ids[0]) {
+                await usecases.modules.swapOrder(nextRowId, ids[0]);
+            }
+
             setRefreshKey(Math.random());
         },
         [modules, usecases]
@@ -130,7 +128,7 @@ export const ModuleListTable: React.FC = () => {
                     url: "/api/apps",
                 })
                 .getData();
-            const appId = AllAppsResponse.filter(app => app.name === row.name)[0].versions[0].id;
+            const appId = AllAppsResponse.filter(app => app.name === row.name)[0]?.versions[0]?.id ?? "";
             const isAppInstalled = await usecases.instance.installApp(appId);
             if (isAppInstalled) {
                 row.installed = true;
@@ -144,6 +142,7 @@ export const ModuleListTable: React.FC = () => {
 
     const publishTranslations = useCallback(
         async (ids: string[]) => {
+            if (!ids[0]) return;
             loading.show(true, i18n.t("Initialize project in POEditor"));
             await usecases.translations.publishTerms(ids[0]);
             loading.reset();
@@ -166,9 +165,7 @@ export const ModuleListTable: React.FC = () => {
                         <div>
                             {item.name}
                             <Tooltip
-                                title={i18n.t(
-                                    "App is not installed. Click install app within Actions to install app."
-                                )}
+                                title={i18n.t("App is not installed. Click install app within Actions to install app.")}
                                 placement="top"
                             >
                                 <IconButton>
@@ -245,10 +242,7 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>arrow_downwards</Icon>,
                 onClick: moveDownModule,
                 isActive: rows => {
-                    return _.every(
-                        rows,
-                        item => item.rowType === "module" && item.position !== modules.length - 1
-                    );
+                    return _.every(rows, item => item.rowType === "module" && item.position !== modules.length - 1);
                 },
             },
             {
@@ -257,10 +251,7 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
                 isActive: rows => {
-                    return _.every(
-                        rows,
-                        item => item.rowType === "page" || item.rowType === "dialog"
-                    );
+                    return _.every(rows, item => item.rowType === "page" || item.rowType === "dialog");
                 },
             },
             {
@@ -297,10 +288,7 @@ export const ModuleListTable: React.FC = () => {
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
 
             {isCreationDialogOpen && (
-                <ModuleCreationDialog
-                    onClose={closeCreationDialog}
-                    builder={editModuleCreationDialog}
-                />
+                <ModuleCreationDialog onClose={closeCreationDialog} builder={editModuleCreationDialog} />
             )}
 
             <ObjectsTable<ListItem>

@@ -6,25 +6,12 @@ import { Card } from "../../components/card-board/Card";
 import { Cardboard } from "../../components/card-board/Cardboard";
 import { ContextualMenu } from "../../components/contextual-menu/ContextualMenu";
 import { MainButton } from "../../components/main-button/MainButton";
-import {
-    Modal,
-    ModalContent,
-    ModalFooter,
-    ModalParagraph,
-    ModalTitle,
-} from "../../components/modal";
+import { Modal, ModalContent, ModalFooter, ModalParagraph, ModalTitle } from "../../components/modal";
 import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
 export const HomePage = () => {
-    const {
-        usecases,
-        setAppState,
-        modules,
-        reload,
-        hasSettingsAccess,
-        translate,
-    } = useAppContext();
+    const { usecases, setAppState, modules, reload, hasSettingsAccess, translate } = useAppContext();
 
     const [loading, setLoading] = useState(true);
     const [contextMenuTarget, setContextMenuTarget] = useState<{
@@ -87,8 +74,8 @@ export const HomePage = () => {
                     id={contextMenuTarget.id}
                     isOpen={!!contextMenuTarget}
                     actions={contextMenuActions}
-                    positionLeft={contextMenuTarget.pos[0]}
-                    positionTop={contextMenuTarget.pos[1]}
+                    positionLeft={contextMenuTarget.pos[0] ?? 0}
+                    positionTop={contextMenuTarget.pos[1] ?? 0}
                     onClose={() => setContextMenuTarget(null)}
                 />
             )}
@@ -116,9 +103,7 @@ export const HomePage = () => {
                                     .filter(module => module.installed === true)
                                     .map(({ name, id, progress, disabled, contents }, idx) => {
                                         const { lastStep, completed } = progress;
-                                        const percentage = Math.round(
-                                            (lastStep / contents.steps.length) * 100
-                                        );
+                                        const percentage = Math.round((lastStep / contents.steps.length) * 100);
 
                                         const handleClick = () => {
                                             loadModule(id, completed ? 0 : lastStep + 1);

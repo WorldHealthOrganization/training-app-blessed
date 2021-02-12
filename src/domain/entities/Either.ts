@@ -19,9 +19,7 @@ export class Either<Error, Data> {
         }
     }
 
-    static isSuccess<Error, Data>(
-        value: EitherValue<Error, Data>
-    ): value is EitherValueSuccess<Data> {
+    static isSuccess<Error, Data>(value: EitherValue<Error, Data>): value is EitherValueSuccess<Data> {
         return value.type === "success";
     }
 

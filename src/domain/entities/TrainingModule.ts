@@ -44,7 +44,10 @@ export const extractStepFromKey = (key: string): { step: number; content: number
     const match = /^.*-(\d*)-(\d*)$/.exec(key);
     if (!match) return null;
 
-    return { step: parseInt(match[1]), content: parseInt(match[2]) };
+    const [step, content] = match;
+    if (!step || !content) return null;
+
+    return { step: parseInt(step), content: parseInt(content) };
 };
 
 export const isValidTrainingType = (type: string): type is TrainingModuleType => {

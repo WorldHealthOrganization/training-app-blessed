@@ -1,4 +1,4 @@
-import { WizardStep, WizardStepperProps } from "d2-ui-components";
+import { WizardStep, WizardStepperProps } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback } from "react";
 import styled from "styled-components";
@@ -30,7 +30,7 @@ export const Stepper = ({
     const index = _(steps).findIndex(step => step.key === currentStepKey);
     const currentStepIndex = index >= 0 ? index : 0;
 
-    const { props } = steps[currentStepIndex];
+    const { props } = steps[currentStepIndex] ?? {};
     const { stepIndex = currentStepIndex, totalSteps = steps.length } = props ?? {};
 
     return (
@@ -42,9 +42,7 @@ export const Stepper = ({
                         current={index === stepIndex}
                         completed={markAllCompleted || index < stepIndex}
                         last={index === totalSteps - 1}
-                        onClick={
-                            lastClickableStepIndex !== -1 ? () => moveStep(index + 1) : undefined
-                        }
+                        onClick={lastClickableStepIndex !== -1 ? () => moveStep(index + 1) : undefined}
                     />
                 </Step>
             ))}

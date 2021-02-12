@@ -96,8 +96,7 @@ export class PoEditorApi {
     }
 
     private buildEndpoint<T extends keyof ApiEndpoints>(url: T) {
-        return (requestParams?: Omit<ApiEndpoints[T]["params"], "api_token">) =>
-            this.request(url, requestParams);
+        return (requestParams?: Omit<ApiEndpoints[T]["params"], "api_token">) => this.request(url, requestParams);
     }
 
     // TODO: Add all possible error codes

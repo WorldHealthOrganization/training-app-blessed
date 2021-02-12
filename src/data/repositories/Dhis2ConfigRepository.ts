@@ -46,9 +46,7 @@ export class Dhis2ConfigRepository implements ConfigRepository {
         };
     }
 
-    public async getUiLocale(d2User: {
-        settings: { keyUiLocale: string; keyDbLocale: string };
-    }): Promise<string> {
+    public async getUiLocale(d2User: { settings: { keyUiLocale: string; keyDbLocale: string } }): Promise<string> {
         const version = getMajorVersion(await this.api.getVersion());
         if (version > 30 && d2User.settings.keyUiLocale) {
             return d2User.settings.keyUiLocale;

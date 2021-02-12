@@ -1,10 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Draggable, {
-    ControlPosition,
-    DraggableData,
-    DraggableEvent,
-    DraggableProps,
-} from "react-draggable";
+import Draggable, { ControlPosition, DraggableData, DraggableEvent, DraggableProps } from "react-draggable";
 import styled from "styled-components";
 import { ModalHeader, ModalHeaderProps } from "./ModalHeader";
 
@@ -31,12 +26,7 @@ export const Modal: React.FC<ModalProps> = ({
     }, [minimized]);
 
     return (
-        <StyledDraggable
-            disabled={!allowDrag}
-            handle={`#${dragId}`}
-            position={position}
-            onDrag={clearPosition}
-        >
+        <StyledDraggable disabled={!allowDrag} handle={`#${dragId}`} position={position} onDrag={clearPosition}>
             <ModalWrapper center={centerChildren}>
                 <ModalBody id={dragId} className={className}>
                     <ModalHeader

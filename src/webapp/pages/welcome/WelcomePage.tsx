@@ -29,12 +29,7 @@ export const WelcomePage = () => {
     if (!module) return null;
 
     return (
-        <StyledModal
-            onMinimize={minimize}
-            onClose={exitTutorial}
-            onGoHome={goHome}
-            centerChildren={true}
-        >
+        <StyledModal onMinimize={minimize} onClose={exitTutorial} onGoHome={goHome} centerChildren={true}>
             <WelcomePageContent welcome={translate(module.contents.welcome)} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>

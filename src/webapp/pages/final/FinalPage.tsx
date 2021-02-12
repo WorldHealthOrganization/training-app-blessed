@@ -3,13 +3,7 @@ import styled from "styled-components";
 import i18n from "../../../locales";
 import Decoration from "../../assets/Decoration.png";
 import { MainButton } from "../../components/main-button/MainButton";
-import {
-    Modal,
-    ModalContent,
-    ModalFooter,
-    ModalParagraph,
-    ModalTitle,
-} from "../../components/modal";
+import { Modal, ModalContent, ModalFooter, ModalParagraph, ModalTitle } from "../../components/modal";
 import { Stepper } from "../../components/training-wizard/stepper/Stepper";
 import { useAppContext } from "../../contexts/app-context";
 
@@ -26,7 +20,7 @@ export const FinalPage = () => {
     const goToLastTutorialStep = useCallback(() => {
         if (!module) return;
         const step = module.contents.steps.length;
-        const content = module.contents.steps[step - 1].pages.length;
+        const content = module.contents.steps[step - 1]?.pages.length ?? 0;
 
         setAppState({
             type: "TRAINING",
@@ -73,9 +67,7 @@ export const FinalPage = () => {
                     </ModalParagraph>
                     <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
                     <ModalFooter>
-                        <MainButton onClick={goToLastTutorialStep}>
-                            {i18n.t("Back to tutorial")}
-                        </MainButton>
+                        <MainButton onClick={goToLastTutorialStep}>{i18n.t("Back to tutorial")}</MainButton>
                         <MainButton onClick={openSummary}>{i18n.t("Finish")}</MainButton>
                     </ModalFooter>
                 </Container>

@@ -2,10 +2,9 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 
-const Viewer: React.FC<{ className?: string; source: string; center?: boolean }> = ({
-    className,
-    source,
-}) => <ReactMarkdown className={className} escapeHtml={false} source={source} />;
+const Viewer: React.FC<{ className?: string; source: string; center?: boolean }> = ({ className, source }) => (
+    <ReactMarkdown className={className} escapeHtml={false} source={source} />
+);
 
 export const MarkdownViewer = styled(Viewer)`
     color: white;

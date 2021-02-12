@@ -35,12 +35,7 @@ interface SettingsAppState extends BaseAppState {
     type: "SETTINGS";
 }
 
-export type AppState =
-    | UnknownAppState
-    | HomeAppState
-    | TrainingAppState
-    | TrainingDialogAppState
-    | SettingsAppState;
+export type AppState = UnknownAppState | HomeAppState | TrainingAppState | TrainingDialogAppState | SettingsAppState;
 
 export const buildPathFromState = (state: AppState): string => {
     switch (state.type) {
@@ -64,19 +59,19 @@ export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
                 return { type: "HOME" };
             case "/tutorial/:key":
             case "/tutorial/:key/welcome":
-                return { type: "TRAINING_DIALOG", dialog: "welcome", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "welcome", module: match.params.key ?? "" };
             case "/tutorial/:key/contents":
-                return { type: "TRAINING_DIALOG", dialog: "contents", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "contents", module: match.params.key ?? "" };
             case "/tutorial/:key/summary":
-                return { type: "TRAINING_DIALOG", dialog: "summary", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "summary", module: match.params.key ?? "" };
             case "/tutorial/:key/final":
-                return { type: "TRAINING_DIALOG", dialog: "final", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "final", module: match.params.key ?? "" };
             case "/tutorial/:key/:step/:content":
                 return {
                     type: "TRAINING",
-                    module: match.params.key,
-                    step: parseInt(match.params.step),
-                    content: parseInt(match.params.content),
+                    module: match.params.key ?? "",
+                    step: parseInt(match.params.step ?? ""),
+                    content: parseInt(match.params.content ?? ""),
                     state: "OPEN",
                 };
             case "/settings":

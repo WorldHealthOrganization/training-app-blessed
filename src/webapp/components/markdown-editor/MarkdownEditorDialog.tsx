@@ -1,4 +1,4 @@
-import { ConfirmationDialog } from "d2-ui-components";
+import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import React, { ReactNode, useCallback, useState } from "react";
 import i18n from "../../../locales";
 import { useAppContext } from "../../contexts/app-context";
@@ -26,9 +26,7 @@ export const MarkdownEditorDialog: React.FC<MarkdownEditorDialogProps> = ({
         onSave(value);
     }, [onSave, value]);
 
-    const onUpload = useCallback(async (data: ArrayBuffer) => usecases.instance.uploadFile(data), [
-        usecases,
-    ]);
+    const onUpload = useCallback(async (data: ArrayBuffer) => usecases.instance.uploadFile(data), [usecases]);
 
     return (
         <ConfirmationDialog
@@ -40,12 +38,7 @@ export const MarkdownEditorDialog: React.FC<MarkdownEditorDialogProps> = ({
             onSave={onFinish}
             saveText={i18n.t("Save")}
         >
-            <MarkdownEditor
-                value={value}
-                onChange={onChange}
-                markdownPreview={markdownPreview}
-                onUpload={onUpload}
-            />
+            <MarkdownEditor value={value} onChange={onChange} markdownPreview={markdownPreview} onUpload={onUpload} />
         </ConfirmationDialog>
     );
 };

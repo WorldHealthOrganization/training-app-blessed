@@ -59,16 +59,7 @@ export function useAppContext(): UseAppContextResult {
     const context = useContext(AppContext);
     if (!context) throw new Error("Context not initialized");
 
-    const {
-        compositionRoot,
-        routes,
-        appState,
-        setAppState,
-        modules,
-        translate,
-        reload,
-        hasSettingsAccess,
-    } = context;
+    const { compositionRoot, routes, appState, setAppState, modules, translate, reload, hasSettingsAccess } = context;
     const { usecases } = compositionRoot;
     const [module, setCurrentModule] = useState<TrainingModule>();
 
