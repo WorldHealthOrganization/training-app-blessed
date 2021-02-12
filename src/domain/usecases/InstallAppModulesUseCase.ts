@@ -1,10 +1,10 @@
 import { UseCase } from "../../webapp/CompositionRoot";
-import { TrainingModuleRepository } from "../repositories/TrainingModuleRepository";
+import { InstanceRepository } from "../repositories/InstanceRepository";
 
 export class InstallAppModulesUseCase implements UseCase {
-    constructor(private trainingModuleRepository: TrainingModuleRepository) {}
+    constructor(private instanceRepository: InstanceRepository) {}
 
     public async execute(appId: string): Promise<boolean> {
-        return this.trainingModuleRepository.installApp(appId);
+        return this.instanceRepository.installApp(appId);
     }
 }

@@ -1,6 +1,8 @@
 import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepository";
+import { InstanceDhisRepository } from "../data/repositories/InstanceDhisRepository";
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { ConfigRepository } from "../domain/repositories/ConfigRepository";
+import { InstanceRepository } from "../domain/repositories/InstanceRepository";
 import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
 import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSettingsPermissionsUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
@@ -9,24 +11,29 @@ import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { EditModuleUseCase } from "../domain/usecases/EditModuleUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
-import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
-import { InstallAppModulesUseCase } from "../domain/usecases/InstallAppModulesUseCase";
+import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
+import { InstallAppModulesUseCase } from "../domain/usecases/InstallAppModulesUseCase";
+import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
-import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
-import { cache } from "../utils/cache";
 import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
-import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
+import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { UploadFileUseCase } from "../domain/usecases/UploadFileUseCase";
+import { cache } from "../utils/cache";
 
 export class CompositionRoot {
     private readonly configRepository: ConfigRepository;
+    private readonly instanceRepository: InstanceRepository;
     private readonly trainingModuleRepository: TrainingModuleRepository;
 
     constructor(baseUrl: string) {
         this.configRepository = new Dhis2ConfigRepository(baseUrl);
-        this.trainingModuleRepository = new TrainingModuleDefaultRepository(this.configRepository);
+        this.instanceRepository = new InstanceDhisRepository(this.configRepository);
+        this.trainingModuleRepository = new TrainingModuleDefaultRepository(
+            this.configRepository,
+            this.instanceRepository
+        );
     }
 
     @cache()
@@ -38,7 +45,6 @@ export class CompositionRoot {
                 delete: new DeleteModulesUseCase(this.trainingModuleRepository),
                 edit: new EditModuleUseCase(this.trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
-                installApp: new InstallAppModulesUseCase(this.trainingModuleRepository),
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(this.trainingModuleRepository),
@@ -59,8 +65,9 @@ export class CompositionRoot {
             user: getExecute({
                 checkSuperUser: new CheckSettingsPermissionsUseCase(this.configRepository),
             }),
-            content: getExecute({
-                uploadFile: new UploadFileUseCase(this.trainingModuleRepository),
+            instance: getExecute({
+                uploadFile: new UploadFileUseCase(this.instanceRepository),
+                installApp: new InstallAppModulesUseCase(this.instanceRepository),
             }),
         };
     }
