@@ -3,7 +3,7 @@ import { Either } from "../../domain/entities/Either";
 import {
     isValidTrainingType,
     TrainingModule,
-    TrainingModuleBuilder
+    TrainingModuleBuilder,
 } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
@@ -21,7 +21,7 @@ import { Instance } from "../entities/Instance";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import {
     PersistedTrainingModule,
-    TranslationConnection
+    TranslationConnection,
 } from "../entities/PersistedTrainingModule";
 import { getD2APiFromInstance } from "../utils/d2-api";
 import { generateUid } from "../utils/uid";

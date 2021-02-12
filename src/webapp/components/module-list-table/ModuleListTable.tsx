@@ -165,7 +165,12 @@ export const ModuleListTable: React.FC = () => {
                     !item.installed && item.rowType === "module" ? (
                         <div>
                             {item.name}
-                            <Tooltip title={i18n.t("App is not installed. Click install app within Actions to install app.")} placement="top">
+                            <Tooltip
+                                title={i18n.t(
+                                    "App is not installed. Click install app within Actions to install app."
+                                )}
+                                placement="top"
+                            >
                                 <IconButton>
                                     <Icon color="error">warning</Icon>
                                 </IconButton>
