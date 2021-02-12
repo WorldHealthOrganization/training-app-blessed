@@ -3,7 +3,7 @@ import { Either } from "../../domain/entities/Either";
 import {
     isValidTrainingType,
     TrainingModule,
-    TrainingModuleBuilder,
+    TrainingModuleBuilder
 } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
@@ -17,12 +17,14 @@ import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClien
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorApi } from "../clients/translation/PoEditorApi";
+import { Instance } from "../entities/Instance";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import {
     PersistedTrainingModule,
-    TranslationConnection,
+    TranslationConnection
 } from "../entities/PersistedTrainingModule";
 import { getD2APiFromInstance } from "../utils/d2-api";
+import { generateUid } from "../utils/uid";
 
 interface ModuleResponse {
     data: string;
@@ -37,17 +39,26 @@ interface Headers {
     lastModified: Date;
 }
 
+interface SaveApiResponse {
+    response: {
+        fileResource: {
+            id: string;
+        };
+    };
+}
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
     private api: D2Api;
+    private instance: Instance;
 
     constructor(private config: ConfigRepository) {
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
         this.api = getD2APiFromInstance(config.getInstance());
+        this.instance = config.getInstance();
     }
 
     public async list(): Promise<TrainingModule[]> {
@@ -331,6 +342,49 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         // Update reference language
         await api.projects.update({ id: project, reference_language: "en" });
+    }
+
+    public async uploadFile(data: ArrayBuffer): Promise<string> {
+        const documentId = generateUid();
+
+        const auth = this.instance.auth;
+        const authHeaders: Record<string, string> = this.getAuthHeaders(auth);
+
+        const formdata = new FormData();
+        const blob = new Blob([data], { type: "image/jpeg" });
+        formdata.append("file", blob, "file.jpg");
+        formdata.append("domain", "DOCUMENT");
+
+        const fetchOptions: RequestInit = {
+            method: "POST",
+            headers: { ...authHeaders },
+            body: formdata,
+            credentials: auth ? "omit" : ("include" as const),
+        };
+
+        const response = await fetch(`${this.api.apiPath}/fileResources`, fetchOptions);
+        if (!response.ok) {
+            throw Error(`An error ocurred uploading the image`);
+        }
+
+        const apiResponse: SaveApiResponse = JSON.parse(await response.text());
+        const { id: fileResourceId } = apiResponse.response.fileResource;
+
+        await this.api.models.documents
+            .post({
+                id: documentId,
+                name: `[Training App] Uploaded file ${fileResourceId}`,
+                url: fileResourceId,
+            })
+            .getData();
+
+        return `${this.api.apiPath}/documents/${documentId}/data`;
+    }
+
+    private getAuthHeaders(
+        auth: { username: string; password: string } | undefined
+    ): Record<string, string> {
+        return auth ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) } : {};
     }
 
     private async validateModuleAppInstalled(launchUrl: string): Promise<boolean> {

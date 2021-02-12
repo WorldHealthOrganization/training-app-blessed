@@ -11,5 +11,6 @@ export interface TrainingModuleRepository {
     updateProgress(id: string, lastStep: number, completed: boolean): Promise<void>;
     updateTranslations(id: string): Promise<void>;
     initializeTranslation(id: string): Promise<void>;
+    uploadFile(file: ArrayBuffer): Promise<string>;
     installApp(appId: string): Promise<boolean>;
 }
