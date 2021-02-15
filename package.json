@@ -26,7 +26,7 @@
         "btoa": "1.2.1",
         "classnames": "2.2.6",
         "d2": "31.9.0",
-        "d2-api": "1.7.0",
+        "d2-api": "1.7.1-beta.1",
         "d2-manifest": "1.0.0",
         "date-fns": "2.17.0",
         "font-awesome": "4.7.0",

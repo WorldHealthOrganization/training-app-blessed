@@ -61,7 +61,7 @@ export class CompositionRoot {
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
             }),
             user: getExecute({
-                checkSuperUser: new CheckSettingsPermissionsUseCase(this.configRepository),
+                checkSettingsPermissions: new CheckSettingsPermissionsUseCase(this.configRepository),
             }),
             instance: getExecute({
                 uploadFile: new UploadFileUseCase(this.instanceRepository),
