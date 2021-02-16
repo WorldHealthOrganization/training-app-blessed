@@ -12,7 +12,7 @@ export interface ModuleCreationWizardProps {
     onCancel: () => void;
     onClose: () => void;
     module: TrainingModule;
-    onChange: (module: TrainingModule) => void;
+    onChange: (update: TrainingModule | ((prev: TrainingModule) => TrainingModule)) => void;
 }
 
 export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = ({

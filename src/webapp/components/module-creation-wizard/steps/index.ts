@@ -11,7 +11,7 @@ export interface ModuleCreationWizardStep extends WizardStep {
 
 export interface ModuleCreationWizardStepProps {
     module: TrainingModule;
-    onChange: (module: TrainingModule) => void;
+    onChange: (update: TrainingModule | ((prev: TrainingModule) => TrainingModule)) => void;
     onCancel: () => void;
     onClose: () => void;
     isEdit: boolean;
