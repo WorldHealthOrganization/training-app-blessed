@@ -5,8 +5,20 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-16T09:42:46.043Z\n"
-"PO-Revision-Date: 2021-02-16T09:42:46.043Z\n"
+"POT-Creation-Date: 2021-02-16T10:00:57.782Z\n"
+"PO-Revision-Date: 2021-02-16T10:00:57.782Z\n"
+
+msgid "Field {{field}} cannot be blank"
+msgstr ""
+
+msgid "You need to select at least one {{field}}"
+msgstr ""
+
+msgid "Field {{field}} needs to be a valid url"
+msgstr ""
+
+msgid "Field {{field}} is not valid"
+msgstr ""
 
 msgid "Tutorial"
 msgstr ""

@@ -1,6 +1,7 @@
 import { GetSchemaType, Schema } from "../../utils/codec";
 import { SharedRefModel } from "./Ref";
 import { TranslatableTextModel } from "./TranslatableText";
+import { ModelValidation } from "./Validation";
 
 export const TrainingModuleTypeModel = Schema.oneOf([
     Schema.exact("app"),
@@ -67,3 +68,5 @@ export const extractStepFromKey = (key: string): { step: number; content: number
 export const isValidTrainingType = (type: string): type is TrainingModuleType => {
     return ["app", "core", "widget"].includes(type);
 };
+
+export const trainingModuleValidations: ModelValidation[] = [];
