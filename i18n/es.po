@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-02-12T12:40:33.176Z\n"
+"POT-Creation-Date: 2021-02-16T07:53:42.190Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +49,9 @@ msgstr "Añadir modulo"
 
 msgid "Edit contents of {{name}}"
 msgstr "Editar contenidos de {{name}}"
+
+msgid "Installing application"
+msgstr ""
 
 msgid "Initialize project in POEditor"
 msgstr ""

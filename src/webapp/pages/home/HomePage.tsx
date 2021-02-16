@@ -101,7 +101,7 @@ export const HomePage = () => {
                             <Cardboard>
                                 {modules
                                     .filter(module => module.installed === true)
-                                    .map(({ name, id, progress, disabled, contents }, idx) => {
+                                    .map(({ displayName, id, progress, disabled, contents }, idx) => {
                                         const { lastStep, completed } = progress;
                                         const percentage = Math.round((lastStep / contents.steps.length) * 100);
 
@@ -126,7 +126,7 @@ export const HomePage = () => {
                                         return (
                                             <Card
                                                 key={`card-${idx}`}
-                                                label={translate(name)}
+                                                label={translate(displayName)}
                                                 progress={completed ? 100 : percentage}
                                                 onClick={handleClick}
                                                 onContextMenu={isDebug ? handleContextMenu : noop}
