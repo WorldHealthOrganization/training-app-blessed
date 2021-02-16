@@ -1,6 +1,6 @@
 import { useConfig } from "@dhis2/app-runtime";
-import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import { LoadingProvider, SnackbarProvider } from "@eyeseetea/d2-ui-components";
+import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
 import { HashRouter } from "react-router-dom";
@@ -12,6 +12,7 @@ import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
+import { EditPage } from "./edit/EditPage";
 import { ExitPage } from "./exit/ExitPage";
 import { FinalPage } from "./final/FinalPage";
 import { HomePage } from "./home/HomePage";
@@ -80,6 +81,18 @@ export const routes: AppRoute[] = [
         name: () => i18n.t("Settings"),
         paths: ["/settings"],
         element: <SettingsPage />,
+    },
+    {
+        key: "edit",
+        name: () => i18n.t("Edit"),
+        paths: ["/edit/:module"],
+        element: <EditPage edit={true} />,
+    },
+    {
+        key: "create",
+        name: () => i18n.t("Create"),
+        paths: ["/create"],
+        element: <EditPage edit={false} />,
     },
 ];
 

@@ -1,7 +1,5 @@
-//@ts-ignore
-import { HeaderBar } from "@dhis2/ui-widgets";
-import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
 import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
+import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
@@ -9,6 +7,7 @@ import i18n from "../../../locales";
 import { ModuleListTable } from "../../components/module-list-table/ModuleListTable";
 import PermissionsDialog, { SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
 import { useAppContext } from "../../contexts/app-context";
+import { DhisPage } from "../dhis-page/DhisPage";
 import { PageHeader } from "./PageHeader";
 
 export const SettingsPage: React.FC = () => {
@@ -74,7 +73,7 @@ export const SettingsPage: React.FC = () => {
     }, [usecases]);
 
     return (
-        <React.Fragment>
+        <DhisPage>
             {!!permissionsType && (
                 <PermissionsDialog
                     object={{
@@ -117,7 +116,6 @@ export const SettingsPage: React.FC = () => {
                 </form>
             </ConfirmationDialog>
 
-            <HeaderBar appName={i18n.t("Training app")} />
             <Header title={i18n.t("Settings")} onBackClick={openTraining} />
 
             <Container>
@@ -145,7 +143,7 @@ export const SettingsPage: React.FC = () => {
 
                 <ModuleListTable />
             </Container>
-        </React.Fragment>
+        </DhisPage>
     );
 };
 

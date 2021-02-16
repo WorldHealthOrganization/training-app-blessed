@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-16T07:53:42.190Z\n"
-"PO-Revision-Date: 2021-02-16T07:53:42.190Z\n"
+"POT-Creation-Date: 2021-02-16T09:27:06.134Z\n"
+"PO-Revision-Date: 2021-02-16T09:27:06.134Z\n"
 
 msgid "Tutorial"
 msgstr ""
@@ -110,6 +110,15 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
+msgid "Edit"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Training app"
+msgstr ""
+
 msgid "Continue Tutorial"
 msgstr ""
 
@@ -173,9 +182,6 @@ msgid "Connection with POEditor"
 msgstr ""
 
 msgid "POEditor token"
-msgstr ""
-
-msgid "Training app"
 msgstr ""
 
 msgid "Permissions"
