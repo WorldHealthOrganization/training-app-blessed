@@ -5,7 +5,7 @@ import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
 import { HashRouter } from "react-router-dom";
 import i18n from "../../locales";
-import { CompositionRoot } from "../CompositionRoot";
+import { getCompositionRoot } from "../CompositionRoot";
 import { AppContextProvider } from "../contexts/app-context";
 import { AppRoute } from "../router/AppRoute";
 import { Router } from "../router/Router";
@@ -98,7 +98,7 @@ export const routes: AppRoute[] = [
 
 const App: React.FC<{ locale: string }> = ({ locale }) => {
     const { baseUrl } = useConfig();
-    const compositionRoot = new CompositionRoot(baseUrl);
+    const compositionRoot = getCompositionRoot(baseUrl);
 
     return (
         <AppContextProvider routes={routes} compositionRoot={compositionRoot} locale={locale}>

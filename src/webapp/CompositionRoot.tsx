@@ -1,9 +1,6 @@
 import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepository";
 import { InstanceDhisRepository } from "../data/repositories/InstanceDhisRepository";
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
-import { ConfigRepository } from "../domain/repositories/ConfigRepository";
-import { InstanceRepository } from "../domain/repositories/InstanceRepository";
-import { TrainingModuleRepository } from "../domain/repositories/TrainingModuleRepository";
 import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSettingsPermissionsUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { CreateModuleUseCase } from "../domain/usecases/CreateModuleUseCase";
@@ -20,56 +17,47 @@ import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCas
 import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { UploadFileUseCase } from "../domain/usecases/UploadFileUseCase";
-import { cache } from "../utils/cache";
 
-export class CompositionRoot {
-    private readonly configRepository: ConfigRepository;
-    private readonly instanceRepository: InstanceRepository;
-    private readonly trainingModuleRepository: TrainingModuleRepository;
+export function getCompositionRoot(baseUrl: string) {
+    const configRepository = new Dhis2ConfigRepository(baseUrl);
+    const instanceRepository = new InstanceDhisRepository(configRepository);
+    const trainingModuleRepository = new TrainingModuleDefaultRepository(configRepository, instanceRepository);
 
-    constructor(baseUrl: string) {
-        this.configRepository = new Dhis2ConfigRepository(baseUrl);
-        this.instanceRepository = new InstanceDhisRepository(this.configRepository);
-        this.trainingModuleRepository = new TrainingModuleDefaultRepository(
-            this.configRepository,
-            this.instanceRepository
-        );
-    }
-
-    @cache()
-    public get usecases() {
-        return {
+    return {
+        usecases: {
             modules: getExecute({
-                list: new ListModulesUseCase(this.trainingModuleRepository),
-                create: new CreateModuleUseCase(this.trainingModuleRepository),
-                delete: new DeleteModulesUseCase(this.trainingModuleRepository),
-                edit: new EditModuleUseCase(this.trainingModuleRepository),
-                swapOrder: new SwapModuleOrderUseCase(this.trainingModuleRepository),
+                list: new ListModulesUseCase(trainingModuleRepository),
+                create: new CreateModuleUseCase(trainingModuleRepository),
+                delete: new DeleteModulesUseCase(trainingModuleRepository),
+                edit: new EditModuleUseCase(trainingModuleRepository),
+                swapOrder: new SwapModuleOrderUseCase(trainingModuleRepository),
             }),
             translations: getExecute({
-                fetch: new FetchTranslationsUseCase(this.trainingModuleRepository),
-                publishTerms: new InitializeTranslationsUseCase(this.trainingModuleRepository),
+                fetch: new FetchTranslationsUseCase(trainingModuleRepository),
+                publishTerms: new InitializeTranslationsUseCase(trainingModuleRepository),
             }),
             progress: getExecute({
-                update: new UpdateUserProgressUseCase(this.trainingModuleRepository),
-                complete: new CompleteUserProgressUseCase(this.trainingModuleRepository),
+                update: new UpdateUserProgressUseCase(trainingModuleRepository),
+                complete: new CompleteUserProgressUseCase(trainingModuleRepository),
             }),
             config: getExecute({
-                getSettingsPermissions: new GetSettingsPermissionsUseCase(this.configRepository),
-                updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(this.configRepository),
-                savePoEditorToken: new SavePoEditorTokenUseCase(this.configRepository),
-                existsPoEditorToken: new ExistsPoEditorTokenUseCase(this.configRepository),
+                getSettingsPermissions: new GetSettingsPermissionsUseCase(configRepository),
+                updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(configRepository),
+                savePoEditorToken: new SavePoEditorTokenUseCase(configRepository),
+                existsPoEditorToken: new ExistsPoEditorTokenUseCase(configRepository),
             }),
             user: getExecute({
-                checkSettingsPermissions: new CheckSettingsPermissionsUseCase(this.configRepository),
+                checkSettingsPermissions: new CheckSettingsPermissionsUseCase(configRepository),
             }),
             instance: getExecute({
-                uploadFile: new UploadFileUseCase(this.instanceRepository),
-                installApp: new InstallAppUseCase(this.instanceRepository, this.trainingModuleRepository),
+                uploadFile: new UploadFileUseCase(instanceRepository),
+                installApp: new InstallAppUseCase(instanceRepository, trainingModuleRepository),
             }),
-        };
-    }
+        },
+    };
 }
+
+export type CompositionRoot = ReturnType<typeof getCompositionRoot>;
 
 function getExecute<UseCases extends Record<Key, UseCase>, Key extends keyof UseCases>(
     useCases: UseCases
