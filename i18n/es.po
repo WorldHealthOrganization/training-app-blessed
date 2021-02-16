@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-02-16T09:27:06.134Z\n"
+"POT-Creation-Date: 2021-02-16T09:42:46.043Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,12 @@ msgstr "Editar contenidos"
 msgid "Install app"
 msgstr ""
 
+msgid "Back"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
 msgid "Close"
 msgstr "Cerrar"
 
@@ -118,6 +124,10 @@ msgstr ""
 
 msgid "Training app"
 msgstr ""
+
+#, fuzzy
+msgid "Create module"
+msgstr "Eliminar modulo"
 
 msgid "Continue Tutorial"
 msgstr "Continuar el tutorial"
@@ -161,12 +171,6 @@ msgstr "Este es tu progreso en el entrenamiento de DHIS2"
 
 msgid "Select one of these tutorials to continue learning:"
 msgstr "Seleccione uno de los tutoriales para continuar aprendiendo"
-
-msgid "Back"
-msgstr ""
-
-msgid "Help"
-msgstr ""
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
 msgstr ""
