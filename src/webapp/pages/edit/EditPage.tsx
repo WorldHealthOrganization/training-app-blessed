@@ -23,7 +23,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
             <Header title={i18n.t("Create module")} onBackClick={openSettings} />
 
             {modules[0] ? (
-                <ModuleCreationWizard
+                <Wizard
                     isEdit={edit}
                     onChange={_.noop}
                     onCancel={openSettings}
@@ -37,4 +37,8 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
 
 const Header = styled(PageHeader)`
     margin-top: 1rem;
+`;
+
+const Wizard = styled(ModuleCreationWizard)`
+    margin: 1rem;
 `;

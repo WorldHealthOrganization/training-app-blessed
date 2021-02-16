@@ -7,6 +7,7 @@ import { validateModel } from "../../../domain/entities/Validation";
 import { moduleCreationWizardSteps, ModuleCreationWizardStepProps } from "./steps";
 
 export interface ModuleCreationWizardProps {
+    className?: string;
     isEdit: boolean;
     onCancel: () => void;
     onClose: () => void;
@@ -15,6 +16,7 @@ export interface ModuleCreationWizardProps {
 }
 
 export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = ({
+    className,
     isEdit,
     onCancel,
     onClose,
@@ -39,12 +41,14 @@ export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = ({
     const initialStepKey = stepExists ? urlHash : firstStepKey;
 
     return (
-        <Wizard
-            useSnackFeedback={true}
-            onStepChangeRequest={onStepChangeRequest}
-            initialStepKey={initialStepKey}
-            lastClickableStepIndex={steps.length - 1}
-            steps={steps}
-        />
+        <div className={className}>
+            <Wizard
+                useSnackFeedback={true}
+                onStepChangeRequest={onStepChangeRequest}
+                initialStepKey={initialStepKey}
+                lastClickableStepIndex={steps.length - 1}
+                steps={steps}
+            />
+        </div>
     );
 };
