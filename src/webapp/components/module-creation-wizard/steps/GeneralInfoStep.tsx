@@ -3,18 +3,29 @@ import { TextField } from "@material-ui/core";
 import { Dictionary } from "lodash";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { TrainingModuleBuilder } from "../../../../domain/entities/TrainingModule";
+import { TrainingModule } from "../../../../domain/entities/TrainingModule";
 import { ModuleCreationWizardStepProps } from "./index";
 
 export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ module, onChange, isEdit }) => {
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
 
     const onChangeField = useCallback(
-        (field: keyof TrainingModuleBuilder) => {
+        (field: keyof TrainingModule) => {
             return (event: React.ChangeEvent<{ value: unknown }>) => {
-                onChange(module => {
-                    return { ...module, [field]: event.target.value as string };
-                });
+                switch (field) {
+                    case "translation": {
+                        const project = event.target.value as string;
+                        onChange(module => {
+                            return { ...module, translation: { provider: "poeditor", project } };
+                        });
+                        return;
+                    }
+                    default: {
+                        onChange(module => {
+                            return { ...module, [field]: event.target.value as string };
+                        });
+                    }
+                }
                 setErrors(errors => ({
                     ...errors,
                     // TODO: Add validation from model
@@ -44,7 +55,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     disabled={!!isEdit}
                     fullWidth={true}
                     label={"Name *"}
-                    value={module.name}
+                    value={module.name.referenceValue}
                     onChange={onChangeField("name")}
                     error={!!errors["name"]}
                     helperText={errors["name"]}
@@ -56,7 +67,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     fullWidth={true}
                     label={"PoEditor Project id *"}
                     value={module.translation.provider !== "NONE" ? module.translation.project : ""}
-                    onChange={onChangeField("poEditorProject")}
+                    onChange={onChangeField("translation")}
                 />
             </Row>
         </React.Fragment>

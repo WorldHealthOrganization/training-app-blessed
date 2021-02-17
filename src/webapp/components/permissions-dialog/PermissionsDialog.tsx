@@ -6,7 +6,7 @@ import i18n from "../../../locales";
 import { D2Api } from "../../../types/d2-api";
 
 interface PermissionsDialogProps {
-    object: Pick<SharedRef, "name" | "userAccesses" | "userGroupAccesses" | "publicAccess">;
+    object: Pick<SharedRef, "userAccesses" | "userGroupAccesses" | "publicAccess"> & { name: string };
     onChange: (sharedUpdate: SharedUpdate) => Promise<void>;
     allowPublicAccess?: boolean;
     allowExternalAccess?: boolean;

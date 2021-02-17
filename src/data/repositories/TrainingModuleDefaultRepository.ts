@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
+import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
@@ -102,24 +102,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async update(module: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
         const { id, name, ...rest } = module;
 
-        const newModel = await this.buildPersistedModel({
-            id,
-            name: { key: "module-name", referenceValue: name, translations: {} },
-            type: "app",
-            _version: 1,
-            revision: 1,
-            dhisVersionRange: "",
-            dhisAppKey: "",
-            dhisLaunchUrl: "",
-            dhisAuthorities: [],
-            disabled: false,
-            translation: { provider: "NONE" },
-            contents: {
-                welcome: { key: "module-welcome", referenceValue: "", translations: {} },
-                steps: [],
-            },
-            ...rest,
-        });
+        const newModel = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...rest });
 
         await this.saveDataStore(newModel);
     }
@@ -300,13 +283,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
 
-        const { name, created, lastUpdated, type, ...rest } = model;
+        const { created, lastUpdated, type, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
 
         return {
             ...rest,
-            name: name.referenceValue,
-            displayName: name,
             installed: await this.instanceRepository.isAppInstalledByUrl(model.dhisLaunchUrl),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),

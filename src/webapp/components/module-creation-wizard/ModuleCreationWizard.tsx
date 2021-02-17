@@ -2,17 +2,17 @@ import { Wizard, WizardStep } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { TrainingModule, trainingModuleValidations } from "../../../domain/entities/TrainingModule";
+import { PartialTrainingModule, trainingModuleValidations } from "../../../domain/entities/TrainingModule";
 import { validateModel } from "../../../domain/entities/Validation";
-import { moduleCreationWizardSteps, ModuleCreationWizardStepProps } from "./steps";
+import { ModuleCreationWizardStepProps, moduleCreationWizardSteps } from "./steps";
 
 export interface ModuleCreationWizardProps {
     className?: string;
     isEdit: boolean;
     onCancel: () => void;
     onClose: () => void;
-    module: TrainingModule;
-    onChange: (update: TrainingModule | ((prev: TrainingModule) => TrainingModule)) => void;
+    module: PartialTrainingModule;
+    onChange: (update: PartialTrainingModule | ((prev: PartialTrainingModule) => PartialTrainingModule)) => void;
 }
 
 export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = ({

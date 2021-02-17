@@ -1,5 +1,6 @@
+import { PartialBy } from "../../types/utils";
 import { GetSchemaType, Schema } from "../../utils/codec";
-import { SharedRefModel } from "./Ref";
+import { DatedRefModel, SharedRefModel } from "./Ref";
 import { TranslatableTextModel } from "./TranslatableText";
 import { ModelValidation } from "./Validation";
 
@@ -32,10 +33,13 @@ export const TrainingModuleContentsModel = Schema.object({
     steps: Schema.array(TrainingModuleStepModel),
 });
 
+const BaseModel = Schema.extend(DatedRefModel, SharedRefModel);
+
 export const TrainingModuleModel = Schema.extend(
-    SharedRefModel,
+    BaseModel,
     Schema.object({
-        displayName: TranslatableTextModel,
+        id: Schema.string,
+        name: TranslatableTextModel,
         translation: TranslationConnectionModel,
         type: TrainingModuleTypeModel,
         disabled: Schema.optionalSafe(Schema.boolean, false),
@@ -49,6 +53,7 @@ export const TrainingModuleModel = Schema.extend(
         dhisVersionRange: Schema.string,
         dhisAppKey: Schema.string,
         dhisLaunchUrl: Schema.string,
+        dhisAuthorities: Schema.array(Schema.string),
         installed: Schema.boolean,
     })
 );
@@ -57,6 +62,19 @@ export type TrainingModule = GetSchemaType<typeof TrainingModuleModel>;
 export type TrainingModuleType = GetSchemaType<typeof TrainingModuleTypeModel>;
 export type TrainingModuleStep = GetSchemaType<typeof TrainingModuleStepModel>;
 export type TrainingModuleContents = GetSchemaType<typeof TrainingModuleContentsModel>;
+
+export type PartialTrainingModule = PartialBy<
+    TrainingModule,
+    | "user"
+    | "created"
+    | "lastUpdated"
+    | "lastUpdatedBy"
+    | "publicAccess"
+    | "userAccesses"
+    | "userGroupAccesses"
+    | "progress"
+    | "installed"
+>;
 
 export type TranslationConnection = GetSchemaType<typeof TranslationConnectionModel>;
 export type TranslationProviders = GetSchemaType<typeof TranslationProvidersModel>;
@@ -82,3 +100,20 @@ export const isValidTrainingType = (type: string): type is TrainingModuleType =>
 };
 
 export const trainingModuleValidations: ModelValidation[] = [];
+
+export const defaultTrainingModule: PartialTrainingModule = {
+    id: "",
+    name: { key: "module-name", referenceValue: "", translations: {} },
+    type: "app",
+    revision: 1,
+    dhisVersionRange: "",
+    dhisAppKey: "",
+    dhisLaunchUrl: "",
+    dhisAuthorities: [],
+    disabled: false,
+    translation: { provider: "NONE" },
+    contents: {
+        welcome: { key: "module-welcome", referenceValue: "", translations: {} },
+        steps: [],
+    },
+};

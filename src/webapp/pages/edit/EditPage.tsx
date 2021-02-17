@@ -1,6 +1,7 @@
-import _ from "lodash";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
+import { defaultTrainingModule, PartialTrainingModule } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { ModuleCreationWizard } from "../../components/module-creation-wizard/ModuleCreationWizard";
 import { PageHeader } from "../../components/page-header/PageHeader";
@@ -13,22 +14,27 @@ export interface EditPageProps {
 
 export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
     const { module, setAppState } = useAppContext();
+    const [stateModule, updateStateModule] = useState<PartialTrainingModule>(module ?? defaultTrainingModule);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
     }, [setAppState]);
 
+    useEffect(() => {
+        if (module) updateStateModule(module);
+    }, [module]);
+
     return (
         <DhisPage>
             <Header title={edit ? i18n.t("Edit module") : i18n.t("Create module")} onBackClick={openSettings} />
 
-            {module ? (
+            {stateModule ? (
                 <Wizard
                     isEdit={edit}
-                    onChange={_.noop}
+                    onChange={updateStateModule}
                     onCancel={openSettings}
                     onClose={openSettings}
-                    module={module}
+                    module={stateModule}
                 />
             ) : null}
         </DhisPage>

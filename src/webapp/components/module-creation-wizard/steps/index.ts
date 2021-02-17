@@ -1,5 +1,5 @@
 import { WizardStep } from "@eyeseetea/d2-ui-components";
-import { TrainingModule } from "../../../../domain/entities/TrainingModule";
+import { PartialTrainingModule } from "../../../../domain/entities/TrainingModule";
 import i18n from "../../../../locales";
 import { AccessStep } from "./AccessStep";
 import { ContentsStep } from "./ContentsStep";
@@ -13,8 +13,8 @@ export interface ModuleCreationWizardStep extends WizardStep {
 }
 
 export interface ModuleCreationWizardStepProps {
-    module: TrainingModule;
-    onChange: (update: TrainingModule | ((prev: TrainingModule) => TrainingModule)) => void;
+    module: PartialTrainingModule;
+    onChange: (update: PartialTrainingModule | ((prev: PartialTrainingModule) => PartialTrainingModule)) => void;
     onCancel: () => void;
     onClose: () => void;
     isEdit: boolean;
