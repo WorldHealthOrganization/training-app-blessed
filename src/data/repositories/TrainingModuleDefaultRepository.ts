@@ -100,11 +100,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async update(module: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
-        const { id, name, ...rest } = module;
-
-        const newModel = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...rest });
-
-        await this.saveDataStore(newModel);
+        const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...module });
+        await this.saveDataStore(newModule);
     }
 
     public async delete(ids: string[]): Promise<void> {

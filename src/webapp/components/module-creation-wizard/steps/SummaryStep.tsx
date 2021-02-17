@@ -4,12 +4,13 @@ import i18n from "../../../../locales";
 import { useAppContext } from "../../../contexts/app-context";
 import { ModuleCreationWizardStepProps } from "./index";
 
-export const SummaryStep: React.FC<ModuleCreationWizardStepProps> = ({ module }) => {
+export const SummaryStep: React.FC<ModuleCreationWizardStepProps> = ({ module, onClose }) => {
     const { usecases } = useAppContext();
 
     const saveModule = useCallback(async () => {
         if (!module) return;
         await usecases.modules.update(module);
+        onClose();
     }, [usecases]);
 
     return (
