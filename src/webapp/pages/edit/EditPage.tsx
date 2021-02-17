@@ -20,7 +20,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
 
     return (
         <DhisPage>
-            <Header title={i18n.t("Create module")} onBackClick={openSettings} />
+            <Header title={edit ? i18n.t("Edit module") : i18n.t("Create module")} onBackClick={openSettings} />
 
             {module ? (
                 <Wizard

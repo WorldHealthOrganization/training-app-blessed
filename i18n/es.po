@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-02-17T07:33:55.583Z\n"
+"POT-Creation-Date: 2021-02-17T09:23:15.451Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +52,15 @@ msgstr "El campo debe tener un valor"
 
 msgid "General info"
 msgstr ""
+
+msgid "Contents"
+msgstr "Contenidos"
+
+msgid "Access"
+msgstr ""
+
+msgid "Summary"
+msgstr "Fin"
 
 msgid "Edit contents of {{name}}"
 msgstr "Editar contenidos de {{name}}"
@@ -113,14 +122,8 @@ msgstr ""
 msgid "Welcome"
 msgstr "Bienvenido"
 
-msgid "Contents"
-msgstr "Contenidos"
-
 msgid "Final"
 msgstr ""
-
-msgid "Summary"
-msgstr "Fin"
 
 msgid "Exit"
 msgstr ""
