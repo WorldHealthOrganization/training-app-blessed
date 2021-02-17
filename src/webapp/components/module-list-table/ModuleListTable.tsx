@@ -195,8 +195,7 @@ export const ModuleListTable: React.FC = () => {
                 multiple: true,
                 onClick: deleteModules,
                 isActive: _rows => {
-                    // TODO: Action is disabled for now
-                    return _.every(_rows, item => item.rowType === "module");
+                    return _.every(_rows, item => item.rowType === "module" && item.type !== "core");
                 },
             },
             {
