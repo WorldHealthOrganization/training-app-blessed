@@ -1,4 +1,4 @@
-import { Wizard, WizardStep, WizardStepperProps } from "@eyeseetea/d2-ui-components";
+import { Wizard, WizardNavigationProps, WizardStep, WizardStepperProps } from "@eyeseetea/d2-ui-components";
 import React, { useCallback, useRef } from "react";
 import styled from "styled-components";
 import { extractStepFromKey, TrainingModule } from "../../../domain/entities/TrainingModule";
@@ -67,6 +67,9 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = props => {
     );
 
     const WizardStepper = (props: WizardStepperProps) => <Stepper {...props} onMove={step => onChangeStep(step, 1)} />;
+    const WizardNavigation = (props: WizardNavigationProps) => (
+        <Navigation {...props} onMove={step => onChangeStep(step, 1)} />
+    );
 
     if (!module || steps.length === 0) return null;
 
@@ -84,7 +87,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = props => {
                 onStepChange={onStepChange}
                 initialStepKey={steps[0]?.key}
                 StepperComponent={minimized ? EmptyComponent : WizardStepper}
-                NavigationComponent={minimized ? EmptyComponent : Navigation}
+                NavigationComponent={minimized ? EmptyComponent : WizardNavigation}
             />
         </StyledModal>
     );

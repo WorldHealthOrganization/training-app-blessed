@@ -6,13 +6,13 @@ import { arrayFill } from "../../../../utils/array";
 import { TrainingWizardStepProps } from "../TrainingWizard";
 import { Bullet } from "./Bullet";
 
-export const Stepper = ({
+export const Stepper: React.FC<StepperProps> = ({
     steps,
     currentStepKey,
     markAllCompleted = false,
     lastClickableStepIndex = -1,
     onMove = _.noop,
-}: StepperProps) => {
+}) => {
     if (steps.length === 0) return null;
 
     const index = _(steps).findIndex(step => step.key === currentStepKey);

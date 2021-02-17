@@ -1,16 +1,45 @@
 import { WizardNavigationProps } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
+import { extractStepFromKey } from "../../../../domain/entities/TrainingModule";
 import i18n from "../../../../locales";
 import { arrayFill } from "../../../../utils/array";
 import { MainButton } from "../../main-button/MainButton";
 import { NavigationBullet } from "./NavigationBullet";
 
-export const Navigation: React.FC<WizardNavigationProps> = ({ steps, onNext, onPrev, currentStepKey }) => {
+export const Navigation: React.FC<NavigationProps> = ({
+    steps,
+    onNext,
+    onPrev,
+    onMove,
+    disableNext,
+    disablePrev,
+    currentStepKey = "",
+}) => {
     const index = _(steps).findIndex(step => step.key === currentStepKey);
     const currentStepIndex = index >= 0 ? index : 0;
     const currentStep = steps[currentStepIndex];
+
+    const prev = useCallback(() => {
+        const currentStep = extractStepFromKey(currentStepKey);
+
+        if (currentStep && disablePrev) {
+            onMove(currentStep.step - 1, 1);
+        } else {
+            onPrev();
+        }
+    }, [onMove, onPrev, currentStepIndex]);
+
+    const next = useCallback(() => {
+        const currentStep = extractStepFromKey(currentStepKey);
+
+        if (currentStep && disableNext) {
+            onMove(currentStep.step + 1, 1);
+        } else {
+            onNext();
+        }
+    }, [onMove, onPrev, currentStepIndex]);
 
     if (steps.length === 0 || !currentStep) return null;
     const { contentIndex = 0, totalContents = 0 } = (currentStep.props as unknown) as any;
@@ -18,9 +47,9 @@ export const Navigation: React.FC<WizardNavigationProps> = ({ steps, onNext, onP
     return (
         <ModalFooter>
             {contentIndex - 1 < 0 ? (
-                <MainButton onClick={onPrev}>{i18n.t("Previous step")}</MainButton>
+                <MainButton onClick={prev}>{i18n.t("Previous step")}</MainButton>
             ) : (
-                <MainButton onClick={onPrev} color="secondary">
+                <MainButton onClick={prev} color="secondary">
                     {i18n.t("Previous")}
                 </MainButton>
             )}
@@ -32,15 +61,19 @@ export const Navigation: React.FC<WizardNavigationProps> = ({ steps, onNext, onP
                     : null}
             </ProgressBar>
             {contentIndex + 1 === totalContents ? (
-                <MainButton onClick={onNext}>{i18n.t("Next step")}</MainButton>
+                <MainButton onClick={next}>{i18n.t("Next step")}</MainButton>
             ) : (
-                <MainButton onClick={onNext} color="secondary">
+                <MainButton onClick={next} color="secondary">
                     {i18n.t("Next")}
                 </MainButton>
             )}
         </ModalFooter>
     );
 };
+
+export interface NavigationProps extends WizardNavigationProps {
+    onMove: (step: number, content: number) => void;
+}
 
 const ModalFooter = styled.div`
     overflow: hidden;

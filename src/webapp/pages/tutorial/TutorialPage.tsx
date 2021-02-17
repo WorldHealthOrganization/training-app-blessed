@@ -63,7 +63,7 @@ export const TutorialPage = () => {
                     if (appState.type !== "TRAINING") return appState;
                     return { type: "TRAINING_DIALOG", dialog: "contents", module: appState.module };
                 });
-            } else if (step === steps.length - 1) {
+            } else if (module && step > module.contents.steps.length) {
                 setAppState(appState => {
                     if (appState.type !== "TRAINING") return appState;
                     return { type: "TRAINING_DIALOG", dialog: "final", module: appState.module };
@@ -75,7 +75,7 @@ export const TutorialPage = () => {
                 });
             }
         },
-        [setAppState, steps]
+        [setAppState, steps, module]
     );
 
     const stepKey = useMemo(() => {
