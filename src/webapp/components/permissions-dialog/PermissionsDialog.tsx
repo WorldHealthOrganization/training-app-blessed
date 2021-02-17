@@ -1,19 +1,20 @@
 import { useConfig } from "@dhis2/app-runtime";
 import { ConfirmationDialog, ShareUpdate, Sharing, SharingRule } from "@eyeseetea/d2-ui-components";
 import React, { useCallback } from "react";
-import { SharedRef, SharingSetting } from "../../../domain/entities/Ref";
+import { SharedProperties, SharingSetting } from "../../../domain/entities/Ref";
 import i18n from "../../../locales";
 import { D2Api } from "../../../types/d2-api";
 
-interface PermissionsDialogProps {
-    object: Pick<SharedRef, "userAccesses" | "userGroupAccesses" | "publicAccess"> & { name: string };
+export type SharedUpdate = Partial<Pick<SharedProperties, "userAccesses" | "userGroupAccesses" | "publicAccess">>;
+export type PermissionsObject = Required<SharedUpdate> & { name: string };
+
+export interface PermissionsDialogProps {
+    object: PermissionsObject;
     onChange: (sharedUpdate: SharedUpdate) => Promise<void>;
     allowPublicAccess?: boolean;
     allowExternalAccess?: boolean;
     onClose: () => void;
 }
-
-export type SharedUpdate = Partial<Pick<SharedRef, "userAccesses" | "userGroupAccesses" | "publicAccess">>;
 
 export default function PermissionsDialog({
     object,

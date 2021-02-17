@@ -11,7 +11,7 @@ export const NamedRefModel = Schema.extend(
     })
 );
 
-export const DatedRefModel = Schema.object({
+export const DatedPropertiesModel = Schema.object({
     user: NamedRefModel,
     created: Schema.date,
     lastUpdated: Schema.date,
@@ -24,7 +24,7 @@ export const SharingSettingModel = Schema.object({
     name: Schema.string,
 });
 
-export const SharedRefModel = Schema.object({
+export const SharedPropertiesModel = Schema.object({
     publicAccess: Schema.string,
     userAccesses: Schema.array(SharingSettingModel),
     userGroupAccesses: Schema.array(SharingSettingModel),
@@ -32,6 +32,6 @@ export const SharedRefModel = Schema.object({
 
 export type Ref = GetSchemaType<typeof RefModel>;
 export type NamedRef = GetSchemaType<typeof NamedRefModel>;
-export type DatedRef = GetSchemaType<typeof DatedRefModel>;
-export type SharedRef = GetSchemaType<typeof SharedRefModel>;
+export type DatedProperties = GetSchemaType<typeof DatedPropertiesModel>;
+export type SharedProperties = GetSchemaType<typeof SharedPropertiesModel>;
 export type SharingSetting = GetSchemaType<typeof SharingSettingModel>;

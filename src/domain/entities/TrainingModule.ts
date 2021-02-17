@@ -1,6 +1,6 @@
 import { PartialBy } from "../../types/utils";
 import { GetSchemaType, Schema } from "../../utils/codec";
-import { DatedRefModel, SharedRefModel } from "./Ref";
+import { DatedPropertiesModel, SharedPropertiesModel } from "./Ref";
 import { TranslatableTextModel } from "./TranslatableText";
 import { ModelValidation } from "./Validation";
 
@@ -33,7 +33,7 @@ export const TrainingModuleContentsModel = Schema.object({
     steps: Schema.array(TrainingModuleStepModel),
 });
 
-const BaseModel = Schema.extend(DatedRefModel, SharedRefModel);
+const BaseModel = Schema.extend(DatedPropertiesModel, SharedPropertiesModel);
 
 export const TrainingModuleModel = Schema.extend(
     BaseModel,
