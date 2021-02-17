@@ -248,6 +248,8 @@ export const ModuleListTable: React.FC = () => {
     );
 
     useEffect(() => {
+        setTableLoading(true);
+
         usecases.modules.list().then(modules => {
             setModules(buildListItems(modules));
             setTableLoading(false);

@@ -1,6 +1,7 @@
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
+import { cache, clearCache } from "../../utils/cache";
 import { StoreApp } from "../entities/StoreApp";
 import { getD2APiFromInstance } from "../utils/d2-api";
 
@@ -25,6 +26,8 @@ export class InstanceDhisRepository implements InstanceRepository {
     }
 
     public async installApp(appName: string): Promise<boolean> {
+        clearCache(this.isAppInstalledByUrl, this);
+
         const storeApps = await this.listStoreApps();
         const { versions = [] } = storeApps.find(({ name }) => name === appName) ?? {};
         const latestVersion = versions[0]?.id;
@@ -39,6 +42,7 @@ export class InstanceDhisRepository implements InstanceRepository {
         return true;
     }
 
+    @cache()
     public async isAppInstalledByUrl(launchUrl: string): Promise<boolean> {
         try {
             await this.api.baseConnection.request({ method: "get", url: launchUrl }).getData();
