@@ -1,5 +1,5 @@
 import { NamedRef, SharingSetting } from "../../domain/entities/Ref";
-import { TranslationConnection } from "../../domain/entities/TrainingModule";
+import { TranslationConnection } from "../../domain/entities/TranslationProvider";
 import { JSONTrainingModule } from "./JSONTrainingModule";
 
 export interface PersistedTrainingModule extends JSONTrainingModule {

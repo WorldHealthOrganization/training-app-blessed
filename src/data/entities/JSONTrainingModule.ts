@@ -1,5 +1,6 @@
-import { TrainingModuleContents, TranslationConnection } from "../../domain/entities/TrainingModule";
+import { TrainingModuleContents } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
+import { TranslationConnection } from "../../domain/entities/TranslationProvider";
 
 export interface JSONTrainingModule {
     _version: number;

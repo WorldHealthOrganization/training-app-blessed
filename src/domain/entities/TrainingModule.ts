@@ -2,24 +2,13 @@ import { PartialBy } from "../../types/utils";
 import { GetSchemaType, Schema } from "../../utils/codec";
 import { DatedPropertiesModel, SharedPropertiesModel } from "./Ref";
 import { TranslatableTextModel } from "./TranslatableText";
+import { TranslationConnectionModel } from "./TranslationProvider";
 import { ModelValidation } from "./Validation";
 
 export const TrainingModuleTypeModel = Schema.oneOf([
     Schema.exact("app"),
     Schema.exact("core"),
     Schema.exact("widget"),
-]);
-
-export const TranslationProvidersModel = Schema.oneOf([Schema.exact("poeditor")]);
-
-export const TranslationConnectionModel = Schema.oneOf([
-    Schema.object({
-        provider: TranslationProvidersModel,
-        project: Schema.string,
-    }),
-    Schema.object({
-        provider: Schema.exact("NONE"),
-    }),
 ]);
 
 export const TrainingModuleStepModel = Schema.object({
@@ -75,15 +64,6 @@ export type PartialTrainingModule = PartialBy<
     | "progress"
     | "installed"
 >;
-
-export type TranslationConnection = GetSchemaType<typeof TranslationConnectionModel>;
-export type TranslationProviders = GetSchemaType<typeof TranslationProvidersModel>;
-
-export interface TrainingModuleBuilder {
-    id: string;
-    name: string;
-    poEditorProject: string;
-}
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
     const match = /^.*-(\d*)-(\d*)$/.exec(key);
