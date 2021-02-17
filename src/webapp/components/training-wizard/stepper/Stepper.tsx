@@ -11,7 +11,7 @@ export const Stepper: React.FC<StepperProps> = ({
     currentStepKey,
     markAllCompleted = false,
     lastClickableStepIndex = -1,
-    onMove = _.noop,
+    onMove,
 }) => {
     if (steps.length === 0) return null;
 
