@@ -44,8 +44,8 @@ export const extractStepFromKey = (key: string): { step: number; content: number
     const match = /^.*-(\d*)-(\d*)$/.exec(key);
     if (!match) return null;
 
-    const [step, content] = match;
-    if (!step || !content) return null;
+    const [stepKey, step, content] = match;
+    if (!stepKey || !step || !content) return null;
 
     return { step: parseInt(step), content: parseInt(content) };
 };
