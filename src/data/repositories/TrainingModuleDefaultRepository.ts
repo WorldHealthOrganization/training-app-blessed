@@ -1,6 +1,5 @@
 import _ from "lodash";
-import { Either } from "../../domain/entities/Either";
-import { isValidTrainingType, TrainingModule, TrainingModuleBuilder } from "../../domain/entities/TrainingModule";
+import { isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
@@ -14,7 +13,7 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
-import { PersistedTrainingModule, TranslationConnection } from "../entities/PersistedTrainingModule";
+import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -100,12 +99,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         };
     }
 
-    public async create({ id, name, poEditorProject }: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>> {
-        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES
-        );
-        const exists = !!items.find(item => item.id === id);
-        if (exists) return Either.error("CODE_EXISTS");
+    public async update(module: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
+        const { id, name, ...rest } = module;
 
         const newModel = await this.buildPersistedModel({
             id,
@@ -118,38 +113,15 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             dhisLaunchUrl: "",
             dhisAuthorities: [],
             disabled: false,
+            translation: { provider: "NONE" },
             contents: {
                 welcome: { key: "module-welcome", referenceValue: "", translations: {} },
                 steps: [],
             },
-            translation: {
-                provider: poEditorProject ? "poeditor" : "NONE",
-                project: poEditorProject,
-            },
+            ...rest,
         });
 
         await this.saveDataStore(newModel);
-        return Either.success(undefined);
-    }
-
-    public async edit({ id, name, poEditorProject }: TrainingModuleBuilder): Promise<void> {
-        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES
-        );
-
-        const item = items.find(item => item.id === id);
-        if (!item) return;
-
-        const newItem = {
-            ...item,
-            name: name,
-            translation: {
-                provider: poEditorProject ? "poeditor" : "NONE",
-                project: poEditorProject,
-            },
-        };
-
-        await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, newItem);
     }
 
     public async delete(ids: string[]): Promise<void> {
@@ -309,9 +281,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const currentUser = await this.config.getUser();
         const lastUpdatedBy = { id: currentUser.id, name: currentUser.name };
 
-        await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, {
+        await this.storageClient.saveObjectInCollection<PersistedTrainingModule>(Namespaces.TRAINING_MODULES, {
             ...model,
-            lastUpdated: new Date(),
+            lastUpdated: new Date().toISOString(),
             lastUpdatedBy,
         });
     }
@@ -346,15 +318,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const currentUser = await this.config.getUser();
         const defaultUser = { id: currentUser.id, name: currentUser.name };
 
-        // TODO: This is hard-coded for now
-        const translation =
-            model.translation?.provider === "poeditor" && model.translation?.project
-                ? (model.translation as TranslationConnection)
-                : { provider: "NONE" as const, project: undefined };
-
         return {
-            ...model,
-            translation,
             created: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             publicAccess: "--------",
@@ -363,6 +327,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             user: defaultUser,
             lastUpdatedBy: defaultUser,
             lastTranslationSync: new Date().toISOString(),
+            ...model,
         };
     }
 }

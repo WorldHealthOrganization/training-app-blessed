@@ -1,4 +1,4 @@
-import { TrainingModuleContents } from "../../domain/entities/TrainingModule";
+import { TrainingModuleContents, TranslationConnection } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 
 export interface JSONTrainingModule {
@@ -8,7 +8,7 @@ export interface JSONTrainingModule {
     type: string;
     disabled: boolean;
     contents: TrainingModuleContents;
-    translation: { provider: string; project: string | undefined } | undefined;
+    translation: TranslationConnection;
     revision: number;
     dhisVersionRange: string;
     dhisAppKey: string;

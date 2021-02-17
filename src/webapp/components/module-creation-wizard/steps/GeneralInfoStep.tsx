@@ -55,7 +55,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                 <TextField
                     fullWidth={true}
                     label={"PoEditor Project id *"}
-                    value={module.translation.project}
+                    value={module.translation.provider !== "NONE" ? module.translation.project : ""}
                     onChange={onChangeField("poEditorProject")}
                 />
             </Row>

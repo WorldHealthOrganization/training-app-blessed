@@ -12,7 +12,7 @@ export interface EditPageProps {
 }
 
 export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
-    const { modules, setAppState } = useAppContext();
+    const { module, setAppState } = useAppContext();
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -22,13 +22,13 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
         <DhisPage>
             <Header title={i18n.t("Create module")} onBackClick={openSettings} />
 
-            {modules[0] ? (
+            {module ? (
                 <Wizard
                     isEdit={edit}
                     onChange={_.noop}
                     onCancel={openSettings}
                     onClose={openSettings}
-                    module={modules[0]}
+                    module={module}
                 />
             ) : null}
         </DhisPage>

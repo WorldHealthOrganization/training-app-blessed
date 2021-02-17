@@ -1,5 +1,5 @@
-import { SharingSetting, NamedRef } from "../../domain/entities/Ref";
-import { TranslationProvider } from "../clients/translation/TranslationClient";
+import { NamedRef, SharingSetting } from "../../domain/entities/Ref";
+import { TranslationConnection } from "../../domain/entities/TrainingModule";
 import { JSONTrainingModule } from "./JSONTrainingModule";
 
 export interface PersistedTrainingModule extends JSONTrainingModule {
@@ -13,10 +13,3 @@ export interface PersistedTrainingModule extends JSONTrainingModule {
     lastUpdatedBy: NamedRef;
     lastTranslationSync: string;
 }
-
-export type TranslationConnection =
-    | {
-          provider: TranslationProvider;
-          project: string;
-      }
-    | { provider: "NONE"; project: undefined };

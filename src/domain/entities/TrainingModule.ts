@@ -9,6 +9,18 @@ export const TrainingModuleTypeModel = Schema.oneOf([
     Schema.exact("widget"),
 ]);
 
+export const TranslationProvidersModel = Schema.oneOf([Schema.exact("poeditor")]);
+
+export const TranslationConnectionModel = Schema.oneOf([
+    Schema.object({
+        provider: TranslationProvidersModel,
+        project: Schema.string,
+    }),
+    Schema.object({
+        provider: Schema.exact("NONE"),
+    }),
+]);
+
 export const TrainingModuleStepModel = Schema.object({
     title: TranslatableTextModel,
     subtitle: Schema.optional(TranslatableTextModel),
@@ -24,10 +36,7 @@ export const TrainingModuleModel = Schema.extend(
     SharedRefModel,
     Schema.object({
         displayName: TranslatableTextModel,
-        translation: Schema.object({
-            provider: Schema.string,
-            project: Schema.optional(Schema.string),
-        }),
+        translation: TranslationConnectionModel,
         type: TrainingModuleTypeModel,
         disabled: Schema.optionalSafe(Schema.boolean, false),
         progress: Schema.object({
@@ -48,6 +57,9 @@ export type TrainingModule = GetSchemaType<typeof TrainingModuleModel>;
 export type TrainingModuleType = GetSchemaType<typeof TrainingModuleTypeModel>;
 export type TrainingModuleStep = GetSchemaType<typeof TrainingModuleStepModel>;
 export type TrainingModuleContents = GetSchemaType<typeof TrainingModuleContentsModel>;
+
+export type TranslationConnection = GetSchemaType<typeof TranslationConnectionModel>;
+export type TranslationProviders = GetSchemaType<typeof TranslationProvidersModel>;
 
 export interface TrainingModuleBuilder {
     id: string;

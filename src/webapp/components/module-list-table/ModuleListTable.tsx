@@ -12,7 +12,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule, TrainingModuleBuilder } from "../../../domain/entities/TrainingModule";
+import { TrainingModule } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
@@ -20,10 +20,9 @@ import { AlertIcon } from "../alert-icon/AlertIcon";
 import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
-import { ModuleCreationDialog } from "../module-creation-dialog/ModuleCreationDialog";
 
 export const ModuleListTable: React.FC = () => {
-    const { usecases } = useAppContext();
+    const { usecases, setAppState } = useAppContext();
     const loading = useLoading();
     const snackbar = useSnackbar();
 
@@ -31,15 +30,7 @@ export const ModuleListTable: React.FC = () => {
     const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
-    const [editModuleCreationDialog, setEditModuleCreationDialog] = useState<TrainingModuleBuilder>();
-    const [isCreationDialogOpen, setOpenCreationDialog] = useState<boolean>(false);
     const [refreshKey, setRefreshKey] = useState(Math.random());
-
-    const closeCreationDialog = useCallback(() => {
-        setOpenCreationDialog(false);
-        setEditModuleCreationDialog(undefined);
-        setRefreshKey(Math.random());
-    }, []);
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
@@ -54,15 +45,8 @@ export const ModuleListTable: React.FC = () => {
 
     const editModule = useCallback(
         (ids: string[]) => {
-            const row = modules.find(({ id }) => id === ids[0]);
-            if (row) {
-                setEditModuleCreationDialog({
-                    id: row.id,
-                    name: row.name,
-                    poEditorProject: row.translation.project ?? "",
-                });
-                setOpenCreationDialog(true);
-            }
+            if (!ids[0]) return;
+            setAppState({ type: "EDIT_MODULE", module: ids[0] });
         },
         [modules]
     );
@@ -273,10 +257,6 @@ export const ModuleListTable: React.FC = () => {
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
-
-            {isCreationDialogOpen && (
-                <ModuleCreationDialog onClose={closeCreationDialog} builder={editModuleCreationDialog} />
-            )}
 
             <ObjectsTable<ListItem>
                 loading={tableLoading}

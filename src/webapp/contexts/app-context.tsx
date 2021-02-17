@@ -64,8 +64,11 @@ export function useAppContext(): UseAppContextResult {
     const [module, setCurrentModule] = useState<TrainingModule>();
 
     useEffect(() => {
-        if (appState.type !== "TRAINING" && appState.type !== "TRAINING_DIALOG") return;
-        setCurrentModule(modules.find(({ id }) => id === appState.module));
+        setCurrentModule(
+            appState.type === "TRAINING" || appState.type === "TRAINING_DIALOG" || appState.type === "EDIT_MODULE"
+                ? modules.find(({ id }) => id === appState.module)
+                : undefined
+        );
     }, [appState, modules]);
 
     return {
