@@ -17,6 +17,7 @@ export interface ModuleCreationWizardStepProps {
     onChange: (update: PartialTrainingModule | ((prev: PartialTrainingModule) => PartialTrainingModule)) => void;
     onCancel: () => void;
     onClose: () => void;
+    onSave: () => Promise<void>;
     isEdit: boolean;
 }
 

@@ -43,6 +43,16 @@ export const FinalPage = () => {
         setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
+    const movePage = useCallback(
+        (step: number, content: number) => {
+            setAppState(appState => {
+                if (appState.type !== "TRAINING") return appState;
+                return { ...appState, step, content };
+            });
+        },
+        [setAppState]
+    );
+
     useEffect(() => {
         if (module) usecases.progress.complete(module.id);
     }, [module, usecases]);
@@ -65,7 +75,7 @@ export const FinalPage = () => {
                             name: translate(module.name),
                         })}
                     </ModalParagraph>
-                    <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
+                    <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} onMove={movePage} />
                     <ModalFooter>
                         <MainButton onClick={goToLastTutorialStep}>{i18n.t("Back to tutorial")}</MainButton>
                         <MainButton onClick={openSummary}>{i18n.t("Finish")}</MainButton>

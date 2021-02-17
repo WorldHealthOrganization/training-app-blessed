@@ -2,31 +2,19 @@ import { Wizard, WizardStep } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { PartialTrainingModule, trainingModuleValidations } from "../../../domain/entities/TrainingModule";
+import { trainingModuleValidations } from "../../../domain/entities/TrainingModule";
 import { validateModel } from "../../../domain/entities/Validation";
 import { ModuleCreationWizardStepProps, moduleCreationWizardSteps } from "./steps";
 
-export interface ModuleCreationWizardProps {
+export interface ModuleCreationWizardProps extends ModuleCreationWizardStepProps {
     className?: string;
-    isEdit: boolean;
-    onCancel: () => void;
-    onClose: () => void;
-    module: PartialTrainingModule;
-    onChange: (update: PartialTrainingModule | ((prev: PartialTrainingModule) => PartialTrainingModule)) => void;
 }
 
-export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = ({
-    className,
-    isEdit,
-    onCancel,
-    onClose,
-    module,
-    onChange,
-}) => {
+export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = props => {
     const location = useLocation();
 
-    const props: ModuleCreationWizardStepProps = { module, onChange, onCancel, onClose, isEdit };
-    const steps = moduleCreationWizardSteps.map(step => ({ ...step, props }));
+    const { className, ...stepProps } = props;
+    const steps = moduleCreationWizardSteps.map(step => ({ ...step, props: stepProps }));
 
     const onStepChangeRequest = async (_currentStep: WizardStep, newStep: WizardStep) => {
         const index = _(steps).findIndex(step => step.key === newStep.key);

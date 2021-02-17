@@ -1,18 +1,22 @@
-import { Wizard } from "@eyeseetea/d2-ui-components";
-import _ from "lodash";
-import React, { useCallback, useMemo, useRef } from "react";
+import { Wizard, WizardStep, WizardStepperProps } from "@eyeseetea/d2-ui-components";
+import React, { useCallback, useRef } from "react";
 import styled from "styled-components";
 import { extractStepFromKey, TrainingModule } from "../../../domain/entities/TrainingModule";
-import { useAppContext } from "../../contexts/app-context";
 import { Modal } from "../modal/Modal";
 import { ModalContent } from "../modal/ModalContent";
 import { Navigation } from "./navigation/Navigation";
 import { Stepper } from "./stepper/Stepper";
-import { MarkdownContentStep } from "./steps/MarkdownContentStep";
 
 export interface TrainingWizardProps {
-    onClose: () => void;
+    steps: WizardStep[];
     module?: TrainingModule;
+    onClose: () => void;
+    onGoHome: () => void;
+    currentStep: string;
+    onChangeStep: (step: number, contents: number) => void;
+    minimized: boolean;
+    onMinimize: () => void;
+    updateProgress: (moduleId: string, progress: number) => Promise<void>;
 }
 
 export interface TrainingWizardStepProps {
@@ -27,43 +31,19 @@ export interface TrainingWizardStepProps {
     totalContents?: number;
 }
 
-export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
-    const { appState, setAppState, usecases, translate } = useAppContext();
+export const TrainingWizard: React.FC<TrainingWizardProps> = props => {
+    const {
+        steps,
+        module,
+        onClose,
+        onGoHome,
+        currentStep,
+        onChangeStep,
+        minimized,
+        onMinimize,
+        updateProgress,
+    } = props;
     const lastStep = useRef<string>();
-
-    const minimized = useMemo(() => appState.type === "TRAINING" && appState.state === "MINIMIZED", [appState]);
-
-    const wizardSteps = useMemo(() => {
-        if (!module) return [];
-        return _.flatMap(module.contents.steps, ({ title, subtitle, pages }, step) =>
-            pages.map((content, position) => {
-                const props: TrainingWizardStepProps = {
-                    title: translate(title),
-                    subtitle: subtitle ? translate(subtitle) : undefined,
-                    content: translate(content),
-                    stepIndex: step,
-                    contentIndex: position,
-                    totalSteps: module.contents.steps.length,
-                    totalContents: pages.length,
-                    minimized,
-                };
-
-                return {
-                    key: `${module.id}-${step + 1}-${position + 1}`,
-                    module,
-                    label: "Select your location",
-                    component: MarkdownContentStep,
-                    props,
-                };
-            })
-        );
-    }, [module, minimized, translate]);
-
-    const stepKey = useMemo(() => {
-        if (appState.type !== "TRAINING" || !module) return undefined;
-        const key = `${module.id}-${appState.step}-${appState.content}`;
-        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0]?.key;
-    }, [appState, module, wizardSteps]);
 
     const onStepChange = useCallback(
         async (stepKey: string) => {
@@ -77,40 +57,33 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
             const shouldUpdateProgress = isOneStepChange && !module.progress.completed;
 
             if (shouldUpdateProgress) {
-                await usecases.progress.update(module.id, currentStep.step - 1);
+                await updateProgress(module.id, currentStep.step - 1);
             }
 
             lastStep.current = stepKey;
-            setAppState(appState => {
-                if (appState.type !== "TRAINING") return appState;
-                return { ...appState, ...currentStep };
-            });
+            onChangeStep(currentStep.step, currentStep.content);
         },
-        [setAppState, module, usecases]
+        [module, updateProgress]
     );
 
-    const minimize = useCallback(() => {
-        setAppState(appState => {
-            if (appState.type !== "TRAINING") return appState;
-            const state = appState.state === "MINIMIZED" ? "OPEN" : "MINIMIZED";
-            return { ...appState, state };
-        });
-    }, [setAppState]);
+    const WizardStepper = (props: WizardStepperProps) => <Stepper {...props} onMove={step => onChangeStep(step, 1)} />;
 
-    const goHome = useCallback(() => {
-        setAppState({ type: "HOME" });
-    }, [setAppState]);
-
-    if (!module || wizardSteps.length === 0) return null;
+    if (!module || steps.length === 0) return null;
 
     return (
-        <StyledModal onClose={onClose} onGoHome={goHome} onMinimize={minimize} minimized={minimized} allowDrag={true}>
+        <StyledModal
+            onClose={onClose}
+            onGoHome={onGoHome}
+            onMinimize={onMinimize}
+            minimized={minimized}
+            allowDrag={true}
+        >
             <StyledWizard
-                steps={wizardSteps}
-                stepKey={stepKey}
+                steps={steps}
+                stepKey={currentStep}
                 onStepChange={onStepChange}
-                initialStepKey={wizardSteps[0]?.key}
-                StepperComponent={minimized ? EmptyComponent : Stepper}
+                initialStepKey={steps[0]?.key}
+                StepperComponent={minimized ? EmptyComponent : WizardStepper}
                 NavigationComponent={minimized ? EmptyComponent : Navigation}
             />
         </StyledModal>

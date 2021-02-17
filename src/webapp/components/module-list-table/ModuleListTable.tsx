@@ -94,10 +94,11 @@ export const ModuleListTable: React.FC = () => {
                     // TODO
                     updateEditContentsDialog(null);
                 },
+                onUpload: (data: ArrayBuffer) => usecases.instance.uploadFile(data),
                 markdownPreview: markdown => <StepPreview value={markdown} rowType={row.rowType} />,
             });
         },
-        [modules]
+        [modules, usecases]
     );
 
     const installApp = useCallback(

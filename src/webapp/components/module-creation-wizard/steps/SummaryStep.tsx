@@ -1,17 +1,13 @@
 import { Button } from "@material-ui/core";
 import React, { useCallback } from "react";
 import i18n from "../../../../locales";
-import { useAppContext } from "../../../contexts/app-context";
 import { ModuleCreationWizardStepProps } from "./index";
 
-export const SummaryStep: React.FC<ModuleCreationWizardStepProps> = ({ module, onClose }) => {
-    const { usecases } = useAppContext();
-
+export const SummaryStep: React.FC<ModuleCreationWizardStepProps> = ({ onClose, onSave }) => {
     const saveModule = useCallback(async () => {
-        if (!module) return;
-        await usecases.modules.update(module);
+        await onSave();
         onClose();
-    }, [usecases]);
+    }, []);
 
     return (
         <React.Fragment>

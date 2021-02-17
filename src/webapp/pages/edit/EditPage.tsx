@@ -13,12 +13,17 @@ export interface EditPageProps {
 }
 
 export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
-    const { module, setAppState } = useAppContext();
+    const { module, setAppState, usecases } = useAppContext();
     const [stateModule, updateStateModule] = useState<PartialTrainingModule>(module ?? defaultTrainingModule);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
     }, [setAppState]);
+
+    const saveModule = useCallback(async () => {
+        if (!module) return;
+        await usecases.modules.update(module);
+    }, [module]);
 
     useEffect(() => {
         if (module) updateStateModule(module);
@@ -34,6 +39,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
                     onChange={updateStateModule}
                     onCancel={openSettings}
                     onClose={openSettings}
+                    onSave={saveModule}
                     module={stateModule}
                 />
             ) : null}
