@@ -2,7 +2,6 @@ import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
 import { cache, clearCache } from "../../utils/cache";
-import { StoreApp } from "../entities/StoreApp";
 import { getD2APiFromInstance } from "../utils/d2-api";
 
 export class InstanceDhisRepository implements InstanceRepository {
@@ -53,7 +52,7 @@ export class InstanceDhisRepository implements InstanceRepository {
         return true;
     }
 
-    private async listStoreApps(): Promise<StoreApp[]> {
+    private async listStoreApps() {
         try {
             return this.api.appHub.list().getData();
         } catch (error) {
