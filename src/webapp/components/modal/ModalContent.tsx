@@ -16,10 +16,11 @@ const ModalContentBase: React.FC<ModalContentProps> = ({ className, children }) 
 };
 
 export const ModalContent = styled(ModalContentBase)`
-    padding: 15px;
     max-width: ${({ bigger }) => (bigger ? "none" : "600px")};
     width: ${({ bigger }) => (bigger ? "700px" : "inherit")};
-    height: 100%;
+
+    padding: 0px 15px;
+    max-height: 550px;
 
     margin: 0;
     overflow-x: hidden;

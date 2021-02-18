@@ -1,39 +1,11 @@
-import _ from "lodash";
 import React, { useCallback, useMemo } from "react";
-import { MarkdownContentStep } from "../../components/training-wizard/steps/MarkdownContentStep";
-import { TrainingWizard, TrainingWizardStepProps } from "../../components/training-wizard/TrainingWizard";
+import { TrainingWizardModal } from "../../components/training-wizard/TrainingWizardModal";
 import { useAppContext } from "../../contexts/app-context";
 
 export const TutorialPage = () => {
     const { appState, setAppState, module, usecases, translate } = useAppContext();
 
     const minimized = useMemo(() => appState.type === "TRAINING" && appState.state === "MINIMIZED", [appState]);
-
-    const steps = useMemo(() => {
-        if (!module) return [];
-        return _.flatMap(module.contents.steps, ({ title, subtitle, pages }, step) =>
-            pages.map((content, position) => {
-                const props: TrainingWizardStepProps = {
-                    title: translate(title),
-                    subtitle: subtitle ? translate(subtitle) : undefined,
-                    content: translate(content),
-                    stepIndex: step,
-                    contentIndex: position,
-                    totalSteps: module.contents.steps.length,
-                    totalContents: pages.length,
-                    minimized,
-                };
-
-                return {
-                    key: `${module.id}-${step + 1}-${position + 1}`,
-                    module,
-                    label: "Select your location",
-                    component: MarkdownContentStep,
-                    props,
-                };
-            })
-        );
-    }, [module, minimized, translate]);
 
     const exitTutorial = useCallback(() => {
         setAppState(appState => ({ ...appState, exit: true }));
@@ -75,20 +47,19 @@ export const TutorialPage = () => {
                 });
             }
         },
-        [setAppState, steps, module]
+        [setAppState, module]
     );
 
     const stepKey = useMemo(() => {
         if (appState.type !== "TRAINING" || !module) return undefined;
-        const key = `${module.id}-${appState.step}-${appState.content}`;
-        return steps.find(step => step.key === key) ? key : steps[0]?.key;
+        return `${module.id}-${appState.step}-${appState.content}`;
     }, [appState, module]);
 
-    if (appState.type !== "TRAINING" || !stepKey) return null;
+    if (appState.type !== "TRAINING" || !stepKey || !module) return null;
 
     return (
-        <TrainingWizard
-            steps={steps}
+        <TrainingWizardModal
+            translate={translate}
             module={module}
             onClose={exitTutorial}
             onGoHome={goHome}
