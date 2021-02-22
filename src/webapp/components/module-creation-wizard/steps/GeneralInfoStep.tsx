@@ -5,7 +5,6 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule } from "../../../../domain/entities/TrainingModule";
 import { ModuleCreationWizardStepProps } from "./index";
-
 export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ module, onChange, isEdit }) => {
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
 

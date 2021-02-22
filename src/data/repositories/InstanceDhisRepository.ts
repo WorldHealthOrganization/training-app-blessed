@@ -3,6 +3,7 @@ import { InstanceRepository } from "../../domain/repositories/InstanceRepository
 import { D2Api } from "../../types/d2-api";
 import { cache, clearCache } from "../../utils/cache";
 import { getD2APiFromInstance } from "../utils/d2-api";
+import { SearchResult } from "../entities/SearchUser";
 
 export class InstanceDhisRepository implements InstanceRepository {
     private api: D2Api;
@@ -40,7 +41,19 @@ export class InstanceDhisRepository implements InstanceRepository {
 
         return true;
     }
+    
+    public async searchUsers(query: string): Promise<SearchResult> {
+        const options = {
+            fields: { id: true, displayName: true },
+            filter: { displayName: { ilike: query } },
+        };
+      
+       return await this.api.metadata.get({ users: options, userGroups: options }).getData();
 
+            
+        
+        
+    }
     @cache()
     public async isAppInstalledByUrl(launchUrl: string): Promise<boolean> {
         try {
