@@ -53,7 +53,7 @@ export class InstanceDhisRepository implements InstanceRepository {
             filter: { displayName: { ilike: query } },
         };
 
-        return await this.api.metadata.get({ users: options, userGroups: options }).getData();
+        return this.api.metadata.get({ users: options, userGroups: options }).getData();
     }
     @cache()
     public async isAppInstalledByUrl(launchUrl: string): Promise<boolean> {

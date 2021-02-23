@@ -24,6 +24,7 @@ export default function PermissionsDialog({
 }: PermissionsDialogProps) {
     const { usecases } = useAppContext();
     const search = (query: string) => usecases.instance.searchUsers(query);
+
     const metaObject = {
         meta: { allowPublicAccess, allowExternalAccess },
         object: {
@@ -61,7 +62,6 @@ export default function PermissionsDialog({
         </ConfirmationDialog>
     );
 }
-//should this go to an entity file or somewhere else for functions that are used in other places like AccessStep?
 const mapSharingSettings = (settings?: SharingRule[]): SharingSetting[] | undefined => {
     return settings?.map(item => {
         return { id: item.id, access: item.access, name: item.displayName };
