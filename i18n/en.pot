@@ -5,9 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2021-02-23T10:22:31.055Z\n"
-"PO-Revision-Date: 2021-02-23T10:22:31.055Z\n"
+"POT-Creation-Date: 2021-02-23T13:34:25.207Z\n"
+"PO-Revision-Date: 2021-02-23T13:34:25.208Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -20,10 +19,6 @@ msgstr ""
 
 msgid "Field {{field}} is not valid"
 msgstr ""
-=======
-"POT-Creation-Date: 2021-02-23T12:58:31.810Z\n"
-"PO-Revision-Date: 2021-02-23T12:58:31.810Z\n"
->>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
 
 msgid "Tutorial"
 msgstr ""
@@ -112,20 +107,19 @@ msgstr ""
 msgid "Edit contents"
 msgstr ""
 
-<<<<<<< HEAD
 msgid "Install app"
+msgstr ""
+
+msgid "Restore to factory settings"
+msgstr ""
+
+msgid "Reset app to factory settings"
 msgstr ""
 
 msgid "Back"
 msgstr ""
 
 msgid "Help"
-=======
-msgid "Restore to factory settings"
-msgstr ""
-
-msgid "Reset app to factory settings"
->>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
 msgstr ""
 
 msgid "Close"

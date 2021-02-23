@@ -1,5 +1,4 @@
 import { UseCase } from "../../webapp/CompositionRoot";
-//import { TrainingModuleBuilder } from "../entities/TrainingModule";
 import { TrainingModuleRepository } from "../repositories/TrainingModuleRepository";
 
 export class ResetModuleToFactorySettingsUseCase implements UseCase {

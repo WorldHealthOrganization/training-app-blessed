@@ -33,29 +33,13 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const snackbar = useSnackbar();
 
     const [selection, setSelection] = useState<TableSelection[]>([]);
-<<<<<<< HEAD
-    const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
-=======
 
     const [
         editContentsDialogProps,
         updateEditContentsDialog,
     ] = useState<MarkdownEditorDialogProps | null>(null);
 
-    const [editModuleCreationDialog, setEditModuleCreationDialog] = useState<
-        TrainingModuleBuilder
-    >();
-    const [isCreationDialogOpen, setOpenCreationDialog] = useState<boolean>(false);
     const [factorySettingsDialog, setFactorySettingsDialog] = useState<ListItem>();
-
-    const [refreshKey, setRefreshKey] = useState(Math.random());
-
-    const closeCreationDialog = useCallback(() => {
-        setOpenCreationDialog(false);
-        setEditModuleCreationDialog(undefined);
-        setRefreshKey(Math.random());
-    }, []);
->>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
@@ -148,14 +132,17 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const resetToFactorySettings = useCallback(
         async (row: ListItem) => {
             setFactorySettingsDialog(undefined);
-            console.log(row)
-            console.log("I am at resetToFactorySettings")
+            loading.show(true, i18n.t(`Resetting ${row.name} to factory settings`));
             await usecases.modules.resetToFactorySettings(row.dhisAppKey);
+            snackbar.success(`Successfully resetted ${row.name} to factory settings`);
+            loading.reset();
+            await refreshRows();
+            
         },
-        [modules]
+        [rows]
     );
     const showFactorySettingsConfirmationDialog = (ids: string[]) => {
-        const row = buildChildrenRows(modules).find(({ id }) => id === ids[0]);
+        const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
         if (!row) return;
         setFactorySettingsDialog(row);
     }
@@ -293,37 +280,22 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 },
             },
         ],
-<<<<<<< HEAD
-        [rows, editModule, deleteModules, moveUpModule, moveDownModule, editContents, installApp, publishTranslations]
-=======
         [
-            modules,
+            rows,
             editModule,
             deleteModules,
             moveUpModule,
             moveDownModule,
             editContents,
+            installApp,
             publishTranslations,
-            resetToFactorySettings,
-            showFactorySettingsConfirmationDialog
-
-            
-        ]
->>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
+            resetToFactorySettings        ]
     );
 
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
-
-<<<<<<< HEAD
-=======
-            {isCreationDialogOpen && (
-                <ModuleCreationDialog
-                    onClose={closeCreationDialog}
-                    builder={editModuleCreationDialog}
-                />
-            )}
+            
             {factorySettingsDialog && (
                 <ConfirmationDialog
                 title={`Are you sure you want to reset ${factorySettingsDialog.name} to its factory settings? This action cannot be reversed.`}
@@ -336,7 +308,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             >
             </ConfirmationDialog>
             )}
->>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
             <ObjectsTable<ListItem>
                 rows={rows}
                 columns={columns}

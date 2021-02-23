@@ -104,16 +104,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.saveDataStore(newModule);
     }
     public async resetToFactorySettings(key: string | undefined): Promise<void> {
-       /* const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES
-        );*/
         const builtInModule = key ? this.builtinModules[key] : undefined;
-        console.log(builtInModule)
         if (!builtInModule) return;
-        //should I also reset the saveDataStore ? 
         const model = await this.buildPersistedModel(builtInModule);
         await this.saveDataStore(model);
-       // await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, builtInModule);
     }
 
     public async delete(ids: string[]): Promise<void> {
