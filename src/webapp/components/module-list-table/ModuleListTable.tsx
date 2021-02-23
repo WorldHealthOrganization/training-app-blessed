@@ -7,7 +7,7 @@ import {
     TableSelection,
     TableState,
     useLoading,
-    useSnackbar
+    useSnackbar,
 } from "@eyeseetea/d2-ui-components";
 import { Icon } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -36,10 +36,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
 
-    const [
-        editContentsDialogProps,
-        updateEditContentsDialog,
-    ] = useState<MarkdownEditorDialogProps | null>(null);
+    const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
@@ -61,7 +58,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 cancelText: i18n.t("Cancel"),
                 saveText: i18n.t("Delete modules"),
             });
-            
         },
         [usecases]
     );
@@ -153,7 +149,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             snackbar.success(`Successfully resetted ${row.name} to factory settings`);
             loading.reset();
             await refreshRows();
-            
         },
         [rows]
     );
@@ -169,7 +164,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             cancelText: i18n.t("Cancel"),
             saveText: i18n.t("Reset app to factory settings"),
         });
-    }
+    };
 
     const publishTranslations = useCallback(
         async (ids: string[]) => {
@@ -313,14 +308,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             editContents,
             installApp,
             publishTranslations,
-            resetToFactorySettings        ]
+            resetToFactorySettings,
+        ]
     );
 
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
-            
+
             <ObjectsTable<ListItem>
                 rows={rows}
                 columns={columns}
