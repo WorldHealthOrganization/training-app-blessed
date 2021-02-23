@@ -13,6 +13,6 @@ export class InstallAppUseCase implements UseCase {
         if (!module?.name) return false;
 
         // TODO: We should store app hub id on model instead of using display name
-        return this.instanceRepository.installApp(module.name.referenceValue);
+        return this.instanceRepository.installApp(module.displayName.referenceValue);
     }
 }

@@ -22,6 +22,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     private progressStorageClient: StorageClient;
 
     constructor(private config: ConfigRepository, private instanceRepository: InstanceRepository) {
+        //@ts-ignore FIXME: Add decoding to enforce types
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
@@ -121,13 +122,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 welcome: { key: "module-welcome", referenceValue: "", translations: {} },
                 steps: [],
             },
+            translation: {
+                provider: poEditorProject ? "poeditor" : "NONE",
+                project: poEditorProject,
+            },
         });
 
-        const translation: TranslationConnection = poEditorProject
-            ? { provider: "poeditor", project: poEditorProject }
-            : { provider: "NONE" };
-
-        await this.saveDataStore({ ...newModel, translation });
+        await this.saveDataStore(newModel);
         return Either.success(undefined);
     }
 
@@ -139,11 +140,15 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const item = items.find(item => item.id === id);
         if (!item) return;
 
-        const translation: TranslationConnection = poEditorProject
-            ? { provider: "poeditor", project: poEditorProject }
-            : { provider: "NONE" };
+        const newItem = {
+            ...item,
+            name: name,
+            translation: {
+                provider: poEditorProject ? "poeditor" : "NONE",
+                project: poEditorProject,
+            },
+        };
 
-        const newItem = { ...item, name: name, translation };
         await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, newItem);
     }
 
@@ -323,11 +328,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
 
-        const { created, lastUpdated, type, ...rest } = model;
+        const { name, created, lastUpdated, type, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
 
         return {
             ...rest,
+            name: name.referenceValue,
+            displayName: name,
             installed: await this.instanceRepository.isAppInstalledByUrl(model.dhisLaunchUrl),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
@@ -340,10 +347,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const defaultUser = { id: currentUser.id, name: currentUser.name };
 
         // TODO: This is hard-coded for now
-        const translation: TranslationConnection =
+        const translation =
             model.translation?.provider === "poeditor" && model.translation?.project
                 ? (model.translation as TranslationConnection)
-                : { provider: "NONE" };
+                : { provider: "NONE" as const, project: undefined };
 
         return {
             ...model,

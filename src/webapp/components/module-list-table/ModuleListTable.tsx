@@ -321,7 +321,7 @@ interface ListItemPage {
 const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
     return modules.map((module, moduleIdx) => ({
         ...module,
-        name: module.name.referenceValue,
+        name: module.displayName.referenceValue,
         rowType: "module",
         position: moduleIdx,
         welcome: [

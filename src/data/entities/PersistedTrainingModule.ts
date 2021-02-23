@@ -19,4 +19,4 @@ export type TranslationConnection =
           provider: TranslationProvider;
           project: string;
       }
-    | { provider: "NONE" };
+    | { provider: "NONE"; project: undefined };
