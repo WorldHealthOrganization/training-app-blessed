@@ -315,20 +315,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             publishTranslations,
             resetToFactorySettings        ]
     );
-    /*
-            {factorySettingsDialog && (
-                <ConfirmationDialog
-                title={`Are you sure you want to reset ${factorySettingsDialog.name} to its factory settings? This action cannot be reversed.`}
-                isOpen={true}
-                maxWidth={"md"}
-                fullWidth={true}
-                onCancel={() => setFactorySettingsDialog(undefined)}
-                onSave={() => resetToFactorySettings(factorySettingsDialog)}
-                saveText={i18n.t("Reset app to factory settings")}
-            >
-            </ConfirmationDialog>
-            )}
-    */
+
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
