@@ -35,23 +35,22 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
-
     const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
-            const numModules = ids.length > 1 ? "these modules" : "this module";
             updateDialog({
-                title: `Are you sure you want to delete ${numModules}? This action cannot be reversed.`,
+                title: i18n.t("Are you sure you want to delete the selected modules?"),
+                description: i18n.t("This action cannot be reversed"),
                 onCancel: () => {
                     updateDialog(null);
                 },
                 onSave: async () => {
                     updateDialog(null);
-                    loading.show(true, i18n.t(`Deleting modules`));
+                    loading.show(true, i18n.t("Deleting modules"));
                     await usecases.modules.delete(ids);
                     await refreshRows();
-                    snackbar.success(`Successfully deleted modules`);
+                    snackbar.success("Successfully deleted modules");
                     loading.reset();
                     setSelection([]);
                 },
