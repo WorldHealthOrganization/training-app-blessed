@@ -85,7 +85,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = props => {
             lastStep.current = stepKey;
             onChangeStep(currentStep.step, currentStep.content);
         },
-        [module, updateProgress]
+        [module, updateProgress, onChangeStep]
     );
 
     const WizardStepper = (props: WizardStepperProps) => <Stepper {...props} onMove={step => onChangeStep(step, 1)} />;

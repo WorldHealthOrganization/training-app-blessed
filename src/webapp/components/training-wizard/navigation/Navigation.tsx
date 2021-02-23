@@ -29,7 +29,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         } else {
             onPrev();
         }
-    }, [onMove, onPrev, currentStepIndex]);
+    }, [onMove, onPrev, currentStepKey, disablePrev]);
 
     const next = useCallback(() => {
         const currentStep = extractStepFromKey(currentStepKey);
@@ -39,7 +39,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         } else {
             onNext();
         }
-    }, [onMove, onPrev, currentStepIndex]);
+    }, [onMove, onNext, currentStepKey, disableNext]);
 
     if (steps.length === 0 || !currentStep) return null;
     const { contentIndex = 0, totalContents = 0 } = (currentStep.props as unknown) as any;

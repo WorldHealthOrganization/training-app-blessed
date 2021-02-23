@@ -60,17 +60,17 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 saveText: i18n.t("Delete modules"),
             });
         },
-        [usecases]
+        [usecases, loading, refreshRows, snackbar]
     );
 
-    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [rows]);
+    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [setAppState]);
 
     const editModule = useCallback(
         (ids: string[]) => {
             if (!ids[0]) return;
             setAppState({ type: "EDIT_MODULE", module: ids[0] });
         },
-        [rows]
+        [setAppState]
     );
 
     const moveUpModule = useCallback(
@@ -85,7 +85,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
             await refreshRows();
         },
-        [rows, usecases]
+        [rows, usecases, refreshRows]
     );
 
     const moveDownModule = useCallback(
@@ -100,7 +100,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
             await refreshRows();
         },
-        [rows, usecases]
+        [rows, usecases, refreshRows]
     );
 
     const editContents = useCallback(
@@ -139,29 +139,32 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             snackbar.success("Successfully installed app");
             await refreshRows();
         },
-        [rows, snackbar, usecases]
+        [snackbar, usecases, loading, refreshRows]
     );
 
-    const showFactorySettingsConfirmationDialog = useCallback((ids: string[]) => {
-        updateDialog({
-            title: i18n.t("Are you sure you want to reset module to its default value?"),
-            description: i18n.t("This action cannot be reversed."),
-            onCancel: () => updateDialog(null),
-            onSave: async () => {
-                updateDialog(null);
-                if (!ids[0]) return;
+    const resetModule = useCallback(
+        (ids: string[]) => {
+            updateDialog({
+                title: i18n.t("Are you sure you want to reset module to its default value?"),
+                description: i18n.t("This action cannot be reversed."),
+                onCancel: () => updateDialog(null),
+                onSave: async () => {
+                    updateDialog(null);
+                    if (!ids[0]) return;
 
-                loading.show(true, i18n.t("Resetting module to default value"));
-                await usecases.modules.resetDefaultValue(ids[0]);
-                loading.reset();
+                    loading.show(true, i18n.t("Resetting module to default value"));
+                    await usecases.modules.resetDefaultValue(ids[0]);
+                    loading.reset();
 
-                snackbar.success(i18n.t("Successfully resetted module to default value"));
-                await refreshRows();
-            },
-            cancelText: i18n.t("Cancel"),
-            saveText: i18n.t("Reset app to factory settings"),
-        });
-    }, []);
+                    snackbar.success(i18n.t("Successfully resetted module to default value"));
+                    await refreshRows();
+                },
+                cancelText: i18n.t("Cancel"),
+                saveText: i18n.t("Reset app to factory settings"),
+            });
+        },
+        [loading, refreshRows, snackbar, usecases]
+    );
 
     const publishTranslations = useCallback(
         async (ids: string[]) => {
@@ -290,13 +293,23 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 name: "reset-factory-settings",
                 text: i18n.t("Restore to factory settings"),
                 icon: <Icon>rotate_left</Icon>,
-                onClick: showFactorySettingsConfirmationDialog,
+                onClick: resetModule,
                 isActive: rows => {
                     return _.every(rows, item => item.rowType === "module");
                 },
             },
         ],
-        [rows, editModule, deleteModules, moveUpModule, moveDownModule, editContents, installApp, publishTranslations]
+        [
+            editModule,
+            deleteModules,
+            moveUpModule,
+            moveDownModule,
+            editContents,
+            installApp,
+            publishTranslations,
+            addModule,
+            resetModule,
+        ]
     );
 
     return (
