@@ -8,6 +8,7 @@ import { MarkdownEditor } from "../../markdown-editor/MarkdownEditor";
 import { MarkdownViewer } from "../../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../../modal";
 import { ModuleCreationWizardStepProps } from "./index";
+
 export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ module, onChange, isEdit }) => {
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
 

@@ -1,6 +1,9 @@
-type Id = string;
-export type SearchMatchObject = { id: Id; displayName: string };
-export interface SearchResult {
-    users: SearchMatchObject[];
-    userGroups: SearchMatchObject[];
+export interface UserSearchItem {
+    id: string;
+    displayName: string;
+}
+
+export interface UserSearch {
+    users: UserSearchItem[];
+    userGroups: UserSearchItem[];
 }
