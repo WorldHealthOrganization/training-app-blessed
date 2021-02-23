@@ -1,5 +1,6 @@
 import {
     ConfirmationDialog,
+    ConfirmationDialogProps,
     ObjectsTable,
     TableAction,
     TableColumn,
@@ -33,19 +34,34 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const snackbar = useSnackbar();
 
     const [selection, setSelection] = useState<TableSelection[]>([]);
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
 
     const [
         editContentsDialogProps,
         updateEditContentsDialog,
     ] = useState<MarkdownEditorDialogProps | null>(null);
 
-    const [factorySettingsDialog, setFactorySettingsDialog] = useState<ListItem>();
-
     const deleteModules = useCallback(
         async (ids: string[]) => {
-            await usecases.modules.delete(ids);
-            await refreshRows();
-            setSelection([]);
+            const numModules = ids.length > 1 ? "these modules" : "this module";
+            updateDialog({
+                title: `Are you sure you want to delete ${numModules}? This action cannot be reversed.`,
+                onCancel: () => {
+                    updateDialog(null);
+                },
+                onSave: async () => {
+                    updateDialog(null);
+                    loading.show(true, i18n.t(`Deleting modules`));
+                    await usecases.modules.delete(ids);
+                    await refreshRows();
+                    snackbar.success(`Successfully deleted modules`);
+                    loading.reset();
+                    setSelection([]);
+                },
+                cancelText: i18n.t("Cancel"),
+                saveText: i18n.t("Delete modules"),
+            });
+            
         },
         [usecases]
     );
@@ -131,7 +147,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
     const resetToFactorySettings = useCallback(
         async (row: ListItem) => {
-            setFactorySettingsDialog(undefined);
+            updateDialog(null);
             loading.show(true, i18n.t(`Resetting ${row.name} to factory settings`));
             await usecases.modules.resetToFactorySettings(row.dhisAppKey);
             snackbar.success(`Successfully resetted ${row.name} to factory settings`);
@@ -144,7 +160,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const showFactorySettingsConfirmationDialog = (ids: string[]) => {
         const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
         if (!row) return;
-        setFactorySettingsDialog(row);
+        updateDialog({
+            title: `Are you sure you want to reset ${row.name} to its factory settings? This action cannot be reversed.`,
+            onCancel: () => {
+                updateDialog(null);
+            },
+            onSave: () => resetToFactorySettings(row),
+            cancelText: i18n.t("Cancel"),
+            saveText: i18n.t("Reset app to factory settings"),
+        });
     }
 
     const publishTranslations = useCallback(
@@ -291,11 +315,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             publishTranslations,
             resetToFactorySettings        ]
     );
-
-    return (
-        <PageWrapper>
-            {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
-            
+    /*
             {factorySettingsDialog && (
                 <ConfirmationDialog
                 title={`Are you sure you want to reset ${factorySettingsDialog.name} to its factory settings? This action cannot be reversed.`}
@@ -308,6 +328,12 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             >
             </ConfirmationDialog>
             )}
+    */
+    return (
+        <PageWrapper>
+            {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
+            {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
+            
             <ObjectsTable<ListItem>
                 rows={rows}
                 columns={columns}
