@@ -294,16 +294,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 },
             },
         ],
-        [
-            rows,
-            editModule,
-            deleteModules,
-            moveUpModule,
-            moveDownModule,
-            editContents,
-            installApp,
-            publishTranslations,
-        ]
+        [rows, editModule, deleteModules, moveUpModule, moveDownModule, editContents, installApp, publishTranslations]
     );
 
     return (
