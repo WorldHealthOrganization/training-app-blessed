@@ -15,7 +15,7 @@ export const SummaryStep: React.FC<ModuleCreationWizardStepProps> = ({ module, o
     const saveModule = useCallback(async () => {
         await onSave();
         onClose();
-    }, []);
+    }, [onClose, onSave]);
 
     const movePage = useCallback((step: number, content: number) => setStepKey(`${module.id}-${step}-${content}`), [
         setStepKey,

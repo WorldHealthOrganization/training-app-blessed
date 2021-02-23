@@ -1,11 +1,13 @@
 import {
+    ConfirmationDialog,
+    ConfirmationDialogProps,
     ObjectsTable,
     TableAction,
     TableColumn,
     TableSelection,
     TableState,
     useLoading,
-    useSnackbar
+    useSnackbar,
 } from "@eyeseetea/d2-ui-components";
 import { Icon } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -32,25 +34,43 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const snackbar = useSnackbar();
 
     const [selection, setSelection] = useState<TableSelection[]>([]);
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
     const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
-            await usecases.modules.delete(ids);
-            await refreshRows();
-            setSelection([]);
+            updateDialog({
+                title: i18n.t("Are you sure you want to delete the selected modules?"),
+                description: i18n.t("This action cannot be reversed"),
+                onCancel: () => {
+                    updateDialog(null);
+                },
+                onSave: async () => {
+                    updateDialog(null);
+
+                    loading.show(true, i18n.t("Deleting modules"));
+                    await usecases.modules.delete(ids);
+                    loading.reset();
+
+                    snackbar.success("Successfully deleted modules");
+                    setSelection([]);
+                    await refreshRows();
+                },
+                cancelText: i18n.t("Cancel"),
+                saveText: i18n.t("Delete modules"),
+            });
         },
-        [usecases]
+        [usecases, loading, refreshRows, snackbar]
     );
 
-    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [rows]);
+    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [setAppState]);
 
     const editModule = useCallback(
         (ids: string[]) => {
             if (!ids[0]) return;
             setAppState({ type: "EDIT_MODULE", module: ids[0] });
         },
-        [rows]
+        [setAppState]
     );
 
     const moveUpModule = useCallback(
@@ -65,7 +85,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
             await refreshRows();
         },
-        [rows, usecases]
+        [rows, usecases, refreshRows]
     );
 
     const moveDownModule = useCallback(
@@ -80,7 +100,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
             await refreshRows();
         },
-        [rows, usecases]
+        [rows, usecases, refreshRows]
     );
 
     const editContents = useCallback(
@@ -119,7 +139,31 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             snackbar.success("Successfully installed app");
             await refreshRows();
         },
-        [rows, snackbar, usecases]
+        [snackbar, usecases, loading, refreshRows]
+    );
+
+    const resetModule = useCallback(
+        (ids: string[]) => {
+            updateDialog({
+                title: i18n.t("Are you sure you want to reset module to its default value?"),
+                description: i18n.t("This action cannot be reversed."),
+                onCancel: () => updateDialog(null),
+                onSave: async () => {
+                    updateDialog(null);
+                    if (!ids[0]) return;
+
+                    loading.show(true, i18n.t("Resetting module to default value"));
+                    await usecases.modules.resetDefaultValue(ids[0]);
+                    loading.reset();
+
+                    snackbar.success(i18n.t("Successfully resetted module to default value"));
+                    await refreshRows();
+                },
+                cancelText: i18n.t("Cancel"),
+                saveText: i18n.t("Reset app to factory settings"),
+            });
+        },
+        [loading, refreshRows, snackbar, usecases]
     );
 
     const publishTranslations = useCallback(
@@ -245,13 +289,33 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                     return _.every(rows, item => item.rowType === "module" && !item.installed);
                 },
             },
+            {
+                name: "reset-factory-settings",
+                text: i18n.t("Restore to factory settings"),
+                icon: <Icon>rotate_left</Icon>,
+                onClick: resetModule,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module");
+                },
+            },
         ],
-        [rows, editModule, deleteModules, moveUpModule, moveDownModule, editContents, installApp, publishTranslations]
+        [
+            editModule,
+            deleteModules,
+            moveUpModule,
+            moveDownModule,
+            editContents,
+            installApp,
+            publishTranslations,
+            addModule,
+            resetModule,
+        ]
     );
 
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
+            {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 
             <ObjectsTable<ListItem>
                 rows={rows}

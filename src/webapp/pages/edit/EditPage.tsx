@@ -23,7 +23,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
     const saveModule = useCallback(async () => {
         await usecases.modules.update(stateModule);
         await reload();
-    }, [stateModule]);
+    }, [stateModule, usecases, reload]);
 
     useEffect(() => {
         if (module) updateStateModule(module);
