@@ -30,7 +30,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     }, [reload]);
 
     useEffect(() => {
-        compositionRoot.usecases.user.checkSuperUser().then(setHasSettingsAccess);
+        compositionRoot.usecases.user.checkSettingsPermissions().then(setHasSettingsAccess);
     }, [compositionRoot]);
 
     useEffect(() => {

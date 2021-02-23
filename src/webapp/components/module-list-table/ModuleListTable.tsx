@@ -120,7 +120,7 @@ export const ModuleListTable: React.FC = () => {
         async (ids: string[]) => {
             if (!ids[0]) return;
 
-            loading.show(true, i18n.t("Initialize project in POEditor"));
+            loading.show(true, i18n.t("Installing application"));
             const installed = await usecases.instance.installApp(ids[0]);
             loading.reset();
 
