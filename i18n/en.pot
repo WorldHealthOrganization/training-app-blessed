@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-22T07:41:16.633Z\n"
-"PO-Revision-Date: 2021-02-22T07:41:16.633Z\n"
+"POT-Creation-Date: 2021-02-23T10:16:27.811Z\n"
+"PO-Revision-Date: 2021-02-23T10:16:27.811Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -48,11 +48,14 @@ msgid "Minimize window"
 msgstr ""
 
 msgid ""
-"Note: only users with permissions in the selected country  can be added to "
-"this project"
+"Note: only users with permissions in the selected module ({{moduleName}}) "
+"can be added to this module"
 msgstr ""
 
 msgid "Field must have a value"
+msgstr ""
+
+msgid "Welcome page"
 msgstr ""
 
 msgid "Identifier"
@@ -83,6 +86,9 @@ msgid "Initialize project in POEditor"
 msgstr ""
 
 msgid "App is not installed in this instance"
+msgstr ""
+
+msgid "Add module"
 msgstr ""
 
 msgid "Edit module"

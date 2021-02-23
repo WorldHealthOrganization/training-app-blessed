@@ -24,10 +24,10 @@ export const ActionButton: React.FC<ActionButtonProps> = ({ onClick }) => {
 
     return (
         <DragContainer onDrag={onDrag} onStop={onStop}>
-                <StyledFab variant="extended" size="large" color="primary" onClick={isDragging ? undefined : onClick}>
-                    <EmojiObjectsIcon />
-                    <p>{i18n.t("Tutorial")}</p>
-                </StyledFab>
+            <StyledFab variant="extended" size="large" color="primary" onClick={isDragging ? undefined : onClick}>
+                <EmojiObjectsIcon />
+                <p>{i18n.t("Tutorial")}</p>
+            </StyledFab>
         </DragContainer>
     );
 };

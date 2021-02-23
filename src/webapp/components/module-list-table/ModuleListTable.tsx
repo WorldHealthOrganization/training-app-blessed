@@ -43,6 +43,8 @@ export const ModuleListTable: React.FC = () => {
         [usecases]
     );
 
+    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [modules]);
+
     const editModule = useCallback(
         (ids: string[]) => {
             if (!ids[0]) return;
@@ -95,7 +97,7 @@ export const ModuleListTable: React.FC = () => {
                     updateEditContentsDialog(null);
                 },
                 onUpload: (data: ArrayBuffer) => usecases.instance.uploadFile(data),
-                markdownPreview: markdown => <StepPreview value={markdown} rowType={row.rowType} />,
+                markdownPreview: markdown => <StepPreview value={markdown} />,
             });
         },
         [modules, usecases]
@@ -161,7 +163,7 @@ export const ModuleListTable: React.FC = () => {
                 text: "Preview",
                 sortable: false,
                 getValue: item => {
-                    return item.value && <StepPreview value={item.value} rowType={item.rowType} />;
+                    return item.value && <StepPreview value={item.value} />;
                 },
             },
         ],
@@ -170,6 +172,15 @@ export const ModuleListTable: React.FC = () => {
 
     const actions: TableAction<ListItem>[] = useMemo(
         () => [
+            {
+                name: "new-module",
+                text: i18n.t("Add module"),
+                icon: <Icon>add</Icon>,
+                onClick: addModule,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module");
+                },
+            },
             {
                 name: "edit-module",
                 text: i18n.t("Edit module"),
@@ -194,8 +205,8 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>delete</Icon>,
                 multiple: true,
                 onClick: deleteModules,
-                isActive: _rows => {
-                    return _.every(_rows, item => item.rowType === "module" && item.type !== "core");
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module" && item.type !== "core");
                 },
             },
             {
@@ -204,7 +215,7 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>arrow_upwards</Icon>,
                 onClick: moveUpModule,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module" && item.position !== 0);
+                    return _.every(rows, ({ position }) => position !== 0);
                 },
             },
             {
@@ -213,7 +224,7 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>arrow_downwards</Icon>,
                 onClick: moveDownModule,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module" && item.position !== modules.length - 1);
+                    return _.every(rows, ({ position, lastPosition }) => position !== lastPosition);
                 },
             },
             {
@@ -222,7 +233,7 @@ export const ModuleListTable: React.FC = () => {
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "page" || item.rowType === "dialog");
+                    return _.every(rows, item => item.rowType === "page");
                 },
             },
             {
@@ -280,8 +291,8 @@ interface ListItemModule extends Omit<TrainingModule, "name"> {
     name: string;
     rowType: "module";
     steps: ListItemStep[];
-    welcome: ListItemStep[];
     position: number;
+    lastPosition: number;
 }
 
 interface ListItemStep {
@@ -290,14 +301,16 @@ interface ListItemStep {
     rowType: "step";
     pages: ListItemPage[];
     position: number;
+    lastPosition: number;
 }
 
 interface ListItemPage {
     id: string;
     name: string;
-    rowType: "page" | "dialog";
+    rowType: "page";
     value: string;
     position: number;
+    lastPosition: number;
 }
 
 const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
@@ -306,33 +319,19 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
         name: module.name.referenceValue,
         rowType: "module",
         position: moduleIdx,
-        welcome: [
-            {
-                id: `${module.id}-welcome-step`,
-                name: "Welcome page",
-                rowType: "step",
-                position: 0,
-                pages: [
-                    {
-                        id: `${module.id}-welcome-page`,
-                        name: "Welcome dialog",
-                        rowType: "dialog",
-                        position: 0,
-                        value: module.contents.welcome.referenceValue,
-                    },
-                ],
-            },
-        ],
+        lastPosition: modules.length - 1,
         steps: module.contents.steps.map(({ title, pages }, stepIdx) => ({
-            id: `${module.id}-step-${stepIdx + 1}`,
+            id: `${module.id}-step-${stepIdx}`,
             name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
             rowType: "step",
-            position: stepIdx + 1,
+            position: stepIdx,
+            lastPosition: module.contents.steps.length - 1,
             pages: pages.map((value, pageIdx) => ({
-                id: `${module.id}-page-${stepIdx + 1}-${stepIdx + 1}`,
+                id: `${module.id}-page-${stepIdx}-${pageIdx}`,
                 name: `Page ${pageIdx + 1}`,
                 rowType: "page",
                 position: pageIdx,
+                lastPosition: pages.length - 1,
                 value: value.referenceValue,
             })),
         })),
@@ -340,7 +339,7 @@ const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
 };
 
 const buildChildrenRows = (items: ListItemModule[]): ListItem[] => {
-    const steps = _.flatMap(items, item => [...item.welcome, ...item.steps]);
+    const steps = _.flatMap(items, item => item.steps);
     const pages = _.flatMap(steps, step => step.pages);
     return [...items, ...steps, ...pages];
 };
@@ -348,13 +347,12 @@ const buildChildrenRows = (items: ListItemModule[]): ListItem[] => {
 export const StepPreview: React.FC<{
     className?: string;
     value?: string;
-    rowType: "module" | "step" | "page" | "dialog";
-}> = ({ className, value, rowType }) => {
+}> = ({ className, value }) => {
     if (!value) return null;
 
     return (
         <StyledModalBody className={className}>
-            <MarkdownViewer source={value} center={rowType === "dialog"} />
+            <MarkdownViewer source={value} />
         </StyledModalBody>
     );
 };

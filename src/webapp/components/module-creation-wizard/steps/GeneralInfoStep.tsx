@@ -4,6 +4,9 @@ import { Dictionary } from "lodash";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule } from "../../../../domain/entities/TrainingModule";
+import { MarkdownEditor } from "../../markdown-editor/MarkdownEditor";
+import { MarkdownViewer } from "../../markdown-viewer/MarkdownViewer";
+import { ModalBody } from "../../modal";
 import { ModuleCreationWizardStepProps } from "./index";
 export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ module, onChange, isEdit }) => {
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
@@ -31,6 +34,22 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     [field]: !event.target.value ? i18n.t("Field must have a value") : undefined,
                 }));
             };
+        },
+        [onChange]
+    );
+
+    const onChangeWelcome = useCallback(
+        text => {
+            onChange(module => ({
+                ...module,
+                contents: {
+                    ...module.contents,
+                    welcome: {
+                        ...module.contents.welcome,
+                        referenceValue: text,
+                    },
+                },
+            }));
         },
         [onChange]
     );
@@ -69,6 +88,15 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     onChange={onChangeField("translation")}
                 />
             </Row>
+
+            <Row>
+                <h3>{i18n.t("Welcome page")}</h3>
+                <MarkdownEditor
+                    value={module.contents.welcome.referenceValue}
+                    onChange={onChangeWelcome}
+                    markdownPreview={markdown => <StepPreview value={markdown} />}
+                />
+            </Row>
         </React.Fragment>
     );
 };
@@ -76,3 +104,20 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
 const Row = styled.div`
     margin-bottom: 25px;
 `;
+
+const StyledModalBody = styled(ModalBody)`
+    max-width: 600px;
+`;
+
+const StepPreview: React.FC<{
+    className?: string;
+    value?: string;
+}> = ({ className, value }) => {
+    if (!value) return null;
+
+    return (
+        <StyledModalBody className={className}>
+            <MarkdownViewer source={value} center={true} />
+        </StyledModalBody>
+    );
+};
