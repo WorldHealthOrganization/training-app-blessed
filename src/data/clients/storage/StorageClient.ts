@@ -42,7 +42,7 @@ export abstract class StorageClient {
             for (const element of elements) {
                 const advancedElement = _.pick(element, advancedProperties);
                 await this.saveObject(`${key}-${element.id}`, advancedElement);
-            }   
+            }
         }
     }
 

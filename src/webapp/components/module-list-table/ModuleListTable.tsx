@@ -1,12 +1,13 @@
 import {
     ConfirmationDialog,
+    ConfirmationDialogProps,
     ObjectsTable,
     TableAction,
     TableColumn,
     TableSelection,
     TableState,
     useLoading,
-    useSnackbar
+    useSnackbar,
 } from "@eyeseetea/d2-ui-components";
 import { Icon } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
@@ -33,19 +34,29 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const snackbar = useSnackbar();
 
     const [selection, setSelection] = useState<TableSelection[]>([]);
-
-    const [
-        editContentsDialogProps,
-        updateEditContentsDialog,
-    ] = useState<MarkdownEditorDialogProps | null>(null);
-
-    const [factorySettingsDialog, setFactorySettingsDialog] = useState<ListItem>();
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
+    const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
-            await usecases.modules.delete(ids);
-            await refreshRows();
-            setSelection([]);
+            updateDialog({
+                title: i18n.t("Are you sure you want to delete the selected modules?"),
+                description: i18n.t("This action cannot be reversed"),
+                onCancel: () => {
+                    updateDialog(null);
+                },
+                onSave: async () => {
+                    updateDialog(null);
+                    loading.show(true, i18n.t("Deleting modules"));
+                    await usecases.modules.delete(ids);
+                    await refreshRows();
+                    snackbar.success("Successfully deleted modules");
+                    loading.reset();
+                    setSelection([]);
+                },
+                cancelText: i18n.t("Cancel"),
+                saveText: i18n.t("Delete modules"),
+            });
         },
         [usecases]
     );
@@ -129,23 +140,26 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
         [rows, snackbar, usecases]
     );
 
-    const resetToFactorySettings = useCallback(
-        async (row: ListItem) => {
-            setFactorySettingsDialog(undefined);
-            loading.show(true, i18n.t(`Resetting ${row.name} to factory settings`));
-            await usecases.modules.resetToFactorySettings(row.dhisAppKey);
-            snackbar.success(`Successfully resetted ${row.name} to factory settings`);
-            loading.reset();
-            await refreshRows();
-            
-        },
-        [rows]
-    );
-    const showFactorySettingsConfirmationDialog = (ids: string[]) => {
+    const showFactorySettingsConfirmationDialog = useCallback((ids: string[]) => {
         const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
         if (!row) return;
-        setFactorySettingsDialog(row);
-    }
+
+        updateDialog({
+            title: i18n.t("Are you sure you want to reset {{name}} to its factory settings?", row),
+            description: i18n.t("This action cannot be reversed."),
+            onCancel: () => updateDialog(null),
+            onSave: async () => {
+                updateDialog(null);
+                loading.show(true, i18n.t(`Resetting ${row.name} to factory settings`));
+                await usecases.modules.resetToFactorySettings(row.dhisAppKey);
+                snackbar.success(`Successfully resetted ${row.name} to factory settings`);
+                loading.reset();
+                await refreshRows();
+            },
+            cancelText: i18n.t("Cancel"),
+            saveText: i18n.t("Reset app to factory settings"),
+        });
+    }, []);
 
     const publishTranslations = useCallback(
         async (ids: string[]) => {
@@ -289,25 +303,14 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             editContents,
             installApp,
             publishTranslations,
-            resetToFactorySettings        ]
+        ]
     );
 
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
-            
-            {factorySettingsDialog && (
-                <ConfirmationDialog
-                title={`Are you sure you want to reset ${factorySettingsDialog.name} to its factory settings? This action cannot be reversed.`}
-                isOpen={true}
-                maxWidth={"md"}
-                fullWidth={true}
-                onCancel={() => setFactorySettingsDialog(undefined)}
-                onSave={() => resetToFactorySettings(factorySettingsDialog)}
-                saveText={i18n.t("Reset app to factory settings")}
-            >
-            </ConfirmationDialog>
-            )}
+            {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
+
             <ObjectsTable<ListItem>
                 rows={rows}
                 columns={columns}

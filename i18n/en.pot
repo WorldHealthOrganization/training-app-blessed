@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-23T13:34:25.207Z\n"
-"PO-Revision-Date: 2021-02-23T13:34:25.208Z\n"
+"POT-Creation-Date: 2021-02-23T15:29:49.625Z\n"
+"PO-Revision-Date: 2021-02-23T15:29:49.625Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -74,10 +74,28 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
+msgid "Are you sure you want to delete the selected modules?"
+msgstr ""
+
+msgid "This action cannot be reversed"
+msgstr ""
+
+msgid "Deleting modules"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Delete modules"
+msgstr ""
+
 msgid "Edit contents of {{name}}"
 msgstr ""
 
 msgid "Installing application"
+msgstr ""
+
+msgid "Reset app to factory settings"
 msgstr ""
 
 msgid "Initialize project in POEditor"
@@ -111,9 +129,6 @@ msgid "Install app"
 msgstr ""
 
 msgid "Restore to factory settings"
-msgstr ""
-
-msgid "Reset app to factory settings"
 msgstr ""
 
 msgid "Back"
