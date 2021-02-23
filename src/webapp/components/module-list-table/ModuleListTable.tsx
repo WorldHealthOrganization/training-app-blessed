@@ -5,14 +5,14 @@ import {
     TableSelection,
     TableState,
     useLoading,
-    useSnackbar,
+    useSnackbar
 } from "@eyeseetea/d2-ui-components";
 import { Icon } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import _ from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule } from "../../../domain/entities/TrainingModule";
+import { TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
@@ -21,71 +21,71 @@ import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-edi
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 
-export const ModuleListTable: React.FC = () => {
+export interface ModuleListTableProps {
+    rows: ListItem[];
+    refreshRows?: () => Promise<void>;
+}
+
+export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshRows = async () => {} }) => {
     const { usecases, setAppState } = useAppContext();
     const loading = useLoading();
     const snackbar = useSnackbar();
 
-    const [tableLoading, setTableLoading] = useState<boolean>(true);
-    const [modules, setModules] = useState<ListItemModule[]>([]);
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
-    const [refreshKey, setRefreshKey] = useState(Math.random());
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
-            setTableLoading(true);
             await usecases.modules.delete(ids);
-            setRefreshKey(Math.random());
-            setTableLoading(false);
+            await refreshRows();
             setSelection([]);
         },
         [usecases]
     );
 
-    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [modules]);
+    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [rows]);
 
     const editModule = useCallback(
         (ids: string[]) => {
             if (!ids[0]) return;
             setAppState({ type: "EDIT_MODULE", module: ids[0] });
         },
-        [modules]
+        [rows]
     );
 
     const moveUpModule = useCallback(
         async (ids: string[]) => {
-            const rowIndex = _.findIndex(modules, ({ id }) => id === ids[0]);
+            const rowIndex = _.findIndex(rows, ({ id }) => id === ids[0]);
             if (rowIndex === -1 || rowIndex === 0) return;
 
-            const { id: prevRowId } = modules[rowIndex - 1] ?? {};
+            const { id: prevRowId } = rows[rowIndex - 1] ?? {};
             if (prevRowId && ids[0]) {
                 await usecases.modules.swapOrder(ids[0], prevRowId);
             }
 
-            setRefreshKey(Math.random());
+            await refreshRows();
         },
-        [modules, usecases]
+        [rows, usecases]
     );
 
     const moveDownModule = useCallback(
         async (ids: string[]) => {
-            const rowIndex = _.findIndex(modules, ({ id }) => id === ids[0]);
-            if (rowIndex === -1 || rowIndex === modules.length - 1) return;
+            const rowIndex = _.findIndex(rows, ({ id }) => id === ids[0]);
+            if (rowIndex === -1 || rowIndex === rows.length - 1) return;
 
-            const { id: nextRowId } = modules[rowIndex + 1] ?? {};
+            const { id: nextRowId } = rows[rowIndex + 1] ?? {};
             if (nextRowId && ids[0]) {
                 await usecases.modules.swapOrder(nextRowId, ids[0]);
             }
 
-            setRefreshKey(Math.random());
+            await refreshRows();
         },
-        [modules, usecases]
+        [rows, usecases]
     );
 
     const editContents = useCallback(
         (ids: string[]) => {
-            const row = buildChildrenRows(modules).find(({ id }) => id === ids[0]);
+            const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
             if (!row) return;
 
             updateEditContentsDialog({
@@ -100,7 +100,7 @@ export const ModuleListTable: React.FC = () => {
                 markdownPreview: markdown => <StepPreview value={markdown} />,
             });
         },
-        [modules, usecases]
+        [rows, usecases]
     );
 
     const installApp = useCallback(
@@ -117,9 +117,9 @@ export const ModuleListTable: React.FC = () => {
             }
 
             snackbar.success("Successfully installed app");
-            setRefreshKey(Math.random());
+            await refreshRows();
         },
-        [modules, snackbar, usecases]
+        [rows, snackbar, usecases]
     );
 
     const publishTranslations = useCallback(
@@ -246,34 +246,15 @@ export const ModuleListTable: React.FC = () => {
                 },
             },
         ],
-        [
-            modules,
-            editModule,
-            deleteModules,
-            moveUpModule,
-            moveDownModule,
-            editContents,
-            installApp,
-            publishTranslations,
-        ]
+        [rows, editModule, deleteModules, moveUpModule, moveDownModule, editContents, installApp, publishTranslations]
     );
-
-    useEffect(() => {
-        setTableLoading(true);
-
-        usecases.modules.list().then(modules => {
-            setModules(buildListItems(modules));
-            setTableLoading(false);
-        });
-    }, [usecases, refreshKey]);
 
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
 
             <ObjectsTable<ListItem>
-                loading={tableLoading}
-                rows={modules}
+                rows={rows}
                 columns={columns}
                 actions={actions}
                 selection={selection}
@@ -285,9 +266,9 @@ export const ModuleListTable: React.FC = () => {
     );
 };
 
-type ListItem = FlattenUnion<ListItemModule | ListItemStep | ListItemPage>;
+export type ListItem = FlattenUnion<ListItemModule | ListItemStep | ListItemPage>;
 
-interface ListItemModule extends Omit<TrainingModule, "name"> {
+export interface ListItemModule extends Omit<TrainingModule, "name"> {
     name: string;
     rowType: "module";
     steps: ListItemStep[];
@@ -295,7 +276,7 @@ interface ListItemModule extends Omit<TrainingModule, "name"> {
     lastPosition: number;
 }
 
-interface ListItemStep {
+export interface ListItemStep {
     id: string;
     name: string;
     rowType: "step";
@@ -304,7 +285,7 @@ interface ListItemStep {
     lastPosition: number;
 }
 
-interface ListItemPage {
+export interface ListItemPage {
     id: string;
     name: string;
     rowType: "page";
@@ -313,35 +294,39 @@ interface ListItemPage {
     lastPosition: number;
 }
 
-const buildListItems = (modules: TrainingModule[]): ListItemModule[] => {
+export const buildListModules = (modules: TrainingModule[]): ListItemModule[] => {
     return modules.map((module, moduleIdx) => ({
         ...module,
         name: module.name.referenceValue,
         rowType: "module",
         position: moduleIdx,
         lastPosition: modules.length - 1,
-        steps: module.contents.steps.map(({ title, pages }, stepIdx) => ({
-            id: `${module.id}-step-${stepIdx}`,
-            name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
-            rowType: "step",
-            position: stepIdx,
-            lastPosition: module.contents.steps.length - 1,
-            pages: pages.map((value, pageIdx) => ({
-                id: `${module.id}-page-${stepIdx}-${pageIdx}`,
-                name: `Page ${pageIdx + 1}`,
-                rowType: "page",
-                position: pageIdx,
-                lastPosition: pages.length - 1,
-                value: value.referenceValue,
-            })),
+        steps: buildListSteps(module.contents.steps),
+    }));
+};
+
+export const buildListSteps = (steps: TrainingModuleStep[]): ListItemStep[] => {
+    return steps.map(({ title, pages }, stepIdx) => ({
+        id: `${module.id}-step-${stepIdx}`,
+        name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
+        rowType: "step",
+        position: stepIdx,
+        lastPosition: steps.length - 1,
+        pages: pages.map((value, pageIdx) => ({
+            id: `${module.id}-page-${stepIdx}-${pageIdx}`,
+            name: `Page ${pageIdx + 1}`,
+            rowType: "page",
+            position: pageIdx,
+            lastPosition: pages.length - 1,
+            value: value.referenceValue,
         })),
     }));
 };
 
-const buildChildrenRows = (items: ListItemModule[]): ListItem[] => {
+const buildChildrenRows = (items: ListItem[]): ListItem[] => {
     const steps = _.flatMap(items, item => item.steps);
-    const pages = _.flatMap(steps, step => step.pages);
-    return [...items, ...steps, ...pages];
+    const pages = _.flatMap(steps, step => step?.pages);
+    return _.compact([...items, ...steps, ...pages]);
 };
 
 export const StepPreview: React.FC<{

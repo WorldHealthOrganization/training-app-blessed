@@ -4,14 +4,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
 import i18n from "../../../locales";
-import { ModuleListTable } from "../../components/module-list-table/ModuleListTable";
+import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
 import { PageHeader } from "../../components/page-header/PageHeader";
 import PermissionsDialog, { SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
 import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 
 export const SettingsPage: React.FC = () => {
-    const { usecases, setAppState } = useAppContext();
+    const { modules, reload, usecases, setAppState } = useAppContext();
 
     const [poEditorToken, setPoEditorToken] = useState<string>();
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
@@ -63,6 +63,10 @@ export const SettingsPage: React.FC = () => {
             return i18n.t("Only accessible to system administrators");
         }
     }, [settingsPermissions]);
+
+    const refreshModules = useCallback(async () => {
+        await reload();
+    }, [reload]);
 
     useEffect(() => {
         usecases.config.existsPoEditorToken().then(setExistsPoEditorToken);
@@ -128,6 +132,7 @@ export const SettingsPage: React.FC = () => {
                         </ListItemIcon>
                         <ListItemText primary={i18n.t("Access to Settings")} secondary={buildSharingDescription()} />
                     </ListItem>
+
                     <ListItem button onClick={() => setPOEditorDialogOpen(true)}>
                         <ListItemIcon>
                             <Icon>translate</Icon>
@@ -141,7 +146,7 @@ export const SettingsPage: React.FC = () => {
 
                 <Title>{i18n.t("Training modules")}</Title>
 
-                <ModuleListTable />
+                <ModuleListTable rows={buildListModules(modules)} refreshRows={refreshModules} />
             </Container>
         </DhisPage>
     );
