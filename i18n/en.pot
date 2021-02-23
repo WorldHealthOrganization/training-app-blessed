@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-23T09:34:23.260Z\n"
-"PO-Revision-Date: 2021-02-23T09:34:23.260Z\n"
+"POT-Creation-Date: 2021-02-23T10:22:31.055Z\n"
+"PO-Revision-Date: 2021-02-23T10:22:31.055Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -47,7 +47,13 @@ msgstr ""
 msgid "Minimize window"
 msgstr ""
 
+msgid "Note: The sharing settings are only applied to the current module"
+msgstr ""
+
 msgid "Field must have a value"
+msgstr ""
+
+msgid "Welcome page"
 msgstr ""
 
 msgid "Identifier"
