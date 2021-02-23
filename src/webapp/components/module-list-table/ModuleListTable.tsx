@@ -140,30 +140,26 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
         [rows, snackbar, usecases]
     );
 
-    const resetToFactorySettings = useCallback(
-        async (row: ListItem) => {
-            updateDialog(null);
-            loading.show(true, i18n.t(`Resetting ${row.name} to factory settings`));
-            await usecases.modules.resetToFactorySettings(row.dhisAppKey);
-            snackbar.success(`Successfully resetted ${row.name} to factory settings`);
-            loading.reset();
-            await refreshRows();
-        },
-        [rows]
-    );
-    const showFactorySettingsConfirmationDialog = (ids: string[]) => {
+    const showFactorySettingsConfirmationDialog = useCallback((ids: string[]) => {
         const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
         if (!row) return;
+
         updateDialog({
-            title: `Are you sure you want to reset ${row.name} to its factory settings? This action cannot be reversed.`,
-            onCancel: () => {
+            title: i18n.t("Are you sure you want to reset {{name}} to its factory settings?", row),
+            description: i18n.t("This action cannot be reversed."),
+            onCancel: () => updateDialog(null),
+            onSave: async () => {
                 updateDialog(null);
+                loading.show(true, i18n.t(`Resetting ${row.name} to factory settings`));
+                await usecases.modules.resetToFactorySettings(row.dhisAppKey);
+                snackbar.success(`Successfully resetted ${row.name} to factory settings`);
+                loading.reset();
+                await refreshRows();
             },
-            onSave: () => resetToFactorySettings(row),
             cancelText: i18n.t("Cancel"),
             saveText: i18n.t("Reset app to factory settings"),
         });
-    };
+    }, []);
 
     const publishTranslations = useCallback(
         async (ids: string[]) => {
@@ -307,7 +303,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             editContents,
             installApp,
             publishTranslations,
-            resetToFactorySettings,
         ]
     );
 
