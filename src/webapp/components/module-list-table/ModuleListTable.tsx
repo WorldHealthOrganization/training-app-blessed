@@ -1,4 +1,5 @@
 import {
+    ConfirmationDialog,
     ObjectsTable,
     TableAction,
     TableColumn,
@@ -32,7 +33,29 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const snackbar = useSnackbar();
 
     const [selection, setSelection] = useState<TableSelection[]>([]);
+<<<<<<< HEAD
     const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
+=======
+
+    const [
+        editContentsDialogProps,
+        updateEditContentsDialog,
+    ] = useState<MarkdownEditorDialogProps | null>(null);
+
+    const [editModuleCreationDialog, setEditModuleCreationDialog] = useState<
+        TrainingModuleBuilder
+    >();
+    const [isCreationDialogOpen, setOpenCreationDialog] = useState<boolean>(false);
+    const [factorySettingsDialog, setFactorySettingsDialog] = useState<ListItem>();
+
+    const [refreshKey, setRefreshKey] = useState(Math.random());
+
+    const closeCreationDialog = useCallback(() => {
+        setOpenCreationDialog(false);
+        setEditModuleCreationDialog(undefined);
+        setRefreshKey(Math.random());
+    }, []);
+>>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
@@ -121,6 +144,21 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
         },
         [rows, snackbar, usecases]
     );
+
+    const resetToFactorySettings = useCallback(
+        async (row: ListItem) => {
+            setFactorySettingsDialog(undefined);
+            console.log(row)
+            console.log("I am at resetToFactorySettings")
+            await usecases.modules.resetToFactorySettings(row.dhisAppKey);
+        },
+        [modules]
+    );
+    const showFactorySettingsConfirmationDialog = (ids: string[]) => {
+        const row = buildChildrenRows(modules).find(({ id }) => id === ids[0]);
+        if (!row) return;
+        setFactorySettingsDialog(row);
+    }
 
     const publishTranslations = useCallback(
         async (ids: string[]) => {
@@ -245,14 +283,60 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                     return _.every(rows, item => item.rowType === "module" && !item.installed);
                 },
             },
+            {
+                name: "reset-factory-settings",
+                text: i18n.t("Restore to factory settings"),
+                icon: <Icon>rotate_left</Icon>,
+                onClick: showFactorySettingsConfirmationDialog,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module");
+                },
+            },
         ],
+<<<<<<< HEAD
         [rows, editModule, deleteModules, moveUpModule, moveDownModule, editContents, installApp, publishTranslations]
+=======
+        [
+            modules,
+            editModule,
+            deleteModules,
+            moveUpModule,
+            moveDownModule,
+            editContents,
+            publishTranslations,
+            resetToFactorySettings,
+            showFactorySettingsConfirmationDialog
+
+            
+        ]
+>>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
     );
 
     return (
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
 
+<<<<<<< HEAD
+=======
+            {isCreationDialogOpen && (
+                <ModuleCreationDialog
+                    onClose={closeCreationDialog}
+                    builder={editModuleCreationDialog}
+                />
+            )}
+            {factorySettingsDialog && (
+                <ConfirmationDialog
+                title={`Are you sure you want to reset ${factorySettingsDialog.name} to its factory settings? This action cannot be reversed.`}
+                isOpen={true}
+                maxWidth={"md"}
+                fullWidth={true}
+                onCancel={() => setFactorySettingsDialog(undefined)}
+                onSave={() => resetToFactorySettings(factorySettingsDialog)}
+                saveText={i18n.t("Reset app to factory settings")}
+            >
+            </ConfirmationDialog>
+            )}
+>>>>>>> Allow restoring a bundled module to factory defaults - all except refreshing modules done
             <ObjectsTable<ListItem>
                 rows={rows}
                 columns={columns}
