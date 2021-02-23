@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-23T15:38:52.608Z\n"
-"PO-Revision-Date: 2021-02-23T15:38:52.608Z\n"
+"POT-Creation-Date: 2021-02-23T15:48:08.357Z\n"
+"PO-Revision-Date: 2021-02-23T15:48:08.357Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -95,10 +95,16 @@ msgstr ""
 msgid "Installing application"
 msgstr ""
 
-msgid "Are you sure you want to reset {{name}} to its factory settings?"
+msgid "Are you sure you want to reset module to its default value?"
 msgstr ""
 
 msgid "This action cannot be reversed."
+msgstr ""
+
+msgid "Resetting module to default value"
+msgstr ""
+
+msgid "Successfully resetted module to default value"
 msgstr ""
 
 msgid "Reset app to factory settings"

@@ -17,7 +17,7 @@ import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSetti
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { UploadFileUseCase } from "../domain/usecases/UploadFileUseCase";
 import { SearchUsersUseCase } from "../domain/usecases/SearchUsersUseCase";
-import { ResetModuleToFactorySettingsUseCase } from "../domain/usecases/ResetModuleToFactorySettingsUseCase";
+import { ResetModuleDefaultValueUseCase } from "../domain/usecases/ResetModuleDefaultValueUseCase";
 
 export function getCompositionRoot(baseUrl: string) {
     const configRepository = new Dhis2ConfigRepository(baseUrl);
@@ -31,7 +31,7 @@ export function getCompositionRoot(baseUrl: string) {
                 update: new UpdateModuleUseCase(trainingModuleRepository),
                 delete: new DeleteModulesUseCase(trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(trainingModuleRepository),
-                resetToFactorySettings: new ResetModuleToFactorySettingsUseCase(trainingModuleRepository),
+                resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),

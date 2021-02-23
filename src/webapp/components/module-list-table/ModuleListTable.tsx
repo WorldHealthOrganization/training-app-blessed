@@ -47,12 +47,14 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 },
                 onSave: async () => {
                     updateDialog(null);
+
                     loading.show(true, i18n.t("Deleting modules"));
                     await usecases.modules.delete(ids);
-                    await refreshRows();
-                    snackbar.success("Successfully deleted modules");
                     loading.reset();
+
+                    snackbar.success("Successfully deleted modules");
                     setSelection([]);
+                    await refreshRows();
                 },
                 cancelText: i18n.t("Cancel"),
                 saveText: i18n.t("Delete modules"),
@@ -141,19 +143,19 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     );
 
     const showFactorySettingsConfirmationDialog = useCallback((ids: string[]) => {
-        const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
-        if (!row) return;
-
         updateDialog({
-            title: i18n.t("Are you sure you want to reset {{name}} to its factory settings?", row),
+            title: i18n.t("Are you sure you want to reset module to its default value?"),
             description: i18n.t("This action cannot be reversed."),
             onCancel: () => updateDialog(null),
             onSave: async () => {
                 updateDialog(null);
-                loading.show(true, i18n.t(`Resetting ${row.name} to factory settings`));
-                await usecases.modules.resetToFactorySettings(row.dhisAppKey);
-                snackbar.success(`Successfully resetted ${row.name} to factory settings`);
+                if (!ids[0]) return;
+
+                loading.show(true, i18n.t("Resetting module to default value"));
+                await usecases.modules.resetDefaultValue(ids[0]);
                 loading.reset();
+
+                snackbar.success(i18n.t("Successfully resetted module to default value"));
                 await refreshRows();
             },
             cancelText: i18n.t("Cancel"),
