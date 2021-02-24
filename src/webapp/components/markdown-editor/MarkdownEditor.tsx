@@ -34,15 +34,11 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 <ReactMde
                     value={value}
                     onChange={onChange}
-                    selectedTab={"write"}
                     paste={onUpload ? { saveImage } : undefined}
                     commands={{ "add-note": addNoteCommand }}
                     toolbarCommands={[...getDefaultToolbarCommands(), ["add-note"]]}
-                    childProps={{
-                        writeButton: {
-                            tabIndex: -1,
-                        },
-                    }}
+                    minEditorHeight={500}
+                    disablePreview={true}
                 />
             </Children>
             <Children>{markdownPreview(value)}</Children>
