@@ -30,4 +30,10 @@ export const MarkdownViewer = styled(Viewer)`
         border-radius: 1em;
         user-drag: none;
     }
+
+    summary {
+        outline: none;
+        font-size: 33px;
+        font-weight: lighter;
+    }
 `;
