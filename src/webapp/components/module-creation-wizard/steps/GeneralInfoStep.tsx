@@ -3,7 +3,8 @@ import { TextField } from "@material-ui/core";
 import { Dictionary } from "lodash";
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule } from "../../../../domain/entities/TrainingModule";
+import { TrainingModule, updateTranslation } from "../../../../domain/entities/TrainingModule";
+import { TranslatableText } from "../../../../domain/entities/TranslatableText";
 import { MarkdownEditor } from "../../markdown-editor/MarkdownEditor";
 import { MarkdownViewer } from "../../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../../modal";
@@ -39,18 +40,9 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
         [onChange]
     );
 
-    const onChangeWelcome = useCallback(
-        text => {
-            onChange(module => ({
-                ...module,
-                contents: {
-                    ...module.contents,
-                    welcome: {
-                        ...module.contents.welcome,
-                        referenceValue: text,
-                    },
-                },
-            }));
+    const onChangeTranslation = useCallback(
+        (text: TranslatableText, value: string) => {
+            onChange(module => updateTranslation(module, text.key, value));
         },
         [onChange]
     );
@@ -93,7 +85,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                 <h3>{i18n.t("Welcome page")}</h3>
                 <MarkdownEditor
                     value={module.contents.welcome.referenceValue}
-                    onChange={onChangeWelcome}
+                    onChange={value => onChangeTranslation(module.contents.welcome, value)}
                     markdownPreview={markdown => <StepPreview value={markdown} />}
                 />
             </Row>

@@ -1,7 +1,7 @@
 import { PartialBy } from "../../types/utils";
 import { GetSchemaType, Schema } from "../../utils/codec";
 import { DatedPropertiesModel, SharedPropertiesModel } from "./Ref";
-import { TranslatableTextModel } from "./TranslatableText";
+import { TranslatableText, TranslatableTextModel } from "./TranslatableText";
 import { TranslationConnectionModel } from "./TranslationProvider";
 import { ModelValidation } from "./Validation";
 
@@ -96,4 +96,28 @@ export const defaultTrainingModule: PartialTrainingModule = {
         welcome: { key: "module-welcome", referenceValue: "", translations: {} },
         steps: [],
     },
+};
+
+export const updateTranslation = (module: PartialTrainingModule, key: string, value: string, language?: string) => {
+    const translate = (text: TranslatableText): TranslatableText => {
+        if (key !== text.key) return text;
+
+        return !language
+            ? { ...text, referenceValue: value }
+            : { ...text, translations: { ...text.translations, [language]: value } };
+    };
+
+    return {
+        ...module,
+        name: translate(module.name),
+        contents: {
+            ...module.contents,
+            welcome: translate(module.contents.welcome),
+            steps: module.contents.steps.map(step => ({
+                ...step,
+                title: translate(step.title),
+                pages: step.pages.map(page => translate(page)),
+            })),
+        },
+    };
 };

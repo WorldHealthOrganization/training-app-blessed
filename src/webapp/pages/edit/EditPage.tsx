@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { useEffect } from "react";
+import { ConfirmationDialogProps, ConfirmationDialog } from "@eyeseetea/d2-ui-components";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { defaultTrainingModule, PartialTrainingModule } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
@@ -14,7 +14,10 @@ export interface EditPageProps {
 
 export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
     const { module, setAppState, usecases, reload } = useAppContext();
+
     const [stateModule, updateStateModule] = useState<PartialTrainingModule>(module ?? defaultTrainingModule);
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
+    const [dirty, setDirty] = useState<boolean>(false);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -25,20 +28,43 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
         await reload();
     }, [stateModule, usecases, reload]);
 
+    const onChange = useCallback((update: Parameters<typeof updateStateModule>[0]) => {
+        updateStateModule(update);
+        setDirty(true);
+    }, []);
+
+    const onCancel = useCallback(() => {
+        if (!dirty) {
+            openSettings();
+            return;
+        }
+
+        updateDialog({
+            title: edit ? i18n.t("Cancel module editing?") : i18n.t("Cancel module creation?"),
+            description: i18n.t("All your changes will be lost. Are you sure you want to proceed?"),
+            saveText: i18n.t("Yes"),
+            cancelText: i18n.t("No"),
+            onSave: openSettings,
+            onCancel: () => updateDialog(null),
+        });
+    }, [dirty, edit, openSettings]);
+
     useEffect(() => {
         if (module) updateStateModule(module);
     }, [module]);
 
     return (
         <DhisPage>
-            <Header title={edit ? i18n.t("Edit module") : i18n.t("Create module")} onBackClick={openSettings} />
+            <Header title={edit ? i18n.t("Edit module") : i18n.t("Create module")} onBackClick={onCancel} />
+
+            {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 
             {stateModule ? (
                 <Wizard
                     isEdit={edit}
-                    onChange={updateStateModule}
-                    onCancel={openSettings}
-                    onClose={openSettings}
+                    onChange={onChange}
+                    onCancel={onCancel}
+                    onClose={onCancel}
                     onSave={saveModule}
                     module={stateModule}
                 />
