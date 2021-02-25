@@ -365,19 +365,19 @@ export const buildListModules = (modules: TrainingModule[]): ListItemModule[] =>
         rowType: "module",
         position: moduleIdx,
         lastPosition: modules.length - 1,
-        steps: buildListSteps(module.contents.steps),
+        steps: buildListSteps(module.id, module.contents.steps),
     }));
 };
 
-export const buildListSteps = (steps: TrainingModuleStep[]): ListItemStep[] => {
+export const buildListSteps = (moduleId: string, steps: TrainingModuleStep[]): ListItemStep[] => {
     return steps.map(({ title, pages }, stepIdx) => ({
-        id: `${module.id}-step-${stepIdx}`,
+        id: `${moduleId}-step-${stepIdx}`,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
         pages: pages.map((value, pageIdx) => ({
-            id: `${module.id}-page-${stepIdx}-${pageIdx}`,
+            id: `${moduleId}-page-${stepIdx}-${pageIdx}`,
             name: `Page ${pageIdx + 1}`,
             rowType: "page",
             position: pageIdx,
@@ -389,7 +389,7 @@ export const buildListSteps = (steps: TrainingModuleStep[]): ListItemStep[] => {
 
 const buildChildrenRows = (items: ListItem[]): ListItem[] => {
     const steps = _.flatMap(items, item => item.steps);
-    const pages = _.flatMap(steps, step => step?.pages);
+    const pages = _.flatMap([...items, ...steps], step => step?.pages);
     return _.compact([...items, ...steps, ...pages]);
 };
 

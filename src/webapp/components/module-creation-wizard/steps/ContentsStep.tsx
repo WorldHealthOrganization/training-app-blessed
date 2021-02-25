@@ -5,7 +5,7 @@ import { ModuleCreationWizardStepProps } from "./index";
 export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module }) => {
     return (
         <React.Fragment>
-            <ModuleListTable rows={buildListSteps(module.contents.steps)} />
+            <ModuleListTable rows={buildListSteps(module.id, module.contents.steps)} />
         </React.Fragment>
     );
 };
