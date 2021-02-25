@@ -71,7 +71,6 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
 
             <Row>
                 <TextField
-                    disabled={!!isEdit}
                     fullWidth={true}
                     label={"Name *"}
                     value={module.name.referenceValue}
@@ -84,7 +83,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
             <Row>
                 <TextField
                     fullWidth={true}
-                    label={"PoEditor Project id *"}
+                    label={"PoEditor Project id"}
                     value={module.translation.provider !== "NONE" ? module.translation.project : ""}
                     onChange={onChangeField("translation")}
                 />

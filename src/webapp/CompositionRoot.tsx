@@ -14,6 +14,7 @@ import { ResetModuleDefaultValueUseCase } from "../domain/usecases/ResetModuleDe
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SearchUsersUseCase } from "../domain/usecases/SearchUsersUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
+import { UpdateModuleContentsUseCase } from "../domain/usecases/UpdateModuleContentsUseCase";
 import { UpdateModuleUseCase } from "../domain/usecases/UpdateModuleUseCase";
 import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
@@ -32,6 +33,7 @@ export function getCompositionRoot(baseUrl: string) {
                 delete: new DeleteModulesUseCase(trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(trainingModuleRepository),
                 resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
+                updateContents: new UpdateModuleContentsUseCase(trainingModuleRepository),
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),
