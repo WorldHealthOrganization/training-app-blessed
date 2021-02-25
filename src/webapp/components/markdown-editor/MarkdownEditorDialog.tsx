@@ -1,11 +1,12 @@
 import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import React, { ReactNode, useCallback, useState } from "react";
+import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import i18n from "../../../locales";
 import { MarkdownEditor } from "./MarkdownEditor";
 
 export interface MarkdownEditorDialogProps {
     title?: string;
-    initialValue: string;
+    initialValue: TranslatableText;
     onCancel: () => void;
     onSave: (value: string) => void;
     onUpload?: (data: ArrayBuffer) => Promise<string>;
@@ -20,7 +21,7 @@ export const MarkdownEditorDialog: React.FC<MarkdownEditorDialogProps> = ({
     onUpload,
     markdownPreview,
 }) => {
-    const [value, onChange] = useState<string>(initialValue);
+    const [value, onChange] = useState<string>(initialValue.referenceValue);
 
     const onFinish = useCallback(() => {
         onSave(value);

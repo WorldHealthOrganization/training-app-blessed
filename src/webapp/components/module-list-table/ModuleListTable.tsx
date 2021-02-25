@@ -15,6 +15,7 @@ import _ from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
+import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
@@ -106,11 +107,11 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
     const editContents = useCallback(
         (ids: string[]) => {
             const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
-            if (!row) return;
+            if (!row || !row.value) return;
 
             updateEditContentsDialog({
                 title: i18n.t("Edit contents of {{name}}", row),
-                initialValue: row.value ?? "",
+                initialValue: row.value,
                 onCancel: () => updateEditContentsDialog(null),
                 onSave: () => {
                     // TODO
@@ -207,7 +208,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 text: "Preview",
                 sortable: false,
                 getValue: item => {
-                    return item.value && <StepPreview value={item.value} />;
+                    return item.value && <StepPreview value={item.value.referenceValue} />;
                 },
             },
         ],
@@ -353,7 +354,7 @@ export interface ListItemPage {
     id: string;
     name: string;
     rowType: "page";
-    value: string;
+    value: TranslatableText;
     position: number;
     lastPosition: number;
 }
@@ -382,7 +383,7 @@ export const buildListSteps = (moduleId: string, steps: TrainingModuleStep[]): L
             rowType: "page",
             position: pageIdx,
             lastPosition: pages.length - 1,
-            value: value.referenceValue,
+            value,
         })),
     }));
 };
@@ -393,7 +394,7 @@ const buildChildrenRows = (items: ListItem[]): ListItem[] => {
     return _.compact([...items, ...steps, ...pages]);
 };
 
-export const StepPreview: React.FC<{
+const StepPreview: React.FC<{
     className?: string;
     value?: string;
 }> = ({ className, value }) => {
