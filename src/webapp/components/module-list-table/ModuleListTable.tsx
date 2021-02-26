@@ -49,6 +49,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 },
                 onSave: async () => {
                     updateDialog(null);
+                    if (!tableActions.deleteModules) return;
 
                     loading.show(true, i18n.t("Deleting modules"));
                     await tableActions.deleteModules({ ids });
@@ -65,11 +66,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions, loading, refreshRows, snackbar]
     );
 
-    const addModule = useCallback(() => tableActions.createModule(), [tableActions]);
+    const addModule = useCallback(() => {
+        if (!tableActions.openCreateModulePage) return;
+        tableActions.openCreateModulePage();
+    }, [tableActions]);
 
     const editModule = useCallback(
         (ids: string[]) => {
-            if (ids[0]) tableActions.editModule({ id: ids[0] });
+            if (!tableActions.openEditModulePage || !ids[0]) return;
+            tableActions.openEditModulePage({ id: ids[0] });
         },
         [tableActions]
     );
@@ -77,7 +82,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const moveUpModule = useCallback(
         async (ids: string[]) => {
             const rowIndex = _.findIndex(rows, ({ id }) => id === ids[0]);
-            if (rowIndex === -1 || rowIndex === 0) return;
+            if (!tableActions.swap || rowIndex === -1 || rowIndex === 0) return;
 
             const { id: prevRowId } = rows[rowIndex - 1] ?? {};
             if (prevRowId && ids[0]) {
@@ -92,7 +97,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const moveDownModule = useCallback(
         async (ids: string[]) => {
             const rowIndex = _.findIndex(rows, ({ id }) => id === ids[0]);
-            if (rowIndex === -1 || rowIndex === rows.length - 1) return;
+            if (!tableActions.swap || rowIndex === -1 || rowIndex === rows.length - 1) return;
 
             const { id: nextRowId } = rows[rowIndex + 1] ?? {};
             if (nextRowId && ids[0]) {
@@ -109,16 +114,18 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
             if (!row || !row.value) return;
 
+            const { uploadFile } = tableActions;
+
             updateEditContentsDialog({
                 title: i18n.t("Edit contents of {{name}}", row),
                 initialValue: row.value,
+                markdownPreview: markdown => <StepPreview value={markdown} />,
+                onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
                 onCancel: () => updateEditContentsDialog(null),
                 onSave: () => {
                     // TODO
                     updateEditContentsDialog(null);
                 },
-                onUpload: (data: ArrayBuffer) => tableActions.uploadFile({ data }),
-                markdownPreview: markdown => <StepPreview value={markdown} />,
             });
         },
         [tableActions, rows]
@@ -126,7 +133,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
 
     const installApp = useCallback(
         async (ids: string[]) => {
-            if (!ids[0]) return;
+            if (!tableActions.installApp || !ids[0]) return;
 
             loading.show(true, i18n.t("Installing application"));
             const installed = await tableActions.installApp({ id: ids[0] });
@@ -143,7 +150,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions, snackbar, loading, refreshRows]
     );
 
-    const resetModule = useCallback(
+    const resetModules = useCallback(
         (ids: string[]) => {
             updateDialog({
                 title: i18n.t("Are you sure you want to reset selected modules to its default value?"),
@@ -151,6 +158,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 onCancel: () => updateDialog(null),
                 onSave: async () => {
                     updateDialog(null);
+                    if (!tableActions.resetModules) return;
 
                     loading.show(true, i18n.t("Resetting modules to default value"));
                     await tableActions.resetModules({ ids });
@@ -168,7 +176,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
 
     const publishTranslations = useCallback(
         async (ids: string[]) => {
-            if (!ids[0]) return;
+            if (!tableActions.publishTranslations || !ids[0]) return;
 
             loading.show(true, i18n.t("Initialize project in POEditor"));
             await tableActions.publishTranslations({ id: ids[0] });
@@ -222,7 +230,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>add</Icon>,
                 onClick: addModule,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module");
+                    return !!tableActions.openCreateModulePage && _.every(rows, item => item.rowType === "module");
                 },
             },
             {
@@ -231,7 +239,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>edit</Icon>,
                 onClick: editModule,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module");
+                    return !!tableActions.openEditModulePage && _.every(rows, item => item.rowType === "module");
                 },
             },
             {
@@ -240,7 +248,11 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>publish</Icon>,
                 onClick: publishTranslations,
                 isActive: rows => {
-                    return isDebug && _.every(rows, item => item.rowType === "module");
+                    return (
+                        isDebug &&
+                        !!tableActions.publishTranslations &&
+                        _.every(rows, item => item.rowType === "module")
+                    );
                 },
             },
             {
@@ -250,7 +262,10 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 multiple: true,
                 onClick: deleteModules,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module" && item.type !== "core");
+                    return (
+                        !!tableActions.deleteModules &&
+                        _.every(rows, item => item.rowType === "module" && item.type !== "core")
+                    );
                 },
             },
             {
@@ -259,7 +274,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>arrow_upwards</Icon>,
                 onClick: moveUpModule,
                 isActive: rows => {
-                    return _.every(rows, ({ position }) => position !== 0);
+                    return !!tableActions.swap && _.every(rows, ({ position }) => position !== 0);
                 },
             },
             {
@@ -268,7 +283,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>arrow_downwards</Icon>,
                 onClick: moveDownModule,
                 isActive: rows => {
-                    return _.every(rows, ({ position, lastPosition }) => position !== lastPosition);
+                    return (
+                        !!tableActions.swap && _.every(rows, ({ position, lastPosition }) => position !== lastPosition)
+                    );
                 },
             },
             {
@@ -286,20 +303,23 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <GetAppIcon />,
                 onClick: installApp,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module" && !item.installed);
+                    return (
+                        !!tableActions.installApp && _.every(rows, item => item.rowType === "module" && !item.installed)
+                    );
                 },
             },
             {
                 name: "reset-factory-settings",
                 text: i18n.t("Restore to factory settings"),
                 icon: <Icon>rotate_left</Icon>,
-                onClick: resetModule,
+                onClick: resetModules,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module");
+                    return !!tableActions.resetModules && _.every(rows, item => item.rowType === "module");
                 },
             },
         ],
         [
+            tableActions,
             editModule,
             deleteModules,
             moveUpModule,
@@ -308,7 +328,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             installApp,
             publishTranslations,
             addModule,
-            resetModule,
+            resetModules,
         ]
     );
 
@@ -419,12 +439,12 @@ const PageWrapper = styled.div`
 const isDebug = process.env.NODE_ENV === "development";
 
 export type ModuleListTableAction = {
-    editModule: (params: { id: string }) => void;
-    createModule: () => void;
-    deleteModules: (params: { ids: string[] }) => Promise<void>;
-    resetModules: (params: { ids: string[] }) => Promise<void>;
-    swap: (params: { from: string; to: string }) => Promise<void>;
-    publishTranslations: (params: { id: string }) => Promise<void>;
-    uploadFile: (params: { data: ArrayBuffer }) => Promise<string>;
-    installApp: (params: { id: string }) => Promise<boolean>;
+    openEditModulePage?: (params: { id: string }) => void;
+    openCreateModulePage?: () => void;
+    deleteModules?: (params: { ids: string[] }) => Promise<void>;
+    resetModules?: (params: { ids: string[] }) => Promise<void>;
+    swap?: (params: { from: string; to: string }) => Promise<void>;
+    publishTranslations?: (params: { id: string }) => Promise<void>;
+    uploadFile?: (params: { data: ArrayBuffer }) => Promise<string>;
+    installApp?: (params: { id: string }) => Promise<boolean>;
 };

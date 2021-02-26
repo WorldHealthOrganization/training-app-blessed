@@ -71,10 +71,10 @@ export const SettingsPage: React.FC = () => {
 
     const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
         () => ({
-            editModule: ({ id }) => {
+            openEditModulePage: ({ id }) => {
                 setAppState({ type: "EDIT_MODULE", module: id });
             },
-            createModule: () => {
+            openCreateModulePage: () => {
                 setAppState({ type: "CREATE_MODULE" });
             },
             deleteModules: ({ ids }) => usecases.modules.delete(ids),

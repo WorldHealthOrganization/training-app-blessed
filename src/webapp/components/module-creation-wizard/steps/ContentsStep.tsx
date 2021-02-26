@@ -5,25 +5,13 @@ import { buildListSteps, ModuleListTable } from "../../module-list-table/ModuleL
 import { ModuleCreationWizardStepProps } from "./index";
 
 export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module }) => {
-    // TODO: Remove from component
-    const { setAppState, usecases } = useAppContext();
+    const { usecases } = useAppContext();
 
     const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
         () => ({
-            editModule: ({ id }) => {
-                setAppState({ type: "EDIT_MODULE", module: id });
-            },
-            createModule: () => {
-                setAppState({ type: "CREATE_MODULE" });
-            },
-            deleteModules: ({ ids }) => usecases.modules.delete(ids),
-            resetModules: ({ ids }) => usecases.modules.resetDefaultValue(ids),
-            swap: ({ from, to }) => usecases.modules.swapOrder(from, to),
-            publishTranslations: ({ id }) => usecases.translations.publishTerms(id),
             uploadFile: ({ data }) => usecases.instance.uploadFile(data),
-            installApp: ({ id }) => usecases.instance.installApp(id),
         }),
-        [usecases, setAppState]
+        [usecases]
     );
 
     return (
