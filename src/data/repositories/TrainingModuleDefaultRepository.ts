@@ -103,12 +103,15 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...module });
         await this.saveDataStore(newModule);
     }
-    public async resetDefaultValue(id: string): Promise<void> {
-        const defaultModule = this.builtinModules[id];
-        if (!defaultModule) return;
 
-        const module = await this.buildPersistedModel(defaultModule);
-        await this.saveDataStore(module);
+    public async resetDefaultValue(ids: string[]): Promise<void> {
+        for (const id of ids) {
+            const defaultModule = this.builtinModules[id];
+            if (defaultModule) {
+                const module = await this.buildPersistedModel(defaultModule);
+                await this.saveDataStore(module);
+            }
+        }
     }
 
     public async delete(ids: string[]): Promise<void> {

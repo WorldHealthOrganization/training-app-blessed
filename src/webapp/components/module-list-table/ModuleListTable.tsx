@@ -18,7 +18,6 @@ import { TrainingModule, TrainingModuleStep } from "../../../domain/entities/Tra
 import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
-import { useAppContext } from "../../contexts/app-context";
 import { AlertIcon } from "../alert-icon/AlertIcon";
 import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
@@ -27,10 +26,12 @@ import { ModalBody } from "../modal";
 export interface ModuleListTableProps {
     rows: ListItem[];
     refreshRows?: () => Promise<void>;
+    tableActions: ModuleListTableAction;
 }
 
-export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshRows = async () => {} }) => {
-    const { usecases, setAppState } = useAppContext();
+export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
+    const { rows, tableActions, refreshRows = async () => {} } = props;
+
     const loading = useLoading();
     const snackbar = useSnackbar();
 
@@ -50,7 +51,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                     updateDialog(null);
 
                     loading.show(true, i18n.t("Deleting modules"));
-                    await usecases.modules.delete(ids);
+                    await tableActions.deleteModules({ ids });
                     loading.reset();
 
                     snackbar.success("Successfully deleted modules");
@@ -61,17 +62,16 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                 saveText: i18n.t("Delete modules"),
             });
         },
-        [usecases, loading, refreshRows, snackbar]
+        [tableActions, loading, refreshRows, snackbar]
     );
 
-    const addModule = useCallback(() => setAppState({ type: "CREATE_MODULE" }), [setAppState]);
+    const addModule = useCallback(() => tableActions.createModule(), [tableActions]);
 
     const editModule = useCallback(
         (ids: string[]) => {
-            if (!ids[0]) return;
-            setAppState({ type: "EDIT_MODULE", module: ids[0] });
+            if (ids[0]) tableActions.editModule({ id: ids[0] });
         },
-        [setAppState]
+        [tableActions]
     );
 
     const moveUpModule = useCallback(
@@ -81,12 +81,12 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
             const { id: prevRowId } = rows[rowIndex - 1] ?? {};
             if (prevRowId && ids[0]) {
-                await usecases.modules.swapOrder(ids[0], prevRowId);
+                await tableActions.swap({ from: ids[0], to: prevRowId });
             }
 
             await refreshRows();
         },
-        [rows, usecases, refreshRows]
+        [tableActions, rows, refreshRows]
     );
 
     const moveDownModule = useCallback(
@@ -96,12 +96,12 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
 
             const { id: nextRowId } = rows[rowIndex + 1] ?? {};
             if (nextRowId && ids[0]) {
-                await usecases.modules.swapOrder(nextRowId, ids[0]);
+                await tableActions.swap({ from: nextRowId, to: ids[0] });
             }
 
             await refreshRows();
         },
-        [rows, usecases, refreshRows]
+        [tableActions, rows, refreshRows]
     );
 
     const editContents = useCallback(
@@ -117,11 +117,11 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
                     // TODO
                     updateEditContentsDialog(null);
                 },
-                onUpload: (data: ArrayBuffer) => usecases.instance.uploadFile(data),
+                onUpload: (data: ArrayBuffer) => tableActions.uploadFile({ data }),
                 markdownPreview: markdown => <StepPreview value={markdown} />,
             });
         },
-        [rows, usecases]
+        [tableActions, rows]
     );
 
     const installApp = useCallback(
@@ -129,7 +129,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             if (!ids[0]) return;
 
             loading.show(true, i18n.t("Installing application"));
-            const installed = await usecases.instance.installApp(ids[0]);
+            const installed = await tableActions.installApp({ id: ids[0] });
             loading.reset();
 
             if (!installed) {
@@ -140,31 +140,30 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             snackbar.success("Successfully installed app");
             await refreshRows();
         },
-        [snackbar, usecases, loading, refreshRows]
+        [tableActions, snackbar, loading, refreshRows]
     );
 
     const resetModule = useCallback(
         (ids: string[]) => {
             updateDialog({
-                title: i18n.t("Are you sure you want to reset module to its default value?"),
+                title: i18n.t("Are you sure you want to reset selected modules to its default value?"),
                 description: i18n.t("This action cannot be reversed."),
                 onCancel: () => updateDialog(null),
                 onSave: async () => {
                     updateDialog(null);
-                    if (!ids[0]) return;
 
-                    loading.show(true, i18n.t("Resetting module to default value"));
-                    await usecases.modules.resetDefaultValue(ids[0]);
+                    loading.show(true, i18n.t("Resetting modules to default value"));
+                    await tableActions.resetModules({ ids });
                     loading.reset();
 
-                    snackbar.success(i18n.t("Successfully resetted module to default value"));
+                    snackbar.success(i18n.t("Successfully resetted modules to default value"));
                     await refreshRows();
                 },
                 cancelText: i18n.t("Cancel"),
                 saveText: i18n.t("Reset app to factory settings"),
             });
         },
-        [loading, refreshRows, snackbar, usecases]
+        [tableActions, loading, refreshRows, snackbar]
     );
 
     const publishTranslations = useCallback(
@@ -172,10 +171,10 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = ({ rows, refreshR
             if (!ids[0]) return;
 
             loading.show(true, i18n.t("Initialize project in POEditor"));
-            await usecases.translations.publishTerms(ids[0]);
+            await tableActions.publishTranslations({ id: ids[0] });
             loading.reset();
         },
-        [usecases, loading]
+        [tableActions, loading]
     );
 
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
@@ -418,3 +417,14 @@ const PageWrapper = styled.div`
 `;
 
 const isDebug = process.env.NODE_ENV === "development";
+
+export type ModuleListTableAction = {
+    editModule: (params: { id: string }) => void;
+    createModule: () => void;
+    deleteModules: (params: { ids: string[] }) => Promise<void>;
+    resetModules: (params: { ids: string[] }) => Promise<void>;
+    swap: (params: { from: string; to: string }) => Promise<void>;
+    publishTranslations: (params: { id: string }) => Promise<void>;
+    uploadFile: (params: { data: ArrayBuffer }) => Promise<string>;
+    installApp: (params: { id: string }) => Promise<boolean>;
+};

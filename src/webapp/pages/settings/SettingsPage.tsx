@@ -1,9 +1,10 @@
 import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
 import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
 import i18n from "../../../locales";
+import { ComponentParameter } from "../../../types/utils";
 import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
 import { PageHeader } from "../../components/page-header/PageHeader";
 import PermissionsDialog, { SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
@@ -67,6 +68,24 @@ export const SettingsPage: React.FC = () => {
     const refreshModules = useCallback(async () => {
         await reload();
     }, [reload]);
+
+    const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
+        () => ({
+            editModule: ({ id }) => {
+                setAppState({ type: "EDIT_MODULE", module: id });
+            },
+            createModule: () => {
+                setAppState({ type: "CREATE_MODULE" });
+            },
+            deleteModules: ({ ids }) => usecases.modules.delete(ids),
+            resetModules: ({ ids }) => usecases.modules.resetDefaultValue(ids),
+            swap: ({ from, to }) => usecases.modules.swapOrder(from, to),
+            publishTranslations: ({ id }) => usecases.translations.publishTerms(id),
+            uploadFile: ({ data }) => usecases.instance.uploadFile(data),
+            installApp: ({ id }) => usecases.instance.installApp(id),
+        }),
+        [usecases, setAppState]
+    );
 
     useEffect(() => {
         usecases.config.existsPoEditorToken().then(setExistsPoEditorToken);
@@ -146,7 +165,11 @@ export const SettingsPage: React.FC = () => {
 
                 <Title>{i18n.t("Training modules")}</Title>
 
-                <ModuleListTable rows={buildListModules(modules)} refreshRows={refreshModules} />
+                <ModuleListTable
+                    rows={buildListModules(modules)}
+                    refreshRows={refreshModules}
+                    tableActions={tableActions}
+                />
             </Container>
         </DhisPage>
     );

@@ -9,5 +9,5 @@ export interface TrainingModuleRepository {
     updateProgress(id: string, lastStep: number, completed: boolean): Promise<void>;
     updateTranslations(id: string): Promise<void>;
     initializeTranslation(id: string): Promise<void>;
-    resetDefaultValue(id: string): Promise<void>;
+    resetDefaultValue(ids: string[]): Promise<void>;
 }
