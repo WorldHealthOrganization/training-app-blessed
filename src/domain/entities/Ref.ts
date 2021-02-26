@@ -30,8 +30,11 @@ export const SharedPropertiesModel = Schema.object({
     userGroupAccesses: Schema.array(SharingSettingModel),
 });
 
+export const BaseMetadataModel = Schema.extend(DatedPropertiesModel, SharedPropertiesModel);
+
 export type Ref = GetSchemaType<typeof RefModel>;
 export type NamedRef = GetSchemaType<typeof NamedRefModel>;
 export type DatedProperties = GetSchemaType<typeof DatedPropertiesModel>;
 export type SharedProperties = GetSchemaType<typeof SharedPropertiesModel>;
 export type SharingSetting = GetSchemaType<typeof SharingSettingModel>;
+export type BaseMetadata = GetSchemaType<typeof BaseMetadataModel>;

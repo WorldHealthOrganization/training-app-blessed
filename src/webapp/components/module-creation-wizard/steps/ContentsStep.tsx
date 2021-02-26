@@ -16,7 +16,7 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module }
 
     return (
         <React.Fragment>
-            <ModuleListTable rows={buildListSteps(module.id, module.contents.steps)} tableActions={tableActions} />
+            <ModuleListTable rows={buildListSteps(module, module.contents.steps)} tableActions={tableActions} />
         </React.Fragment>
     );
 };

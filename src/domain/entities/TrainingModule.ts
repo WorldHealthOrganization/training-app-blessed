@@ -1,6 +1,6 @@
 import { PartialBy } from "../../types/utils";
 import { GetSchemaType, Schema } from "../../utils/codec";
-import { DatedPropertiesModel, SharedPropertiesModel } from "./Ref";
+import { BaseMetadataModel } from "./Ref";
 import { TranslatableText, TranslatableTextModel } from "./TranslatableText";
 import { TranslationConnectionModel } from "./TranslationProvider";
 import { ModelValidation } from "./Validation";
@@ -22,10 +22,8 @@ export const TrainingModuleContentsModel = Schema.object({
     steps: Schema.array(TrainingModuleStepModel),
 });
 
-const BaseModel = Schema.extend(DatedPropertiesModel, SharedPropertiesModel);
-
 export const TrainingModuleModel = Schema.extend(
-    BaseModel,
+    BaseMetadataModel,
     Schema.object({
         id: Schema.string,
         name: TranslatableTextModel,
@@ -44,6 +42,7 @@ export const TrainingModuleModel = Schema.extend(
         dhisLaunchUrl: Schema.string,
         dhisAuthorities: Schema.array(Schema.string),
         installed: Schema.boolean,
+        editable: Schema.boolean,
     })
 );
 
@@ -63,6 +62,7 @@ export type PartialTrainingModule = PartialBy<
     | "userGroupAccesses"
     | "progress"
     | "installed"
+    | "editable"
 >;
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {

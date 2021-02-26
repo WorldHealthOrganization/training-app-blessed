@@ -14,6 +14,7 @@ import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
+import { validateUserPermission } from "../entities/User";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -57,6 +58,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                         authority => userAuthorities.includes("ALL") || userAuthorities.includes(authority)
                     );
                 })
+                .filter(model => validateUserPermission(model, "read", currentUser))
                 .value();
 
             return promiseMap(modules, async module => {
@@ -292,10 +294,12 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const { created, lastUpdated, type, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
+        const currentUser = await this.config.getUser();
 
         return {
             ...rest,
             installed: await this.instanceRepository.isAppInstalledByUrl(model.dhisLaunchUrl),
+            editable: validateUserPermission(model, "write", currentUser),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,

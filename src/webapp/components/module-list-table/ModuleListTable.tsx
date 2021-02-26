@@ -14,7 +14,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import _ from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
-import { TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
+import { PartialTrainingModule, TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
@@ -239,7 +239,10 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>edit</Icon>,
                 onClick: editModule,
                 isActive: rows => {
-                    return !!tableActions.openEditModulePage && _.every(rows, item => item.rowType === "module");
+                    return (
+                        !!tableActions.openEditModulePage &&
+                        _.every(rows, item => item.rowType === "module" && item.editable)
+                    );
                 },
             },
             {
@@ -294,7 +297,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "page");
+                    return _.every(rows, item => item.rowType === "page" && item.editable);
                 },
             },
             {
@@ -376,6 +379,7 @@ export interface ListItemPage {
     value: TranslatableText;
     position: number;
     lastPosition: number;
+    editable: boolean;
 }
 
 export const buildListModules = (modules: TrainingModule[]): ListItemModule[] => {
@@ -385,23 +389,24 @@ export const buildListModules = (modules: TrainingModule[]): ListItemModule[] =>
         rowType: "module",
         position: moduleIdx,
         lastPosition: modules.length - 1,
-        steps: buildListSteps(module.id, module.contents.steps),
+        steps: buildListSteps(module, module.contents.steps),
     }));
 };
 
-export const buildListSteps = (moduleId: string, steps: TrainingModuleStep[]): ListItemStep[] => {
+export const buildListSteps = (module: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
     return steps.map(({ title, pages }, stepIdx) => ({
-        id: `${moduleId}-step-${stepIdx}`,
+        id: `${module.id}-step-${stepIdx}`,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
         pages: pages.map((value, pageIdx) => ({
-            id: `${moduleId}-page-${stepIdx}-${pageIdx}`,
+            id: `${module.id}-page-${stepIdx}-${pageIdx}`,
             name: `Page ${pageIdx + 1}`,
             rowType: "page",
             position: pageIdx,
             lastPosition: pages.length - 1,
+            editable: module.editable ?? false,
             value,
         })),
     }));
