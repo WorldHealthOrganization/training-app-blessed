@@ -30,7 +30,7 @@ export const ModalContent = styled(ModalContentBase)`
     scrollbar-color: #fff transparent;
 
     ::-webkit-scrollbar {
-        width: 6px;
+        width: 7px;
     }
 
     ::-webkit-scrollbar-track {
