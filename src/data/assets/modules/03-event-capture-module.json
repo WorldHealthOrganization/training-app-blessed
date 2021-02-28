@@ -4,6 +4,7 @@
     "disabled": false,
     "dhisAppKey": "event-capture",
     "name": { "key": "module-name", "referenceValue": "Capture", "translations": {} },
+    "icon": "https://user-images.githubusercontent.com/2181866/109413195-7c333a80-79ac-11eb-811a-e1c75268df83.png",
     "type": "core",
     "revision": 3,
     "dhisVersionRange": "",

@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-26T10:47:25.370Z\n"
-"PO-Revision-Date: 2021-02-26T10:47:25.370Z\n"
+"POT-Creation-Date: 2021-02-28T09:13:47.062Z\n"
+"PO-Revision-Date: 2021-02-28T09:13:47.062Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -233,9 +233,6 @@ msgid "Back to tutorial"
 msgstr ""
 
 msgid "Finish"
-msgstr ""
-
-msgid "Reset progress"
 msgstr ""
 
 msgid "Here is your progress on DHIS2 training"

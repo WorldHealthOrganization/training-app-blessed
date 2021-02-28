@@ -27,6 +27,7 @@ export const TrainingModuleModel = Schema.extend(
     Schema.object({
         id: Schema.string,
         name: TranslatableTextModel,
+        icon: Schema.string,
         translation: TranslationConnectionModel,
         type: TrainingModuleTypeModel,
         disabled: Schema.optionalSafe(Schema.boolean, false),
@@ -84,6 +85,7 @@ export const trainingModuleValidations: ModelValidation[] = [];
 export const defaultTrainingModule: PartialTrainingModule = {
     id: "",
     name: { key: "module-name", referenceValue: "", translations: {} },
+    icon: "",
     type: "app",
     revision: 1,
     dhisVersionRange: "",

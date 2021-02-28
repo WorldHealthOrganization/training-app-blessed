@@ -6,6 +6,7 @@ export interface JSONTrainingModule {
     _version: number;
     id: string;
     name: TranslatableText;
+    icon: string;
     type: string;
     disabled: boolean;
     contents: TrainingModuleContents;

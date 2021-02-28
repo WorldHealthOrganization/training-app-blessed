@@ -4,6 +4,7 @@
     "disabled": false,
     "dhisAppKey": "data-visualizer",
     "name": { "key": "module-name", "referenceValue": "Data Visualizer", "translations": {} },
+    "icon": "https://user-images.githubusercontent.com/2181866/109413198-7ccbd100-79ac-11eb-9111-d57907dc8bec.png",
     "type": "core",
     "revision": 3,
     "dhisVersionRange": "",

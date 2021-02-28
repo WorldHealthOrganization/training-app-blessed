@@ -4,6 +4,7 @@
     "disabled": false,
     "dhisAppKey": "bulk-load",
     "name": { "key": "module-name", "referenceValue": "Bulk Load", "translations": {} },
+    "icon": "https://user-images.githubusercontent.com/2181866/109413194-7b9aa400-79ac-11eb-8574-ed905b666029.png",
     "type": "app",
     "revision": 3,
     "dhisVersionRange": "",

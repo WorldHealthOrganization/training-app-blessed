@@ -4,6 +4,7 @@
     "disabled": false,
     "dhisAppKey": "pivot-tables",
     "name": { "key": "module-name", "referenceValue": "Pivot Tables", "translations": {} },
+    "icon": "https://user-images.githubusercontent.com/2181866/109413210-7f2e2b00-79ac-11eb-87fc-cc5ab7c2e4a1.png",
     "type": "core",
     "revision": 3,
     "dhisVersionRange": "",
