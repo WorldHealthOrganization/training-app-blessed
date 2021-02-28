@@ -56,7 +56,7 @@ const BigCardIcon = styled.span`
     place-content: center;
     margin: 20px 0px;
 
-    svg {
-        max-height: 150px;
+    img,svg {
+        max-height: 125px;
     }
 `;
