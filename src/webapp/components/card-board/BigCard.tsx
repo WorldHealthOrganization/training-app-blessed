@@ -46,7 +46,7 @@ export interface BigCardProps {
 const BigCardTitle = styled.span`
     color: #fff;
     min-height: 48px;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     display: block;
 `;
