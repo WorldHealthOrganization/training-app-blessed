@@ -1,16 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import { getColor } from "../../themes/colors";
-import { CardIcon } from "./CardIcon";
+import { CardTitleIcon } from "./CardTitleIcon";
 import { CardProgress, CardProgressText } from "./CardProgress";
-import { CardTitle } from "./CardTitle";
 
 const BaseCard: React.FC<CardProps> = ({ className, label, progress, onClick, onContextMenu, disabled }) => {
     const normalizedProgress = normalizeProgress(progress);
 
     return (
         <div className={className} onClick={disabled ? undefined : onClick} onContextMenu={onContextMenu}>
-            {progress >= 100 ? <CardIcon>done</CardIcon> : null}
+            {progress >= 100 ? <CardTitleIcon>done</CardTitleIcon> : null}
             <CardTitle>{label}</CardTitle>
             <CardProgressText>{`${normalizedProgress}%`}</CardProgressText>
             <CardProgress value={normalizedProgress} max="100"></CardProgress>
@@ -18,6 +17,9 @@ const BaseCard: React.FC<CardProps> = ({ className, label, progress, onClick, on
     );
 };
 
+/**
+ * This will likely remain unused after Phase II redesign, remove when necessary
+ */
 export const Card = styled(BaseCard)`
     color: ${props => getCardColor(normalizeProgress(props.progress))};
     background: #fff;
@@ -48,3 +50,9 @@ export interface CardProps {
     onContextMenu?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     disabled?: boolean;
 }
+
+const CardTitle = styled.span`
+    min-height: 48px;
+    font-size: 15px;
+    display: block;
+`;

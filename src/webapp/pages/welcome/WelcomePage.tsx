@@ -48,6 +48,12 @@ const StyledModal = styled(Modal)`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    ${ModalContent} {
+        padding-top: 25px;
+        height: 100%;
+        max-height: unset;
+    }
 `;
 
 export const WelcomePageContent: React.FC<{ welcome: string }> = ({ welcome }) => {
