@@ -3,7 +3,7 @@ import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
-import { updateTranslation } from "../../../domain/entities/TrainingModule";
+import { updateOrder, updateTranslation } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { ComponentParameter } from "../../../types/utils";
 import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
@@ -87,7 +87,13 @@ export const SettingsPage: React.FC = () => {
             },
             deleteModules: ({ ids }) => usecases.modules.delete(ids),
             resetModules: ({ ids }) => usecases.modules.resetDefaultValue(ids),
-            swap: ({ from, to }) => usecases.modules.swapOrder(from, to),
+            swap: async ({ type, id, from, to }) => {
+                if (type === "module") await usecases.modules.swapOrder(from, to);
+
+                const module = await usecases.modules.get(id);
+                if (module) await usecases.modules.update(updateOrder(module, from, to));
+                else snackbar.error(i18n.t("Unable to move item"));
+            },
             publishTranslations: ({ id }) => usecases.translations.publishTerms(id),
             uploadFile: ({ data }) => usecases.instance.uploadFile(data),
             installApp: ({ id }) => usecases.instance.installApp(id),

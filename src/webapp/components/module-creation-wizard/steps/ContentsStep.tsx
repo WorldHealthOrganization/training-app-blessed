@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { updateTranslation } from "../../../../domain/entities/TrainingModule";
+import { updateOrder, updateTranslation } from "../../../../domain/entities/TrainingModule";
 import { ComponentParameter } from "../../../../types/utils";
 import { useAppContext } from "../../../contexts/app-context";
 import { buildListSteps, ModuleListTable } from "../../module-list-table/ModuleListTable";
@@ -12,6 +12,10 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module, 
         () => ({
             uploadFile: ({ data }) => usecases.instance.uploadFile(data),
             editContents: async ({ text, value }) => onChange(module => updateTranslation(module, text.key, value)),
+            swap: async ({ type, from, to }) => {
+                if (type === "module") return;
+                onChange(module => updateOrder(module, from, to));
+            },
         }),
         [usecases, onChange]
     );

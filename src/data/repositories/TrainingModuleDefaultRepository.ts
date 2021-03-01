@@ -1,6 +1,6 @@
-import _ from "lodash";
 import FileSaver from "file-saver";
 import JSZip from "jszip";
+import _ from "lodash";
 import moment from "moment";
 import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
@@ -9,6 +9,7 @@ import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
+import { swapById } from "../../utils/array";
 import { promiseMap } from "../../utils/promises";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
@@ -152,17 +153,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             Namespaces.TRAINING_MODULES
         );
 
-        const index1 = _.findIndex(items, ({ id }) => id === id1);
-        const index2 = _.findIndex(items, ({ id }) => id === id2);
-
-        const item1 = items[_.findIndex(items, ({ id }) => id === id1)];
-        const item2 = items[_.findIndex(items, ({ id }) => id === id2)];
-        if (!item1 || !item2) return;
-
-        items[index1] = item2;
-        items[index2] = item1;
-
-        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
+        const newItems = swapById(items, id1, id2);
+        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, newItems);
     }
 
     public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
@@ -317,12 +309,23 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
 
-        const { created, lastUpdated, type, ...rest } = model;
+        const { created, lastUpdated, type, contents, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
         const currentUser = await this.config.getUser();
 
         return {
             ...rest,
+            contents: {
+                ...contents,
+                steps: contents.steps.map((step, stepIdx) => ({
+                    ...step,
+                    id: `${module.id}-step-${stepIdx}`,
+                    pages: step.pages.map((page, pageIdx) => ({
+                        ...page,
+                        id: `${module.id}-page-${stepIdx}-${pageIdx}`,
+                    })),
+                })),
+            },
             installed: await this.instanceRepository.isAppInstalledByUrl(model.dhisLaunchUrl),
             editable: validateUserPermission(model, "write", currentUser),
             created: new Date(created),

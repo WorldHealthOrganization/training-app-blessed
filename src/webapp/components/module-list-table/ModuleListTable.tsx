@@ -103,14 +103,16 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions]
     );
 
-    const moveUpModule = useCallback(
+    const moveUp = useCallback(
         async (ids: string[]) => {
-            const rowIndex = _.findIndex(rows, ({ id }) => id === ids[0]);
-            if (!tableActions.swap || rowIndex === -1 || rowIndex === 0) return;
+            const allRows = buildChildrenRows(rows);
+            const rowIndex = _.findIndex(allRows, ({ id }) => id === ids[0]);
+            const row = allRows[rowIndex];
+            if (!tableActions.swap || rowIndex === -1 || rowIndex === 0 || !row) return;
 
-            const { id: prevRowId } = rows[rowIndex - 1] ?? {};
-            if (prevRowId && ids[0]) {
-                await tableActions.swap({ from: ids[0], to: prevRowId });
+            const { id: prevRowId } = allRows[rowIndex - 1] ?? {};
+            if (prevRowId && ids[0] && row.moduleId) {
+                await tableActions.swap({ id: row.moduleId, type: row.rowType, from: ids[0], to: prevRowId });
             }
 
             await refreshRows();
@@ -118,14 +120,16 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions, rows, refreshRows]
     );
 
-    const moveDownModule = useCallback(
+    const moveDown = useCallback(
         async (ids: string[]) => {
-            const rowIndex = _.findIndex(rows, ({ id }) => id === ids[0]);
-            if (!tableActions.swap || rowIndex === -1 || rowIndex === rows.length - 1) return;
+            const allRows = buildChildrenRows(rows);
+            const rowIndex = _.findIndex(allRows, ({ id }) => id === ids[0]);
+            const row = allRows[rowIndex];
+            if (!tableActions.swap || rowIndex === -1 || rowIndex === allRows.length - 1 || !row) return;
 
-            const { id: nextRowId } = rows[rowIndex + 1] ?? {};
-            if (nextRowId && ids[0]) {
-                await tableActions.swap({ from: nextRowId, to: ids[0] });
+            const { id: nextRowId } = allRows[rowIndex + 1] ?? {};
+            if (nextRowId && ids[0] && row.moduleId) {
+                await tableActions.swap({ id: row.moduleId, type: row.rowType, from: ids[0], to: nextRowId });
             }
 
             await refreshRows();
@@ -318,7 +322,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 name: "move-up-module",
                 text: i18n.t("Move up"),
                 icon: <Icon>arrow_upwards</Icon>,
-                onClick: moveUpModule,
+                onClick: moveUp,
                 isActive: rows => {
                     return !!tableActions.swap && _.every(rows, ({ position }) => position !== 0);
                 },
@@ -327,7 +331,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 name: "move-down-module",
                 text: i18n.t("Move down"),
                 icon: <Icon>arrow_downwards</Icon>,
-                onClick: moveDownModule,
+                onClick: moveDown,
                 isActive: rows => {
                     return (
                         !!tableActions.swap && _.every(rows, ({ position, lastPosition }) => position !== lastPosition)
@@ -380,8 +384,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             tableActions,
             editModule,
             deleteModules,
-            moveUpModule,
-            moveDownModule,
+            moveUp,
+            moveDown,
             editContents,
             installApp,
             publishTranslations,
@@ -470,14 +474,14 @@ export const buildListModules = (modules: TrainingModule[]): ListItemModule[] =>
 };
 
 export const buildListSteps = (module: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
-    return steps.map(({ title, pages }, stepIdx) => ({
-        id: `${module.id}-step-${stepIdx}`,
+    return steps.map(({ id, title, pages }, stepIdx) => ({
+        id,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
-        pages: pages.map((value, pageIdx) => ({
-            id: `${module.id}-page-${stepIdx}-${pageIdx}`,
+        pages: pages.map(({ id, ...value}, pageIdx) => ({
+            id,
             moduleId: module.id,
             name: `Page ${pageIdx + 1}`,
             rowType: "page",
@@ -526,7 +530,7 @@ export type ModuleListTableAction = {
     editContents?: (params: { id: string; text: TranslatableText; value: string }) => Promise<void>;
     deleteModules?: (params: { ids: string[] }) => Promise<void>;
     resetModules?: (params: { ids: string[] }) => Promise<void>;
-    swap?: (params: { from: string; to: string }) => Promise<void>;
+    swap?: (params: { type: "module" | "step" | "page"; id: string; from: string; to: string }) => Promise<void>;
     publishTranslations?: (params: { id: string }) => Promise<void>;
     uploadFile?: (params: { data: ArrayBuffer }) => Promise<string>;
     installApp?: (params: { id: string }) => Promise<boolean>;

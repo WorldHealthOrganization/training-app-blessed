@@ -1,4 +1,5 @@
 import { PartialBy } from "../../types/utils";
+import { swapById } from "../../utils/array";
 import { GetSchemaType, Schema } from "../../utils/codec";
 import { BaseMetadataModel } from "./Ref";
 import { TranslatableText, TranslatableTextModel } from "./TranslatableText";
@@ -12,9 +13,10 @@ export const TrainingModuleTypeModel = Schema.oneOf([
 ]);
 
 export const TrainingModuleStepModel = Schema.object({
+    id: Schema.string,
     title: TranslatableTextModel,
     subtitle: Schema.optional(TranslatableTextModel),
-    pages: Schema.array(TranslatableTextModel),
+    pages: Schema.array(Schema.extend(TranslatableTextModel, Schema.object({ id: Schema.string }))),
 });
 
 export const TrainingModuleContentsModel = Schema.object({
@@ -123,8 +125,25 @@ export const updateTranslation = (
             steps: module.contents.steps.map(step => ({
                 ...step,
                 title: translate(step.title),
-                pages: step.pages.map(page => translate(page)),
+                pages: step.pages.map(page => ({ ...page, ...translate(page)})),
             })),
+        },
+    };
+};
+
+export const updateOrder = (
+    module: PartialTrainingModule,
+    id1: string,
+    id2: string,
+): PartialTrainingModule => {
+    return {
+        ...module,
+        contents: {
+            ...module.contents,
+            steps: swapById(module.contents.steps.map(step => ({
+                ...step,
+                pages: swapById(step.pages, id1, id2),
+            })), id1, id2),
         },
     };
 };
