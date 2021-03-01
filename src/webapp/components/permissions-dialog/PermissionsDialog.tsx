@@ -15,13 +15,13 @@ export interface PermissionsDialogProps {
     onClose: () => void;
 }
 
-export default function PermissionsDialog({
+export const PermissionsDialog: React.FC<PermissionsDialogProps> = ({
     object,
     allowPublicAccess,
     allowExternalAccess,
     onClose,
     onChange,
-}: PermissionsDialogProps) {
+}) => {
     const { usecases } = useAppContext();
     const search = (query: string) => usecases.instance.searchUsers(query);
 
@@ -61,7 +61,7 @@ export default function PermissionsDialog({
             />
         </ConfirmationDialog>
     );
-}
+};
 const mapSharingSettings = (settings?: SharingRule[]): SharingSetting[] | undefined => {
     return settings?.map(item => {
         return { id: item.id, access: item.access, name: item.displayName };

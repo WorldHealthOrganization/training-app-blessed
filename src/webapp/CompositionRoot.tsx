@@ -34,7 +34,6 @@ export function getCompositionRoot(baseUrl: string) {
                 swapOrder: new SwapModuleOrderUseCase(trainingModuleRepository),
                 resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
                 export: new ExportModulesUseCase(trainingModuleRepository),
-
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),

@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-01T10:24:49.371Z\n"
-"PO-Revision-Date: 2021-03-01T10:24:49.372Z\n"
+"POT-Creation-Date: 2021-03-01T13:53:51.639Z\n"
+"PO-Revision-Date: 2021-03-01T13:53:51.639Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -33,6 +33,9 @@ msgid "Home"
 msgstr ""
 
 msgid "Settings"
+msgstr ""
+
+msgid "Back"
 msgstr ""
 
 msgid "Move window"
@@ -155,16 +158,7 @@ msgstr ""
 msgid "Export module"
 msgstr ""
 
-msgid "Predictor groups"
-msgstr ""
-
-msgid "Output data element"
-msgstr ""
-
-msgid "Last updated date"
-msgstr ""
-
-msgid "Back"
+msgid "Search by name"
 msgstr ""
 
 msgid "Help"

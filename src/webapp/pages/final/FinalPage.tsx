@@ -7,7 +7,7 @@ import { Modal, ModalContent, ModalFooter, ModalParagraph, ModalTitle } from "..
 import { Stepper } from "../../components/training-wizard/stepper/Stepper";
 import { useAppContext } from "../../contexts/app-context";
 
-export const FinalPage = () => {
+export const FinalPage: React.FC = () => {
     const { usecases, setAppState, module, translate } = useAppContext();
 
     const openSummary = useCallback(() => {

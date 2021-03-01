@@ -110,7 +110,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
     public async export(ids: string[]): Promise<void> {
         let dataStoreModel;
-       /*const moduleJsons = [];
+        /*const moduleJsons = [];
         ids.forEach(async id => {
             const module = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
                 Namespaces.TRAINING_MODULES,
@@ -133,28 +133,24 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             const name = _.kebabCase(`module-${dataStoreModel?.name.referenceValue}-${date}`);
             this.downloadFile(name, dataStoreModel);
         } else {
-            const zipFileName =`training-modules-${date}.zip`;
-            this.generateZipFile(ids, zipFileName)
+            const zipFileName = `training-modules-${date}.zip`;
+            this.generateZipFile(ids, zipFileName);
         }
-
     }
-    private async generateZipFile (ids: string[], zipFileName: string): Promise<void> {
+    private async generateZipFile(ids: string[], zipFileName: string): Promise<void> {
         const zip = new JSZip();
         let dataStoreModel;
-            ids.forEach(async id => {
-                dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-                    Namespaces.TRAINING_MODULES,
-                    id || ""
-                );
-                const json = JSON.stringify(dataStoreModel, null, 4);
-                const blob = new Blob([json], { type: "application/json" });
-                zip.file(
-                    `${_.kebabCase(`module-${dataStoreModel?.name.referenceValue}`)}.json`,
-                    blob
-                );
-            });
-            const blob = await zip.generateAsync({ type: "blob" });
-            FileSaver.saveAs(blob, zipFileName);
+        ids.forEach(async id => {
+            dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+                Namespaces.TRAINING_MODULES,
+                id || ""
+            );
+            const json = JSON.stringify(dataStoreModel, null, 4);
+            const blob = new Blob([json], { type: "application/json" });
+            zip.file(`${_.kebabCase(`module-${dataStoreModel?.name.referenceValue}`)}.json`, blob);
+        });
+        const blob = await zip.generateAsync({ type: "blob" });
+        FileSaver.saveAs(blob, zipFileName);
     }
     private downloadFile(name: string, payload: unknown): void {
         const json = JSON.stringify(payload, null, 4);

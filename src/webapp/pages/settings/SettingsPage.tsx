@@ -7,7 +7,7 @@ import i18n from "../../../locales";
 import { ComponentParameter } from "../../../types/utils";
 import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
 import { PageHeader } from "../../components/page-header/PageHeader";
-import PermissionsDialog, { SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
+import { PermissionsDialog, SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
 import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 

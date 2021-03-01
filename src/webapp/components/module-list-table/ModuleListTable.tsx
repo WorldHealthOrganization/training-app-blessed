@@ -25,7 +25,7 @@ import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-edi
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 import { useAppContext } from "../../contexts/app-context";
-import { Dropzone, DropzoneRef  } from "../dropzone/Dropzone";
+import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
 /*import { ObjectsList } from "../objects-list/ObjectsList";
 import {
     Pager,
@@ -216,9 +216,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             loading.show(true, i18n.t("Exporting module"));
             await usecases.modules.export(ids);
             loading.reset();
-        },  
+        },
         [loading, usecases]
-        );
+    );
     const publishTranslations = useCallback(
         async (ids: string[]) => {
             if (!tableActions.publishTranslations || !ids[0]) return;
@@ -387,7 +387,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             publishTranslations,
             addModule,
             resetModules,
-            exportModule
+            exportModule,
         ]
     );
 
@@ -395,14 +395,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
-            {showImportDragAndDrop && 
-            <Dropzone
-                ref={fileRef}
-                accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
-                onDrop={handleFileUpload}
-            >
-                   <h1>Here is the dropzone</h1> 
-            </Dropzone>}
+            {showImportDragAndDrop && (
+                <Dropzone
+                    ref={fileRef}
+                    accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
+                    onDrop={handleFileUpload}
+                >
+                    <h1>Here is the dropzone</h1>
+                </Dropzone>
+            )}
             <div>
                 <Icon onClick={() => setShowImportDragAndDrop(true)}>publish</Icon> Import Module
             </div>
