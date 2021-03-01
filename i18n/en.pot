@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-01T15:33:14.413Z\n"
-"PO-Revision-Date: 2021-03-01T15:33:14.413Z\n"
+"POT-Creation-Date: 2021-03-01T17:53:19.186Z\n"
+"PO-Revision-Date: 2021-03-01T17:53:19.186Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -51,6 +51,12 @@ msgid "Minimize window"
 msgstr ""
 
 msgid "Note: The sharing settings are only applied to the current module"
+msgstr ""
+
+msgid "Add new step"
+msgstr ""
+
+msgid "Title *"
 msgstr ""
 
 msgid "Field must have a value"
@@ -107,6 +113,21 @@ msgstr ""
 msgid "Delete modules"
 msgstr ""
 
+msgid "Are you sure you want to delete the selected step and its pages?"
+msgstr ""
+
+msgid "Delete step"
+msgstr ""
+
+msgid "Are you sure you want to delete the selected page?"
+msgstr ""
+
+msgid "Delete page"
+msgstr ""
+
+msgid "Add new page"
+msgstr ""
+
 msgid "Edit contents of {{name}}"
 msgstr ""
 
@@ -146,19 +167,25 @@ msgstr ""
 msgid "Edit module"
 msgstr ""
 
-msgid "Push local translations to POEditor"
+msgid "Delete module"
 msgstr ""
 
-msgid "Delete module"
+msgid "Add step"
+msgstr ""
+
+msgid "Add page"
+msgstr ""
+
+msgid "Edit page"
+msgstr ""
+
+msgid "Push local translations to POEditor"
 msgstr ""
 
 msgid "Move up"
 msgstr ""
 
 msgid "Move down"
-msgstr ""
-
-msgid "Edit contents"
 msgstr ""
 
 msgid "Install app"
@@ -284,6 +311,18 @@ msgid "Unable to update module contents"
 msgstr ""
 
 msgid "Unable to move item"
+msgstr ""
+
+msgid "Unable to add step"
+msgstr ""
+
+msgid "Unable to add page"
+msgstr ""
+
+msgid "Unable to remove step"
+msgstr ""
+
+msgid "Unable to remove page"
 msgstr ""
 
 msgid "Connection with POEditor"

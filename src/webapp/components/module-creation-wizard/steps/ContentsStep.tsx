@@ -1,5 +1,12 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { updateOrder, updateTranslation } from "../../../../domain/entities/TrainingModule";
+import {
+    addPage,
+    addStep,
+    removePage,
+    removeStep,
+    updateOrder,
+    updateTranslation,
+} from "../../../../domain/helpers/TrainingModuleHelpers";
 import i18n from "../../../../locales";
 import { ComponentParameter } from "../../../../types/utils";
 import { useAppContext } from "../../../contexts/app-context";
@@ -12,49 +19,37 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module, 
 
     const [dialogProps, updateDialog] = useState<InputDialogProps | null>(null);
 
-    const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
-        () => ({
-            uploadFile: ({ data }) => usecases.instance.uploadFile(data),
-            editContents: async ({ text, value }) => onChange(module => updateTranslation(module, text.key, value)),
-            swap: async ({ type, from, to }) => {
-                if (type === "module") return;
-                onChange(module => updateOrder(module, from, to));
-            },
-        }),
-        [usecases, onChange]
-    );
+    const uploadFile = useCallback(({ data }) => usecases.instance.uploadFile(data), [usecases]);
 
-    const addStep = useCallback(() => {
+    const openAddStep = useCallback(() => {
         updateDialog({
             title: i18n.t("Add new step"),
             inputLabel: i18n.t("Title *"),
             onCancel: () => {
                 updateDialog(null);
             },
-            onSave: stepName => {
+            onSave: title => {
                 updateDialog(null);
-                onChange(module => ({
-                    ...module,
-                    contents: {
-                        ...module.contents,
-                        steps: [
-                            ...module.contents.steps,
-                            {
-                                id: `${module.id}-step-${module.contents.steps.length}`,
-                                title: {
-                                    key: `step-${module.contents.steps.length + 1}-title`,
-                                    referenceValue: stepName,
-                                    translations: {},
-                                },
-                                subtitle: undefined,
-                                pages: [],
-                            },
-                        ],
-                    },
-                }));
+                onChange(module => addStep(module, title));
             },
         });
     }, [onChange]);
+
+    const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
+        () => ({
+            uploadFile,
+            editContents: async ({ text, value }) => onChange(module => updateTranslation(module, text.key, value)),
+            swap: async ({ type, from, to }) => {
+                if (type === "module") return;
+                onChange(module => updateOrder(module, from, to));
+            },
+            addPage: async ({ step, value }) => onChange(module => addPage(module, step, value)),
+            addStep: async ({ title }) => onChange(module => addStep(module, title)),
+            deleteStep: async ({ step }) => onChange(module => removeStep(module, step)),
+            deletePage: async ({ step, page }) => onChange(module => removePage(module, step, page)),
+        }),
+        [onChange, uploadFile]
+    );
 
     return (
         <React.Fragment>
@@ -63,7 +58,7 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module, 
             <ModuleListTable
                 rows={buildListSteps(module, module.contents.steps)}
                 tableActions={tableActions}
-                onActionButtonClick={addStep}
+                onActionButtonClick={openAddStep}
             />
         </React.Fragment>
     );

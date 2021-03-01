@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-01T15:33:14.413Z\n"
+"POT-Creation-Date: 2021-03-01T17:53:19.186Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +51,12 @@ msgid "Minimize window"
 msgstr "Minimizar ventana"
 
 msgid "Note: The sharing settings are only applied to the current module"
+msgstr ""
+
+msgid "Add new step"
+msgstr ""
+
+msgid "Title *"
 msgstr ""
 
 msgid "Field must have a value"
@@ -108,6 +114,23 @@ msgstr ""
 msgid "Delete modules"
 msgstr "Eliminar modulos"
 
+msgid "Are you sure you want to delete the selected step and its pages?"
+msgstr ""
+
+#, fuzzy
+msgid "Delete step"
+msgstr "Paso siguiente"
+
+msgid "Are you sure you want to delete the selected page?"
+msgstr ""
+
+#, fuzzy
+msgid "Delete page"
+msgstr "Bienvenido"
+
+msgid "Add new page"
+msgstr ""
+
 msgid "Edit contents of {{name}}"
 msgstr "Editar contenidos de {{name}}"
 
@@ -148,20 +171,27 @@ msgstr "Añadir modulo"
 msgid "Edit module"
 msgstr "Editar modulo"
 
-msgid "Push local translations to POEditor"
-msgstr ""
-
 msgid "Delete module"
 msgstr "Eliminar modulo"
+
+msgid "Add step"
+msgstr ""
+
+msgid "Add page"
+msgstr ""
+
+#, fuzzy
+msgid "Edit page"
+msgstr "Bienvenido"
+
+msgid "Push local translations to POEditor"
+msgstr ""
 
 msgid "Move up"
 msgstr "Mover arriba"
 
 msgid "Move down"
 msgstr "Mover abajo"
-
-msgid "Edit contents"
-msgstr "Editar contenidos"
 
 msgid "Install app"
 msgstr ""
@@ -290,6 +320,18 @@ msgstr ""
 msgid "Unable to move item"
 msgstr ""
 
+msgid "Unable to add step"
+msgstr ""
+
+msgid "Unable to add page"
+msgstr ""
+
+msgid "Unable to remove step"
+msgstr ""
+
+msgid "Unable to remove page"
+msgstr ""
+
 msgid "Connection with POEditor"
 msgstr ""
 
@@ -322,6 +364,9 @@ msgstr ""
 
 msgid "Start Tutorial"
 msgstr "Empezar tutorial"
+
+#~ msgid "Edit contents"
+#~ msgstr "Editar contenidos"
 
 #~ msgid "Here is your progress on DHIS2 training"
 #~ msgstr "Este es tu progreso en el entrenamiento de DHIS2"

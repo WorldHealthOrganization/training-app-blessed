@@ -23,6 +23,7 @@ import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
 import { AlertIcon } from "../alert-icon/AlertIcon";
 import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
+import { InputDialog, InputDialogProps } from "../input-dialog/InputDialog";
 import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
@@ -41,10 +42,12 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const loading = useLoading();
     const snackbar = useSnackbar();
 
-    const [selection, setSelection] = useState<TableSelection[]>([]);
-    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
-    const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
     const fileRef = useRef<DropzoneRef>(null);
+    const [selection, setSelection] = useState<TableSelection[]>([]);
+
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
+    const [markdownDialogProps, updateMarkdownDialog] = useState<MarkdownEditorDialogProps | null>(null);
+    const [inputDialogProps, updateInputDialog] = useState<InputDialogProps | null>(null);
 
     const handleFileUpload = useCallback(
         async (files: File[], rejections: FileRejection[]) => {
@@ -91,10 +94,103 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions, loading, refreshRows, snackbar]
     );
 
+    const deleteStep = useCallback(
+        async (ids: string[]) => {
+            const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
+            if (!row || !row.moduleId) return;
+
+            updateDialog({
+                title: i18n.t("Are you sure you want to delete the selected step and its pages?"),
+                description: i18n.t("This action cannot be reversed"),
+                onCancel: () => {
+                    updateDialog(null);
+                },
+                onSave: async () => {
+                    updateDialog(null);
+                    if (!tableActions.deleteStep || !row.moduleId) return;
+                    await tableActions.deleteStep({ id: row.moduleId, step: row.id });
+                    await refreshRows();
+                },
+                cancelText: i18n.t("Cancel"),
+                saveText: i18n.t("Delete step"),
+            });
+        },
+        [tableActions, refreshRows, rows]
+    );
+
+    const deletePage = useCallback(
+        async (ids: string[]) => {
+            const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
+            if (!row || !row.moduleId) return;
+
+            updateDialog({
+                title: i18n.t("Are you sure you want to delete the selected page?"),
+                description: i18n.t("This action cannot be reversed"),
+                onCancel: () => {
+                    updateDialog(null);
+                },
+                onSave: async () => {
+                    updateDialog(null);
+                    if (!tableActions.deletePage || !row.moduleId || !row.stepId) return;
+                    await tableActions.deletePage({ id: row.moduleId, step: row.stepId, page: row.id });
+                    await refreshRows();
+                },
+                cancelText: i18n.t("Cancel"),
+                saveText: i18n.t("Delete page"),
+            });
+        },
+        [tableActions, refreshRows, rows]
+    );
+
     const addModule = useCallback(() => {
         if (!tableActions.openCreateModulePage) return;
         tableActions.openCreateModulePage();
     }, [tableActions]);
+
+    const addStep = useCallback(
+        async (ids: string[]) => {
+            const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
+            if (!row || !tableActions.addStep) return;
+
+            updateInputDialog({
+                title: i18n.t("Add new step"),
+                inputLabel: i18n.t("Title *"),
+                onCancel: () => updateInputDialog(null),
+                onSave: async title => {
+                    updateInputDialog(null);
+                    if (!tableActions.addStep) return;
+
+                    await tableActions.addStep({ id: row.id, title });
+                    await refreshRows();
+                },
+            });
+        },
+        [tableActions, rows, refreshRows]
+    );
+
+    const addPage = useCallback(
+        async (ids: string[]) => {
+            const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
+            if (!row) return;
+
+            const { uploadFile } = tableActions;
+
+            updateMarkdownDialog({
+                title: i18n.t("Add new page"),
+                markdownPreview: markdown => <StepPreview value={markdown} />,
+                onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
+                onCancel: () => updateMarkdownDialog(null),
+                onSave: async value => {
+                    updateMarkdownDialog(null);
+                    if (!row.moduleId || !tableActions.addPage) return;
+
+                    await tableActions.addPage({ id: row.moduleId, step: row.id, value });
+                    await refreshRows();
+                },
+            });
+        },
+        [tableActions, rows, refreshRows]
+    );
 
     const editModule = useCallback(
         (ids: string[]) => {
@@ -145,12 +241,12 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
 
             const { uploadFile } = tableActions;
 
-            updateEditContentsDialog({
+            updateMarkdownDialog({
                 title: i18n.t("Edit contents of {{name}}", row),
-                initialValue: row.value,
+                initialValue: row.value.referenceValue,
                 markdownPreview: markdown => <StepPreview value={markdown} />,
                 onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
-                onCancel: () => updateEditContentsDialog(null),
+                onCancel: () => updateMarkdownDialog(null),
                 onSave: async value => {
                     if (tableActions.editContents && row.value && row.moduleId) {
                         await tableActions.editContents({ id: row.moduleId, text: row.value, value });
@@ -158,7 +254,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                         snackbar.error(i18n.t("Unable to update contents"));
                     }
 
-                    updateEditContentsDialog(null);
+                    updateMarkdownDialog(null);
                 },
             });
         },
@@ -294,19 +390,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 },
             },
             {
-                name: "push-translations",
-                text: i18n.t("Push local translations to POEditor"),
-                icon: <Icon>publish</Icon>,
-                onClick: publishTranslations,
-                isActive: rows => {
-                    return (
-                        isDebug &&
-                        !!tableActions.publishTranslations &&
-                        _.every(rows, item => item.rowType === "module")
-                    );
-                },
-            },
-            {
                 name: "delete-module",
                 text: i18n.t("Delete module"),
                 icon: <Icon>delete</Icon>,
@@ -320,7 +403,69 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 },
             },
             {
-                name: "move-up-module",
+                name: "new-step",
+                text: i18n.t("Add step"),
+                icon: <Icon>add</Icon>,
+                onClick: addStep,
+                isActive: rows => {
+                    return !!tableActions.addStep && _.every(rows, item => item.rowType === "module");
+                },
+            },
+            {
+                name: "delete-step",
+                text: i18n.t("Delete step"),
+                icon: <Icon>delete</Icon>,
+                multiple: true,
+                onClick: deleteStep,
+                isActive: rows => {
+                    return !!tableActions.deleteStep && _.every(rows, item => item.rowType === "step");
+                },
+            },
+            {
+                name: "new-page",
+                text: i18n.t("Add page"),
+                icon: <Icon>add</Icon>,
+                onClick: addPage,
+                isActive: rows => {
+                    return !!tableActions.addPage && _.every(rows, item => item.rowType === "step");
+                },
+            },
+            {
+                name: "edit-page",
+                text: i18n.t("Edit page"),
+                icon: <Icon>edit</Icon>,
+                onClick: editContents,
+                isActive: rows => {
+                    return (
+                        !!tableActions.editContents && _.every(rows, item => item.rowType === "page" && item.editable)
+                    );
+                },
+            },
+            {
+                name: "delete-page",
+                text: i18n.t("Delete page"),
+                icon: <Icon>delete</Icon>,
+                multiple: true,
+                onClick: deletePage,
+                isActive: rows => {
+                    return !!tableActions.deletePage && _.every(rows, item => item.rowType === "page");
+                },
+            },
+            {
+                name: "push-translations",
+                text: i18n.t("Push local translations to POEditor"),
+                icon: <Icon>publish</Icon>,
+                onClick: publishTranslations,
+                isActive: rows => {
+                    return (
+                        isDebug &&
+                        !!tableActions.publishTranslations &&
+                        _.every(rows, item => item.rowType === "module")
+                    );
+                },
+            },
+            {
+                name: "move-up",
                 text: i18n.t("Move up"),
                 icon: <Icon>arrow_upwards</Icon>,
                 onClick: moveUp,
@@ -329,24 +474,13 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 },
             },
             {
-                name: "move-down-module",
+                name: "move-down",
                 text: i18n.t("Move down"),
                 icon: <Icon>arrow_downwards</Icon>,
                 onClick: moveDown,
                 isActive: rows => {
                     return (
                         !!tableActions.swap && _.every(rows, ({ position, lastPosition }) => position !== lastPosition)
-                    );
-                },
-            },
-            {
-                name: "edit-contents",
-                text: i18n.t("Edit contents"),
-                icon: <Icon>edit</Icon>,
-                onClick: editContents,
-                isActive: rows => {
-                    return (
-                        !!tableActions.editContents && _.every(rows, item => item.rowType === "page" && item.editable)
                     );
                 },
             },
@@ -385,12 +519,16 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             tableActions,
             editModule,
             deleteModules,
+            deletePage,
+            deleteStep,
             moveUp,
             moveDown,
             editContents,
             installApp,
             publishTranslations,
             addModule,
+            addPage,
+            addStep,
             resetModules,
             exportModule,
         ]
@@ -410,8 +548,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
 
     return (
         <PageWrapper>
-            {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
+            {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
+            {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
             <Dropzone
                 ref={fileRef}
@@ -457,6 +596,7 @@ export interface ListItemStep {
 export interface ListItemPage {
     id: string;
     moduleId: string;
+    stepId: string;
     name: string;
     rowType: "page";
     value: TranslatableText;
@@ -477,15 +617,16 @@ export const buildListModules = (modules: TrainingModule[]): ListItemModule[] =>
 };
 
 export const buildListSteps = (module: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
-    return steps.map(({ id, title, pages }, stepIdx) => ({
-        id,
+    return steps.map(({ id: stepId, title, pages }, stepIdx) => ({
+        id: stepId,
         moduleId: module.id,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
-        pages: pages.map(({ id, ...value }, pageIdx) => ({
-            id,
+        pages: pages.map(({ id: pageId, ...value }, pageIdx) => ({
+            id: pageId,
+            stepId,
             moduleId: module.id,
             name: `Page ${pageIdx + 1}`,
             rowType: "page",
@@ -532,6 +673,10 @@ export type ModuleListTableAction = {
     openEditModulePage?: (params: { id: string }) => void;
     openCreateModulePage?: () => void;
     editContents?: (params: { id: string; text: TranslatableText; value: string }) => Promise<void>;
+    addStep?: (params: { id: string; title: string }) => Promise<void>;
+    addPage?: (params: { id: string; step: string; value: string }) => Promise<void>;
+    deleteStep?: (params: { id: string; step: string }) => Promise<void>;
+    deletePage?: (params: { id: string; step: string; page: string }) => Promise<void>;
     deleteModules?: (params: { ids: string[] }) => Promise<void>;
     resetModules?: (params: { ids: string[] }) => Promise<void>;
     swap?: (params: { type: "module" | "step" | "page"; id: string; from: string; to: string }) => Promise<void>;

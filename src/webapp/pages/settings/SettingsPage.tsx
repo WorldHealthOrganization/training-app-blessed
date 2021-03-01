@@ -3,7 +3,14 @@ import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
-import { updateOrder, updateTranslation } from "../../../domain/entities/TrainingModule";
+import {
+    addPage,
+    addStep,
+    removePage,
+    removeStep,
+    updateOrder,
+    updateTranslation,
+} from "../../../domain/helpers/TrainingModuleHelpers";
 import i18n from "../../../locales";
 import { ComponentParameter } from "../../../types/utils";
 import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
@@ -72,13 +79,14 @@ export const SettingsPage: React.FC = () => {
         await reload();
     }, [reload]);
 
+    const openAddModule = useCallback(() => {
+        setAppState({ type: "CREATE_MODULE" });
+    }, [setAppState]);
+
     const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
         () => ({
             openEditModulePage: ({ id }) => {
                 setAppState({ type: "EDIT_MODULE", module: id });
-            },
-            openCreateModulePage: () => {
-                setAppState({ type: "CREATE_MODULE" });
             },
             editContents: async ({ id, text, value }) => {
                 const module = await usecases.modules.get(id);
@@ -97,6 +105,26 @@ export const SettingsPage: React.FC = () => {
             publishTranslations: ({ id }) => usecases.translations.publishTerms(id),
             uploadFile: ({ data }) => usecases.instance.uploadFile(data),
             installApp: ({ id }) => usecases.instance.installApp(id),
+            addStep: async ({ id, title }) => {
+                const module = await usecases.modules.get(id);
+                if (module) await usecases.modules.update(addStep(module, title));
+                else snackbar.error(i18n.t("Unable to add step"));
+            },
+            addPage: async ({ id, step, value }) => {
+                const module = await usecases.modules.get(id);
+                if (module) await usecases.modules.update(addPage(module, step, value));
+                else snackbar.error(i18n.t("Unable to add page"));
+            },
+            deleteStep: async ({ id, step }) => {
+                const module = await usecases.modules.get(id);
+                if (module) await usecases.modules.update(removeStep(module, step));
+                else snackbar.error(i18n.t("Unable to remove step"));
+            },
+            deletePage: async ({ id, step, page }) => {
+                const module = await usecases.modules.get(id);
+                if (module) await usecases.modules.update(removePage(module, step, page));
+                else snackbar.error(i18n.t("Unable to remove page"));
+            },
         }),
         [usecases, setAppState, snackbar]
     );
@@ -183,6 +211,7 @@ export const SettingsPage: React.FC = () => {
                     rows={buildListModules(modules)}
                     refreshRows={refreshModules}
                     tableActions={tableActions}
+                    onActionButtonClick={openAddModule}
                 />
             </Container>
         </DhisPage>
