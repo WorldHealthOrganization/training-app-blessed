@@ -7,6 +7,7 @@ import {
     enumeration,
     exactly,
     intersect,
+    lazy,
     Left,
     maybe,
     nonEmptyList,
@@ -19,7 +20,6 @@ import {
     Right,
     string,
     unknown,
-    lazy,
 } from "purify-ts";
 import {
     chainCodec,

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from "react";
 import { TrainingWizardModal } from "../../components/training-wizard/TrainingWizardModal";
 import { useAppContext } from "../../contexts/app-context";
 
-export const TutorialPage = () => {
+export const TutorialPage: React.FC = () => {
     const { appState, setAppState, module, usecases, translate } = useAppContext();
 
     const minimized = useMemo(() => appState.type === "TRAINING" && appState.state === "MINIMIZED", [appState]);

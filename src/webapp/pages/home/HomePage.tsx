@@ -105,8 +105,8 @@ const StyledModal = styled(Modal)`
 
     ${ModalContent} {
         max-width: none;
-        max-height: 55vh;
-        width: 60vw;
+        max-height: 45vh;
+        width: 55vw;
         padding: 0px;
         margin: 0px 10px 20px 10px;
     }
