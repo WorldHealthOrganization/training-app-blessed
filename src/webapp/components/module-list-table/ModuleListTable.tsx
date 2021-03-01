@@ -22,6 +22,7 @@ import { AlertIcon } from "../alert-icon/AlertIcon";
 import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
+import { useAppContext } from "../../contexts/app-context";
 
 export interface ModuleListTableProps {
     rows: ListItem[];
@@ -31,6 +32,7 @@ export interface ModuleListTableProps {
 
 export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const { rows, tableActions, refreshRows = async () => {} } = props;
+    const { usecases } = useAppContext();
 
     const loading = useLoading();
     const snackbar = useSnackbar();
@@ -172,6 +174,26 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             });
         },
         [tableActions, loading, refreshRows, snackbar]
+    );
+
+    const exportModule = useCallback(
+        async (ids: string[]) => {
+            if (!ids[0]) return;
+
+            loading.show(true, i18n.t("Exporting module"));
+            await usecases.modules.export(ids);
+            
+            loading.reset();
+
+            /*if (!installed) {
+                snackbar.error("Error installing app");
+                return;
+            }
+
+            snackbar.success("Successfully installed app");
+            await refreshRows();*/
+        },
+        [loading, refreshRows, usecases]
     );
 
     const publishTranslations = useCallback(
@@ -320,6 +342,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     return !!tableActions.resetModules && _.every(rows, item => item.rowType === "module");
                 },
             },
+            {
+                name: "export-module",
+                text: i18n.t("Export module"),
+                icon: <Icon>get_app</Icon>,
+                onClick: exportModule,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module");
+                },
+            },
         ],
         [
             tableActions,
@@ -332,6 +363,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             publishTranslations,
             addModule,
             resetModules,
+            exportModule
         ]
     );
 

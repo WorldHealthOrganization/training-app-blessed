@@ -18,6 +18,7 @@ import { UpdateModuleUseCase } from "../domain/usecases/UpdateModuleUseCase";
 import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
 import { UploadFileUseCase } from "../domain/usecases/UploadFileUseCase";
+import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
 
 export function getCompositionRoot(baseUrl: string) {
     const configRepository = new Dhis2ConfigRepository(baseUrl);
@@ -32,6 +33,8 @@ export function getCompositionRoot(baseUrl: string) {
                 delete: new DeleteModulesUseCase(trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(trainingModuleRepository),
                 resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
+                export: new ExportModulesUseCase(trainingModuleRepository),
+
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),

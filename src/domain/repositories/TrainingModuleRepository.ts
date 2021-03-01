@@ -10,4 +10,5 @@ export interface TrainingModuleRepository {
     updateTranslations(id: string): Promise<void>;
     initializeTranslation(id: string): Promise<void>;
     resetDefaultValue(ids: string[]): Promise<void>;
+    export(ids: string[]): Promise<void>;
 }

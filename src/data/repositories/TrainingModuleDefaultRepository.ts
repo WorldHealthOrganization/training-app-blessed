@@ -1,4 +1,7 @@
 import _ from "lodash";
+import FileSaver from "file-saver";
+import JSZip from "jszip";
+import moment from "moment";
 import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
@@ -104,6 +107,61 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async update(module: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
         const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...module });
         await this.saveDataStore(newModule);
+    }
+    public async export(ids: string[]): Promise<void> {
+        let dataStoreModel;
+       /*const moduleJsons = [];
+        ids.forEach(async id => {
+            const module = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+                Namespaces.TRAINING_MODULES,
+                id || ""
+            );
+            //need to make functional
+            moduleJsons.push(module);
+        });
+        console.log(moduleJsons)*/
+        /*
+        First go through all the ids and get their dataStoreModel (array of objects) first then 
+        I can divide it up into 1 file or a zip
+        */
+        const date = moment().format("DDMMYYYY");
+        if (ids.length === 1) {
+            dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+                Namespaces.TRAINING_MODULES,
+                ids[0] || ""
+            );
+            const name = _.kebabCase(`module-${dataStoreModel?.name.referenceValue}-${date}`);
+            this.downloadFile(name, dataStoreModel);
+        } else {
+            const zipFileName =`training-modules-${date}.zip`;
+            this.generateJSONFile(ids, zipFileName)
+        }
+        console.log(dataStoreModel);
+
+    }
+    private generateJSONFile (ids: string[], zipFileName: string): void {
+        const zip = new JSZip();
+        let dataStoreModel;
+            ids.forEach(async id => {
+                dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+                    Namespaces.TRAINING_MODULES,
+                    id || ""
+                );
+                const json = JSON.stringify(dataStoreModel, null, 4);
+                const blob = new Blob([json], { type: "application/json" });
+                zip.file(
+                    `${_.kebabCase(`module-${dataStoreModel?.name.referenceValue}`)}.json`,
+                    blob
+                );
+            });
+            zip.generateAsync({ type: "blob" }).then(function (content: Blob) {
+                FileSaver.saveAs(content, zipFileName);
+            });
+    }
+    private downloadFile(name: string, payload: unknown): void {
+        const json = JSON.stringify(payload, null, 4);
+        const blob = new Blob([json], { type: "application/json" });
+        FileSaver.saveAs(blob, name);
     }
 
     public async resetDefaultValue(ids: string[]): Promise<void> {

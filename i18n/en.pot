@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-28T09:13:47.062Z\n"
-"PO-Revision-Date: 2021-02-28T09:13:47.062Z\n"
+"POT-Creation-Date: 2021-03-01T08:40:19.976Z\n"
+"PO-Revision-Date: 2021-03-01T08:40:19.976Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -110,6 +110,9 @@ msgstr ""
 msgid "Reset app to factory settings"
 msgstr ""
 
+msgid "Exporting module"
+msgstr ""
+
 msgid "Initialize project in POEditor"
 msgstr ""
 
@@ -141,6 +144,9 @@ msgid "Install app"
 msgstr ""
 
 msgid "Restore to factory settings"
+msgstr ""
+
+msgid "Export module"
 msgstr ""
 
 msgid "Back"
@@ -235,10 +241,10 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
-msgid "Here is your progress on DHIS2 training"
+msgid "Welcome to training on DHIS2"
 msgstr ""
 
-msgid "Select one of these tutorials to continue learning:"
+msgid "What do you want to learn in DHIS2?"
 msgstr ""
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
