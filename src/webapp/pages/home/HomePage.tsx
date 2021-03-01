@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { LandingNode, LandingPageNode, TempLandingPage } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
@@ -15,9 +15,13 @@ const Item: React.FC<{
 }> = props => {
     const { currentPage, isRoot, openModule, openPage } = props;
 
-    const { translate, modules } = useAppContext();
+    const { translate, modules, reload } = useAppContext();
 
     const rowSize = isRoot || currentPage.type === "module-group" ? 3 : 5;
+
+    useEffect(() => {
+        reload();
+    }, [reload]);
 
     if (currentPage.type === "page-group") {
         return (
