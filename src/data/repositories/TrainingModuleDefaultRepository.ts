@@ -1,4 +1,7 @@
 import _ from "lodash";
+import FileSaver from "file-saver";
+import JSZip from "jszip";
+import moment from "moment";
 import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
@@ -104,6 +107,28 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     public async update(module: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
         const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...module });
         await this.saveDataStore(newModule);
+    }
+
+    public async export(ids: string[]): Promise<void> {
+        const zip = new JSZip();
+
+        await promiseMap(ids, async id => {
+            const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+                Namespaces.TRAINING_MODULES,
+                id
+            );
+
+            if (!dataStoreModel) return;
+
+            const json = JSON.stringify(dataStoreModel, null, 4);
+            const blob = new Blob([json], { type: "application/json" });
+            const fileName = _.kebabCase(`module-${dataStoreModel.name.referenceValue}`);
+            zip.file(`${fileName}.json`, blob);
+        });
+
+        const blob = await zip.generateAsync({ type: "blob" });
+        const date = moment().format("DDMMYYYY");
+        FileSaver.saveAs(blob, `training-modules-${date}.zip`);
     }
 
     public async resetDefaultValue(ids: string[]): Promise<void> {

@@ -5,8 +5,10 @@ import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSetting
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
+import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
+import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
@@ -32,6 +34,8 @@ export function getCompositionRoot(baseUrl: string) {
                 delete: new DeleteModulesUseCase(trainingModuleRepository),
                 swapOrder: new SwapModuleOrderUseCase(trainingModuleRepository),
                 resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
+                export: new ExportModulesUseCase(trainingModuleRepository),
+                import: new ImportModulesUseCase(trainingModuleRepository),
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),
