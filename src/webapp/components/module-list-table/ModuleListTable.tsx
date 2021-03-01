@@ -1,4 +1,5 @@
 import {
+    //DatePicker,
     ConfirmationDialog,
     ConfirmationDialogProps,
     ObjectsTable,
@@ -10,9 +11,10 @@ import {
     useSnackbar,
 } from "@eyeseetea/d2-ui-components";
 import { Icon } from "@material-ui/core";
+import { FileRejection } from "react-dropzone";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import _ from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useRef } from "react";
 import styled from "styled-components";
 import { PartialTrainingModule, TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../domain/entities/TranslatableText";
@@ -23,6 +25,13 @@ import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-edi
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 import { useAppContext } from "../../contexts/app-context";
+import { Dropzone, DropzoneRef  } from "../dropzone/Dropzone";
+/*import { ObjectsList } from "../objects-list/ObjectsList";
+import {
+    Pager,
+    TableConfig,
+    useObjectsTable,
+} from "../objects-list/objects-list-hooks";*/
 
 export interface ModuleListTableProps {
     rows: ListItem[];
@@ -40,6 +49,31 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
     const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
+    const [showImportDragAndDrop, setShowImportDragAndDrop] = useState<boolean>();
+    const fileRef = useRef<DropzoneRef>(null);
+    const handleFileUpload = useCallback(
+        async (files: File[], rejections: FileRejection[]) => {
+            if (files.length === 0 && rejections.length > 0) {
+                snackbar.error(i18n.t("Couldn't read the file because it's not valid"));
+                return;
+            }
+
+            loading.show(true, i18n.t("Reading files"));
+
+            /*const { predictors, warnings } = await usecases.readExcel(files);
+            if (warnings && warnings.length > 0) {
+                snackbar.warning(warnings.map(({ description }) => description).join("\n"));
+            }
+
+            //@ts-ignore TODO FIXME: Add validation
+            const response = await compositionRoot.usecases.import(predictors);
+            setResponse(response);*/
+
+            loading.reset();
+            refreshRows();
+        },
+        [usecases, loading, snackbar]
+    );
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
@@ -179,23 +213,12 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const exportModule = useCallback(
         async (ids: string[]) => {
             if (!ids[0]) return;
-
             loading.show(true, i18n.t("Exporting module"));
             await usecases.modules.export(ids);
-            
             loading.reset();
-
-            /*if (!installed) {
-                snackbar.error("Error installing app");
-                return;
-            }
-
-            snackbar.success("Successfully installed app");
-            await refreshRows();*/
-        },
-        [loading, refreshRows, usecases]
-    );
-
+        },  
+        [loading, usecases]
+        );
     const publishTranslations = useCallback(
         async (ids: string[]) => {
             if (!tableActions.publishTranslations || !ids[0]) return;
@@ -350,6 +373,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 isActive: rows => {
                     return _.every(rows, item => item.rowType === "module");
                 },
+                multiple: true,
             },
         ],
         [
@@ -371,7 +395,17 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         <PageWrapper>
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
-
+            {showImportDragAndDrop && 
+            <Dropzone
+                ref={fileRef}
+                accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
+                onDrop={handleFileUpload}
+            >
+                   <h1>Here is the dropzone</h1> 
+            </Dropzone>}
+            <div>
+                <Icon onClick={() => setShowImportDragAndDrop(true)}>publish</Icon> Import Module
+            </div>
             <ObjectsTable<ListItem>
                 rows={rows}
                 columns={columns}

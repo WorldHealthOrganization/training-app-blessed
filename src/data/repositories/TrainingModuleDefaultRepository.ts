@@ -134,12 +134,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             this.downloadFile(name, dataStoreModel);
         } else {
             const zipFileName =`training-modules-${date}.zip`;
-            this.generateJSONFile(ids, zipFileName)
+            this.generateZipFile(ids, zipFileName)
         }
-        console.log(dataStoreModel);
 
     }
-    private generateJSONFile (ids: string[], zipFileName: string): void {
+    private async generateZipFile (ids: string[], zipFileName: string): Promise<void> {
         const zip = new JSZip();
         let dataStoreModel;
             ids.forEach(async id => {
@@ -154,9 +153,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                     blob
                 );
             });
-            zip.generateAsync({ type: "blob" }).then(function (content: Blob) {
-                FileSaver.saveAs(content, zipFileName);
-            });
+            const blob = await zip.generateAsync({ type: "blob" });
+            FileSaver.saveAs(blob, zipFileName);
     }
     private downloadFile(name: string, payload: unknown): void {
         const json = JSON.stringify(payload, null, 4);
