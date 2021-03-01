@@ -121,7 +121,8 @@ export const TempLandingPage: LandingGroupNode = {
                             id: "insecticide-resistance-page",
                             type: "page",
                             level: 1,
-                            icon: "",
+                            icon:
+                                "https://user-images.githubusercontent.com/2181866/109492811-cfc88580-7a8b-11eb-8e03-b88b64b38a81.png",
                             name: {
                                 key: "insecticide-resistance-page-name",
                                 referenceValue: "Insecticide resistance",

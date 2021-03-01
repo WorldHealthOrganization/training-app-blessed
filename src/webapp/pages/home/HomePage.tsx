@@ -7,8 +7,107 @@ import { Cardboard } from "../../components/card-board/Cardboard";
 import { Modal, ModalContent, ModalParagraph, ModalTitle } from "../../components/modal";
 import { useAppContext } from "../../contexts/app-context";
 
+const Item: React.FC<{
+    currentPage: LandingNode;
+    isRoot?: boolean;
+    openPage: (page: LandingPageNode) => void;
+    openModule: (module: string, step: number) => void;
+}> = props => {
+    const { currentPage, isRoot, openModule, openPage } = props;
+
+    const { translate, modules } = useAppContext();
+
+    const rowSize = isRoot || currentPage.type === "module-group" ? 3 : 5;
+
+    if (currentPage.type === "page-group") {
+        return (
+            <GroupContainer>
+                {currentPage.title ? <GroupTitle>{translate(currentPage.title)}</GroupTitle> : null}
+                {currentPage.description ? (
+                    <GroupDescription>{translate(currentPage.description)}</GroupDescription>
+                ) : null}
+                <Cardboard rowSize={rowSize} key={`group-${currentPage.id}`}>
+                    {currentPage.children.map((item, idx) => {
+                        return (
+                            <BigCard
+                                key={`card-${idx}`}
+                                label={translate(item.name)}
+                                onClick={() => openPage(item)}
+                                icon={<img src={item.icon} alt={`Icon for ${translate(item.name)}`} />}
+                            />
+                        );
+                    })}
+                </Cardboard>
+            </GroupContainer>
+        );
+    }
+
+    if (currentPage.type === "module-group") {
+        return (
+            <GroupContainer>
+                {currentPage.title ? <GroupTitle>{translate(currentPage.title)}</GroupTitle> : null}
+                {currentPage.description ? (
+                    <GroupDescription>{translate(currentPage.description)}</GroupDescription>
+                ) : null}
+                <Cardboard rowSize={rowSize} key={`group-${currentPage.id}`}>
+                    {currentPage.children.map((item, idx) => {
+                        const module = modules.find(({ id }) => item.type === "module" && id === item.moduleId);
+
+                        const percentage = module
+                            ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
+                            : undefined;
+
+                        const handleClick = () => {
+                            if (module) {
+                                openModule(module.id, module.progress.completed ? 0 : module.progress.lastStep + 1);
+                            }
+                        };
+
+                        return (
+                            <BigCard
+                                key={`card-${idx}`}
+                                label={translate(item.name)}
+                                progress={module?.progress.completed ? 100 : percentage}
+                                onClick={handleClick}
+                                disabled={module?.disabled}
+                                icon={<img src={module?.icon} alt={`Icon for ${item.name}`} />}
+                            />
+                        );
+                    })}
+                </Cardboard>
+            </GroupContainer>
+        );
+    }
+
+    if (currentPage.type === "page") {
+        return (
+            <React.Fragment>
+                <Header>
+                    {currentPage.icon ? (
+                        <IconContainer>
+                            <img src={currentPage.icon} alt={`Page icon`} />
+                        </IconContainer>
+                    ) : null}
+
+                    {currentPage.title ? <ModalTitle>{translate(currentPage.title)}</ModalTitle> : null}
+                </Header>
+
+                {currentPage.description ? <ModalParagraph>{translate(currentPage.description)}</ModalParagraph> : null}
+
+                <ModalContent>
+                    {currentPage.children.map(item => (
+                        <Item key={`item-${item.id}`} {...props} currentPage={item}></Item>
+                    ))}
+                </ModalContent>
+            </React.Fragment>
+        );
+    }
+
+    return null;
+};
+
 export const HomePage: React.FC = () => {
-    const { translate, modules, setAppState, hasSettingsAccess } = useAppContext();
+    const { setAppState, hasSettingsAccess } = useAppContext();
 
     const [history, updateHistory] = useState<LandingPageNode[]>([]);
 
@@ -52,7 +151,8 @@ export const HomePage: React.FC = () => {
     }, [history]);
 
     const isRoot = history.length === 0;
-    const rowSize = isRoot || currentPage.type === "module-group" ? 3 : 5;
+
+    console.log("curr", currentPage);
 
     return (
         <StyledModal
@@ -79,62 +179,7 @@ export const HomePage: React.FC = () => {
                     </React.Fragment>
                 ) : null}
 
-                <Header>
-                    {currentPage.icon ? (
-                        <IconContainer>
-                            <img src={currentPage.icon} alt={`Page icon`} />
-                        </IconContainer>
-                    ) : null}
-
-                    {currentPage.title ? <ModalTitle>{translate(currentPage.title)}</ModalTitle> : null}
-                </Header>
-
-                {currentPage.description ? <ModalParagraph>{translate(currentPage.description)}</ModalParagraph> : null}
-
-                <ModalContent>
-                    <Cardboard rowSize={rowSize}>
-                        {currentPage.type === "module-group" &&
-                            currentPage.children.map((item, idx) => {
-                                const module = modules.find(({ id }) => item.type === "module" && id === item.moduleId);
-
-                                const percentage = module
-                                    ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
-                                    : undefined;
-
-                                const handleClick = () => {
-                                    if (module) {
-                                        loadModule(
-                                            module.id,
-                                            module.progress.completed ? 0 : module.progress.lastStep + 1
-                                        );
-                                    }
-                                };
-
-                                return (
-                                    <BigCard
-                                        key={`card-${idx}`}
-                                        label={translate(item.name)}
-                                        progress={module?.progress.completed ? 100 : percentage}
-                                        onClick={handleClick}
-                                        disabled={module?.disabled}
-                                        icon={<img src={module?.icon} alt={`Icon for ${item.name}`} />}
-                                    />
-                                );
-                            })}
-
-                        {currentPage.type === "page-group" &&
-                            currentPage.children.map((item, idx) => {
-                                return (
-                                    <BigCard
-                                        key={`card-${idx}`}
-                                        label={translate(item.name)}
-                                        onClick={() => openPage(item)}
-                                        icon={<img src={item.icon} alt={`Icon for ${translate(item.name)}`} />}
-                                    />
-                                );
-                            })}
-                    </Cardboard>
-                </ModalContent>
+                <Item currentPage={currentPage} isRoot={isRoot} openModule={loadModule} openPage={openPage} />
             </ContentWrapper>
         </StyledModal>
     );
@@ -145,11 +190,11 @@ const StyledModal = styled(Modal)`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    width: 70vw;
 
     ${ModalContent} {
-        max-width: none;
-        max-height: 45vh;
-        width: 55vw;
+        max-height: 55vh;
+        max-width: 70vw;
         padding: 0px;
         margin: 0px 10px 20px 10px;
     }
@@ -182,6 +227,7 @@ const IconContainer = styled.div`
         width: 100%;
         height: auto;
         padding: 10px;
+        user-drag: none;
     }
 `;
 
@@ -192,4 +238,25 @@ const Header = styled.div`
     line-height: 47px;
     font-weight: 300;
     margin: 40px 0px 30px 50px;
+`;
+
+const GroupContainer = styled.div`
+    margin-bottom: 20px;
+`;
+
+const GroupTitle = styled.span`
+    display: block;
+    text-align: left;
+    font-size: 32px;
+    line-height: 47px;
+    font-weight: 700;
+`;
+
+const GroupDescription = styled.span`
+    display: block;
+    text-align: left;
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 28px;
+    margin: 10px 0px 20px;
 `;
