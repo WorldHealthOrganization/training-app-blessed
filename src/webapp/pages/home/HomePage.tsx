@@ -48,12 +48,16 @@ export const HomePage = () => {
                 centerChildren={true}
             >
                 <ContentWrapper>
-                    <ModalTitle>{i18n.t("Here is your progress on DHIS2 training")}</ModalTitle>
-                    <ModalParagraph>
-                        {i18n.t("Select one of these tutorials to continue learning:", {
-                            nsSeparator: false,
-                        })}
+                    <LogoContainer>
+                        <img src="img/logo-dhis.svg" alt="DHIS2" />
+                        <img src="img/logo-who.svg" alt="World Health Organization" />
+                    </LogoContainer>
+
+                    <ModalTitle bold={true}>{i18n.t("Welcome to training on DHIS2")}</ModalTitle>
+                    <ModalParagraph size={28} align={"left"}>
+                        {i18n.t("What do you want to learn in DHIS2?")}
                     </ModalParagraph>
+
                     <ModalContent>
                         {loading ? (
                             <SpinnerWrapper>
@@ -100,9 +104,13 @@ const StyledModal = styled(Modal)`
     ${ModalContent} {
         max-width: none;
         max-height: 60vh;
-        width: 800px;
+        width: 65vw;
         padding: 0px;
         margin: 0px 10px 20px 10px;
+    }
+
+    ${ModalTitle} {
+        padding: 15;
     }
 `;
 
@@ -115,4 +123,10 @@ const SpinnerWrapper = styled.div`
     display: flex;
     place-content: center;
     align-items: center;
+`;
+
+const LogoContainer = styled.div`
+    img {
+        margin: 10px;
+    }
 `;

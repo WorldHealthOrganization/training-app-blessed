@@ -47,6 +47,7 @@ const BigCardTitle = styled.span`
     color: #fff;
     min-height: 48px;
     font-size: 22px;
+    font-size: 1.2vw;
     font-weight: 700;
     display: block;
 `;
@@ -58,6 +59,6 @@ const BigCardIcon = styled.span`
 
     img,
     svg {
-        max-height: 125px;
+        max-height: 10vw;
     }
 `;
