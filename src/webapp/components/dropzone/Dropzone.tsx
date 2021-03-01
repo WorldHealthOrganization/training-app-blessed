@@ -39,7 +39,8 @@ const Text = styled.p`
 `;
 
 export interface DropzoneProps extends DropzoneOptions {
-    children: React.ReactNode;
+    children?: React.ReactNode;
+    visible?: boolean;
 }
 
 export interface DropzoneRef {
@@ -50,7 +51,7 @@ export const Dropzone = React.forwardRef((props: DropzoneProps, ref: React.Forwa
     const childrenRef = useRef<HTMLDivElement>(null);
 
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-        noClick: true,
+        noClick: !props.visible,
         ...props,
     });
 
@@ -67,7 +68,7 @@ export const Dropzone = React.forwardRef((props: DropzoneProps, ref: React.Forwa
                     position: "absolute",
                     height: childrenRef.current?.clientHeight,
                     width: childrenRef.current?.clientWidth,
-                    visibility: isDragActive ? "visible" : "hidden",
+                    visibility: props.visible || isDragActive ? "visible" : "hidden",
                 }}
             >
                 <Shade>

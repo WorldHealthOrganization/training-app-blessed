@@ -55,7 +55,7 @@ const LiEntry: React.FC<{ label: string; value?: string }> = ({ label, value, ch
 };
 
 const StyledModalBody = styled(ModalBody)`
-    max-width: 600px;
+    width: 600px;
     margin: 25px;
 `;
 

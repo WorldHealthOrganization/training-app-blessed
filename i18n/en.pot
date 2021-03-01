@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-01T18:31:02.361Z\n"
-"PO-Revision-Date: 2021-03-01T18:31:02.361Z\n"
+"POT-Creation-Date: 2021-03-01T19:27:22.210Z\n"
+"PO-Revision-Date: 2021-03-01T19:27:22.210Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -69,6 +69,9 @@ msgid "Name *"
 msgstr ""
 
 msgid "PoEditor Project id"
+msgstr ""
+
+msgid "Icon"
 msgstr ""
 
 msgid "Welcome page"
@@ -335,6 +338,9 @@ msgid "Access to Settings"
 msgstr ""
 
 msgid "Connect the application with POEditor to sync translations"
+msgstr ""
+
+msgid "Landing page"
 msgstr ""
 
 msgid "Training modules"

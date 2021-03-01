@@ -13,6 +13,7 @@ import {
 } from "../../../domain/helpers/TrainingModuleHelpers";
 import i18n from "../../../locales";
 import { ComponentParameter } from "../../../types/utils";
+import { LandingPageTreeView } from "../../components/landing-page-tree-view/LandingPageTreeView";
 import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
 import { PageHeader } from "../../components/page-header/PageHeader";
 import { PermissionsDialog, SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
@@ -204,6 +205,10 @@ export const SettingsPage: React.FC = () => {
                         />
                     </ListItem>
                 </Group>
+
+                <Title>{i18n.t("Landing page")}</Title>
+
+                <LandingPageTreeView />
 
                 <Title>{i18n.t("Training modules")}</Title>
 

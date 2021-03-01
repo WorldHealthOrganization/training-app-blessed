@@ -78,6 +78,6 @@ export class InstanceDhisRepository implements InstanceRepository {
 
 const resizeFile = (file: Blob): Promise<Blob> => {
     return new Promise(resolve => {
-        Resizer.imageFileResizer(file, 300, 300, "JPEG", 100, 0, blob => resolve(blob as Blob), "blob");
+        Resizer.imageFileResizer(file, 600, 600, "PNG", 100, 0, blob => resolve(blob as Blob), "blob");
     });
 };

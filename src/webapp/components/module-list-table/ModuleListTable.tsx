@@ -555,7 +555,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
 
             <Dropzone
                 ref={fileRef}
-                accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
+                accept={"application/json"}
                 onDrop={handleFileUpload}
             >
                 <ObjectsTable<ListItem>
