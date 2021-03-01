@@ -42,6 +42,7 @@ export const ModuleNodeModel = Schema.extend(
     Schema.object({
         type: Schema.exact("module"),
         name: TranslatableTextModel,
+        icon: Schema.undefined,
         title: Schema.undefined,
         description: Schema.undefined,
         moduleId: Schema.string,
@@ -53,6 +54,7 @@ export const PageGroupNodeModel = Schema.extend(
     BaseNodeModel,
     Schema.object({
         type: Schema.exact("page-group"),
+        icon: Schema.undefined,
         title: Schema.optional(TranslatableTextModel),
         description: Schema.optional(TranslatableTextModel),
         children: Schema.array(PageNodeModel),
@@ -63,6 +65,7 @@ export const ModuleGroupNodeModel = Schema.extend(
     BaseNodeModel,
     Schema.object({
         type: Schema.exact("module-group"),
+        icon: Schema.undefined,
         title: Schema.optional(TranslatableTextModel),
         description: Schema.optional(TranslatableTextModel),
         children: Schema.array(ModuleNodeModel),
@@ -80,6 +83,7 @@ export const TempLandingPage: LandingGroupNode = {
     id: "root",
     type: "page-group",
     level: 1,
+    icon: undefined,
     title: undefined,
     description: undefined,
     children: [
@@ -88,15 +92,20 @@ export const TempLandingPage: LandingGroupNode = {
             type: "page",
             level: 1,
             name: { key: "data-entry-landing-page-name", referenceValue: "Entering data", translations: {} },
-            title: undefined,
+            title: {
+                key: "data-entry-landing-page-title",
+                referenceValue: "Learn to enter data on DHIS2",
+                translations: {},
+            },
             description: undefined,
             icon:
-                "https://user-images.githubusercontent.com/2181866/109413197-7c333a80-79ac-11eb-8ccb-d5f61f6c041c.png",
+                "https://user-images.githubusercontent.com/2181866/109486411-1fef1a00-7a83-11eb-8703-a246b38e627c.png",
             children: [
                 {
                     id: "data-entry-activities",
                     type: "page-group",
                     level: 1,
+                    icon: undefined,
                     title: {
                         key: "data-entry-activities-title",
                         referenceValue: "Training for activity-related data entry",
@@ -128,6 +137,7 @@ export const TempLandingPage: LandingGroupNode = {
                                 {
                                     id: "insecticide-resistance-page",
                                     type: "page-group",
+                                    icon: undefined,
                                     level: 1,
                                     title: {
                                         key: "insecticide-resistance-page-title",
@@ -169,6 +179,7 @@ export const TempLandingPage: LandingGroupNode = {
                                                     },
                                                     description: undefined,
                                                     children: [],
+                                                    icon: undefined,
                                                 },
                                             ],
                                         },
@@ -182,6 +193,7 @@ export const TempLandingPage: LandingGroupNode = {
                     id: "data-entry-generic",
                     type: "module-group",
                     level: 1,
+                    icon: undefined,
                     title: {
                         key: "data-entry-generic-title",
                         referenceValue: "Generic training for data entry",
@@ -206,6 +218,7 @@ export const TempLandingPage: LandingGroupNode = {
                             title: undefined,
                             description: undefined,
                             children: undefined,
+                            icon: undefined,
                         },
                     ],
                 },

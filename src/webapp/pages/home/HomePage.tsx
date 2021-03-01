@@ -79,7 +79,16 @@ export const HomePage: React.FC = () => {
                     </React.Fragment>
                 ) : null}
 
-                {currentPage.title ? <ModalTitle>{translate(currentPage.title)}</ModalTitle> : null}
+                <Header>
+                    {currentPage.icon ? (
+                        <IconContainer>
+                            <img src={currentPage.icon} alt={`Page icon`} />
+                        </IconContainer>
+                    ) : null}
+
+                    {currentPage.title ? <ModalTitle>{translate(currentPage.title)}</ModalTitle> : null}
+                </Header>
+
                 {currentPage.description ? <ModalParagraph>{translate(currentPage.description)}</ModalParagraph> : null}
 
                 <ModalContent>
@@ -146,7 +155,7 @@ const StyledModal = styled(Modal)`
     }
 
     ${ModalTitle} {
-        margin: 20px 20px 45px;
+        margin: 20px;
     }
 `;
 
@@ -159,4 +168,28 @@ const LogoContainer = styled.div`
         margin: 0 30px;
         user-drag: none;
     }
+`;
+
+const IconContainer = styled.div`
+    background: #6d98b8;
+    margin-right: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    height: 12vh;
+    width: 12vh;
+
+    img {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+`;
+
+const Header = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 36px;
+    line-height: 47px;
+    font-weight: 300;
+    margin: 40px 0px 30px 50px;
 `;
