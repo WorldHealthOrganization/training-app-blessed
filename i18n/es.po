@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-01T14:06:03.087Z\n"
+"POT-Creation-Date: 2021-03-01T14:07:25.821Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -161,9 +161,6 @@ msgid "Export module"
 msgstr "Editar modulo"
 
 msgid "Import"
-msgstr ""
-
-msgid "Search by name"
 msgstr ""
 
 msgid "Help"

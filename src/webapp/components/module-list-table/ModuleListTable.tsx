@@ -4,6 +4,7 @@ import {
     ObjectsTable,
     TableAction,
     TableColumn,
+    TableGlobalAction,
     TableSelection,
     TableState,
     useLoading,
@@ -59,7 +60,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             loading.reset();
             refreshRows();
         },
-        [usecases, loading, snackbar]
+        [usecases, loading, snackbar, refreshRows]
     );
 
     const deleteModules = useCallback(
@@ -206,6 +207,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         },
         [loading, usecases]
     );
+
     const publishTranslations = useCallback(
         async (ids: string[]) => {
             if (!tableActions.publishTranslations || !ids[0]) return;
@@ -391,7 +393,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 onClick: openImportDialog,
             },
         ],
-        []
+        [openImportDialog]
     );
 
     return (
