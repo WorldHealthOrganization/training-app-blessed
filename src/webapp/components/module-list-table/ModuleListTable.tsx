@@ -244,7 +244,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 onSave: async value => {
                     updateMarkdownDialog(null);
                     if (!tableActions.editContents || !row.value || !row.moduleId) return;
-                    
+
                     await tableActions.editContents({ id: row.moduleId, text: row.value, value });
                     await refreshRows();
                 },
@@ -494,13 +494,16 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>rotate_left</Icon>,
                 onClick: resetModules,
                 isActive: rows => {
-                    return !!tableActions.resetModules && _.every(rows, item => item.rowType === "module");
+                    return (
+                        !!tableActions.resetModules &&
+                        _.every(rows, item => item.rowType === "module" && item.type === "core")
+                    );
                 },
             },
             {
                 name: "export-module",
                 text: i18n.t("Export module"),
-                icon: <Icon>get_app</Icon>,
+                icon: <Icon>cloud_download</Icon>,
                 onClick: exportModule,
                 isActive: rows => {
                     return _.every(rows, item => item.rowType === "module");
