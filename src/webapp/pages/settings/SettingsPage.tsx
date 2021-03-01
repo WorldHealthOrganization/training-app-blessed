@@ -1,8 +1,9 @@
-import { ConfirmationDialog } from "@eyeseetea/d2-ui-components";
+import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
 import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
+import { updateTranslation } from "../../../domain/entities/TrainingModule";
 import i18n from "../../../locales";
 import { ComponentParameter } from "../../../types/utils";
 import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
@@ -13,6 +14,8 @@ import { DhisPage } from "../dhis/DhisPage";
 
 export const SettingsPage: React.FC = () => {
     const { modules, reload, usecases, setAppState } = useAppContext();
+
+    const snackbar = useSnackbar();
 
     const [poEditorToken, setPoEditorToken] = useState<string>();
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
@@ -77,6 +80,11 @@ export const SettingsPage: React.FC = () => {
             openCreateModulePage: () => {
                 setAppState({ type: "CREATE_MODULE" });
             },
+            editContents: async ({ id, text, value }) => {
+                const module = await usecases.modules.get(id);
+                if (module) await usecases.modules.update(updateTranslation(module, text.key, value));
+                else snackbar.error(i18n.t("Unable to update module contents"));
+            },
             deleteModules: ({ ids }) => usecases.modules.delete(ids),
             resetModules: ({ ids }) => usecases.modules.resetDefaultValue(ids),
             swap: ({ from, to }) => usecases.modules.swapOrder(from, to),
@@ -84,7 +92,7 @@ export const SettingsPage: React.FC = () => {
             uploadFile: ({ data }) => usecases.instance.uploadFile(data),
             installApp: ({ id }) => usecases.instance.installApp(id),
         }),
-        [usecases, setAppState]
+        [usecases, setAppState, snackbar]
     );
 
     useEffect(() => {

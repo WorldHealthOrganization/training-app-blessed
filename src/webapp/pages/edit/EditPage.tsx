@@ -64,7 +64,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
                     isEdit={edit}
                     onChange={onChange}
                     onCancel={onCancel}
-                    onClose={onCancel}
+                    onClose={openSettings}
                     onSave={saveModule}
                     module={stateModule}
                 />

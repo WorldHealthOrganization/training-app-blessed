@@ -152,8 +152,6 @@ export const HomePage: React.FC = () => {
 
     const isRoot = history.length === 0;
 
-    console.log("curr", currentPage);
-
     return (
         <StyledModal
             onSettings={hasSettingsAccess ? openSettings : undefined}

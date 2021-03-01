@@ -100,7 +100,12 @@ export const defaultTrainingModule: PartialTrainingModule = {
     },
 };
 
-export const updateTranslation = (module: PartialTrainingModule, key: string, value: string, language?: string) => {
+export const updateTranslation = (
+    module: PartialTrainingModule,
+    key: string,
+    value: string,
+    language?: string
+): PartialTrainingModule => {
     const translate = (text: TranslatableText): TranslatableText => {
         if (key !== text.key) return text;
 

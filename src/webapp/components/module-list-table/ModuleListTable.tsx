@@ -54,8 +54,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
 
             loading.show(true, i18n.t("Reading files"));
 
-            //@ts-ignore TODO FIXME: Add validation
-            await usecases.import(predictors);
+            // TODO FIXME: Add validation
+            await usecases.modules.import(files);
 
             loading.reset();
             refreshRows();
@@ -146,13 +146,18 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 markdownPreview: markdown => <StepPreview value={markdown} />,
                 onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
                 onCancel: () => updateEditContentsDialog(null),
-                onSave: () => {
-                    // TODO
+                onSave: async value => {
+                    if (tableActions.editContents && row.value && row.moduleId) {
+                        await tableActions.editContents({ id: row.moduleId, text: row.value, value });
+                    } else {
+                        snackbar.error(i18n.t("Unable to update contents"));
+                    }
+
                     updateEditContentsDialog(null);
                 },
             });
         },
-        [tableActions, rows]
+        [tableActions, rows, snackbar]
     );
 
     const installApp = useCallback(
@@ -335,7 +340,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>edit</Icon>,
                 onClick: editContents,
                 isActive: rows => {
-                    return _.every(rows, item => item.rowType === "page" && item.editable);
+                    return (
+                        !!tableActions.editContents && _.every(rows, item => item.rowType === "page" && item.editable)
+                    );
                 },
             },
             {
@@ -442,6 +449,7 @@ export interface ListItemStep {
 
 export interface ListItemPage {
     id: string;
+    moduleId: string;
     name: string;
     rowType: "page";
     value: TranslatableText;
@@ -470,6 +478,7 @@ export const buildListSteps = (module: PartialTrainingModule, steps: TrainingMod
         lastPosition: steps.length - 1,
         pages: pages.map((value, pageIdx) => ({
             id: `${module.id}-page-${stepIdx}-${pageIdx}`,
+            moduleId: module.id,
             name: `Page ${pageIdx + 1}`,
             rowType: "page",
             position: pageIdx,
@@ -514,6 +523,7 @@ const isDebug = process.env.NODE_ENV === "development";
 export type ModuleListTableAction = {
     openEditModulePage?: (params: { id: string }) => void;
     openCreateModulePage?: () => void;
+    editContents?: (params: { id: string; text: TranslatableText; value: string }) => Promise<void>;
     deleteModules?: (params: { ids: string[] }) => Promise<void>;
     resetModules?: (params: { ids: string[] }) => Promise<void>;
     swap?: (params: { from: string; to: string }) => Promise<void>;

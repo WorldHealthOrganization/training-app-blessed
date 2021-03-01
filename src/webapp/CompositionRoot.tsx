@@ -7,6 +7,7 @@ import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
+import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
@@ -29,6 +30,7 @@ export function getCompositionRoot(baseUrl: string) {
     return {
         usecases: {
             modules: getExecute({
+                get: new GetModuleUseCase(trainingModuleRepository),
                 list: new ListModulesUseCase(trainingModuleRepository),
                 update: new UpdateModuleUseCase(trainingModuleRepository),
                 delete: new DeleteModulesUseCase(trainingModuleRepository),
