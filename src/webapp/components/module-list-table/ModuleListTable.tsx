@@ -378,6 +378,24 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 },
             },
             {
+                name: "new-step",
+                text: i18n.t("Add step"),
+                icon: <Icon>add</Icon>,
+                onClick: addStep,
+                isActive: rows => {
+                    return !!tableActions.addStep && _.every(rows, item => item.rowType === "module");
+                },
+            },
+            {
+                name: "new-page",
+                text: i18n.t("Add page"),
+                icon: <Icon>add</Icon>,
+                onClick: addPage,
+                isActive: rows => {
+                    return !!tableActions.addPage && _.every(rows, item => item.rowType === "step");
+                },
+            },
+            {
                 name: "edit-module",
                 text: i18n.t("Edit module"),
                 icon: <Icon>edit</Icon>,
@@ -386,6 +404,17 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     return (
                         !!tableActions.openEditModulePage &&
                         _.every(rows, item => item.rowType === "module" && item.editable)
+                    );
+                },
+            },
+            {
+                name: "edit-page",
+                text: i18n.t("Edit page"),
+                icon: <Icon>edit</Icon>,
+                onClick: editContents,
+                isActive: rows => {
+                    return (
+                        !!tableActions.editContents && _.every(rows, item => item.rowType === "page" && item.editable)
                     );
                 },
             },
@@ -402,15 +431,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     );
                 },
             },
-            {
-                name: "new-step",
-                text: i18n.t("Add step"),
-                icon: <Icon>add</Icon>,
-                onClick: addStep,
-                isActive: rows => {
-                    return !!tableActions.addStep && _.every(rows, item => item.rowType === "module");
-                },
-            },
+
             {
                 name: "delete-step",
                 text: i18n.t("Delete step"),
@@ -419,26 +440,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 onClick: deleteStep,
                 isActive: rows => {
                     return !!tableActions.deleteStep && _.every(rows, item => item.rowType === "step");
-                },
-            },
-            {
-                name: "new-page",
-                text: i18n.t("Add page"),
-                icon: <Icon>add</Icon>,
-                onClick: addPage,
-                isActive: rows => {
-                    return !!tableActions.addPage && _.every(rows, item => item.rowType === "step");
-                },
-            },
-            {
-                name: "edit-page",
-                text: i18n.t("Edit page"),
-                icon: <Icon>edit</Icon>,
-                onClick: editContents,
-                isActive: rows => {
-                    return (
-                        !!tableActions.editContents && _.every(rows, item => item.rowType === "page" && item.editable)
-                    );
                 },
             },
             {
