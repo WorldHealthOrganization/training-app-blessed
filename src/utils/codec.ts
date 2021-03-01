@@ -19,6 +19,7 @@ import {
     Right,
     string,
     unknown,
+    lazy,
 } from "purify-ts";
 import {
     chainCodec,
@@ -104,6 +105,7 @@ export const Schema = {
     dhis2Id: RegExpMatchedString(dhis2Uid),
     chain: chainCodec,
     custom: Codec.custom,
+    lazy,
 };
 
 export { parseError as parseSchemaError } from "purify-ts";

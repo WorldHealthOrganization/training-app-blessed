@@ -78,7 +78,7 @@ export const HomePage = () => {
                                                 progress={completed ? 100 : percentage}
                                                 onClick={handleClick}
                                                 disabled={disabled}
-                                                icon={<img src={icon} />}
+                                                icon={<img src={icon} alt={`Icon for ${name}`} />}
                                             />
                                         );
                                     })}
