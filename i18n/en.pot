@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-01T17:53:19.186Z\n"
-"PO-Revision-Date: 2021-03-01T17:53:19.186Z\n"
+"POT-Creation-Date: 2021-03-01T18:31:02.361Z\n"
+"PO-Revision-Date: 2021-03-01T18:31:02.361Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -164,19 +164,19 @@ msgstr ""
 msgid "Add module"
 msgstr ""
 
-msgid "Edit module"
-msgstr ""
-
-msgid "Delete module"
-msgstr ""
-
 msgid "Add step"
 msgstr ""
 
 msgid "Add page"
 msgstr ""
 
+msgid "Edit module"
+msgstr ""
+
 msgid "Edit page"
+msgstr ""
+
+msgid "Delete module"
 msgstr ""
 
 msgid "Push local translations to POEditor"
@@ -290,9 +290,6 @@ msgid "Finish"
 msgstr ""
 
 msgid "Welcome to training on DHIS2"
-msgstr ""
-
-msgid "What do you want to learn in DHIS2?"
 msgstr ""
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"

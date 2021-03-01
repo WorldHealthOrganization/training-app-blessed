@@ -60,7 +60,7 @@ export const ModalContent = styled(ModalContentBase)`
     }
 
     ::-webkit-scrollbar-button:vertical:increment {
-        background: url(../img/arrow-down.svg) no-repeat 50% 50%;
+        background: url(./img/arrow-down.svg) no-repeat 50% 50%;
         background-size: contain;
         color: #fff;
         display: block;
@@ -70,7 +70,7 @@ export const ModalContent = styled(ModalContentBase)`
     }
 
     ::-webkit-scrollbar-button:vertical:decrement {
-        background: url(../img/arrow-up.svg) no-repeat 50% 50%;
+        background: url(./img/arrow-up.svg) no-repeat 50% 50%;
         background-size: contain;
         color: #fff;
         display: block;

@@ -82,15 +82,17 @@ const Item: React.FC<{
     if (currentPage.type === "page") {
         return (
             <React.Fragment>
-                <Header>
-                    {currentPage.icon ? (
-                        <IconContainer>
-                            <img src={currentPage.icon} alt={`Page icon`} />
-                        </IconContainer>
-                    ) : null}
+                {currentPage.title ? (
+                    <Header>
+                        {currentPage.icon ? (
+                            <IconContainer>
+                                <img src={currentPage.icon} alt={`Page icon`} />
+                            </IconContainer>
+                        ) : null}
 
-                    {currentPage.title ? <ModalTitle>{translate(currentPage.title)}</ModalTitle> : null}
-                </Header>
+                        <ModalTitle>{translate(currentPage.title)}</ModalTitle>
+                    </Header>
+                ) : null}
 
                 {currentPage.description ? <ModalParagraph>{translate(currentPage.description)}</ModalParagraph> : null}
 
@@ -107,7 +109,7 @@ const Item: React.FC<{
 };
 
 export const HomePage: React.FC = () => {
-    const { setAppState, hasSettingsAccess } = useAppContext();
+    const { setAppState, hasSettingsAccess, modules } = useAppContext();
 
     const [history, updateHistory] = useState<LandingPageNode[]>([]);
 
@@ -147,8 +149,42 @@ export const HomePage: React.FC = () => {
     );
 
     const currentPage = useMemo<LandingNode>(() => {
-        return history[0] ?? TempLandingPage;
-    }, [history]);
+        return (
+            history[0] ?? {
+                ...TempLandingPage,
+                children: [
+                    ...TempLandingPage.children,
+                    {
+                        id: "all-modules",
+                        type: "module-group",
+                        level: 1,
+                        icon: undefined,
+                        title: {
+                            key: "data-entry-generic-title",
+                            referenceValue: "All modules",
+                            translations: {},
+                        },
+                        description: {
+                            key: "data-entry-generic-description",
+                            referenceValue: "Select a module below to learn how to use applications in DHIS2:",
+                            translations: {},
+                        },
+                        children: modules.map(module => ({
+                            id: module.id,
+                            type: "module",
+                            level: 1,
+                            moduleId: module.id,
+                            name: module.name,
+                            title: undefined,
+                            description: undefined,
+                            children: undefined,
+                            icon: undefined,
+                        })),
+                    },
+                ],
+            }
+        );
+    }, [history, modules]);
 
     const isRoot = history.length === 0;
 
@@ -171,9 +207,6 @@ export const HomePage: React.FC = () => {
                         <ModalTitle bold={true} big={true}>
                             {i18n.t("Welcome to training on DHIS2")}
                         </ModalTitle>
-                        <ModalParagraph size={28} align={"left"}>
-                            {i18n.t("What do you want to learn in DHIS2?")}
-                        </ModalParagraph>
                     </React.Fragment>
                 ) : null}
 

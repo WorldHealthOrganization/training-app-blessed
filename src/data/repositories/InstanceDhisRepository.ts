@@ -1,11 +1,11 @@
 import FileType from "file-type/browser";
-import reduce from "image-blob-reduce";
+import Resizer from "react-image-file-resizer";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
 import { cache, clearCache } from "../../utils/cache";
-import { getD2APiFromInstance } from "../utils/d2-api";
 import { UserSearch } from "../entities/SearchUser";
+import { getD2APiFromInstance } from "../utils/d2-api";
 
 export class InstanceDhisRepository implements InstanceRepository {
     private api: D2Api;
@@ -18,7 +18,7 @@ export class InstanceDhisRepository implements InstanceRepository {
         const type = await FileType.fromBuffer(data);
         const { mime = "application/unknown" } = type ?? {};
         const blob = new Blob([data], { type: mime });
-        const resized = mime.startsWith("image") ? await reduce().toBlob(blob, { max: 1000 }) : blob;
+        const resized = mime.startsWith("image") ? await resizeFile(blob) : blob;
 
         const { id } = await this.api.files
             .upload({
@@ -75,3 +75,9 @@ export class InstanceDhisRepository implements InstanceRepository {
         }
     }
 }
+
+const resizeFile = (file: Blob): Promise<Blob> => {
+    return new Promise(resolve => {
+        Resizer.imageFileResizer(file, 300, 300, "JPEG", 100, 0, blob => resolve(blob as Blob), "blob");
+    });
+};

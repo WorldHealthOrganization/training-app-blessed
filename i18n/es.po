@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-01T17:53:19.186Z\n"
+"POT-Creation-Date: 2021-03-01T18:31:02.361Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,21 +168,21 @@ msgstr ""
 msgid "Add module"
 msgstr "Añadir modulo"
 
-msgid "Edit module"
-msgstr "Editar modulo"
-
-msgid "Delete module"
-msgstr "Eliminar modulo"
-
 msgid "Add step"
 msgstr ""
 
 msgid "Add page"
 msgstr ""
 
+msgid "Edit module"
+msgstr "Editar modulo"
+
 #, fuzzy
 msgid "Edit page"
 msgstr "Bienvenido"
+
+msgid "Delete module"
+msgstr "Eliminar modulo"
 
 msgid "Push local translations to POEditor"
 msgstr ""
@@ -297,9 +297,6 @@ msgid "Finish"
 msgstr ""
 
 msgid "Welcome to training on DHIS2"
-msgstr ""
-
-msgid "What do you want to learn in DHIS2?"
 msgstr ""
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"

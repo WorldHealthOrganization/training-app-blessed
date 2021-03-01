@@ -49,7 +49,7 @@ export const MarkdownViewer = styled(Viewer)`
     }
 
     details > summary::before {
-        content: url(../img/note.svg);
+        content: url(./img/note.svg);
         margin-right: 20px;
         top: 3px;
         position: relative;
