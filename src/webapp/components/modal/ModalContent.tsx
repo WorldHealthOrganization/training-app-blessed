@@ -27,20 +27,63 @@ export const ModalContent = styled(ModalContentBase)`
     overflow-y: scroll;
     overflow-y: overlay;
     scrollbar-width: thin;
-    scrollbar-color: #fff transparent;
+    scrollbar-color: #fff #6894b5;
+
+    * {
+        margin-right: 10px;
+    }
 
     ::-webkit-scrollbar {
-        width: 7px;
+        width: 20px;
     }
 
     ::-webkit-scrollbar-track {
+        width: 4px !important;
         background: rgba(255, 255, 255, 0.3);
-        border-radius: 6px;
+        border: 6px solid transparent;
+        border-radius: 10px;
+        background-clip: content-box;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #fff;
-        border-radius: 6px;
+        background-color: #fff;
+        border: 6px solid transparent;
+        border-radius: 10px;
+        background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-button {
+        display: block;
+        color: #fff;
+        height: 40px;
+        width: 20px;
+    }
+
+    ::-webkit-scrollbar-button:vertical:increment {
+        background: url(../img/arrow-down.svg) no-repeat 50% 50%;
+        background-size: contain;
+        color: #fff;
+        display: block;
+        height: 40px;
+        width: 20px !important;
+        margin-top: 10px;
+    }
+
+    ::-webkit-scrollbar-button:vertical:decrement {
+        background: url(../img/arrow-up.svg) no-repeat 50% 50%;
+        background-size: contain;
+        color: #fff;
+        display: block;
+        height: 40px;
+        width: 20px !important;
+        margin-bottom: 10px;
+    }
+
+    ::-webkit-scrollbar-button:vertical:start:increment,
+    ::-webkit-scrollbar-button:vertical:end:decrement,
+    ::-webkit-scrollbar-button:horizontal:end:increment,
+    ::-webkit-scrollbar-button:horizontal:end:decrement {
+        display: none;
     }
 `;
 
