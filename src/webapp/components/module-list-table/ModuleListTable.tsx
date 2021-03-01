@@ -377,7 +377,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>add</Icon>,
                 onClick: addStep,
                 isActive: rows => {
-                    return !!tableActions.addStep && _.every(rows, item => item.rowType === "module");
+                    return !!tableActions.addStep && _.every(rows, item => item.rowType === "module" && item.editable);
                 },
             },
             {
@@ -386,7 +386,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>add</Icon>,
                 onClick: addPage,
                 isActive: rows => {
-                    return !!tableActions.addPage && _.every(rows, item => item.rowType === "step");
+                    return !!tableActions.addPage && _.every(rows, item => item.rowType === "step" && item.editable);
                 },
             },
             {
@@ -421,7 +421,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 isActive: rows => {
                     return (
                         !!tableActions.deleteModules &&
-                        _.every(rows, item => item.rowType === "module" && item.type !== "core")
+                        _.every(rows, item => item.rowType === "module" && item.type !== "core" && item.editable)
                     );
                 },
             },
@@ -433,7 +433,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 multiple: true,
                 onClick: deleteStep,
                 isActive: rows => {
-                    return !!tableActions.deleteStep && _.every(rows, item => item.rowType === "step");
+                    return !!tableActions.deleteStep && _.every(rows, item => item.rowType === "step" && item.editable);
                 },
             },
             {
@@ -443,7 +443,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 multiple: true,
                 onClick: deletePage,
                 isActive: rows => {
-                    return !!tableActions.deletePage && _.every(rows, item => item.rowType === "page");
+                    return !!tableActions.deletePage && _.every(rows, item => item.rowType === "page" && item.editable);
                 },
             },
             {
@@ -498,7 +498,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 isActive: rows => {
                     return (
                         !!tableActions.resetModules &&
-                        _.every(rows, item => item.rowType === "module" && item.type === "core")
+                        _.every(rows, item => item.rowType === "module" && item.type === "core" && item.editable)
                     );
                 },
             },
