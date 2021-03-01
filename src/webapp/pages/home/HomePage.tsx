@@ -110,7 +110,7 @@ const StyledModal = styled(Modal)`
     }
 
     ${ModalTitle} {
-        margin: 10px 20px 45px;
+        margin: 20px 20px 45px;
     }
 `;
 
@@ -127,6 +127,6 @@ const SpinnerWrapper = styled.div`
 
 const LogoContainer = styled.div`
     img {
-        margin: 10px;
+        margin: 0 30px;
     }
 `;
