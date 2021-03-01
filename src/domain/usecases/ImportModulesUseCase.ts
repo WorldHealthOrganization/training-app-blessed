@@ -5,7 +5,6 @@ export class ImportModulesUseCase implements UseCase {
     constructor(private trainingModuleRepository: TrainingModuleRepository) {}
 
     public async execute(zips: unknown[]): Promise<void> {
-        // TODO
-        console.log(zips, this.trainingModuleRepository);
+        console.error("Not implemented yet", this.trainingModuleRepository, zips);
     }
 }

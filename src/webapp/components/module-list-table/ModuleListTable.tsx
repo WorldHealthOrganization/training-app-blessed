@@ -202,8 +202,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             if (!tableActions.swap || rowIndex === -1 || rowIndex === 0 || !row) return;
 
             const { id: prevRowId } = allRows[rowIndex - 1] ?? {};
-            if (prevRowId && ids[0] && row.moduleId) {
-                await tableActions.swap({ id: row.moduleId, type: row.rowType, from: ids[0], to: prevRowId });
+            const moduleId = row.rowType === "module" ? row.id : row.moduleId;
+            if (prevRowId && ids[0] && moduleId) {
+                await tableActions.swap({ id: moduleId, type: row.rowType, from: ids[0], to: prevRowId });
             }
 
             await refreshRows();
@@ -219,8 +220,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             if (!tableActions.swap || rowIndex === -1 || rowIndex === allRows.length - 1 || !row) return;
 
             const { id: nextRowId } = allRows[rowIndex + 1] ?? {};
-            if (nextRowId && ids[0] && row.moduleId) {
-                await tableActions.swap({ id: row.moduleId, type: row.rowType, from: ids[0], to: nextRowId });
+            const moduleId = row.rowType === "module" ? row.id : row.moduleId;
+            if (nextRowId && ids[0] && moduleId) {
+                await tableActions.swap({ id: moduleId, type: row.rowType, from: ids[0], to: nextRowId });
             }
 
             await refreshRows();

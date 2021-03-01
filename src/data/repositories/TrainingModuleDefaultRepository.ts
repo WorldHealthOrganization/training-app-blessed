@@ -128,7 +128,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
 
         const blob = await zip.generateAsync({ type: "blob" });
-        const date = moment().format("DDMMYYYY");
+        const date = moment().format("YYYYMMDDHHmm");
         FileSaver.saveAs(blob, `training-modules-${date}.zip`);
     }
 

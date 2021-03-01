@@ -98,7 +98,10 @@ export const SettingsPage: React.FC = () => {
             deleteModules: ({ ids }) => usecases.modules.delete(ids),
             resetModules: ({ ids }) => usecases.modules.resetDefaultValue(ids),
             swap: async ({ type, id, from, to }) => {
-                if (type === "module") await usecases.modules.swapOrder(from, to);
+                if (type === "module") {
+                    await usecases.modules.swapOrder(from, to);
+                    return;
+                }
 
                 const module = await usecases.modules.get(id);
                 if (module) await usecases.modules.update(updateOrder(module, from, to));
