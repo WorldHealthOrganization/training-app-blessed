@@ -19,7 +19,7 @@ export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = props =
     const onStepChangeRequest = async (_currentStep: WizardStep, newStep: WizardStep) => {
         const index = _(steps).findIndex(step => step.key === newStep.key);
         return _.take(steps, index).flatMap(({ validationKeys }) =>
-            validateModel(module, trainingModuleValidations, validationKeys).map(({ description }) => description)
+            validateModel(props.module, trainingModuleValidations, validationKeys).map(({ description }) => description)
         );
     };
 

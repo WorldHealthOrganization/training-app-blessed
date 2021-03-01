@@ -26,7 +26,7 @@ export const moduleCreationWizardSteps: ModuleCreationWizardStep[] = [
         key: "general-info",
         label: i18n.t("General info"),
         component: GeneralInfoStep,
-        validationKeys: [],
+        validationKeys: ["id", "name.referenceValue"],
     },
     {
         key: "contents",

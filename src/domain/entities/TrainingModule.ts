@@ -82,7 +82,18 @@ export const isValidTrainingType = (type: string): type is TrainingModuleType =>
     return ["app", "core", "widget"].includes(type);
 };
 
-export const trainingModuleValidations: ModelValidation[] = [];
+export const trainingModuleValidations: ModelValidation[] = [
+    {
+        property: "id",
+        validation: "hasValue",
+        alias: "code",
+    },
+    {
+        property: "name.referenceValue",
+        validation: "hasValue",
+        alias: "name",
+    },
+];
 
 export const defaultTrainingModule: PartialTrainingModule = {
     id: "",
