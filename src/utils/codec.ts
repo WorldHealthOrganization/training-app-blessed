@@ -6,6 +6,7 @@ import {
     Either,
     enumeration,
     exactly,
+    identity,
     intersect,
     lazy,
     Left,
@@ -60,6 +61,12 @@ const booleanFromString = Codec.custom<boolean>({
     encode: value => `${value}`,
 });
 
+const undefinedType = Codec.custom<undefined>({
+    decode: value => (value === undefined ? Right(value) : Left(`${value} is not undefined`)),
+    encode: identity,
+    schema: () => ({ type: "null" }),
+});
+
 // Short and long HEX color format
 const colorRegExp = /^#[0-9a-fA-F]{3,6}$/;
 
@@ -86,6 +93,7 @@ export const Schema = {
     numberBetween: NumberRangedIn,
     boolean: booleanFromString,
     null: nullType,
+    undefined: undefinedType,
     unknown,
     date,
     formattedDate: FormattedStringFromDate,

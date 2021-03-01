@@ -1,27 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
+import { LandingNode, LandingPageNode, TempLandingPage } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { BigCard } from "../../components/card-board/BigCard";
 import { Cardboard } from "../../components/card-board/Cardboard";
 import { Modal, ModalContent, ModalParagraph, ModalTitle } from "../../components/modal";
-import { Spinner } from "../../components/spinner/Spinner";
 import { useAppContext } from "../../contexts/app-context";
 
-export const HomePage = () => {
-    const { setAppState, modules, reload, hasSettingsAccess, translate } = useAppContext();
+export const HomePage: React.FC = () => {
+    const { translate, modules, setAppState, hasSettingsAccess } = useAppContext();
 
-    const [loading, setLoading] = useState(true);
-
-    const loadModule = useCallback(
-        (module: string, step: number) => {
-            if (step > 1) {
-                setAppState({ type: "TRAINING", state: "OPEN", module, step, content: 1 });
-            } else {
-                setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
-            }
-        },
-        [setAppState]
-    );
+    const [history, updateHistory] = useState<LandingPageNode[]>([]);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -35,65 +24,110 @@ export const HomePage = () => {
         setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
-    useEffect(() => {
-        reload().then(() => setLoading(false));
-    }, [reload]);
+    const openPage = useCallback((page: LandingPageNode) => {
+        updateHistory(history => [page, ...history]);
+    }, []);
+
+    const goBack = useCallback(() => {
+        updateHistory(history => history.slice(1));
+    }, []);
+
+    const goHome = useCallback(() => {
+        updateHistory([]);
+    }, []);
+
+    const loadModule = useCallback(
+        (module: string, step: number) => {
+            if (step > 1) {
+                setAppState({ type: "TRAINING", state: "OPEN", module, step, content: 1 });
+            } else {
+                setAppState({ type: "TRAINING_DIALOG", dialog: "welcome", module });
+            }
+        },
+        [setAppState]
+    );
+
+    const currentPage = useMemo<LandingNode>(() => {
+        return history[0] ?? TempLandingPage;
+    }, [history]);
+
+    const isRoot = history.length === 0;
+    const rowSize = isRoot || currentPage.type === "module-group" ? 3 : 5;
 
     return (
-        <React.Fragment>
-            <StyledModal
-                onSettings={hasSettingsAccess ? openSettings : undefined}
-                onMinimize={minimize}
-                onClose={exitTutorial}
-                centerChildren={true}
-            >
-                <ContentWrapper>
-                    <LogoContainer>
-                        <img src="img/logo-dhis.svg" alt="DHIS2" />
-                        <img src="img/logo-who.svg" alt="World Health Organization" />
-                    </LogoContainer>
+        <StyledModal
+            onSettings={hasSettingsAccess ? openSettings : undefined}
+            onMinimize={minimize}
+            onClose={exitTutorial}
+            onGoBack={!isRoot ? goBack : undefined}
+            onGoHome={!isRoot ? goHome : undefined}
+            centerChildren={true}
+        >
+            <ContentWrapper>
+                {isRoot ? (
+                    <React.Fragment>
+                        <LogoContainer>
+                            <img src="img/logo-dhis.svg" alt="DHIS2" />
+                            <img src="img/logo-who.svg" alt="World Health Organization" />
+                        </LogoContainer>
+                        <ModalTitle bold={true} big={true}>
+                            {i18n.t("Welcome to training on DHIS2")}
+                        </ModalTitle>
+                        <ModalParagraph size={28} align={"left"}>
+                            {i18n.t("What do you want to learn in DHIS2?")}
+                        </ModalParagraph>
+                    </React.Fragment>
+                ) : null}
 
-                    <ModalTitle bold={true} big={true}>
-                        {i18n.t("Welcome to training on DHIS2")}
-                    </ModalTitle>
-                    <ModalParagraph size={28} align={"left"}>
-                        {i18n.t("What do you want to learn in DHIS2?")}
-                    </ModalParagraph>
+                {currentPage.title ? <ModalTitle>{translate(currentPage.title)}</ModalTitle> : null}
+                {currentPage.description ? <ModalParagraph>{translate(currentPage.description)}</ModalParagraph> : null}
 
-                    <ModalContent>
-                        {loading ? (
-                            <SpinnerWrapper>
-                                <Spinner />
-                            </SpinnerWrapper>
-                        ) : (
-                            <Cardboard rowSize={3}>
-                                {modules
-                                    .filter(module => module.installed === true)
-                                    .map(({ name, id, icon, progress, disabled, contents }, idx) => {
-                                        const { lastStep, completed } = progress;
-                                        const percentage = Math.round((lastStep / contents.steps.length) * 100);
+                <ModalContent>
+                    <Cardboard rowSize={rowSize}>
+                        {currentPage.type === "module-group" &&
+                            currentPage.children.map((item, idx) => {
+                                const module = modules.find(({ id }) => item.type === "module" && id === item.moduleId);
 
-                                        const handleClick = () => {
-                                            loadModule(id, completed ? 0 : lastStep + 1);
-                                        };
+                                const percentage = module
+                                    ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
+                                    : undefined;
 
-                                        return (
-                                            <BigCard
-                                                key={`card-${idx}`}
-                                                label={translate(name)}
-                                                progress={completed ? 100 : percentage}
-                                                onClick={handleClick}
-                                                disabled={disabled}
-                                                icon={<img src={icon} alt={`Icon for ${name}`} />}
-                                            />
+                                const handleClick = () => {
+                                    if (module) {
+                                        loadModule(
+                                            module.id,
+                                            module.progress.completed ? 0 : module.progress.lastStep + 1
                                         );
-                                    })}
-                            </Cardboard>
-                        )}
-                    </ModalContent>
-                </ContentWrapper>
-            </StyledModal>
-        </React.Fragment>
+                                    }
+                                };
+
+                                return (
+                                    <BigCard
+                                        key={`card-${idx}`}
+                                        label={translate(item.name)}
+                                        progress={module?.progress.completed ? 100 : percentage}
+                                        onClick={handleClick}
+                                        disabled={module?.disabled}
+                                        icon={<img src={module?.icon} alt={`Icon for ${item.name}`} />}
+                                    />
+                                );
+                            })}
+
+                        {currentPage.type === "page-group" &&
+                            currentPage.children.map((item, idx) => {
+                                return (
+                                    <BigCard
+                                        key={`card-${idx}`}
+                                        label={translate(item.name)}
+                                        onClick={() => openPage(item)}
+                                        icon={<img src={item.icon} alt={`Icon for ${translate(item.name)}`} />}
+                                    />
+                                );
+                            })}
+                    </Cardboard>
+                </ModalContent>
+            </ContentWrapper>
+        </StyledModal>
     );
 };
 
@@ -118,13 +152,6 @@ const StyledModal = styled(Modal)`
 
 const ContentWrapper = styled.div`
     padding: 15px;
-`;
-
-const SpinnerWrapper = styled.div`
-    height: 150px;
-    display: flex;
-    place-content: center;
-    align-items: center;
 `;
 
 const LogoContainer = styled.div`

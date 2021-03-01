@@ -1,4 +1,5 @@
 import AddIcon from "@material-ui/icons/Add";
+import BackIcon from "@material-ui/icons/ArrowBack";
 import CloseIcon from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import HomeIcon from "@material-ui/icons/Home";
@@ -14,6 +15,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
     minimized,
     onClose,
     onGoHome,
+    onGoBack,
     onMinimize,
     onSettings,
 }) => {
@@ -28,6 +30,11 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
                 <SettingsButton text={i18n.t("Settings")} placement={"right"}>
                     <SettingsIcon onClick={onSettings} />
                 </SettingsButton>
+            ) : null}
+            {onGoBack ? (
+                <HomeButton text={i18n.t("Back")} placement={"right"}>
+                    <BackIcon onClick={onGoBack} />
+                </HomeButton>
             ) : null}
             {allowDrag ? (
                 <DragButton text={i18n.t("Move window")}>
@@ -59,6 +66,7 @@ export interface ModalHeaderProps {
     onGoHome?: () => void;
     onMinimize?: () => void;
     onSettings?: () => void;
+    onGoBack?: () => void;
 }
 
 const DragButton = styled(Tooltip)`

@@ -10,6 +10,7 @@ export const Modal: React.FC<ModalProps> = ({
     onClose,
     onMinimize,
     onGoHome,
+    onGoBack,
     onSettings,
     minimized,
     allowDrag,
@@ -34,6 +35,7 @@ export const Modal: React.FC<ModalProps> = ({
                         minimized={minimized}
                         onClose={onClose}
                         onGoHome={onGoHome}
+                        onGoBack={onGoBack}
                         onSettings={onSettings}
                         onMinimize={onMinimize}
                         allowDrag={allowDrag}
