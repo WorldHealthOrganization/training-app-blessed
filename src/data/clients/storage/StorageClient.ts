@@ -12,8 +12,7 @@ export abstract class StorageClient {
     public async listObjectsInCollection<T extends Ref>(key: string): Promise<T[]> {
         return (await this.getObject<T[]>(key)) ?? [];
     }
-    //create another one getObjectsInCollection
-    //map ids to find them in the data
+
     public async getObjectInCollection<T extends Ref>(key: string, id: string): Promise<T | undefined> {
         const rawData = (await this.getObject<T[]>(key)) ?? [];
         const baseElement = _.find(rawData, element => element.id === id);
