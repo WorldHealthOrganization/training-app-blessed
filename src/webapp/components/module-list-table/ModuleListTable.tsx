@@ -446,6 +446,7 @@ export interface ListItemModule extends Omit<TrainingModule, "name"> {
 
 export interface ListItemStep {
     id: string;
+    moduleId: string;
     name: string;
     rowType: "step";
     pages: ListItemPage[];
@@ -478,6 +479,7 @@ export const buildListModules = (modules: TrainingModule[]): ListItemModule[] =>
 export const buildListSteps = (module: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
     return steps.map(({ id, title, pages }, stepIdx) => ({
         id,
+        moduleId: module.id,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
