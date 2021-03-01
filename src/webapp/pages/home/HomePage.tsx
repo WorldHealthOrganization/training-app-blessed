@@ -53,7 +53,7 @@ export const HomePage = () => {
                         <img src="img/logo-who.svg" alt="World Health Organization" />
                     </LogoContainer>
 
-                    <ModalTitle bold={true}>{i18n.t("Welcome to training on DHIS2")}</ModalTitle>
+                    <ModalTitle bold={true} big={true}>{i18n.t("Welcome to training on DHIS2")}</ModalTitle>
                     <ModalParagraph size={28} align={"left"}>
                         {i18n.t("What do you want to learn in DHIS2?")}
                     </ModalParagraph>
@@ -110,7 +110,7 @@ const StyledModal = styled(Modal)`
     }
 
     ${ModalTitle} {
-        padding: 15;
+        margin: 10px 20px 45px;
     }
 `;
 
