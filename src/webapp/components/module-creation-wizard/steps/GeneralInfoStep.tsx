@@ -53,7 +53,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                 <TextField
                     disabled={!!isEdit}
                     fullWidth={true}
-                    label={"Code *"}
+                    label={i18n.t("Code *")}
                     value={module.id}
                     onChange={onChangeField("id")}
                     error={!!errors["id"]}
@@ -64,9 +64,9 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
             <Row>
                 <TextField
                     fullWidth={true}
-                    label={"Name *"}
+                    label={i18n.t("Name *")}
                     value={module.name.referenceValue}
-                    onChange={onChangeField("name")}
+                    onChange={event => onChangeTranslation(module.name, event.target.value)}
                     error={!!errors["name"]}
                     helperText={errors["name"]}
                 />
@@ -75,7 +75,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
             <Row>
                 <TextField
                     fullWidth={true}
-                    label={"PoEditor Project id"}
+                    label={i18n.t("PoEditor Project id")}
                     value={module.translation.provider !== "NONE" ? module.translation.project : ""}
                     onChange={onChangeField("translation")}
                 />

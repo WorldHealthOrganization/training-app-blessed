@@ -399,8 +399,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         () => [
             {
                 name: "import",
-                text: i18n.t("Import"),
-                icon: <Icon>import</Icon>,
+                text: i18n.t("Import modules"),
+                icon: <Icon>arrow_upward</Icon>,
                 onClick: openImportDialog,
             },
         ],
@@ -480,7 +480,7 @@ export const buildListSteps = (module: PartialTrainingModule, steps: TrainingMod
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
-        pages: pages.map(({ id, ...value}, pageIdx) => ({
+        pages: pages.map(({ id, ...value }, pageIdx) => ({
             id,
             moduleId: module.id,
             name: `Page ${pageIdx + 1}`,

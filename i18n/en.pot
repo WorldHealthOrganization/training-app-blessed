@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-01T14:49:29.329Z\n"
-"PO-Revision-Date: 2021-03-01T14:49:29.329Z\n"
+"POT-Creation-Date: 2021-03-01T15:33:14.413Z\n"
+"PO-Revision-Date: 2021-03-01T15:33:14.413Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -54,6 +54,15 @@ msgid "Note: The sharing settings are only applied to the current module"
 msgstr ""
 
 msgid "Field must have a value"
+msgstr ""
+
+msgid "Code *"
+msgstr ""
+
+msgid "Name *"
+msgstr ""
+
+msgid "PoEditor Project id"
 msgstr ""
 
 msgid "Welcome page"
@@ -161,7 +170,7 @@ msgstr ""
 msgid "Export module"
 msgstr ""
 
-msgid "Import"
+msgid "Import modules"
 msgstr ""
 
 msgid "Help"
@@ -272,6 +281,9 @@ msgid "Only accessible to system administrators"
 msgstr ""
 
 msgid "Unable to update module contents"
+msgstr ""
+
+msgid "Unable to move item"
 msgstr ""
 
 msgid "Connection with POEditor"

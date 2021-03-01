@@ -125,25 +125,25 @@ export const updateTranslation = (
             steps: module.contents.steps.map(step => ({
                 ...step,
                 title: translate(step.title),
-                pages: step.pages.map(page => ({ ...page, ...translate(page)})),
+                pages: step.pages.map(page => ({ ...page, ...translate(page) })),
             })),
         },
     };
 };
 
-export const updateOrder = (
-    module: PartialTrainingModule,
-    id1: string,
-    id2: string,
-): PartialTrainingModule => {
+export const updateOrder = (module: PartialTrainingModule, id1: string, id2: string): PartialTrainingModule => {
     return {
         ...module,
         contents: {
             ...module.contents,
-            steps: swapById(module.contents.steps.map(step => ({
-                ...step,
-                pages: swapById(step.pages, id1, id2),
-            })), id1, id2),
+            steps: swapById(
+                module.contents.steps.map(step => ({
+                    ...step,
+                    pages: swapById(step.pages, id1, id2),
+                })),
+                id1,
+                id2
+            ),
         },
     };
 };
