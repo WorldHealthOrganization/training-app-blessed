@@ -53,7 +53,9 @@ export const HomePage = () => {
                         <img src="img/logo-who.svg" alt="World Health Organization" />
                     </LogoContainer>
 
-                    <ModalTitle bold={true} big={true}>{i18n.t("Welcome to training on DHIS2")}</ModalTitle>
+                    <ModalTitle bold={true} big={true}>
+                        {i18n.t("Welcome to training on DHIS2")}
+                    </ModalTitle>
                     <ModalParagraph size={28} align={"left"}>
                         {i18n.t("What do you want to learn in DHIS2?")}
                     </ModalParagraph>
@@ -103,8 +105,8 @@ const StyledModal = styled(Modal)`
 
     ${ModalContent} {
         max-width: none;
-        max-height: 60vh;
-        width: 65vw;
+        max-height: 55vh;
+        width: 60vw;
         padding: 0px;
         margin: 0px 10px 20px 10px;
     }
@@ -128,5 +130,6 @@ const SpinnerWrapper = styled.div`
 const LogoContainer = styled.div`
     img {
         margin: 0 30px;
+        user-drag: none;
     }
 `;
