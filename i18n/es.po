@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-01T10:23:20.815Z\n"
+"POT-Creation-Date: 2021-03-01T14:06:03.087Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,6 +77,12 @@ msgstr ""
 msgid "Summary"
 msgstr "Fin"
 
+msgid "Couldn't read the file because it's not valid"
+msgstr ""
+
+msgid "Reading files"
+msgstr ""
+
 msgid "Are you sure you want to delete the selected modules?"
 msgstr ""
 
@@ -113,6 +119,10 @@ msgstr ""
 msgid "Reset app to factory settings"
 msgstr ""
 
+#, fuzzy
+msgid "Exporting module"
+msgstr "Editar modulo"
+
 msgid "Initialize project in POEditor"
 msgstr ""
 
@@ -144,6 +154,16 @@ msgid "Install app"
 msgstr ""
 
 msgid "Restore to factory settings"
+msgstr ""
+
+#, fuzzy
+msgid "Export module"
+msgstr "Editar modulo"
+
+msgid "Import"
+msgstr ""
+
+msgid "Search by name"
 msgstr ""
 
 msgid "Help"

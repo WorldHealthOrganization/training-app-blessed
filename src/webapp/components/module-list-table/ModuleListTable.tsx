@@ -12,13 +12,16 @@ import {
 import { Icon } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import _ from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { FileRejection } from "react-dropzone";
 import styled from "styled-components";
 import { PartialTrainingModule, TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import i18n from "../../../locales";
 import { FlattenUnion } from "../../../utils/flatten-union";
+import { useAppContext } from "../../contexts/app-context";
 import { AlertIcon } from "../alert-icon/AlertIcon";
+import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
 import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
@@ -31,6 +34,7 @@ export interface ModuleListTableProps {
 
 export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const { rows, tableActions, refreshRows = async () => {} } = props;
+    const { usecases } = useAppContext();
 
     const loading = useLoading();
     const snackbar = useSnackbar();
@@ -38,6 +42,25 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const [selection, setSelection] = useState<TableSelection[]>([]);
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
     const [editContentsDialogProps, updateEditContentsDialog] = useState<MarkdownEditorDialogProps | null>(null);
+    const fileRef = useRef<DropzoneRef>(null);
+
+    const handleFileUpload = useCallback(
+        async (files: File[], rejections: FileRejection[]) => {
+            if (files.length === 0 && rejections.length > 0) {
+                snackbar.error(i18n.t("Couldn't read the file because it's not valid"));
+                return;
+            }
+
+            loading.show(true, i18n.t("Reading files"));
+
+            //@ts-ignore TODO FIXME: Add validation
+            await usecases.import(predictors);
+
+            loading.reset();
+            refreshRows();
+        },
+        [usecases, loading, snackbar]
+    );
 
     const deleteModules = useCallback(
         async (ids: string[]) => {
@@ -174,6 +197,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions, loading, refreshRows, snackbar]
     );
 
+    const exportModule = useCallback(
+        async (ids: string[]) => {
+            if (!ids[0]) return;
+            loading.show(true, i18n.t("Exporting module"));
+            await usecases.modules.export(ids);
+            loading.reset();
+        },
+        [loading, usecases]
+    );
     const publishTranslations = useCallback(
         async (ids: string[]) => {
             if (!tableActions.publishTranslations || !ids[0]) return;
@@ -188,6 +220,10 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
         setSelection(selection);
     }, []);
+
+    const openImportDialog = useCallback(async () => {
+        fileRef.current?.openDialog();
+    }, [fileRef]);
 
     const columns: TableColumn<ListItem>[] = useMemo(
         () => [
@@ -320,6 +356,16 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     return !!tableActions.resetModules && _.every(rows, item => item.rowType === "module");
                 },
             },
+            {
+                name: "export-module",
+                text: i18n.t("Export module"),
+                icon: <Icon>get_app</Icon>,
+                onClick: exportModule,
+                isActive: rows => {
+                    return _.every(rows, item => item.rowType === "module");
+                },
+                multiple: true,
+            },
         ],
         [
             tableActions,
@@ -332,7 +378,20 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             publishTranslations,
             addModule,
             resetModules,
+            exportModule,
         ]
+    );
+
+    const globalActions: TableGlobalAction[] = useMemo(
+        () => [
+            {
+                name: "import",
+                text: i18n.t("Import"),
+                icon: <Icon>import</Icon>,
+                onClick: openImportDialog,
+            },
+        ],
+        []
     );
 
     return (
@@ -340,15 +399,22 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {editContentsDialogProps && <MarkdownEditorDialog {...editContentsDialogProps} />}
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 
-            <ObjectsTable<ListItem>
-                rows={rows}
-                columns={columns}
-                actions={actions}
-                selection={selection}
-                onChange={onTableChange}
-                childrenKeys={["steps", "welcome", "pages"]}
-                sorting={{ field: "position", order: "asc" }}
-            />
+            <Dropzone
+                ref={fileRef}
+                accept={"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
+                onDrop={handleFileUpload}
+            >
+                <ObjectsTable<ListItem>
+                    rows={rows}
+                    columns={columns}
+                    actions={actions}
+                    globalActions={globalActions}
+                    selection={selection}
+                    onChange={onTableChange}
+                    childrenKeys={["steps", "welcome", "pages"]}
+                    sorting={{ field: "position", order: "asc" }}
+                />
+            </Dropzone>
         </PageWrapper>
     );
 };
