@@ -1,6 +1,6 @@
 import i18n from "@eyeseetea/d2-ui-components/locales";
 import { TextField } from "@material-ui/core";
-import { Dictionary } from "lodash";
+import _, { Dictionary } from "lodash";
 import React, { useCallback, useState } from "react";
 import { FileRejection } from "react-dropzone";
 import styled from "styled-components";
@@ -23,6 +23,13 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
         (field: keyof TrainingModule) => {
             return (event: React.ChangeEvent<{ value: unknown }>) => {
                 switch (field) {
+                    case "id": {
+                        const id = event.target.value as string;
+                        onChange(module => {
+                            return { ...module, id: _.kebabCase(id) };
+                        });
+                        return;
+                    }
                     case "translation": {
                         const project = event.target.value as string;
                         onChange(module => {
@@ -101,9 +108,17 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
             <Row style={{ marginBottom: 80 }}>
                 <h3>{i18n.t("Icon")}</h3>
 
-                <Dropzone visible={true} onDrop={handleFileUpload} maxFiles={1}>
-                    <div style={{ height: 100 }}></div>
-                </Dropzone>
+                <div style={{ display: "flex" }}>
+                    {module.icon ? (
+                        <IconContainer>
+                            <img src={module.icon} alt={`Module icon`} />
+                        </IconContainer>
+                    ) : null}
+
+                    <Dropzone visible={true} onDrop={handleFileUpload} maxFiles={1}>
+                        <Space />
+                    </Dropzone>
+                </div>
             </Row>
 
             <Row>
@@ -139,3 +154,22 @@ const StepPreview: React.FC<{
         </StyledModalBody>
     );
 };
+
+const IconContainer = styled.div`
+    margin-right: 60px;
+    flex-shrink: 0;
+    height: 12vh;
+    width: 12vh;
+
+    img {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        user-drag: none;
+    }
+`;
+
+const Space = styled.div`
+    height: 100px;
+    min-width: 500px;
+`;

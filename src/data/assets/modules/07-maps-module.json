@@ -6,7 +6,7 @@
     "name": { "key": "module-name", "referenceValue": "Maps", "translations": {} },
     "icon": "https://user-images.githubusercontent.com/2181866/109413207-7e959480-79ac-11eb-9348-44df80ed6d64.png",
     "type": "core",
-    "revision": 3,
+    "revision": 4,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-maps/index.html",
     "dhisAuthorities": ["M_dhis-web-maps"],

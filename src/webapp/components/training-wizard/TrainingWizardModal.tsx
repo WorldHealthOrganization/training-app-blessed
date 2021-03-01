@@ -24,6 +24,7 @@ const StyledModal = styled(Modal)`
     margin: 6px;
     bottom: 20px;
     right: 40px;
+    min-width: 600px;
 
     .MuiPaper-root {
         padding: ${({ minimized }) => (minimized ? "35px 0px 20px" : "inherit")};

@@ -159,6 +159,11 @@ export const HomePage: React.FC = () => {
                         type: "module-group",
                         level: 1,
                         icon: undefined,
+                        name: {
+                            key: "data-entry-generic-title",
+                            referenceValue: "All modules",
+                            translations: {},
+                        },
                         title: {
                             key: "data-entry-generic-title",
                             referenceValue: "All modules",

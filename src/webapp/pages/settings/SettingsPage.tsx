@@ -2,6 +2,7 @@ import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
 import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { TempLandingPage } from "../../../domain/entities/LandingPage";
 import { Permission } from "../../../domain/entities/Permission";
 import {
     addPage,
@@ -208,7 +209,7 @@ export const SettingsPage: React.FC = () => {
 
                 <Title>{i18n.t("Landing page")}</Title>
 
-                <LandingPageTreeView />
+                <LandingPageTreeView root={TempLandingPage} />
 
                 <Title>{i18n.t("Training modules")}</Title>
 

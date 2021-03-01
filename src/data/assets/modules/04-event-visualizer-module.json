@@ -6,7 +6,7 @@
     "name": { "key": "module-name", "referenceValue": "Event Visualizer", "translations": {} },
     "icon": "https://user-images.githubusercontent.com/2181866/109413200-7d646780-79ac-11eb-9b5f-e5d4e2c2b311.png",
     "type": "core",
-    "revision": 3,
+    "revision": 4,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-event-visualizer/index.html",
     "dhisAuthorities": ["M_dhis-web-event-visualizer"],

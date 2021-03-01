@@ -54,6 +54,7 @@ export const PageGroupNodeModel = Schema.extend(
     BaseNodeModel,
     Schema.object({
         type: Schema.exact("page-group"),
+        name: TranslatableTextModel,
         icon: Schema.undefined,
         title: Schema.optional(TranslatableTextModel),
         description: Schema.optional(TranslatableTextModel),
@@ -65,6 +66,7 @@ export const ModuleGroupNodeModel = Schema.extend(
     BaseNodeModel,
     Schema.object({
         type: Schema.exact("module-group"),
+        name: TranslatableTextModel,
         icon: Schema.undefined,
         title: Schema.optional(TranslatableTextModel),
         description: Schema.optional(TranslatableTextModel),
@@ -93,6 +95,11 @@ export const TempLandingPage: LandingPageNode = {
             type: "page-group",
             level: 1,
             icon: undefined,
+            name: {
+                key: "data-entry-description",
+                referenceValue: "Root",
+                translations: {},
+            },
             title: undefined,
             description: {
                 key: "data-entry-description",
@@ -119,6 +126,11 @@ export const TempLandingPage: LandingPageNode = {
                             type: "page-group",
                             level: 1,
                             icon: undefined,
+                            name: {
+                                key: "data-entry-activities-title",
+                                referenceValue: "Training for activity-related data entry",
+                                translations: {},
+                            },
                             title: {
                                 key: "data-entry-activities-title",
                                 referenceValue: "Training for activity-related data entry",
@@ -159,6 +171,11 @@ export const TempLandingPage: LandingPageNode = {
                                                 referenceValue: "Learn to enter insecticide resistance data",
                                                 translations: {},
                                             },
+                                            name: {
+                                                key: "insecticide-resistance-page-title",
+                                                referenceValue: "Learn to enter insecticide resistance data",
+                                                translations: {},
+                                            },
                                             description: undefined,
                                             children: [
                                                 {
@@ -187,6 +204,11 @@ export const TempLandingPage: LandingPageNode = {
                                                             id: "discriminating-concentration-bioassay-module",
                                                             type: "module-group",
                                                             level: 1,
+                                                            name: {
+                                                                key: "insecticide-resistance-group-name",
+                                                                referenceValue: "Discriminating Concentration Bioassay",
+                                                                translations: {},
+                                                            },
                                                             title: {
                                                                 key: "insecticide-resistance-group-name",
                                                                 referenceValue: "Discriminating Concentration Bioassay",
@@ -209,6 +231,11 @@ export const TempLandingPage: LandingPageNode = {
                             type: "module-group",
                             level: 1,
                             icon: undefined,
+                            name: {
+                                key: "data-entry-generic-title",
+                                referenceValue: "Generic training for data entry",
+                                translations: {},
+                            },
                             title: {
                                 key: "data-entry-generic-title",
                                 referenceValue: "Generic training for data entry",

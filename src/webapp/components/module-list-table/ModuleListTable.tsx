@@ -56,15 +56,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 return;
             }
 
-            loading.show(true, i18n.t("Reading files"));
-
-            // TODO FIXME: Add validation
-            await usecases.modules.import(files);
-
-            loading.reset();
-            refreshRows();
+            snackbar.info("Import not implemented yet");
         },
-        [usecases, loading, snackbar, refreshRows]
+        [snackbar]
     );
 
     const deleteModules = useCallback(
@@ -248,17 +242,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
                 onCancel: () => updateMarkdownDialog(null),
                 onSave: async value => {
-                    if (tableActions.editContents && row.value && row.moduleId) {
-                        await tableActions.editContents({ id: row.moduleId, text: row.value, value });
-                    } else {
-                        snackbar.error(i18n.t("Unable to update contents"));
-                    }
-
                     updateMarkdownDialog(null);
+                    if (!tableActions.editContents || !row.value || !row.moduleId) return;
+                    
+                    await tableActions.editContents({ id: row.moduleId, text: row.value, value });
+                    await refreshRows();
                 },
             });
         },
-        [tableActions, rows, snackbar]
+        [tableActions, rows, refreshRows]
     );
 
     const installApp = useCallback(
@@ -553,11 +545,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <Dropzone
-                ref={fileRef}
-                accept={"application/json"}
-                onDrop={handleFileUpload}
-            >
+            <Dropzone ref={fileRef} accept={"application/json"} onDrop={handleFileUpload}>
                 <ObjectsTable<ListItem>
                     rows={rows}
                     columns={columns}

@@ -3,29 +3,25 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
 import React from "react";
 import styled from "styled-components";
+import { LandingNode } from "../../../domain/entities/LandingPage";
 
-export const LandingPageTreeView: React.FC = () => {
+export const LandingPageTreeView: React.FC<{ root: LandingNode }> = ({ root }) => {
     return (
         <StyledTreeView
             defaultExpanded={["1"]}
             defaultCollapseIcon={<MinusSquare />}
             defaultExpandIcon={<PlusSquare />}
         >
-            <StyledTreeItem nodeId="1" label="Main">
-                <StyledTreeItem nodeId="2" label="Hello" />
-                <StyledTreeItem nodeId="3" label="Subtree with children">
-                    <StyledTreeItem nodeId="6" label="Hello" />
-                    <StyledTreeItem nodeId="7" label="Sub-subtree with children">
-                        <StyledTreeItem nodeId="9" label="Child 1" />
-                        <StyledTreeItem nodeId="10" label="Child 2" />
-                        <StyledTreeItem nodeId="11" label="Child 3" />
-                    </StyledTreeItem>
-                    <StyledTreeItem nodeId="8" label="Hello" />
-                </StyledTreeItem>
-                <StyledTreeItem nodeId="4" label="World" />
-                <StyledTreeItem nodeId="5" label="Something something" />
-            </StyledTreeItem>
+            <LandingPageTreeItem node={root} />
         </StyledTreeView>
+    );
+};
+
+export const LandingPageTreeItem: React.FC<{ node: any }> = ({ node }) => {
+    return (
+        <StyledTreeItem nodeId={node.id} label={node.name?.referenceValue ?? "foo"}>
+            {node.children?.map((subnode: any) => <LandingPageTreeItem key={subnode.id} node={subnode} />)}
+        </StyledTreeItem>
     );
 };
 

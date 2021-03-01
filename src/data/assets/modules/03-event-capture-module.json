@@ -6,7 +6,7 @@
     "name": { "key": "module-name", "referenceValue": "Capture", "translations": {} },
     "icon": "https://user-images.githubusercontent.com/2181866/109413195-7c333a80-79ac-11eb-811a-e1c75268df83.png",
     "type": "core",
-    "revision": 3,
+    "revision": 4,
     "dhisVersionRange": "",
     "dhisLaunchUrl": "/dhis-web-capture/index.html",
     "dhisAuthorities": ["M_dhis-web-capture"],
