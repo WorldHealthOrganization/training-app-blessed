@@ -34,7 +34,7 @@ export const AccessStep: React.FC<ModuleCreationWizardStepProps> = ({
         <React.Fragment>
             <Sharing
                 meta={{
-                    meta: { allowPublicAccess: false, allowExternalAccess: false },
+                    meta: { allowPublicAccess: true, allowExternalAccess: false },
                     object: {
                         id: module.id,
                         displayName: module.name.referenceValue,
@@ -42,7 +42,13 @@ export const AccessStep: React.FC<ModuleCreationWizardStepProps> = ({
                         userGroupAccesses: mapSharingRules(module.userGroupAccesses),
                     },
                 }}
-                showOptions={showOptions}
+                showOptions={{
+                    title: false,
+                    dataSharing: false,
+                    publicSharing: true,
+                    externalSharing: false,
+                    permissionPicker: true,
+                }}
                 onSearch={search}
                 onChange={setModuleSharing}
             />
@@ -71,12 +77,4 @@ const mapSharingRules = (settings?: SharingSetting[]): SharingRule[] | undefined
     return settings?.map(item => {
         return { id: item.id, access: item.access, displayName: item.name };
     });
-};
-
-const showOptions = {
-    title: false,
-    dataSharing: true,
-    publicSharing: false,
-    externalSharing: false,
-    permissionPicker: false,
 };
