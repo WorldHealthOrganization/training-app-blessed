@@ -14,7 +14,7 @@ import {
 } from "../../../domain/helpers/TrainingModuleHelpers";
 import i18n from "../../../locales";
 import { ComponentParameter } from "../../../types/utils";
-import { LandingPageTreeView } from "../../components/landing-page-tree-view/LandingPageTreeView";
+import { LandingPageListTable } from "../../components/landing-page-list-table/LandingPageListTable";
 import { buildListModules, ModuleListTable } from "../../components/module-list-table/ModuleListTable";
 import { PageHeader } from "../../components/page-header/PageHeader";
 import { PermissionsDialog, SharedUpdate } from "../../components/permissions-dialog/PermissionsDialog";
@@ -212,7 +212,7 @@ export const SettingsPage: React.FC = () => {
 
                 <Title>{i18n.t("Landing page")}</Title>
 
-                <LandingPageTreeView root={TempLandingPage} />
+                <LandingPageListTable nodes={[TempLandingPage]} />
 
                 <Title>{i18n.t("Training modules")}</Title>
 

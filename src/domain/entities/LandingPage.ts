@@ -46,7 +46,6 @@ export const ModuleNodeModel = Schema.extend(
         title: Schema.undefined,
         description: Schema.undefined,
         moduleId: Schema.string,
-        children: Schema.undefined,
     })
 );
 
@@ -127,7 +126,7 @@ export const TempLandingPage: LandingPageNode = {
                             level: 1,
                             icon: undefined,
                             name: {
-                                key: "data-entry-activities-title",
+                                key: "data-entry-activities-name",
                                 referenceValue: "Training for activity-related data entry",
                                 translations: {},
                             },
@@ -162,17 +161,17 @@ export const TempLandingPage: LandingPageNode = {
                                     description: undefined,
                                     children: [
                                         {
-                                            id: "insecticide-resistance-page",
+                                            id: "insecticide-resistance-page-group",
                                             type: "page-group",
                                             icon: undefined,
                                             level: 1,
                                             title: {
-                                                key: "insecticide-resistance-page-title",
+                                                key: "insecticide-resistance-page-group-title",
                                                 referenceValue: "Learn to enter insecticide resistance data",
                                                 translations: {},
                                             },
                                             name: {
-                                                key: "insecticide-resistance-page-title",
+                                                key: "insecticide-resistance-page-group-name",
                                                 referenceValue: "Learn to enter insecticide resistance data",
                                                 translations: {},
                                             },
@@ -260,7 +259,6 @@ export const TempLandingPage: LandingPageNode = {
                                     },
                                     title: undefined,
                                     description: undefined,
-                                    children: undefined,
                                     icon: undefined,
                                 },
                             ],
