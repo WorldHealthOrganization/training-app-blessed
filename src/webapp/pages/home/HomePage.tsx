@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { LandingNode, LandingPageNode } from "../../../domain/entities/LandingPage";
+import { LandingNode } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { BigCard } from "../../components/card-board/BigCard";
 import { Cardboard } from "../../components/card-board/Cardboard";
@@ -10,7 +10,7 @@ import { useAppContext } from "../../contexts/app-context";
 const Item: React.FC<{
     currentPage: LandingNode;
     isRoot?: boolean;
-    openPage: (page: LandingPageNode) => void;
+    openPage: (page: LandingNode) => void;
     openModule: (module: string, step: number) => void;
 }> = props => {
     const { currentPage, isRoot, openModule, openPage } = props;
@@ -115,7 +115,7 @@ const Item: React.FC<{
 export const HomePage: React.FC = () => {
     const { setAppState, hasSettingsAccess, modules, landings } = useAppContext();
 
-    const [history, updateHistory] = useState<LandingPageNode[]>([]);
+    const [history, updateHistory] = useState<LandingNode[]>([]);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -129,7 +129,7 @@ export const HomePage: React.FC = () => {
         setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
-    const openPage = useCallback((page: LandingPageNode) => {
+    const openPage = useCallback((page: LandingNode) => {
         updateHistory(history => [page, ...history]);
     }, []);
 

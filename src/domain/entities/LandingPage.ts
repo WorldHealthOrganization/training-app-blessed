@@ -10,60 +10,26 @@ export const LandingPageNodeTypeModel = Schema.oneOf([
 
 export type LandingNodeType = GetSchemaType<typeof LandingPageNodeTypeModel>;
 
-export interface PageNode {
+export interface LandingNode {
     id: string;
-    type: "page";
+    parent: string;
+    type: LandingNodeType;
     name: TranslatableText;
     icon: string;
     title: TranslatableText | undefined;
     description: TranslatableText | undefined;
-    children: LandingGroupNode[];
+    children: LandingNode[];
+    moduleId: string;
 }
 
-export const PageNodeModel: Codec<PageNode> = Schema.object({
+export const LandingNodeModel: Codec<LandingNode> = Schema.object({
     id: Schema.string,
-    type: Schema.exact("page"),
+    parent: Schema.string,
+    type: LandingPageNodeTypeModel,
     name: TranslatableTextModel,
-    icon: Schema.string,
+    icon: Schema.optionalSafe(Schema.string, ""),
     title: Schema.optional(TranslatableTextModel),
     description: Schema.optional(TranslatableTextModel),
-    children: Schema.lazy(() => Schema.array(Schema.oneOf([PageGroupNodeModel, ModuleGroupNodeModel]))),
+    children: Schema.lazy(() => Schema.array(LandingNodeModel)),
+    moduleId: Schema.optionalSafe(Schema.string, ""),
 });
-
-export const ModuleNodeModel = Schema.object({
-    id: Schema.string,
-    type: Schema.exact("module"),
-    name: TranslatableTextModel,
-    icon: Schema.undefined,
-    title: Schema.undefined,
-    description: Schema.undefined,
-    moduleId: Schema.string,
-    children: Schema.optionalSafe(Schema.array(Schema.undefined), []),
-});
-
-export const PageGroupNodeModel = Schema.object({
-    id: Schema.string,
-    type: Schema.exact("page-group"),
-    name: TranslatableTextModel,
-    icon: Schema.undefined,
-    title: Schema.optional(TranslatableTextModel),
-    description: Schema.optional(TranslatableTextModel),
-    children: Schema.array(PageNodeModel),
-});
-
-export const ModuleGroupNodeModel = Schema.object({
-    id: Schema.string,
-    type: Schema.exact("module-group"),
-    name: TranslatableTextModel,
-    icon: Schema.undefined,
-    title: Schema.optional(TranslatableTextModel),
-    description: Schema.optional(TranslatableTextModel),
-    children: Schema.array(ModuleNodeModel),
-});
-
-export type LandingPageGroupNode = GetSchemaType<typeof PageGroupNodeModel>;
-export type LandingModuleGroupNode = GetSchemaType<typeof ModuleGroupNodeModel>;
-export type LandingGroupNode = LandingPageGroupNode | LandingModuleGroupNode;
-export type LandingPageNode = GetSchemaType<typeof PageNodeModel>;
-export type LandingModuleNode = GetSchemaType<typeof ModuleNodeModel>;
-export type LandingNode = LandingGroupNode | LandingPageNode | LandingModuleNode;

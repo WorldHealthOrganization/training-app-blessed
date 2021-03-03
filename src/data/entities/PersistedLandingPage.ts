@@ -9,8 +9,3 @@ export interface PersistedLandingPage {
     title?: TranslatableText;
     description?: TranslatableText;
 }
-
-export interface LandingPageStorage {
-    id: string;
-    items: PersistedLandingPage[];
-}
