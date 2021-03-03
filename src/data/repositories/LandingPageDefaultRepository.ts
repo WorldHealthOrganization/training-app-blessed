@@ -6,6 +6,7 @@ import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClien
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PersistedLandingPage } from "../entities/PersistedLandingPage";
+import { generateUid } from "../utils/uid";
 
 export class LandingPageDefaultRepository implements LandingPageRepository {
     private storageClient: StorageClient;
@@ -24,18 +25,17 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
 
             if (pages.length === 0 || !root) {
                 const root = {
-                    id: "root",
+                    id: generateUid(),
                     parent: "none",
-                    type: "page" as const,
-                    name: {
+                    type: "root" as const,
+                    icon: "",
+                    title: {
                         key: "root-name",
                         referenceValue: "Main landing page",
                         translations: {},
                     },
-                    icon: "",
-                    title: undefined,
-                    description: undefined,
-                    moduleId: "",
+                    content: undefined,
+                    modules: [],
                 };
 
                 await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, root);

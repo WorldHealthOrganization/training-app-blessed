@@ -1,53 +1,60 @@
-import { ConfirmationDialog, ConfirmationDialogProps, useSnackbar } from "@eyeseetea/d2-ui-components";
+import {
+    ConfirmationDialog,
+    ConfirmationDialogProps,
+    MultipleDropdown,
+    useSnackbar
+} from "@eyeseetea/d2-ui-components";
 import { TextField } from "@material-ui/core";
 import _ from "lodash";
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
+import { generateUid } from "../../../data/utils/uid";
 import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { Dictionary } from "../../../types/utils";
 import { useAppContext } from "../../contexts/app-context";
+import { MarkdownEditor } from "../markdown-editor/MarkdownEditor";
+import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
+import { ModalBody } from "../modal";
 
 const buildDefaultNode = (type: LandingNodeType, parent: string) => {
     return {
-        id: "",
+        id: generateUid(),
         type,
         parent,
-        name: { key: _.kebabCase(`id-name`), referenceValue: "", translations: {} },
-        children: [],
         icon: "",
-        title: undefined,
-        description: undefined,
-        moduleId: "",
+        title: { key: "", referenceValue: "", translations: {} },
+        content: undefined,
+        children: [],
+        modules: [],
     };
 };
 
 export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props => {
     const { type, parent, initialNode, onSave } = props;
 
-    const { usecases, landings } = useAppContext();
+    const { modules, translate, usecases, landings } = useAppContext();
     const snackbar = useSnackbar();
 
     const [value, setValue] = useState<LandingNode>(initialNode ?? buildDefaultNode(type, parent));
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
 
+    const items = useMemo(() => modules.map(({ id, name }) => ({ value: id, text: translate(name) })), [
+        modules,
+        translate,
+    ]);
+
     const validate = useCallback(
         (filter?: string) => {
-            if (flattenRows(landings).find(({ id }) => id === value.id)) {
-                snackbar.error("Code must be unique");
-                return;
-            }
-
             const errors: Dictionary<string | undefined> = {
                 id: flattenRows(landings).find(({ id }) => id === value.id) ? "Code must be unique" : undefined,
-                name: !value.name ? "Field name must have a value" : undefined,
-                icon: value.type === "page" && !value.icon ? "Page must have an icon" : undefined,
-                title: value.type === "page" && !value.title ? "Page must have a title" : undefined,
+                title: !value.title ? "Field name must have a value" : undefined,
+                icon: value.type !== "sub-section" && !value.icon ? "Page must have an icon" : undefined,
             };
 
             return filter ? { [filter]: errors[filter] } : errors;
         },
-        [value, snackbar, landings]
+        [value, landings]
     );
 
     const save = useCallback(() => {
@@ -61,10 +68,8 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
 
         onSave({
             ...value,
-            id,
-            name: { ...value.name, key: `${id}-name` },
-            title: value.title ? { ...value.title, key: `${id}-title` } : undefined,
-            description: value.description ? { ...value.description, key: `${id}-description` } : undefined,
+            title: { ...value.title, key: `${id}-title` },
+            content: value.content ? { ...value.content, key: `${id}-content` } : undefined,
         });
     }, [value, onSave, snackbar, errors]);
 
@@ -72,15 +77,7 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
         (field: keyof LandingNode) => {
             return (event: React.ChangeEvent<{ value: unknown }>) => {
                 switch (field) {
-                    case "id": {
-                        const id = event.target.value as string;
-                        setValue(node => {
-                            return { ...node, id };
-                        });
-                        setErrors(errors => ({ ...errors, ...validate(field) }));
-                        return;
-                    }
-                    case "name": {
+                    case "title": {
                         const referenceValue = event.target.value as string;
                         setValue(node => {
                             return { ...node, [field]: { key: "name", referenceValue, translations: {} } };
@@ -88,8 +85,7 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
                         setErrors(errors => ({ ...errors, ...validate(field) }));
                         return;
                     }
-                    case "title":
-                    case "description": {
+                    case "content": {
                         const referenceValue = event.target.value as string;
                         setValue(node => {
                             return { ...node, [field]: { key: "name", referenceValue, translations: {} } };
@@ -117,9 +113,9 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
         <ConfirmationDialog fullWidth={true} {...props} maxWidth={"md"} onSave={save}>
             <Row>
                 <TextField
-                    disabled={!!initialNode}
+                    disabled={true}
                     fullWidth={true}
-                    label={i18n.t("Code *")}
+                    label={i18n.t("Identifier")}
                     value={value.id}
                     onChange={onChangeField("id")}
                     error={!!errors["id"]}
@@ -130,42 +126,29 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
             <Row>
                 <TextField
                     fullWidth={true}
-                    label={i18n.t("Name *")}
-                    value={value.name.referenceValue}
-                    onChange={onChangeField("name")}
-                    error={!!errors["name"]}
-                    helperText={errors["name"]}
+                    label={i18n.t("Title *")}
+                    value={value.title.referenceValue}
+                    onChange={onChangeField("title")}
+                    error={!!errors["title"]}
+                    helperText={errors["title"]}
                 />
             </Row>
 
-            {value.id !== "root" ? (
-                <Row>
-                    <TextField
-                        fullWidth={true}
-                        label={i18n.t("Title")}
-                        value={value.title?.referenceValue ?? ""}
-                        onChange={onChangeField("title")}
-                        error={!!errors["title"]}
-                        helperText={errors["title"]}
-                    />
-                </Row>
-            ) : null}
+            <Row>
+                <MarkdownEditor
+                    value={value.content?.referenceValue ?? ""}
+                    onChange={referenceValue =>
+                        setValue(landing => ({
+                            ...landing,
+                            content: { key: `${value.id}-content`, referenceValue, translations: {} },
+                        }))
+                    }
+                    markdownPreview={markdown => <StepPreview value={markdown} />}
+                    onUpload={data => usecases.instance.uploadFile(data)}
+                />
+            </Row>
 
-            {value.id !== "root" ? (
-                <Row>
-                    <TextField
-                        fullWidth={true}
-                        label={i18n.t("Description")}
-                        value={value.description?.referenceValue ?? ""}
-                        onChange={onChangeField("description")}
-                        multiline={true}
-                        error={!!errors["description"]}
-                        helperText={errors["description"]}
-                    />
-                </Row>
-            ) : null}
-
-            {value.type === "page" ? (
+            {value.type !== "sub-section" ? (
                 <Row style={{ marginBottom: 80 }}>
                     <h3>{i18n.t("Icon *")}</h3>
 
@@ -180,6 +163,10 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
                     </IconUpload>
                 </Row>
             ) : null}
+
+            <Row>
+                <MultipleDropdown label={i18n.t("Modules assigned")} items={items} values={value.modules} onChange={modules => setValue(landing => ({...landing, modules }))} />
+            </Row>
         </ConfirmationDialog>
     );
 };
@@ -220,4 +207,21 @@ const FileInput = styled.input`
 
 const flattenRows = (rows: LandingNode[]): LandingNode[] => {
     return _.flatMap(rows, row => [row, ...flattenRows(row.children)]);
+};
+
+const StyledModalBody = styled(ModalBody)`
+    max-width: 600px;
+`;
+
+const StepPreview: React.FC<{
+    className?: string;
+    value?: string;
+}> = ({ className, value }) => {
+    if (!value) return null;
+
+    return (
+        <StyledModalBody className={className}>
+            <MarkdownViewer source={value} center={true} />
+        </StyledModalBody>
+    );
 };

@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-03T15:33:25.532Z\n"
-"PO-Revision-Date: 2021-03-03T15:33:25.532Z\n"
+"POT-Creation-Date: 2021-03-03T18:09:55.314Z\n"
+"PO-Revision-Date: 2021-03-03T18:09:55.314Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -23,40 +23,34 @@ msgstr ""
 msgid "Tutorial"
 msgstr ""
 
-msgid "Code *"
+msgid "Identifier"
 msgstr ""
 
-msgid "Name *"
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Description"
+msgid "Title *"
 msgstr ""
 
 msgid "Icon *"
 msgstr ""
 
-msgid "Add sub-section"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Add category"
+msgid "Modules assigned"
 msgstr ""
 
 msgid "Add section"
 msgstr ""
 
-msgid "Assign module"
+msgid "Add sub-section"
+msgstr ""
+
+msgid "Add category"
 msgstr ""
 
 msgid "Edit"
 msgstr ""
 
 msgid "Delete"
+msgstr ""
+
+msgid "Landing page"
 msgstr ""
 
 msgid "Section"
@@ -66,15 +60,6 @@ msgid "Sub-section"
 msgstr ""
 
 msgid "Category"
-msgstr ""
-
-msgid "Training module"
-msgstr ""
-
-msgid "You must select a module"
-msgstr ""
-
-msgid "Select a module"
 msgstr ""
 
 msgid "Edit markdown"
@@ -110,10 +95,13 @@ msgstr ""
 msgid "Add new step"
 msgstr ""
 
-msgid "Title *"
+msgid "Field must have a value"
 msgstr ""
 
-msgid "Field must have a value"
+msgid "Code *"
+msgstr ""
+
+msgid "Name *"
 msgstr ""
 
 msgid "PoEditor Project id"
@@ -126,9 +114,6 @@ msgid "Launch application"
 msgstr ""
 
 msgid "DHIS2 application"
-msgstr ""
-
-msgid "Identifier"
 msgstr ""
 
 msgid "Name"
@@ -346,6 +331,9 @@ msgstr ""
 msgid "Welcome to training on DHIS2"
 msgstr ""
 
+msgid "What do you want to learn in DHIS2?"
+msgstr ""
+
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
 msgstr ""
 
@@ -398,9 +386,6 @@ msgid "A list with all the existing modules is visible"
 msgstr ""
 
 msgid "The list with all the existing  modules is hidden"
-msgstr ""
-
-msgid "Landing page"
 msgstr ""
 
 msgid "Training modules"

@@ -7,16 +7,11 @@ import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPa
 import i18n from "../../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
-import {
-    LandingPageModuleAssignDialog,
-    LandingPageModuleAssignDialogProps,
-} from "../landing-page-module-assign-dialog/LandingPageModuleAssignDialog";
 
 export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
     const { usecases, reload } = useAppContext();
 
     const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
-    const [assignDialogProps, updateAssignDialog] = useState<LandingPageModuleAssignDialogProps | null>(null);
 
     const columns: TableColumn<LandingNode>[] = useMemo(
         () => [
@@ -27,24 +22,20 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 getValue: item => getTypeName(item.type),
             },
             {
-                name: "name",
-                text: "Name",
-                getValue: item => item.name.referenceValue,
-            },
-            {
                 name: "title",
                 text: "Title",
                 getValue: item => item.title?.referenceValue ?? "-",
             },
             {
-                name: "description",
-                text: "Description",
-                getValue: item => item.description?.referenceValue ?? "-",
+                name: "content",
+                text: "Content",
+                getValue: item => item.content?.referenceValue ?? "-",
             },
             {
                 name: "icon",
                 text: "Icon",
-                getValue: item => (item.icon ? <ItemIcon src={item.icon} alt={`Icon for ${item.name}`} /> : "-"),
+                getValue: item =>
+                    item.icon ? <ItemIcon src={item.icon} alt={`Icon for ${item.title.referenceValue}`} /> : "-",
             },
         ],
         []
@@ -53,51 +44,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
     const actions: TableAction<LandingNode>[] = useMemo(
         () => [
             {
-                name: "add-page-group",
-                text: i18n.t("Add sub-section"),
-                icon: <Icon>playlist_add</Icon>,
-                onClick: ids => {
-                    const parent = ids[0];
-                    if (!parent) return;
-
-                    updateEditDialog({
-                        title: i18n.t("Add"),
-                        type: "page-group",
-                        parent,
-                        onCancel: () => updateEditDialog(null),
-                        onSave: async node => {
-                            updateEditDialog(null);
-                            await usecases.landings.update(node);
-                            await reload();
-                        },
-                    });
-                },
-                isActive: nodes => _.every(nodes, item => item.type === "page"),
-            },
-            {
-                name: "add-module-group",
-                text: i18n.t("Add category"),
-                icon: <Icon>queue</Icon>,
-                onClick: ids => {
-                    const parent = ids[0];
-                    if (!parent) return;
-
-                    updateEditDialog({
-                        title: i18n.t("Add"),
-                        type: "module-group",
-                        parent,
-                        onCancel: () => updateEditDialog(null),
-                        onSave: async node => {
-                            updateEditDialog(null);
-                            await usecases.landings.update(node);
-                            await reload();
-                        },
-                    });
-                },
-                isActive: nodes => _.every(nodes, item => item.type === "page"),
-            },
-            {
-                name: "add-page",
+                name: "add-section",
                 text: i18n.t("Add section"),
                 icon: <Icon>add</Icon>,
                 onClick: ids => {
@@ -105,8 +52,8 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                     if (!parent) return;
 
                     updateEditDialog({
-                        title: i18n.t("Add"),
-                        type: "page",
+                        title: i18n.t("Add section"),
+                        type: "section",
                         parent,
                         onCancel: () => updateEditDialog(null),
                         onSave: async node => {
@@ -116,28 +63,51 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                         },
                     });
                 },
-                isActive: nodes => _.every(nodes, item => item.type === "page-group"),
+                isActive: nodes => _.every(nodes, item => item.type === "root"),
             },
             {
-                name: "add-module",
-                text: i18n.t("Assign module"),
-                icon: <Icon>add_circle</Icon>,
+                name: "add-sub-section",
+                text: i18n.t("Add sub-section"),
+                icon: <Icon>add</Icon>,
                 onClick: ids => {
                     const parent = ids[0];
                     if (!parent) return;
 
-                    updateAssignDialog({
-                        title: i18n.t("Assign module"),
+                    updateEditDialog({
+                        title: i18n.t("Add sub-section"),
+                        type: "sub-section",
                         parent,
-                        onCancel: () => updateAssignDialog(null),
+                        onCancel: () => updateEditDialog(null),
                         onSave: async node => {
-                            updateAssignDialog(null);
+                            updateEditDialog(null);
                             await usecases.landings.update(node);
                             await reload();
                         },
                     });
                 },
-                isActive: nodes => _.every(nodes, item => item.type === "module-group"),
+                isActive: nodes => _.every(nodes, item => item.type === "section"),
+            },
+            {
+                name: "add-category",
+                text: i18n.t("Add category"),
+                icon: <Icon>add</Icon>,
+                onClick: ids => {
+                    const parent = ids[0];
+                    if (!parent) return;
+
+                    updateEditDialog({
+                        title: i18n.t("Add category"),
+                        type: "category",
+                        parent,
+                        onCancel: () => updateEditDialog(null),
+                        onSave: async node => {
+                            updateEditDialog(null);
+                            await usecases.landings.update(node);
+                            await reload();
+                        },
+                    });
+                },
+                isActive: nodes => _.every(nodes, item => item.type === "sub-section"),
             },
             {
                 name: "edit",
@@ -160,7 +130,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                         },
                     });
                 },
-                isActive: nodes => _.every(nodes, item => item.type !== "module"),
+                isActive: nodes => _.every(nodes, item => item.type !== "root"),
             },
             {
                 name: "remove",
@@ -180,7 +150,6 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
     return (
         <React.Fragment>
             {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
-            {assignDialogProps && <LandingPageModuleAssignDialog isOpen={true} {...assignDialogProps} />}
 
             <ObjectsTable<LandingNode> rows={nodes} columns={columns} actions={actions} childrenKeys={["children"]} />
         </React.Fragment>
@@ -189,14 +158,14 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
 
 const getTypeName = (type: LandingNodeType) => {
     switch (type) {
-        case "page":
+        case "root":
+            return i18n.t("Landing page");
+        case "section":
             return i18n.t("Section");
-        case "page-group":
+        case "sub-section":
             return i18n.t("Sub-section");
-        case "module-group":
+        case "category":
             return i18n.t("Category");
-        case "module":
-            return i18n.t("Training module");
         default:
             return "-";
     }

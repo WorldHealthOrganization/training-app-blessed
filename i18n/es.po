@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-03T15:33:25.532Z\n"
+"POT-Creation-Date: 2021-03-03T18:09:55.314Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,41 +23,35 @@ msgstr ""
 msgid "Tutorial"
 msgstr "Tutorial"
 
-msgid "Code *"
+msgid "Identifier"
 msgstr ""
 
-msgid "Name *"
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Description"
+msgid "Title *"
 msgstr ""
 
 msgid "Icon *"
 msgstr ""
 
-msgid "Add sub-section"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Add category"
+msgid "Modules assigned"
 msgstr ""
 
 msgid "Add section"
 msgstr ""
 
-msgid "Assign module"
-msgstr "Asignar modulo"
+msgid "Add sub-section"
+msgstr ""
+
+msgid "Add category"
+msgstr ""
 
 msgid "Edit"
 msgstr ""
 
 msgid "Delete"
 msgstr "Borrar"
+
+msgid "Landing page"
+msgstr "Bienvenido"
 
 msgid "Section"
 msgstr ""
@@ -66,15 +60,6 @@ msgid "Sub-section"
 msgstr ""
 
 msgid "Category"
-msgstr ""
-
-msgid "Training module"
-msgstr ""
-
-msgid "You must select a module"
-msgstr ""
-
-msgid "Select a module"
 msgstr ""
 
 msgid "Edit markdown"
@@ -110,11 +95,14 @@ msgstr ""
 msgid "Add new step"
 msgstr ""
 
-msgid "Title *"
-msgstr ""
-
 msgid "Field must have a value"
 msgstr "El campo debe tener un valor"
+
+msgid "Code *"
+msgstr ""
+
+msgid "Name *"
+msgstr ""
 
 msgid "PoEditor Project id"
 msgstr "Token de POEditor"
@@ -126,9 +114,6 @@ msgid "Launch application"
 msgstr ""
 
 msgid "DHIS2 application"
-msgstr ""
-
-msgid "Identifier"
 msgstr ""
 
 msgid "Name"
@@ -346,6 +331,9 @@ msgstr ""
 msgid "Welcome to training on DHIS2"
 msgstr ""
 
+msgid "What do you want to learn in DHIS2?"
+msgstr ""
+
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
 msgstr ""
 
@@ -400,9 +388,6 @@ msgstr ""
 msgid "The list with all the existing  modules is hidden"
 msgstr ""
 
-msgid "Landing page"
-msgstr "Bienvenido"
-
 msgid "Training modules"
 msgstr ""
 
@@ -420,3 +405,6 @@ msgstr ""
 
 msgid "Start Tutorial"
 msgstr "Empezar tutorial"
+
+#~ msgid "Assign module"
+#~ msgstr "Asignar modulo"
