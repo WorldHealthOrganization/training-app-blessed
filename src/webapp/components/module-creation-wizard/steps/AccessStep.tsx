@@ -15,10 +15,11 @@ export const AccessStep: React.FC<ModuleCreationWizardStepProps> = ({
     const search = useCallback((query: string) => usecases.instance.searchUsers(query), [usecases]);
 
     const setModuleSharing = useCallback(
-        ({ userAccesses, userGroupAccesses }: ShareUpdate) => {
+        ({ publicAccess, userAccesses, userGroupAccesses }: ShareUpdate) => {
             onChange(module => {
                 return {
                     ...module,
+                    publicAccess: publicAccess ?? module.publicAccess,
                     userAccesses: userAccesses ? mapSharingSettings(userAccesses) : module.userAccesses,
                     userGroupAccesses: userGroupAccesses
                         ? mapSharingSettings(userGroupAccesses)
@@ -38,6 +39,7 @@ export const AccessStep: React.FC<ModuleCreationWizardStepProps> = ({
                     object: {
                         id: module.id,
                         displayName: module.name.referenceValue,
+                        publicAccess: module.publicAccess,
                         userAccesses: mapSharingRules(module.userAccesses),
                         userGroupAccesses: mapSharingRules(module.userGroupAccesses),
                     },
