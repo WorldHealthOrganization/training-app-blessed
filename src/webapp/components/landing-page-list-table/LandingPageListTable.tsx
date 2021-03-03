@@ -2,6 +2,7 @@ import { ObjectsTable, TableAction, TableColumn } from "@eyeseetea/d2-ui-compone
 import { Icon } from "@material-ui/core";
 import _ from "lodash";
 import React, { useMemo, useState } from "react";
+import styled from "styled-components";
 import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { useAppContext } from "../../contexts/app-context";
@@ -34,6 +35,11 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 name: "description",
                 text: "Description",
                 getValue: item => item.description?.referenceValue ?? "-",
+            },
+            {
+                name: "icon",
+                text: "Icon",
+                getValue: item => (item.icon ? <ItemIcon src={item.icon} alt={`Icon for ${item.name}`} /> : "-"),
             },
         ],
         []
@@ -192,3 +198,7 @@ const getTypeName = (type: LandingNodeType) => {
 const flattenRows = (rows: LandingNode[]): LandingNode[] => {
     return _.flatMap(rows, row => [row, ...flattenRows(row.children)]);
 };
+
+const ItemIcon = styled.img`
+    width: 100px;
+`
