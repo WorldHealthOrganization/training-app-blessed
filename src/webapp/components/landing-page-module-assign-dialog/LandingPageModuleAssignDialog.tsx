@@ -44,7 +44,7 @@ export const LandingPageModuleAssignDialog: React.FC<LandingPageModuleAssignDial
             description: undefined,
             moduleId: value,
         });
-    }, [onSave, value, modules, parent]);
+    }, [onSave, value, modules, parent, snackbar]);
 
     return (
         <ConfirmationDialog fullWidth={true} {...props} maxWidth={"md"} onSave={save}>
