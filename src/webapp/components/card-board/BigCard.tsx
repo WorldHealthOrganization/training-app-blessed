@@ -60,6 +60,8 @@ const BigCardIcon = styled.span`
     img,
     svg {
         max-height: 10vw;
+        max-width: 18vh;
+        margin: 0;
         user-drag: none;
     }
 `;
