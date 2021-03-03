@@ -504,6 +504,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 text: i18n.t("Restore to factory settings"),
                 icon: <Icon>rotate_left</Icon>,
                 onClick: resetModules,
+                multiple: true,
                 isActive: rows => {
                     return (
                         !!tableActions.resetModules &&
