@@ -9,9 +9,7 @@ export class PoEditorTranslationClient implements TranslationClient {
         this.api = new PoEditorApi(token);
     }
 
-    public async getProject(
-        projectId: string
-    ): Promise<Either<TranslationError, TranslationProject>> {
+    public async getProject(projectId: string): Promise<Either<TranslationError, TranslationProject>> {
         const id = parseInt(projectId);
         if (!id) return Either.error("UNKNOWN");
 

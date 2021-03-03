@@ -8,5 +8,6 @@ export function useCurrentRoute(): AppRoute | null {
 
     const result = matchRoutes(buildRoutes(routes), location.pathname);
     if (!result || result.length === 0) return null;
-    return routes.find(({ paths }) => paths.includes(result[0].route.path)) ?? null;
+
+    return routes.find(({ paths }) => paths.includes(result[0]?.route.path ?? "")) ?? null;
 }

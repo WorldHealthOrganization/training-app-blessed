@@ -27,7 +27,7 @@ const dhis2Auth = _(dhis2AuthEnvValue)
     .value();
 
 Cypress.Cookies.defaults({
-    whitelist: "JSESSIONID",
+    preserve: "JSESSIONID",
 });
 
 // const encryptionKey = Cypress.env("ENCRYPTION_KEY");
@@ -64,7 +64,6 @@ Cypress.on("uncaught:exception", (err, runnable) => {
 
 Cypress.Commands.add("waitForStep", stepName => {
     cy.contains(stepName).should($el => {
-        console.log($el);
         expect($el.attr("class")).to.contain("current-step", `Current step should be ${stepName}`);
     });
 });

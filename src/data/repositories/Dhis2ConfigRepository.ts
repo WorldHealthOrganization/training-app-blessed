@@ -46,9 +46,7 @@ export class Dhis2ConfigRepository implements ConfigRepository {
         };
     }
 
-    public async getUiLocale(d2User: {
-        settings: { keyUiLocale: string; keyDbLocale: string };
-    }): Promise<string> {
+    public async getUiLocale(d2User: { settings: { keyUiLocale: string; keyDbLocale: string } }): Promise<string> {
         const version = getMajorVersion(await this.api.getVersion());
         if (version > 30 && d2User.settings.keyUiLocale) {
             return d2User.settings.keyUiLocale;
@@ -92,6 +90,20 @@ export class Dhis2ConfigRepository implements ConfigRepository {
                 users: update.users ?? users,
                 userGroups: update.userGroups ?? userGroups,
             },
+        });
+    }
+
+    public async getShowAllModules(): Promise<boolean> {
+        const { showAllModules = true } = await this.getConfig();
+        return showAllModules;
+    }
+
+    public async setShowAllModules(showAllModules: boolean): Promise<void> {
+        const config = await this.getConfig();
+
+        await this.storageClient.saveObject<PersistedConfig>(Namespaces.CONFIG, {
+            ...config,
+            showAllModules,
         });
     }
 
