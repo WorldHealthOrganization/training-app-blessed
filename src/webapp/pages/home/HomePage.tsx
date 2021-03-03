@@ -152,6 +152,7 @@ export const HomePage: React.FC = () => {
         [setAppState]
     );
 
+    //@ts-ignore
     const currentPage = useMemo<LandingNode | undefined>(() => {
         if (history[0]) return history[0];
 

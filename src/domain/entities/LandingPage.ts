@@ -8,10 +8,7 @@ export const LandingPageNodeTypeModel = Schema.oneOf([
     Schema.exact("module"),
 ]);
 
-export const BaseNodeModel = Schema.object({
-    id: Schema.string,
-    type: LandingPageNodeTypeModel,
-});
+export type LandingNodeType = GetSchemaType<typeof LandingPageNodeTypeModel>;
 
 export interface PageNode {
     id: string;
@@ -23,56 +20,50 @@ export interface PageNode {
     children: LandingGroupNode[];
 }
 
-export const PageNodeModel: Codec<PageNode> = Schema.extend(
-    BaseNodeModel,
-    Schema.object({
-        type: Schema.exact("page"),
-        name: TranslatableTextModel,
-        icon: Schema.string,
-        title: Schema.optional(TranslatableTextModel),
-        description: Schema.optional(TranslatableTextModel),
-        children: Schema.lazy(() => Schema.array(Schema.oneOf([PageGroupNodeModel, ModuleGroupNodeModel]))),
-    })
-);
+export const PageNodeModel: Codec<PageNode> = Schema.object({
+    id: Schema.string,
+    type: Schema.exact("page"),
+    name: TranslatableTextModel,
+    icon: Schema.string,
+    title: Schema.optional(TranslatableTextModel),
+    description: Schema.optional(TranslatableTextModel),
+    children: Schema.lazy(() => Schema.array(Schema.oneOf([PageGroupNodeModel, ModuleGroupNodeModel]))),
+});
 
-export const ModuleNodeModel = Schema.extend(
-    BaseNodeModel,
-    Schema.object({
-        type: Schema.exact("module"),
-        name: TranslatableTextModel,
-        icon: Schema.undefined,
-        title: Schema.undefined,
-        description: Schema.undefined,
-        moduleId: Schema.string,
-    })
-);
+export const ModuleNodeModel = Schema.object({
+    id: Schema.string,
+    type: Schema.exact("module"),
+    name: TranslatableTextModel,
+    icon: Schema.undefined,
+    title: Schema.undefined,
+    description: Schema.undefined,
+    moduleId: Schema.string,
+    children: Schema.optionalSafe(Schema.array(Schema.undefined), []),
+});
 
-export const PageGroupNodeModel = Schema.extend(
-    BaseNodeModel,
-    Schema.object({
-        type: Schema.exact("page-group"),
-        name: TranslatableTextModel,
-        icon: Schema.undefined,
-        title: Schema.optional(TranslatableTextModel),
-        description: Schema.optional(TranslatableTextModel),
-        children: Schema.array(PageNodeModel),
-    })
-);
+export const PageGroupNodeModel = Schema.object({
+    id: Schema.string,
+    type: Schema.exact("page-group"),
+    name: TranslatableTextModel,
+    icon: Schema.undefined,
+    title: Schema.optional(TranslatableTextModel),
+    description: Schema.optional(TranslatableTextModel),
+    children: Schema.array(PageNodeModel),
+});
 
-export const ModuleGroupNodeModel = Schema.extend(
-    BaseNodeModel,
-    Schema.object({
-        type: Schema.exact("module-group"),
-        name: TranslatableTextModel,
-        icon: Schema.undefined,
-        title: Schema.optional(TranslatableTextModel),
-        description: Schema.optional(TranslatableTextModel),
-        children: Schema.array(ModuleNodeModel),
-    })
-);
+export const ModuleGroupNodeModel = Schema.object({
+    id: Schema.string,
+    type: Schema.exact("module-group"),
+    name: TranslatableTextModel,
+    icon: Schema.undefined,
+    title: Schema.optional(TranslatableTextModel),
+    description: Schema.optional(TranslatableTextModel),
+    children: Schema.array(ModuleNodeModel),
+});
 
-export type LandingNode = LandingGroupNode | LandingPageNode | LandingModuleNode;
-export type LandingNodeType = GetSchemaType<typeof LandingPageNodeTypeModel>;
-export type LandingGroupNode = GetSchemaType<typeof PageGroupNodeModel> | GetSchemaType<typeof ModuleGroupNodeModel>;
+export type LandingPageGroupNode = GetSchemaType<typeof PageGroupNodeModel>;
+export type LandingModuleGroupNode = GetSchemaType<typeof ModuleGroupNodeModel>;
+export type LandingGroupNode = LandingPageGroupNode | LandingModuleGroupNode;
 export type LandingPageNode = GetSchemaType<typeof PageNodeModel>;
 export type LandingModuleNode = GetSchemaType<typeof ModuleNodeModel>;
+export type LandingNode = LandingGroupNode | LandingPageNode | LandingModuleNode;
