@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { LandingNode, LandingPageNode, TempLandingPage } from "../../../domain/entities/LandingPage";
+import { LandingNode } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { BigCard } from "../../components/card-board/BigCard";
 import { Cardboard } from "../../components/card-board/Cardboard";
@@ -10,7 +10,7 @@ import { useAppContext } from "../../contexts/app-context";
 const Item: React.FC<{
     currentPage: LandingNode;
     isRoot?: boolean;
-    openPage: (page: LandingPageNode) => void;
+    openPage: (page: LandingNode) => void;
     openModule: (module: string, step: number) => void;
 }> = props => {
     const { currentPage, isRoot, openModule, openPage } = props;
@@ -37,7 +37,11 @@ const Item: React.FC<{
                                 key={`card-${idx}`}
                                 label={translate(item.name)}
                                 onClick={() => openPage(item)}
-                                icon={<img src={item.icon} alt={`Icon for ${translate(item.name)}`} />}
+                                icon={
+                                    item.icon ? (
+                                        <img src={item.icon} alt={`Icon for ${translate(item.name)}`} />
+                                    ) : undefined
+                                }
                             />
                         );
                     })}
@@ -74,7 +78,9 @@ const Item: React.FC<{
                                 progress={module?.progress.completed ? 100 : percentage}
                                 onClick={handleClick}
                                 disabled={module?.disabled}
-                                icon={<img src={module?.icon} alt={`Icon for ${item.name}`} />}
+                                icon={
+                                    module?.icon ? <img src={module.icon} alt={`Icon for ${item.name}`} /> : undefined
+                                }
                             />
                         );
                     })}
@@ -113,9 +119,9 @@ const Item: React.FC<{
 };
 
 export const HomePage: React.FC = () => {
-    const { setAppState, hasSettingsAccess, modules } = useAppContext();
+    const { setAppState, hasSettingsAccess, modules, landings } = useAppContext();
 
-    const [history, updateHistory] = useState<LandingPageNode[]>([]);
+    const [history, updateHistory] = useState<LandingNode[]>([]);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -129,7 +135,7 @@ export const HomePage: React.FC = () => {
         setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
 
-    const openPage = useCallback((page: LandingPageNode) => {
+    const openPage = useCallback((page: LandingNode) => {
         updateHistory(history => [page, ...history]);
     }, []);
 
@@ -152,48 +158,52 @@ export const HomePage: React.FC = () => {
         [setAppState]
     );
 
-    const currentPage = useMemo<LandingNode>(() => {
-        return (
-            history[0] ?? {
-                ...TempLandingPage,
-                children: [
-                    ...TempLandingPage.children,
-                    {
-                        id: "all-modules",
-                        type: "module-group",
-                        level: 1,
-                        icon: undefined,
-                        name: {
-                            key: "data-entry-generic-title",
-                            referenceValue: "All modules",
-                            translations: {},
-                        },
-                        title: {
-                            key: "data-entry-generic-title",
-                            referenceValue: "All modules",
-                            translations: {},
-                        },
-                        description: {
-                            key: "data-entry-generic-description",
-                            referenceValue: "Select a module below to learn how to use applications in DHIS2:",
-                            translations: {},
-                        },
-                        children: modules.map(module => ({
-                            id: module.id,
-                            type: "module",
-                            level: 1,
-                            moduleId: module.id,
-                            name: module.name,
-                            title: undefined,
-                            description: undefined,
-                            children: undefined,
-                            icon: undefined,
-                        })),
+    //@ts-ignore
+    const currentPage = useMemo<LandingNode | undefined>(() => {
+        if (history[0]) return history[0];
+
+        const mainLanding = landings[0];
+        if (!mainLanding || mainLanding.type !== "page") return undefined;
+
+        return {
+            ...mainLanding,
+            children: [
+                ...mainLanding.children,
+                {
+                    id: "all-modules",
+                    type: "module-group",
+                    level: 1,
+                    icon: undefined,
+                    name: {
+                        key: "data-entry-generic-title",
+                        referenceValue: "All modules",
+                        translations: {},
                     },
-                ],
-            }
-        );
-    }, [history, modules]);
+                    title: {
+                        key: "data-entry-generic-title",
+                        referenceValue: "All modules",
+                        translations: {},
+                    },
+                    description: {
+                        key: "data-entry-generic-description",
+                        referenceValue: "Select a module below to learn how to use applications in DHIS2:",
+                        translations: {},
+                    },
+                    children: modules.map(module => ({
+                        id: module.id,
+                        type: "module",
+                        level: 1,
+                        moduleId: module.id,
+                        name: module.name,
+                        title: undefined,
+                        description: undefined,
+                        children: undefined,
+                        icon: undefined,
+                    })),
+                },
+            ],
+        };
+    }, [history, modules, landings]);
 
     const isRoot = history.length === 0;
 
@@ -219,7 +229,9 @@ export const HomePage: React.FC = () => {
                     </React.Fragment>
                 ) : null}
 
-                <Item currentPage={currentPage} isRoot={isRoot} openModule={loadModule} openPage={openPage} />
+                {currentPage ? (
+                    <Item currentPage={currentPage} isRoot={isRoot} openModule={loadModule} openPage={openPage} />
+                ) : null}
             </ContentWrapper>
         </StyledModal>
     );

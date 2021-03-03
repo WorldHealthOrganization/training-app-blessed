@@ -1,7 +1,4 @@
-import FileSaver from "file-saver";
-import JSZip from "jszip";
 import _ from "lodash";
-import moment from "moment";
 import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
@@ -19,6 +16,7 @@ import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
+import { TrainingModuleDefaultImportExport } from "./TrainingModuleDefaultImportExport";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -65,13 +63,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 .filter(model => validateUserPermission(model, "read", currentUser))
                 .value();
 
-            return promiseMap(modules, async module => {
-                const model = await this.buildDomainModel(module);
+            return promiseMap(modules, async persistedModel => {
+                const model = await this.buildDomainModel(persistedModel);
 
                 return {
                     ...model,
-                    progress: progress?.find(({ id }) => id === module.id) ?? {
-                        id: module.id,
+                    progress: progress?.find(({ id }) => id === model.id) ?? {
+                        id: model.id,
                         lastStep: 0,
                         completed: false,
                     },
@@ -97,47 +95,37 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return {
             ...domainModel,
-            progress: progress?.find(({ id }) => id === module.id) ?? {
-                id: module.id,
+            progress: progress?.find(({ id }) => id === model.id) ?? {
+                id: model.id,
                 lastStep: 0,
                 completed: false,
             },
         };
     }
 
-    public async update(module: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
-        const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...module });
+    public async update(model: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
+        const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...model });
         await this.saveDataStore(newModule);
     }
 
+    private getImportExportModule() {
+        return new TrainingModuleDefaultImportExport(this, this.instanceRepository, this.storageClient);
+    }
+
+    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
+        return this.getImportExportModule().import(files);
+    }
+
     public async export(ids: string[]): Promise<void> {
-        const zip = new JSZip();
-
-        await promiseMap(ids, async id => {
-            const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-                Namespaces.TRAINING_MODULES,
-                id
-            );
-
-            if (!dataStoreModel) return;
-
-            const json = JSON.stringify(dataStoreModel, null, 4);
-            const blob = new Blob([json], { type: "application/json" });
-            const fileName = _.kebabCase(`module-${dataStoreModel.name.referenceValue}`);
-            zip.file(`${fileName}.json`, blob);
-        });
-
-        const blob = await zip.generateAsync({ type: "blob" });
-        const date = moment().format("YYYYMMDDHHmm");
-        FileSaver.saveAs(blob, `training-modules-${date}.zip`);
+        return this.getImportExportModule().export(ids);
     }
 
     public async resetDefaultValue(ids: string[]): Promise<void> {
         for (const id of ids) {
             const defaultModule = this.builtinModules[id];
             if (defaultModule) {
-                const module = await this.buildPersistedModel(defaultModule);
-                await this.saveDataStore(module);
+                const model = await this.buildPersistedModel(defaultModule);
+                await this.saveDataStore(model);
             }
         }
     }
@@ -286,14 +274,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return persistedModel;
     }
 
-    private async saveDataStore(model: PersistedTrainingModule) {
+    public async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean }) {
         const currentUser = await this.config.getUser();
-        const lastUpdatedBy = { id: currentUser.id, name: currentUser.name };
+        const user = { id: currentUser.id, name: currentUser.name };
+        const date = new Date().toISOString();
 
         await this.storageClient.saveObjectInCollection<PersistedTrainingModule>(Namespaces.TRAINING_MODULES, {
             ...model,
-            lastUpdated: new Date().toISOString(),
-            lastUpdatedBy,
+            lastUpdatedBy: user,
+            lastUpdated: date,
+            user: options?.recreate ? user : model.user,
+            created: options?.recreate ? date : model.created,
         });
     }
 
@@ -319,10 +310,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 ...contents,
                 steps: contents.steps.map((step, stepIdx) => ({
                     ...step,
-                    id: `${module.id}-step-${stepIdx}`,
+                    id: `${model.id}-step-${stepIdx}`,
                     pages: step.pages.map((page, pageIdx) => ({
                         ...page,
-                        id: `${module.id}-page-${stepIdx}-${pageIdx}`,
+                        id: `${model.id}-page-${stepIdx}-${pageIdx}`,
                     })),
                 })),
             },

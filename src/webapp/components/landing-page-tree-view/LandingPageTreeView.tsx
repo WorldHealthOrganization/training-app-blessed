@@ -20,7 +20,9 @@ export const LandingPageTreeView: React.FC<{ root: LandingNode }> = ({ root }) =
 export const LandingPageTreeItem: React.FC<{ node: any }> = ({ node }) => {
     return (
         <StyledTreeItem nodeId={node.id} label={node.name?.referenceValue ?? "foo"}>
-            {node.children?.map((subnode: any) => <LandingPageTreeItem key={subnode.id} node={subnode} />)}
+            {node.children?.map((subnode: any) => (
+                <LandingPageTreeItem key={subnode.id} node={subnode} />
+            ))}
         </StyledTreeItem>
     );
 };

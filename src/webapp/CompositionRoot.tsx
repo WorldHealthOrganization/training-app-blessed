@@ -1,8 +1,10 @@
 import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepository";
 import { InstanceDhisRepository } from "../data/repositories/InstanceDhisRepository";
+import { LandingPageDefaultRepository } from "../data/repositories/LandingPageDefaultRepository";
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSettingsPermissionsUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
+import { DeleteLandingChildUseCase } from "../domain/usecases/DeleteLandingChildUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
@@ -12,11 +14,13 @@ import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPer
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
+import { ListLandingChildrenUseCase } from "../domain/usecases/ListLandingChildrenUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { ResetModuleDefaultValueUseCase } from "../domain/usecases/ResetModuleDefaultValueUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SearchUsersUseCase } from "../domain/usecases/SearchUsersUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
+import { UpdateLandingChildUseCase } from "../domain/usecases/UpdateLandingChildUseCase";
 import { UpdateModuleUseCase } from "../domain/usecases/UpdateModuleUseCase";
 import { UpdateSettingsPermissionsUseCase } from "../domain/usecases/UpdateSettingsPermissionsUseCase";
 import { UpdateUserProgressUseCase } from "../domain/usecases/UpdateUserProgressUseCase";
@@ -26,6 +30,7 @@ export function getCompositionRoot(baseUrl: string) {
     const configRepository = new Dhis2ConfigRepository(baseUrl);
     const instanceRepository = new InstanceDhisRepository(configRepository);
     const trainingModuleRepository = new TrainingModuleDefaultRepository(configRepository, instanceRepository);
+    const landingPageRepository = new LandingPageDefaultRepository(configRepository);
 
     return {
         usecases: {
@@ -38,6 +43,11 @@ export function getCompositionRoot(baseUrl: string) {
                 resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
                 export: new ExportModulesUseCase(trainingModuleRepository),
                 import: new ImportModulesUseCase(trainingModuleRepository),
+            }),
+            landings: getExecute({
+                list: new ListLandingChildrenUseCase(landingPageRepository),
+                update: new UpdateLandingChildUseCase(landingPageRepository),
+                delete: new DeleteLandingChildUseCase(landingPageRepository),
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),
