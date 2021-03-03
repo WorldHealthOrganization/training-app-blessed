@@ -8,7 +8,8 @@ import { getUid } from "../../utils/dhis2";
 import { promiseMap } from "../../utils/promises";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { getUrls, PersistedTrainingModule, replaceUrls } from "../entities/PersistedTrainingModule";
+import { getUrls, PersistedTrainingModule, replaceUrls, setUser } from "../entities/PersistedTrainingModule";
+import { User } from "../entities/User";
 import { TrainingModuleDefaultRepository } from "./TrainingModuleDefaultRepository";
 
 export type Mapping = MappingItem[];
@@ -32,7 +33,7 @@ export class TrainingModuleDefaultImportExport {
         private storageClient: StorageClient
     ) {}
 
-    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
+    public async import(currentUser: User, files: File[]): Promise<PersistedTrainingModule[]> {
         const modules = await promiseMap(files, async file => {
             const zip = new JSZip();
             const contents = await zip.loadAsync(file);
@@ -44,7 +45,8 @@ export class TrainingModuleDefaultImportExport {
             return promiseMap(modulePaths, async modulePath => {
                 const module = await this.getJsonFromFile<PersistedTrainingModule>(zip, modulePath);
                 if (!module) return;
-                const moduleWithMappedUrls = replaceUrls(module, urlMapping);
+                const moduleWithNewUser = setUser(module, currentUser);
+                const moduleWithMappedUrls = replaceUrls(moduleWithNewUser, urlMapping);
                 await this.trainingModuleRepository.saveDataStore(moduleWithMappedUrls);
                 return moduleWithMappedUrls;
             });

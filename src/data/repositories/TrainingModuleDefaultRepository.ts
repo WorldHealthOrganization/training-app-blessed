@@ -113,7 +113,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
-        return this.getImportExportModule().import(files);
+        const currentUser = await this.config.getUser();
+        return this.getImportExportModule().import(currentUser, files);
     }
 
     public async export(ids: string[]): Promise<void> {

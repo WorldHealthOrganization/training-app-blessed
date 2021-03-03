@@ -2,6 +2,7 @@ import _ from "lodash";
 import { NamedRef, SharingSetting } from "../../domain/entities/Ref";
 import { TranslationConnection } from "../../domain/entities/TranslationProvider";
 import { JSONTrainingModule } from "./JSONTrainingModule";
+import { User } from "./User";
 
 export interface PersistedTrainingModule extends JSONTrainingModule {
     translation: TranslationConnection;
@@ -35,4 +36,11 @@ export function replaceUrls(
     const json = JSON.stringify(module);
     const json2 = json.replace(urlRegExp, url => urlMapping[url] || url);
     return JSON.parse(json2);
+}
+
+export function setUser(module: PersistedTrainingModule, user: User): PersistedTrainingModule {
+    return {
+        ...module,
+        user: { id: user.id, name: user.name },
+    };
 }
