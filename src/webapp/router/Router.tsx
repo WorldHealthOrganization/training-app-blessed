@@ -24,7 +24,7 @@ export const Router: React.FC = () => {
     const hasProperty = useCallback(
         (property: keyof AppRoute) => {
             const match = matchRoutes(routerRoutes, location.pathname);
-            const path = match ? match[0].route.path : "";
+            const path = match && match[0] ? match[0].route.path : "";
             const route = routes.find(({ paths }) => paths.includes(path));
             return route && route[property];
         },
@@ -37,14 +37,10 @@ export const Router: React.FC = () => {
         }
 
         if (appState.minimized) {
-            return (
-                <ActionButton
-                    onClick={() => setAppState(appState => ({ ...appState, minimized: false }))}
-                />
-            );
+            return <ActionButton onClick={() => setAppState(appState => ({ ...appState, minimized: false }))} />;
         }
 
-        return element ?? defaultRoute.element;
+        return element ?? defaultRoute?.element;
     }, [appState, setAppState, element, defaultRoute]);
 
     // Update path on state change

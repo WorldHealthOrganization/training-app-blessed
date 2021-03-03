@@ -55,9 +55,7 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
         [module, setAppState]
     );
 
-    const title = completed
-        ? i18n.t("What did you learn in this tutorial?")
-        : i18n.t("What will this tutorial cover?");
+    const title = completed ? i18n.t("What did you learn in this tutorial?") : i18n.t("What will this tutorial cover?");
 
     const prev = completed ? startTutorial : goToWelcomePage;
     const next = completed ? endTutorial : startTutorial;
@@ -80,17 +78,13 @@ export const SummaryPage: React.FC<{ completed?: boolean }> = ({ completed }) =>
                         const half = module.contents.steps.length / 2;
                         const column = idx < half ? "left" : "right";
                         const row = idx % half;
-                        const last =
-                            idx + 1 === Math.round(half) ||
-                            idx === module.contents.steps.length - 1;
+                        const last = idx + 1 === Math.round(half) || idx === module.contents.steps.length - 1;
 
                         return (
                             <Step key={`step-${idx}`} column={column} row={row} last={last}>
                                 <Line />
                                 <Bullet stepKey={idx + 1} onClick={() => jumpToStep(idx + 1)} />
-                                <Label onClick={() => jumpToStep(idx + 1)}>
-                                    {translate(title)}
-                                </Label>
+                                <Label onClick={() => jumpToStep(idx + 1)}>{translate(title)}</Label>
                             </Step>
                         );
                     })}

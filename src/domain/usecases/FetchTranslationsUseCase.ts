@@ -7,12 +7,8 @@ export class FetchTranslationsUseCase implements UseCase {
 
     public async execute(): Promise<void> {
         const modules = await this.trainingModuleRepository.list();
-        const availableModules = modules.filter(
-            ({ translation }) => translation.provider !== "NONE"
-        );
+        const availableModules = modules.filter(({ translation }) => translation.provider !== "NONE");
 
-        await promiseMap(availableModules, module =>
-            this.trainingModuleRepository.updateTranslations(module.id)
-        );
+        await promiseMap(availableModules, module => this.trainingModuleRepository.updateTranslations(module.id));
     }
 }

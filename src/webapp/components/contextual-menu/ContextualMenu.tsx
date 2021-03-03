@@ -13,7 +13,7 @@ export interface ContextualMenuProps {
     actions: TableAction[];
 }
 
-export function ContextualMenu(props: ContextualMenuProps) {
+export const ContextualMenu: React.FC<ContextualMenuProps> = props => {
     const { id, isOpen, positionLeft, positionTop, onClose, actions } = props;
 
     const handleActionClick = (action: TableAction) => {
@@ -43,7 +43,7 @@ export function ContextualMenu(props: ContextualMenuProps) {
             ))}
         </Container>
     );
-}
+};
 
 const Container = styled(Menu)`
     position: fixed;

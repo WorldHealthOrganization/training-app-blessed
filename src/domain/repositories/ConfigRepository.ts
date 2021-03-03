@@ -9,4 +9,6 @@ export interface ConfigRepository {
     getPoEditorToken(): Promise<string | undefined>;
     getSettingsPermissions(): Promise<Permission>;
     updateSettingsPermissions(update: Partial<Permission>): Promise<void>;
+    getShowAllModules(): Promise<boolean>;
+    setShowAllModules(flag: boolean): Promise<void>;
 }

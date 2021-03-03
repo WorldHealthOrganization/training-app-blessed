@@ -1,12 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Tooltip: React.FC<TooltipProps> = ({
-    className,
-    text,
-    children,
-    placement = "left",
-}) => {
+export const Tooltip: React.FC<TooltipProps> = ({ className, text, children, placement = "left" }) => {
     return (
         <TooltipWrapper className={className}>
             {children}

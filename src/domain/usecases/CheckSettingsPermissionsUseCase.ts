@@ -11,9 +11,7 @@ export class CheckSettingsPermissionsUseCase implements UseCase {
         const user = await this.configRepository.getUser();
         const permissions = await this.configRepository.getSettingsPermissions();
 
-        const isAdmin = !!user.userRoles.find(role =>
-            role.authorities.find(authority => authority === "ALL")
-        );
+        const isAdmin = !!user.userRoles.find(role => role.authorities.find(authority => authority === "ALL"));
 
         const sharedByUser = this.findCurrentUser(user, permissions.users ?? []);
         const sharedByGroup = this.findCurrentUser(user, permissions.userGroups ?? []);

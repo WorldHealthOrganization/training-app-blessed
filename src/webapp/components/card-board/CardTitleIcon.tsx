@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Icon } from "@material-ui/core";
 import { getColor } from "../../themes/colors";
 
-export const CardIcon = styled(Icon)`
+export const CardTitleIcon = styled(Icon)`
     float: right;
     background: ${getColor("primary")};
     color: #fff;

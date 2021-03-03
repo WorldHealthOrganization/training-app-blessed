@@ -3,17 +3,11 @@ import styled from "styled-components";
 import i18n from "../../../locales";
 import Decoration from "../../assets/Decoration.png";
 import { MainButton } from "../../components/main-button/MainButton";
-import {
-    Modal,
-    ModalContent,
-    ModalFooter,
-    ModalParagraph,
-    ModalTitle,
-} from "../../components/modal";
+import { Modal, ModalContent, ModalFooter, ModalParagraph, ModalTitle } from "../../components/modal";
 import { Stepper } from "../../components/training-wizard/stepper/Stepper";
 import { useAppContext } from "../../contexts/app-context";
 
-export const FinalPage = () => {
+export const FinalPage: React.FC = () => {
     const { usecases, setAppState, module, translate } = useAppContext();
 
     const openSummary = useCallback(() => {
@@ -26,7 +20,7 @@ export const FinalPage = () => {
     const goToLastTutorialStep = useCallback(() => {
         if (!module) return;
         const step = module.contents.steps.length;
-        const content = module.contents.steps[step - 1].pages.length;
+        const content = module.contents.steps[step - 1]?.pages.length ?? 0;
 
         setAppState({
             type: "TRAINING",
@@ -48,6 +42,16 @@ export const FinalPage = () => {
     const exit = useCallback(() => {
         setAppState(appState => ({ ...appState, exit: true }));
     }, [setAppState]);
+
+    const movePage = useCallback(
+        (step: number, content: number) => {
+            setAppState(appState => {
+                if (appState.type !== "TRAINING") return appState;
+                return { ...appState, step, content };
+            });
+        },
+        [setAppState]
+    );
 
     useEffect(() => {
         if (module) usecases.progress.complete(module.id);
@@ -71,11 +75,9 @@ export const FinalPage = () => {
                             name: translate(module.name),
                         })}
                     </ModalParagraph>
-                    <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} />
+                    <Stepper steps={steps} lastClickableStepIndex={-1} markAllCompleted={true} onMove={movePage} />
                     <ModalFooter>
-                        <MainButton onClick={goToLastTutorialStep}>
-                            {i18n.t("Back to tutorial")}
-                        </MainButton>
+                        <MainButton onClick={goToLastTutorialStep}>{i18n.t("Back to tutorial")}</MainButton>
                         <MainButton onClick={openSummary}>{i18n.t("Finish")}</MainButton>
                     </ModalFooter>
                 </Container>

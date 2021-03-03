@@ -1,5 +1,6 @@
 import { Provider } from "@dhis2/app-runtime";
 import i18n from "@dhis2/d2-i18n";
+import whyDidYouRender from "@welldone-software/why-did-you-render";
 import axios from "axios";
 import { init } from "d2";
 import _ from "lodash";
@@ -11,7 +12,6 @@ import App from "./webapp/pages/App";
 async function getBaseUrl() {
     if (process.env.NODE_ENV === "development") {
         const baseUrl = process.env.REACT_APP_DHIS2_BASE_URL || "http://localhost:8080";
-        console.info(`[DEV] DHIS2 instance: ${baseUrl}`);
         return baseUrl.replace(/\/*$/, "");
     } else {
         const { data: manifest } = await axios.get("manifest.webapp");
@@ -42,9 +42,11 @@ async function main() {
         configI18n(userSettings);
 
         ReactDOM.render(
-            <Provider config={{ baseUrl, apiVersion: 30 }}>
-                <App locale={userSettings.keyUiLocale} />
-            </Provider>,
+            <React.StrictMode>
+                <Provider config={{ baseUrl, apiVersion: 30 }}>
+                    <App locale={userSettings.keyUiLocale} />
+                </Provider>
+            </React.StrictMode>,
             document.getElementById("root")
         );
     } catch (err) {
@@ -61,6 +63,13 @@ async function main() {
         );
         ReactDOM.render(<div>{message}</div>, document.getElementById("root"));
     }
+}
+
+if (process.env.REACT_APP_TRACK_RERENDERS) {
+    console.debug("[whyDidYouRender] Track re-renders");
+    whyDidYouRender(React, {
+        trackAllPureComponents: true,
+    });
 }
 
 main();
