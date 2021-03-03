@@ -1,0 +1,416 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: i18next-conv\n"
+"POT-Creation-Date: 2021-03-03T22:48:02.634Z\n"
+"PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "Field {{field}} cannot be blank"
+msgstr ""
+
+msgid "You need to select at least one {{field}}"
+msgstr ""
+
+msgid "Field {{field}} needs to be a valid url"
+msgstr ""
+
+msgid "Field {{field}} is not valid"
+msgstr ""
+
+msgid "Tutorial"
+msgstr "Tutorial"
+
+msgid "Field name is mandatory"
+msgstr ""
+
+msgid "Identifier"
+msgstr ""
+
+msgid "Name *"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Icon"
+msgstr ""
+
+msgid "Modules"
+msgstr ""
+
+msgid "Modules assigned"
+msgstr ""
+
+msgid "Contents"
+msgstr "Contenidos"
+
+msgid "Add section"
+msgstr ""
+
+msgid "Add sub-section"
+msgstr ""
+
+msgid "Add category"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr "Borrar"
+
+msgid "Landing page"
+msgstr "Bienvenido"
+
+msgid "Section"
+msgstr ""
+
+msgid "Sub-section"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Edit markdown"
+msgstr "Editar markdown"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Settings"
+msgstr "Ajustes"
+
+msgid "Back"
+msgstr ""
+
+msgid "Move window"
+msgstr "Mover ventana"
+
+msgid "Exit tutorial"
+msgstr "Salir del tutorial"
+
+msgid "Expand window"
+msgstr "Expandir ventana"
+
+msgid "Minimize window"
+msgstr "Minimizar ventana"
+
+msgid "Note: The sharing settings are only applied to the current module"
+msgstr ""
+
+msgid "Add new step"
+msgstr ""
+
+msgid "Title *"
+msgstr ""
+
+msgid "Field must have a value"
+msgstr "El campo debe tener un valor"
+
+msgid "Code *"
+msgstr ""
+
+msgid "PoEditor Project id"
+msgstr "Token de POEditor"
+
+msgid "Launch application"
+msgstr ""
+
+msgid "DHIS2 application"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Welcome page"
+msgstr "Bienvenido"
+
+msgid "General info"
+msgstr ""
+
+msgid "Access"
+msgstr ""
+
+msgid "Summary"
+msgstr "Fin"
+
+msgid "Couldn't read the file because it's not valid"
+msgstr ""
+
+msgid "Importing module(s)"
+msgstr "Importando módulo(s)"
+
+msgid "Imported {{n}} modules"
+msgstr "{{n}} módulos importados"
+
+msgid "Are you sure you want to delete the selected modules?"
+msgstr ""
+
+msgid "This action cannot be reversed"
+msgstr ""
+
+msgid "Deleting modules"
+msgstr "Eliminando modulo"
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Delete modules"
+msgstr "Eliminar modulos"
+
+msgid "Are you sure you want to delete the selected step and its pages?"
+msgstr ""
+
+msgid "Delete step"
+msgstr "Borrar paso"
+
+msgid "Are you sure you want to delete the selected page?"
+msgstr ""
+
+msgid "Delete page"
+msgstr "Borrar página"
+
+msgid "Add new page"
+msgstr ""
+
+msgid "Edit contents of {{name}}"
+msgstr "Editar contenidos de {{name}}"
+
+msgid "Installing application"
+msgstr ""
+
+msgid "Are you sure you want to reset selected modules to its default value?"
+msgstr ""
+
+msgid "This action cannot be reversed."
+msgstr ""
+
+msgid "Resetting modules to default value"
+msgstr ""
+
+msgid "Successfully resetted modules to default value"
+msgstr ""
+
+msgid "Reset app to factory settings"
+msgstr ""
+
+msgid "Exporting module(s)"
+msgstr "Exportando módulo(s)"
+
+msgid "Initialize project in POEditor"
+msgstr ""
+
+msgid "App is not installed in this instance"
+msgstr ""
+
+msgid "Add module"
+msgstr "Añadir modulo"
+
+msgid "Add step"
+msgstr ""
+
+msgid "Add page"
+msgstr ""
+
+msgid "Edit module"
+msgstr "Editar modulo"
+
+msgid "Edit page"
+msgstr "Editar página"
+
+msgid "Delete module"
+msgstr "Eliminar modulo"
+
+msgid "Push local translations to POEditor"
+msgstr ""
+
+msgid "Move up"
+msgstr "Mover arriba"
+
+msgid "Move down"
+msgstr "Mover abajo"
+
+msgid "Install app"
+msgstr ""
+
+msgid "Restore to factory settings"
+msgstr ""
+
+msgid "Export module"
+msgstr "Exportar módulo"
+
+msgid "Import modules"
+msgstr "Importar módulos"
+
+msgid "Help"
+msgstr ""
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Previous step"
+msgstr "Paso anterior"
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Next step"
+msgstr "Paso siguiente"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Sub step {{position}} of {{total}}"
+msgstr ""
+
+msgid "Welcome"
+msgstr "Bienvenido"
+
+msgid "Final"
+msgstr ""
+
+msgid "Exit"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Training app"
+msgstr ""
+
+msgid "Cancel module editing?"
+msgstr ""
+
+msgid "Cancel module creation?"
+msgstr ""
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "No"
+msgstr "No"
+
+msgid "Create module"
+msgstr "Crear modulo"
+
+msgid "Continue Tutorial"
+msgstr "Continuar el tutorial"
+
+msgid "Exit Tutorial"
+msgstr "Salir del tutorial"
+
+msgid "Are you sure you want to exit?"
+msgstr ""
+
+msgid ""
+"If you are sure you want to exit, select 'Exit tutorial'. You can relaunch "
+"the training tutorial again at any time from the applications menu."
+msgstr ""
+
+msgid ""
+"If you would like to continue with training, select 'Continue tutorial' "
+"below or if you would like to select a different tutorial, click on the "
+"'Home' button."
+msgstr ""
+
+msgid "Well done!"
+msgstr "Bien hecho!"
+
+msgid "You've completed the {{name}} tutorial!"
+msgstr "Has completado el tutorial {{name}}"
+
+msgid "Back to tutorial"
+msgstr "Vovler al tutorial"
+
+msgid "Finish"
+msgstr ""
+
+msgid "Welcome to training on DHIS2"
+msgstr ""
+
+msgid "What do you want to learn in DHIS2?"
+msgstr ""
+
+msgid "Accessible to {{users}} users and {{userGroups}} user groups"
+msgstr ""
+
+msgid "Accessible to {{users}} users"
+msgstr ""
+
+msgid "Accessible to {{userGroups}} user groups"
+msgstr ""
+
+msgid "Only accessible to system administrators"
+msgstr ""
+
+msgid "Unable to update module contents"
+msgstr ""
+
+msgid "Unable to move item"
+msgstr ""
+
+msgid "Unable to add step"
+msgstr ""
+
+msgid "Unable to add page"
+msgstr ""
+
+msgid "Unable to remove step"
+msgstr ""
+
+msgid "Unable to remove page"
+msgstr ""
+
+msgid "Connection with POEditor"
+msgstr ""
+
+msgid "POEditor token"
+msgstr "Token de POEditor"
+
+msgid "Permissions"
+msgstr "Permisos"
+
+msgid "Access to Settings"
+msgstr ""
+
+msgid "Connect the application with POEditor to sync translations"
+msgstr ""
+
+msgid "Show list with modules on main landing page"
+msgstr ""
+
+msgid "A list with all the existing modules is visible"
+msgstr ""
+
+msgid "The list with all the existing  modules is hidden"
+msgstr ""
+
+msgid "Training modules"
+msgstr ""
+
+msgid "What did you learn in this tutorial?"
+msgstr "¿Qué ha aprendido en este tutorial?"
+
+msgid "What will this tutorial cover?"
+msgstr "¿Qué cubrirá este tutorial?"
+
+msgid "Take another tutorial"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Start Tutorial"
+msgstr "Empezar tutorial"
+
+#~ msgid "Assign module"
+#~ msgstr "Asignar modulo"

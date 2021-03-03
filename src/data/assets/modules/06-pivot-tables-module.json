@@ -1,0 +1,142 @@
+{
+    "_version": 1,
+    "id": "pivot-tables",
+    "disabled": false,
+    "dhisAppKey": "pivot-tables",
+    "name": { "key": "module-name", "referenceValue": "Pivot Tables", "translations": {} },
+    "icon": "https://user-images.githubusercontent.com/2181866/109413210-7f2e2b00-79ac-11eb-87fc-cc5ab7c2e4a1.png",
+    "type": "core",
+    "revision": 4,
+    "dhisVersionRange": "",
+    "dhisLaunchUrl": "/dhis-web-pivot/index.html",
+    "dhisAuthorities": ["M_dhis-web-pivot"],
+    "translation": { "provider": "poeditor", "project": "394103" },
+    "contents": {
+        "welcome": {
+            "key": "module-welcome",
+            "referenceValue": "# Welcome to the tutorial on Pivot Tables\n\n![Welcome Illustration](https://user-images.githubusercontent.com/2181866/100328140-79e7cb80-2fcc-11eb-81bc-9f39f8030fa6.png)\n\nUse this application to visualise your data in pivot tables. This tutorial takes you through all the steps to create pivot tables and use them to quickly summarize and arrange your data in a meaningful way.",
+            "translations": {}
+        },
+        "steps": [
+            {
+                "title": {
+                    "key": "step-1-title",
+                    "referenceValue": "Select data type",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-1-1",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100326898-d944dc00-2fca-11eb-8a98-f7d45486ef88.gif)\n\nIn the 'Data' section of the left-hand menu, select the data type that you would like to display in your table. There are several types of data to choose from, including:\n\n- Indicators: Calculated formulae using a combination of data variables\n\n- Data elements: Variables whose data are actually recorded in the DHIS2 system (e.g. number of mosquitoes etc.)\n\n- Data sets: A collection of data elements grouped together. These have set reporting frequencies.\n\n- Event data items: Data elements that are part of a program and represent captured events\n\n- Program indicators: Calculated formulae based on data elements in a program that represent events."
+                    },
+                    {
+                        "key": "step-1-2",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100326901-d9dd7280-2fca-11eb-93a7-3f63f3851ffe.gif)\n\nDepending on which data you have selected, the next section requires you to 'Select indicator group' if you have selected Indicators or 'Select data element group' if you have selected data elements. Click on the drop-down menu to search for you data group.\n\nThese groups have been created to make it easier to find specific variables within your data. If your data type does not have data groups, you can select [All indicators] or [All data elements].\n\nFor Data Elements, you will be able to select between data 'Totals' or 'Details'. Totals will display aggregated data (e.g. average, sum etc.), while Details will show the breakdown of each variable into its categories."
+                    },
+                    {
+                        "key": "step-1-3",
+                        "translations": {},
+                        "referenceValue": "![Select data type](https://user-images.githubusercontent.com/2181866/100326903-da760900-2fca-11eb-9532-41178fc224a7.gif)\n\nBy now you should see a list of variables on the left 'Available' column below. Select which variables from the list to include in your table by double clicking on them. This will move the variables from the 'Available' column to the 'Selected' column.\n\nYou can also select multiple variables by holding the Ctrl key (or Cmd on Mac) and clicking on several items to highlight them, and clicking the single arrow pointing to the right.\n\nClick on the double arrow to move all the variables from the left to right column at once. The same functions work to move the variables back from the right to the left column."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-2-title",
+                    "referenceValue": "Select time period",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-2-1",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/100326904-da760900-2fca-11eb-8b02-c8353fe04cac.gif)\n\nClick on the 'Periods' tab to open the time period menu.\n\nYou can select time periods which are relative to the current date using the check boxes in the section at the bottom of this section below. You can select more than one relative period."
+                    },
+                    {
+                        "key": "step-2-2",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/100326906-db0e9f80-2fca-11eb-816b-0402b0b106d5.gif)\n\nIn addition to relative time periods, you can select fixed time periods. The drop down menu under 'Select period type' includes a variety of reporting frequencies (e.g. daily, weekly etc.). Selecting from this list will create a list of time periods in the left-hand 'Available' column, corresponding to the period type that you selected.\n\nThe current year is the default year for the available time periods in the list. You can toggle between years by clicking on the 'Prev year' and 'Next year' buttons.\n\nMake sure to deselect any relative periods in the check box section otherwise your table will have a mix of time periods that may not make sense.\n\n<i>Note: You can select both fixed time periods (added to the 'Selected' column) and relative time periods for the same table. Make sure that your selection makes sense.</i>"
+                    },
+                    {
+                        "key": "step-2-3",
+                        "translations": {},
+                        "referenceValue": "![Select time period](https://user-images.githubusercontent.com/2181866/100326908-db0e9f80-2fca-11eb-82ac-4c980f8347cc.gif)\n\nSelect the time periods that you would like to display in your table by double clicking on the periods, or clicking the periods and moving them over to the right 'Selected' column using the single arrow."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-3-title",
+                    "referenceValue": "Select location",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-3-1",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100326910-dba73600-2fca-11eb-9373-05d180d50eb1.gif)\n\nClick on the 'Organisation units' tab to open the locations menu. You can select any number of locations from the menu. Click down to lower geographic levels on the menu by clicking on the + symbol next to the location names.\n\nClick on the location name to select it. You can select multiple locations from across different geographic levels by pressing the Ctrl key (or Cmd on Mac) and clicking on all the location names that you would like to add to your table."
+                    },
+                    {
+                        "key": "step-3-2",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100326912-dba73600-2fca-11eb-8e9f-73ae4335351d.gif)\n\nAnother way to select organizational units is by clicking on the cog icon and choosing an option from the 'Selection mode' drop-down menu. If you choose 'Select levels', you can select all locations at one or more geographic levels (e.g. Country, Province, District).\n\nSelect a level from the 'Select Organisation Unit levels' drop-down menu. For example, selecting 'District' from the menu will select all locations that are districts from your drop-down tree menu. If you click on a province name after this step, it will only select all districts within that province."
+                    },
+                    {
+                        "key": "step-3-3",
+                        "translations": {},
+                        "referenceValue": "![Select location](https://user-images.githubusercontent.com/2181866/100326914-dc3fcc80-2fca-11eb-8372-f166da1eef40.gif)\n\nThe same applies if you choose 'Select groups' from the 'Selection mode' drop-down menu. In the 'Select organisation unit groups', click on one or more of the available group names. This will select all the locations inside one or more groups at the same time."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-4-title",
+                    "referenceValue": "Create and format table",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-4-1",
+                        "translations": {},
+                        "referenceValue": "![Create and format table](https://user-images.githubusercontent.com/2181866/100326915-dc3fcc80-2fca-11eb-88ee-21b41e0db1a1.gif)\n\nClick on the 'Update' button to create a table with the data that you have selected.\n\nTo change how the data appear in the table, click on the 'Layout' tab. The window that opens shows how the data are arranged in your table, according to filter, rows and columns. You can move the data around by clicking, dragging and dropping the data into the different positions.\n\nClick 'Update' to view the new layout of your table."
+                    },
+                    {
+                        "key": "step-4-2",
+                        "translations": {},
+                        "referenceValue": "![Create and format table](https://user-images.githubusercontent.com/2181866/100326916-dc3fcc80-2fca-11eb-982f-970505f98c4d.gif)\n\nTo change other table settings, click on the 'Options' tab. The Table Options menu provides a list of options for you to:\n\n- Change how the data are aggregated and displayed in your table\n\n- Apply and style a legend for your table\n\n- Change the style and appearance of the table, including table and font size."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-5-title",
+                    "referenceValue": "Save and share your table",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-5-1",
+                        "translations": {},
+                        "referenceValue": "![Save and share your table](https://user-images.githubusercontent.com/2181866/100326918-dcd86300-2fca-11eb-999b-83d3fbb70140.gif)\n\nFrom the 'Favourites' drop-down menu, select 'Save as' to save your table with a name and description. Save your table by clicking 'Save'. From the drop down menu, you can also share the table with other DHIS2 users, and write interpretations on your table.\n\nWhen you want to work on this table again, you can access it from the 'Favourites' menu by selecting 'Open' and finding the name of your file."
+                    }
+                ]
+            },
+            {
+                "title": {
+                    "key": "step-6-title",
+                    "referenceValue": "Download your table",
+                    "translations": {}
+                },
+                "pages": [
+                    {
+                        "key": "step-6-1",
+                        "translations": {},
+                        "referenceValue": "![Download your table](https://user-images.githubusercontent.com/2181866/100326920-dcd86300-2fca-11eb-8eb3-b57776602215.gif)\n\nClick on 'Downloads'; from the drop-down menu, you can choose to download your table in different formats according to your need e.g. for further analysis or to share in a report.\n\nTo download your table as you are seeing in on the screen, chose from one of the three options under 'Table layout' on the drop-down menu."
+                    }
+                ]
+            }
+        ]
+    }
+}
