@@ -4,7 +4,6 @@ import _ from "lodash";
 import moment from "moment";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { fromPairs } from "../../types/utils";
-import { getUid } from "../../utils/dhis2";
 import { promiseMap } from "../../utils/promises";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
@@ -110,9 +109,7 @@ export class TrainingModuleDefaultImportExport {
     ) {
         const fileUrlByFilename = fromPairs(
             await promiseMap(fileContents, async ({ filename, arrayBuffer }) => {
-                const fileData = await arrayBufferToString(arrayBuffer);
-                const fileId = getUid(fileData);
-                const fileUrl = await this.instanceRepository.uploadFile(arrayBuffer, { id: fileId });
+                const fileUrl = await this.instanceRepository.uploadFile(arrayBuffer);
                 return [filename, fileUrl];
             })
         );
@@ -173,21 +170,4 @@ export class TrainingModuleDefaultImportExport {
         const blob = new Blob([json], { type: "application/json" });
         zip.file(path, blob);
     }
-}
-
-function arrayBufferToString(buffer: ArrayBuffer, encoding = "UTF-8"): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-        const blob = new Blob([buffer], { type: "text/plain" });
-        const reader = new FileReader();
-
-        reader.onload = ev => {
-            if (ev.target) {
-                resolve(ev.target.result as string);
-            } else {
-                reject(new Error("Could not convert array to string!"));
-            }
-        };
-
-        reader.readAsText(blob, encoding);
-    });
 }
