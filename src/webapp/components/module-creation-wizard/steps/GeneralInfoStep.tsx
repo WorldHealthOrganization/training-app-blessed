@@ -21,7 +21,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     case "id": {
                         const id = event.target.value as string;
                         onChange(module => {
-                            return { ...module, id: _.kebabCase(id) };
+                            return { ...module, id };
                         });
                         return;
                     }

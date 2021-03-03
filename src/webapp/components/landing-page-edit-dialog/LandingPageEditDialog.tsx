@@ -44,7 +44,7 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
     ]);
 
     const save = useCallback(() => {
-        if (!value.name) {
+        if (!value.name.referenceValue) {
             snackbar.error(i18n.t("Field name is mandatory"));
             return;
         }

@@ -1,4 +1,5 @@
-import { ConfirmationDialogProps, ConfirmationDialog } from "@eyeseetea/d2-ui-components";
+import { ConfirmationDialog, ConfirmationDialogProps } from "@eyeseetea/d2-ui-components";
+import _ from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { defaultTrainingModule, PartialTrainingModule } from "../../../domain/entities/TrainingModule";
@@ -24,7 +25,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
     }, [setAppState]);
 
     const saveModule = useCallback(async () => {
-        await usecases.modules.update(stateModule);
+        await usecases.modules.update({ ...stateModule, id:  _.kebabCase(stateModule.id)});
         await reload();
     }, [stateModule, usecases, reload]);
 
