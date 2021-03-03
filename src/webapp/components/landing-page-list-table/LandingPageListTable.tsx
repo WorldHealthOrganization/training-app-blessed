@@ -7,11 +7,16 @@ import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPa
 import i18n from "../../../locales";
 import { useAppContext } from "../../contexts/app-context";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
+import {
+    LandingPageModuleAssignDialog,
+    LandingPageModuleAssignDialogProps
+} from "../landing-page-module-assign-dialog/LandingPageModuleAssignDialog";
 
 export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
     const { usecases, reload } = useAppContext();
 
     const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
+    const [assignDialogProps, updateAssignDialog] = useState<LandingPageModuleAssignDialogProps | null>(null);
 
     const columns: TableColumn<LandingNode>[] = useMemo(
         () => [
@@ -116,18 +121,17 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
             {
                 name: "add-module",
                 text: i18n.t("Assign module"),
-                icon: <Icon>add</Icon>,
+                icon: <Icon>add_circle</Icon>,
                 onClick: ids => {
                     const parent = ids[0];
                     if (!parent) return;
 
-                    updateEditDialog({
-                        title: i18n.t("Add"),
-                        type: "module",
+                    updateAssignDialog({
+                        title: i18n.t("Assign module"),
                         parent,
                         onCancel: () => updateEditDialog(null),
                         onSave: async node => {
-                            updateEditDialog(null);
+                            updateAssignDialog(null);
                             await usecases.landings.update(node);
                             await reload();
                         },
@@ -156,6 +160,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                         },
                     });
                 },
+                isActive: nodes => _.every(nodes, item => item.id !== "module"),
             },
             {
                 name: "remove",
@@ -175,6 +180,8 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
     return (
         <React.Fragment>
             {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
+            {assignDialogProps && <LandingPageModuleAssignDialog isOpen={true} {...assignDialogProps} />}
+
             <ObjectsTable<LandingNode> rows={nodes} columns={columns} actions={actions} childrenKeys={["children"]} />
         </React.Fragment>
     );
@@ -201,4 +208,4 @@ const flattenRows = (rows: LandingNode[]): LandingNode[] => {
 
 const ItemIcon = styled.img`
     width: 100px;
-`
+`;
