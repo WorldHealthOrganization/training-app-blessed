@@ -1,5 +1,6 @@
 import { Provider } from "@dhis2/app-runtime";
 import i18n from "@dhis2/d2-i18n";
+import whyDidYouRender from "@welldone-software/why-did-you-render";
 import axios from "axios";
 import { init } from "d2";
 import _ from "lodash";
@@ -62,6 +63,13 @@ async function main() {
         );
         ReactDOM.render(<div>{message}</div>, document.getElementById("root"));
     }
+}
+
+if (process.env.REACT_APP_TRACK_RERENDERS) {
+    console.debug("[whyDidYouRender] Track re-renders");
+    whyDidYouRender(React, {
+        trackAllPureComponents: true,
+    });
 }
 
 main();
