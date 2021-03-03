@@ -20,14 +20,18 @@ export const LandingPageModuleAssignDialog: React.FC<LandingPageModuleAssignDial
     ]);
 
     const save = useCallback(() => {
-        const {name} = modules.find(({ id }) => id === value) ?? {};
+        const { name } = modules.find(({ id }) => id === value) ?? {};
         if (!value || !name) return;
 
         onSave({
             id: generateUid(),
             type: "module",
             parent,
-            name: { key: _.kebabCase(`${parent}-${value}-name`), referenceValue: name.referenceValue, translations: name.translations },
+            name: {
+                key: _.kebabCase(`${parent}-${value}-name`),
+                referenceValue: name.referenceValue,
+                translations: name.translations,
+            },
             children: [],
             icon: "",
             title: undefined,

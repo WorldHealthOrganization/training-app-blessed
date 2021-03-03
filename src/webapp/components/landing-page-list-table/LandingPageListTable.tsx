@@ -9,7 +9,7 @@ import { useAppContext } from "../../contexts/app-context";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
 import {
     LandingPageModuleAssignDialog,
-    LandingPageModuleAssignDialogProps
+    LandingPageModuleAssignDialogProps,
 } from "../landing-page-module-assign-dialog/LandingPageModuleAssignDialog";
 
 export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
