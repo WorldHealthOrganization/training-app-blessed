@@ -53,12 +53,17 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         async (files: File[], rejections: FileRejection[]) => {
             if (files.length === 0 && rejections.length > 0) {
                 snackbar.error(i18n.t("Couldn't read the file because it's not valid"));
-                return;
+            } else {
+                try {
+                    const modules = await usecases.modules.import(files);
+                    snackbar.success(i18n.t("Imported: {{n}} modules", { n: modules.length }));
+                    await refreshRows();
+                } catch (err) {
+                    snackbar.error((err && err.message) || err.toString());
+                }
             }
-
-            snackbar.info("Import not implemented yet");
         },
-        [snackbar]
+        [snackbar, refreshRows, usecases]
     );
 
     const deleteModules = useCallback(
@@ -550,7 +555,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <Dropzone ref={fileRef} accept={"application/json"} onDrop={handleFileUpload}>
+            <Dropzone ref={fileRef} accept={"application/zip"} onDrop={handleFileUpload}>
                 <ObjectsTable<ListItem>
                     rows={rows}
                     columns={columns}

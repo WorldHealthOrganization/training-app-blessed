@@ -1,7 +1,4 @@
-import FileSaver from "file-saver";
-import JSZip from "jszip";
 import _ from "lodash";
-import moment from "moment";
 import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
@@ -19,6 +16,7 @@ import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
+import { TrainingModuleDefaultImportExport } from "./TrainingModuleDefaultImportExport";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -110,26 +108,16 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.saveDataStore(newModule);
     }
 
+    private getImportExportModule() {
+        return new TrainingModuleDefaultImportExport(this, this.instanceRepository, this.storageClient);
+    }
+
+    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
+        return this.getImportExportModule().import(files);
+    }
+
     public async export(ids: string[]): Promise<void> {
-        const zip = new JSZip();
-
-        await promiseMap(ids, async id => {
-            const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-                Namespaces.TRAINING_MODULES,
-                id
-            );
-
-            if (!dataStoreModel) return;
-
-            const json = JSON.stringify(dataStoreModel, null, 4);
-            const blob = new Blob([json], { type: "application/json" });
-            const fileName = _.kebabCase(`module-${dataStoreModel.name.referenceValue}`);
-            zip.file(`${fileName}.json`, blob);
-        });
-
-        const blob = await zip.generateAsync({ type: "blob" });
-        const date = moment().format("YYYYMMDDHHmm");
-        FileSaver.saveAs(blob, `training-modules-${date}.zip`);
+        return this.getImportExportModule().export(ids);
     }
 
     public async resetDefaultValue(ids: string[]): Promise<void> {
@@ -286,7 +274,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return persistedModel;
     }
 
-    private async saveDataStore(model: PersistedTrainingModule) {
+    public async saveDataStore(model: PersistedTrainingModule) {
         const currentUser = await this.config.getUser();
         const lastUpdatedBy = { id: currentUser.id, name: currentUser.name };
 

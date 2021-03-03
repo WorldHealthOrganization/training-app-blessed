@@ -1,7 +1,7 @@
 import FileType from "file-type/browser";
 import Resizer from "react-image-file-resizer";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
-import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
+import { InstanceRepository, UploadFileOptions } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
 import { cache, clearCache } from "../../utils/cache";
 import { UserSearch } from "../entities/SearchUser";
@@ -9,12 +9,14 @@ import { getD2APiFromInstance } from "../utils/d2-api";
 
 export class InstanceDhisRepository implements InstanceRepository {
     private api: D2Api;
+    public baseUrl: string;
 
     constructor(config: ConfigRepository) {
         this.api = getD2APiFromInstance(config.getInstance());
+        this.baseUrl = this.api.baseUrl;
     }
 
-    public async uploadFile(data: ArrayBuffer): Promise<string> {
+    public async uploadFile(data: ArrayBuffer, options: UploadFileOptions = {}): Promise<string> {
         const type = await FileType.fromBuffer(data);
         const { mime = "application/unknown" } = type ?? {};
         const blob = new Blob([data], { type: mime });
@@ -22,6 +24,7 @@ export class InstanceDhisRepository implements InstanceRepository {
 
         const { id } = await this.api.files
             .upload({
+                id: options.id,
                 name: `[Training App] Uploaded file`,
                 data: resized,
             })
