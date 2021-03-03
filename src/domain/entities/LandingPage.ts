@@ -15,7 +15,8 @@ export interface LandingNode {
     parent: string;
     type: LandingNodeType;
     icon: string;
-    title: TranslatableText;
+    name: TranslatableText;
+    title: TranslatableText | undefined;
     content: TranslatableText | undefined;
     modules: string[];
     children: LandingNode[];
@@ -26,7 +27,8 @@ export const LandingNodeModel: Codec<LandingNode> = Schema.object({
     parent: Schema.string,
     type: LandingPageNodeTypeModel,
     icon: Schema.optionalSafe(Schema.string, ""),
-    title: TranslatableTextModel,
+    name: TranslatableTextModel,
+    title: Schema.optional(TranslatableTextModel),
     content: Schema.optional(TranslatableTextModel),
     modules: Schema.optionalSafe(Schema.array(Schema.string), []),
     children: Schema.lazy(() => Schema.array(LandingNodeModel)),

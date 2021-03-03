@@ -2,7 +2,7 @@ import {
     ConfirmationDialog,
     ConfirmationDialogProps,
     MultipleDropdown,
-    useSnackbar
+    useSnackbar,
 } from "@eyeseetea/d2-ui-components";
 import { TextField } from "@material-ui/core";
 import _ from "lodash";
@@ -23,7 +23,8 @@ const buildDefaultNode = (type: LandingNodeType, parent: string) => {
         type,
         parent,
         icon: "",
-        title: { key: "", referenceValue: "", translations: {} },
+        name: { key: "", referenceValue: "", translations: {} },
+        title: undefined,
         content: undefined,
         children: [],
         modules: [],
@@ -33,7 +34,7 @@ const buildDefaultNode = (type: LandingNodeType, parent: string) => {
 export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props => {
     const { type, parent, initialNode, onSave } = props;
 
-    const { modules, translate, usecases, landings } = useAppContext();
+    const { modules, translate, usecases } = useAppContext();
     const snackbar = useSnackbar();
 
     const [value, setValue] = useState<LandingNode>(initialNode ?? buildDefaultNode(type, parent));
@@ -47,14 +48,12 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
     const validate = useCallback(
         (filter?: string) => {
             const errors: Dictionary<string | undefined> = {
-                id: flattenRows(landings).find(({ id }) => id === value.id) ? "Code must be unique" : undefined,
-                title: !value.title ? "Field name must have a value" : undefined,
-                icon: value.type !== "sub-section" && !value.icon ? "Page must have an icon" : undefined,
+                name: !value.name ? "Field name must have a value" : undefined,
             };
 
             return filter ? { [filter]: errors[filter] } : errors;
         },
-        [value, landings]
+        [value]
     );
 
     const save = useCallback(() => {
@@ -64,12 +63,11 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
             return;
         }
 
-        const id = _.kebabCase(value.id);
-
         onSave({
             ...value,
-            title: { ...value.title, key: `${id}-title` },
-            content: value.content ? { ...value.content, key: `${id}-content` } : undefined,
+            name: { ...value.name, key: `${value.id}-name` },
+            title: value.title ? { ...value.title, key: `${value.id}-title` } : undefined,
+            content: value.content ? { ...value.content, key: `${value.id}-content` } : undefined,
         });
     }, [value, onSave, snackbar, errors]);
 
@@ -77,19 +75,13 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
         (field: keyof LandingNode) => {
             return (event: React.ChangeEvent<{ value: unknown }>) => {
                 switch (field) {
+                    case "name":
                     case "title": {
                         const referenceValue = event.target.value as string;
                         setValue(node => {
                             return { ...node, [field]: { key: "name", referenceValue, translations: {} } };
                         });
                         setErrors(errors => ({ ...errors, ...validate(field) }));
-                        return;
-                    }
-                    case "content": {
-                        const referenceValue = event.target.value as string;
-                        setValue(node => {
-                            return { ...node, [field]: { key: "name", referenceValue, translations: {} } };
-                        });
                         return;
                     }
                 }
@@ -126,8 +118,19 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
             <Row>
                 <TextField
                     fullWidth={true}
-                    label={i18n.t("Title *")}
-                    value={value.title.referenceValue}
+                    label={i18n.t("Name *")}
+                    value={value.name.referenceValue}
+                    onChange={onChangeField("name")}
+                    error={!!errors["name"]}
+                    helperText={errors["name"]}
+                />
+            </Row>
+
+            <Row>
+                <TextField
+                    fullWidth={true}
+                    label={i18n.t("Title")}
+                    value={value.title?.referenceValue ?? ""}
                     onChange={onChangeField("title")}
                     error={!!errors["title"]}
                     helperText={errors["title"]}
@@ -135,6 +138,33 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
             </Row>
 
             <Row>
+                <h3>{i18n.t("Icon")}</h3>
+
+                <IconUpload>
+                    {value.icon ? (
+                        <IconContainer>
+                            <img src={value.icon} alt={`Page icon`} />
+                        </IconContainer>
+                    ) : null}
+
+                    <FileInput type="file" onChange={handleFileUpload} />
+                </IconUpload>
+            </Row>
+
+            <Row>
+                <h3>{i18n.t("Modules")}</h3>
+
+                <ModuleSelector
+                    label={i18n.t("Modules assigned")}
+                    items={items}
+                    values={value.modules}
+                    onChange={modules => setValue(landing => ({ ...landing, modules }))}
+                />
+            </Row>
+
+            <Row>
+                <h3>{i18n.t("Contents")}</h3>
+
                 <MarkdownEditor
                     value={value.content?.referenceValue ?? ""}
                     onChange={referenceValue =>
@@ -146,26 +176,6 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
                     markdownPreview={markdown => <StepPreview value={markdown} />}
                     onUpload={data => usecases.instance.uploadFile(data)}
                 />
-            </Row>
-
-            {value.type !== "sub-section" ? (
-                <Row style={{ marginBottom: 80 }}>
-                    <h3>{i18n.t("Icon *")}</h3>
-
-                    <IconUpload>
-                        {value.icon ? (
-                            <IconContainer>
-                                <img src={value.icon} alt={`Page icon`} />
-                            </IconContainer>
-                        ) : null}
-
-                        <FileInput type="file" onChange={handleFileUpload} />
-                    </IconUpload>
-                </Row>
-            ) : null}
-
-            <Row>
-                <MultipleDropdown label={i18n.t("Modules assigned")} items={items} values={value.modules} onChange={modules => setValue(landing => ({...landing, modules }))} />
             </Row>
         </ConfirmationDialog>
     );
@@ -205,10 +215,6 @@ const FileInput = styled.input`
     outline: none;
 `;
 
-const flattenRows = (rows: LandingNode[]): LandingNode[] => {
-    return _.flatMap(rows, row => [row, ...flattenRows(row.children)]);
-};
-
 const StyledModalBody = styled(ModalBody)`
     max-width: 600px;
 `;
@@ -225,3 +231,7 @@ const StepPreview: React.FC<{
         </StyledModalBody>
     );
 };
+
+const ModuleSelector = styled(MultipleDropdown)`
+    width: 100%;
+`;

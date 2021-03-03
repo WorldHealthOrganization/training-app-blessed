@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-03T18:09:55.314Z\n"
-"PO-Revision-Date: 2021-03-03T18:09:55.314Z\n"
+"POT-Creation-Date: 2021-03-03T21:20:22.157Z\n"
+"PO-Revision-Date: 2021-03-03T21:20:22.157Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -26,13 +26,22 @@ msgstr ""
 msgid "Identifier"
 msgstr ""
 
-msgid "Title *"
+msgid "Name *"
 msgstr ""
 
-msgid "Icon *"
+msgid "Title"
+msgstr ""
+
+msgid "Icon"
+msgstr ""
+
+msgid "Modules"
 msgstr ""
 
 msgid "Modules assigned"
+msgstr ""
+
+msgid "Contents"
 msgstr ""
 
 msgid "Add section"
@@ -95,19 +104,16 @@ msgstr ""
 msgid "Add new step"
 msgstr ""
 
+msgid "Title *"
+msgstr ""
+
 msgid "Field must have a value"
 msgstr ""
 
 msgid "Code *"
 msgstr ""
 
-msgid "Name *"
-msgstr ""
-
 msgid "PoEditor Project id"
-msgstr ""
-
-msgid "Icon"
 msgstr ""
 
 msgid "Launch application"
@@ -123,9 +129,6 @@ msgid "Welcome page"
 msgstr ""
 
 msgid "General info"
-msgstr ""
-
-msgid "Contents"
 msgstr ""
 
 msgid "Access"

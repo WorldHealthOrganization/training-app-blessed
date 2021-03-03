@@ -5,8 +5,10 @@ import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
+import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import { useAppContext } from "../../contexts/app-context";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
+import { ModalBody } from "../modal";
 
 export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
     const { usecases, reload } = useAppContext();
@@ -22,6 +24,11 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 getValue: item => getTypeName(item.type),
             },
             {
+                name: "name",
+                text: "Name",
+                getValue: item => item.name?.referenceValue ?? "-",
+            },
+            {
                 name: "title",
                 text: "Title",
                 getValue: item => item.title?.referenceValue ?? "-",
@@ -29,13 +36,13 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
             {
                 name: "content",
                 text: "Content",
-                getValue: item => item.content?.referenceValue ?? "-",
+                getValue: item => item.content ? <StepPreview value={item.content.referenceValue} /> : "-",
             },
             {
                 name: "icon",
                 text: "Icon",
                 getValue: item =>
-                    item.icon ? <ItemIcon src={item.icon} alt={`Icon for ${item.title.referenceValue}`} /> : "-",
+                    item.icon ? <ItemIcon src={item.icon} alt={`Icon for ${item.name.referenceValue}`} /> : "-",
             },
         ],
         []
@@ -107,7 +114,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                         },
                     });
                 },
-                isActive: nodes => _.every(nodes, item => item.type === "sub-section"),
+                isActive: nodes => _.every(nodes, item => item.type === "sub-section" || item.type === "category"),
             },
             {
                 name: "edit",
@@ -177,4 +184,21 @@ const flattenRows = (rows: LandingNode[]): LandingNode[] => {
 
 const ItemIcon = styled.img`
     width: 100px;
+`;
+
+const StepPreview: React.FC<{
+    className?: string;
+    value?: string;
+}> = ({ className, value }) => {
+    if (!value) return null;
+
+    return (
+        <StyledModalBody className={className}>
+            <MarkdownViewer source={value} />
+        </StyledModalBody>
+    );
+};
+
+const StyledModalBody = styled(ModalBody)`
+    max-width: 600px;
 `;

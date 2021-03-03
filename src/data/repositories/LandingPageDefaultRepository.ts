@@ -29,11 +29,12 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
                     parent: "none",
                     type: "root" as const,
                     icon: "",
-                    title: {
+                    name: {
                         key: "root-name",
                         referenceValue: "Main landing page",
                         translations: {},
                     },
+                    title: undefined,
                     content: undefined,
                     modules: [],
                 };

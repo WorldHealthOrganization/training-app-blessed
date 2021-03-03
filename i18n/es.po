@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-03T18:09:55.314Z\n"
+"POT-Creation-Date: 2021-03-03T21:20:22.157Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,14 +26,23 @@ msgstr "Tutorial"
 msgid "Identifier"
 msgstr ""
 
-msgid "Title *"
+msgid "Name *"
 msgstr ""
 
-msgid "Icon *"
+msgid "Title"
+msgstr ""
+
+msgid "Icon"
+msgstr ""
+
+msgid "Modules"
 msgstr ""
 
 msgid "Modules assigned"
 msgstr ""
+
+msgid "Contents"
+msgstr "Contenidos"
 
 msgid "Add section"
 msgstr ""
@@ -95,20 +104,17 @@ msgstr ""
 msgid "Add new step"
 msgstr ""
 
+msgid "Title *"
+msgstr ""
+
 msgid "Field must have a value"
 msgstr "El campo debe tener un valor"
 
 msgid "Code *"
 msgstr ""
 
-msgid "Name *"
-msgstr ""
-
 msgid "PoEditor Project id"
 msgstr "Token de POEditor"
-
-msgid "Icon"
-msgstr ""
 
 msgid "Launch application"
 msgstr ""
@@ -124,9 +130,6 @@ msgstr "Bienvenido"
 
 msgid "General info"
 msgstr ""
-
-msgid "Contents"
-msgstr "Contenidos"
 
 msgid "Access"
 msgstr ""
