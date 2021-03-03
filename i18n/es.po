@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-03T12:23:34.075Z\n"
+"POT-Creation-Date: 2021-03-03T12:49:11.708Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +68,6 @@ msgstr ""
 msgid "Name *"
 msgstr ""
 
-#, fuzzy
 msgid "PoEditor Project id"
 msgstr "Token de POEditor"
 
@@ -99,6 +98,12 @@ msgstr "Fin"
 msgid "Couldn't read the file because it's not valid"
 msgstr ""
 
+msgid "Importing module(s)"
+msgstr "Importando módulo(s)"
+
+msgid "Imported {{n}} modules"
+msgstr "{{n}} módulos importados"
+
 msgid "Are you sure you want to delete the selected modules?"
 msgstr ""
 
@@ -117,16 +122,14 @@ msgstr "Eliminar modulos"
 msgid "Are you sure you want to delete the selected step and its pages?"
 msgstr ""
 
-#, fuzzy
 msgid "Delete step"
-msgstr "Paso siguiente"
+msgstr "Borrar paso"
 
 msgid "Are you sure you want to delete the selected page?"
 msgstr ""
 
-#, fuzzy
 msgid "Delete page"
-msgstr "Bienvenido"
+msgstr "Borrar página"
 
 msgid "Add new page"
 msgstr ""
@@ -152,9 +155,8 @@ msgstr ""
 msgid "Reset app to factory settings"
 msgstr ""
 
-#, fuzzy
-msgid "Exporting module"
-msgstr "Editar modulo"
+msgid "Exporting module(s)"
+msgstr "Exportando módulo(s)"
 
 msgid "Initialize project in POEditor"
 msgstr ""
@@ -174,9 +176,8 @@ msgstr ""
 msgid "Edit module"
 msgstr "Editar modulo"
 
-#, fuzzy
 msgid "Edit page"
-msgstr "Bienvenido"
+msgstr "Editar página"
 
 msgid "Delete module"
 msgstr "Eliminar modulo"
@@ -196,13 +197,11 @@ msgstr ""
 msgid "Restore to factory settings"
 msgstr ""
 
-#, fuzzy
 msgid "Export module"
-msgstr "Editar modulo"
+msgstr "Exportar módulo"
 
-#, fuzzy
 msgid "Import modules"
-msgstr "Editar modulo"
+msgstr "Importar módulos"
 
 msgid "Help"
 msgstr ""
@@ -341,7 +340,6 @@ msgstr ""
 msgid "Connect the application with POEditor to sync translations"
 msgstr ""
 
-#, fuzzy
 msgid "Landing page"
 msgstr "Bienvenido"
 

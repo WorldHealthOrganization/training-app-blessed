@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-03T12:23:34.075Z\n"
-"PO-Revision-Date: 2021-03-03T12:23:34.075Z\n"
+"POT-Creation-Date: 2021-03-03T12:49:11.708Z\n"
+"PO-Revision-Date: 2021-03-03T12:49:11.708Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -98,6 +98,12 @@ msgstr ""
 msgid "Couldn't read the file because it's not valid"
 msgstr ""
 
+msgid "Importing module(s)"
+msgstr ""
+
+msgid "Imported {{n}} modules"
+msgstr ""
+
 msgid "Are you sure you want to delete the selected modules?"
 msgstr ""
 
@@ -149,7 +155,7 @@ msgstr ""
 msgid "Reset app to factory settings"
 msgstr ""
 
-msgid "Exporting module"
+msgid "Exporting module(s)"
 msgstr ""
 
 msgid "Initialize project in POEditor"

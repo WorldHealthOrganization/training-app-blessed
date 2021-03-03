@@ -54,12 +54,15 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             if (files.length === 0 && rejections.length > 0) {
                 snackbar.error(i18n.t("Couldn't read the file because it's not valid"));
             } else {
+                loading.show(true, i18n.t("Importing module(s)"));
                 try {
                     const modules = await usecases.modules.import(files);
-                    snackbar.success(i18n.t("Imported: {{n}} modules", { n: modules.length }));
+                    snackbar.success(i18n.t("Imported {{n}} modules", { n: modules.length }));
                     await refreshRows();
                 } catch (err) {
                     snackbar.error((err && err.message) || err.toString());
+                } finally {
+                    loading.reset();
                 }
             }
         },
@@ -306,7 +309,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const exportModule = useCallback(
         async (ids: string[]) => {
             if (!ids[0]) return;
-            loading.show(true, i18n.t("Exporting module"));
+            loading.show(true, i18n.t("Exporting module(s)"));
             await usecases.modules.export(ids);
             loading.reset();
         },
