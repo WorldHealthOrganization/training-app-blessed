@@ -2,16 +2,14 @@ import {
     ConfirmationDialog,
     ConfirmationDialogProps,
     MultipleDropdown,
-    useSnackbar,
+    useSnackbar
 } from "@eyeseetea/d2-ui-components";
 import { TextField } from "@material-ui/core";
-import _ from "lodash";
 import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import { generateUid } from "../../../data/utils/uid";
 import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
-import { Dictionary } from "../../../types/utils";
 import { useAppContext } from "../../contexts/app-context";
 import { MarkdownEditor } from "../markdown-editor/MarkdownEditor";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
@@ -39,28 +37,15 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
     const snackbar = useSnackbar();
 
     const [value, setValue] = useState<LandingNode>(initialNode ?? buildDefaultNode(type, parent, order));
-    const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
 
     const items = useMemo(() => modules.map(({ id, name }) => ({ value: id, text: translate(name) })), [
         modules,
         translate,
     ]);
 
-    const validate = useCallback(
-        (filter?: string) => {
-            const errors: Dictionary<string | undefined> = {
-                name: !value.name ? "Field name must have a value" : undefined,
-            };
-
-            return filter ? { [filter]: errors[filter] } : errors;
-        },
-        [value]
-    );
-
     const save = useCallback(() => {
-        const validations = _(errors).values().flatten().compact().value();
-        if (validations.length > 0) {
-            snackbar.error(validations.join("\n"));
+        if (!value.name) {
+            snackbar.error(i18n.t("Field name is mandatory"));
             return;
         }
 
@@ -70,26 +55,22 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
             title: value.title ? { ...value.title, key: `${value.id}-title` } : undefined,
             content: value.content ? { ...value.content, key: `${value.id}-content` } : undefined,
         });
-    }, [value, onSave, snackbar, errors]);
+    }, [value, onSave, snackbar]);
 
-    const onChangeField = useCallback(
-        (field: keyof LandingNode) => {
-            return (event: React.ChangeEvent<{ value: unknown }>) => {
-                switch (field) {
-                    case "name":
-                    case "title": {
-                        const referenceValue = event.target.value as string;
-                        setValue(node => {
-                            return { ...node, [field]: { key: "name", referenceValue, translations: {} } };
-                        });
-                        setErrors(errors => ({ ...errors, ...validate(field) }));
-                        return;
-                    }
+    const onChangeField = useCallback((field: keyof LandingNode) => {
+        return (event: React.ChangeEvent<{ value: unknown }>) => {
+            switch (field) {
+                case "name":
+                case "title": {
+                    const referenceValue = event.target.value as string;
+                    setValue(node => {
+                        return { ...node, [field]: { key: "name", referenceValue, translations: {} } };
+                    });
+                    return;
                 }
-            };
-        },
-        [validate]
-    );
+            }
+        };
+    }, []);
 
     const handleFileUpload = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +92,6 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
                     label={i18n.t("Identifier")}
                     value={value.id}
                     onChange={onChangeField("id")}
-                    error={!!errors["id"]}
-                    helperText={errors["id"]}
                 />
             </Row>
 
@@ -122,8 +101,6 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
                     label={i18n.t("Name *")}
                     value={value.name.referenceValue}
                     onChange={onChangeField("name")}
-                    error={!!errors["name"]}
-                    helperText={errors["name"]}
                 />
             </Row>
 
@@ -133,8 +110,6 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
                     label={i18n.t("Title")}
                     value={value.title?.referenceValue ?? ""}
                     onChange={onChangeField("title")}
-                    error={!!errors["title"]}
-                    helperText={errors["title"]}
                 />
             </Row>
 
