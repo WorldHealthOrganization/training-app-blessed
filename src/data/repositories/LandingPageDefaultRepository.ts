@@ -20,7 +20,9 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
                 Namespaces.LANDING_PAGES
             );
 
-            if (pages.length === 0) {
+            const root = pages?.find(({ parent }) => parent === "none");
+
+            if (pages.length === 0 || !root) {
                 const root = {
                     id: "root",
                     parent: "none",
@@ -39,9 +41,6 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
                 await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, root);
                 return [{ ...root, children: [] }];
             }
-
-            const root = pages?.find(({ parent }) => parent === "none");
-            if (!root) return [];
 
             const validation = LandingNodeModel.decode(buildDomainLandingNode(root, pages));
 

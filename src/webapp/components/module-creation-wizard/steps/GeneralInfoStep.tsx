@@ -1,14 +1,12 @@
 import i18n from "@eyeseetea/d2-ui-components/locales";
 import { TextField } from "@material-ui/core";
 import _, { Dictionary } from "lodash";
-import React, { useCallback, useState } from "react";
-import { FileRejection } from "react-dropzone";
+import React, { ChangeEvent, useCallback, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule } from "../../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../../domain/entities/TranslatableText";
 import { updateTranslation } from "../../../../domain/helpers/TrainingModuleHelpers";
 import { useAppContext } from "../../../contexts/app-context";
-import { Dropzone } from "../../dropzone/Dropzone";
 import { MarkdownEditor } from "../../markdown-editor/MarkdownEditor";
 import { MarkdownViewer } from "../../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../../modal";
@@ -61,12 +59,12 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
     );
 
     const handleFileUpload = useCallback(
-        async (files: File[], rejections: FileRejection[]) => {
-            if (!files[0] || rejections.length > 0) return;
-
-            const data = await files[0].arrayBuffer();
-            const icon = await usecases.instance.uploadFile(data);
-            onChange(module => ({ ...module, icon }));
+        (event: ChangeEvent<HTMLInputElement>) => {
+            const file = event.target.files ? event.target.files[0] : undefined;
+            file?.arrayBuffer().then(async data => {
+                const icon = await usecases.instance.uploadFile(data);
+                onChange(module => ({ ...module, icon }));
+            });
         },
         [usecases, onChange]
     );
@@ -108,17 +106,15 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
             <Row style={{ marginBottom: 80 }}>
                 <h3>{i18n.t("Icon")}</h3>
 
-                <div style={{ display: "flex" }}>
+                <IconUpload>
                     {module.icon ? (
                         <IconContainer>
                             <img src={module.icon} alt={`Module icon`} />
                         </IconContainer>
                     ) : null}
 
-                    <Dropzone visible={true} onDrop={handleFileUpload} maxFiles={1}>
-                        <Space />
-                    </Dropzone>
-                </div>
+                    <FileInput type="file" onChange={handleFileUpload} />
+                </IconUpload>
             </Row>
 
             <Row>
@@ -169,7 +165,11 @@ const IconContainer = styled.div`
     }
 `;
 
-const Space = styled.div`
-    height: 100px;
-    min-width: 500px;
+const IconUpload = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const FileInput = styled.input`
+    outline: none;
 `;

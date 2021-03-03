@@ -37,7 +37,11 @@ const Item: React.FC<{
                                 key={`card-${idx}`}
                                 label={translate(item.name)}
                                 onClick={() => openPage(item)}
-                                icon={<img src={item.icon} alt={`Icon for ${translate(item.name)}`} />}
+                                icon={
+                                    item.icon ? (
+                                        <img src={item.icon} alt={`Icon for ${translate(item.name)}`} />
+                                    ) : undefined
+                                }
                             />
                         );
                     })}
@@ -74,7 +78,9 @@ const Item: React.FC<{
                                 progress={module?.progress.completed ? 100 : percentage}
                                 onClick={handleClick}
                                 disabled={module?.disabled}
-                                icon={<img src={module?.icon} alt={`Icon for ${item.name}`} />}
+                                icon={
+                                    module?.icon ? <img src={module.icon} alt={`Icon for ${item.name}`} /> : undefined
+                                }
                             />
                         );
                     })}

@@ -65,13 +65,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 .filter(model => validateUserPermission(model, "read", currentUser))
                 .value();
 
-            return promiseMap(modules, async module => {
-                const model = await this.buildDomainModel(module);
+            return promiseMap(modules, async persistedModel => {
+                const model = await this.buildDomainModel(persistedModel);
 
                 return {
                     ...model,
-                    progress: progress?.find(({ id }) => id === module.id) ?? {
-                        id: module.id,
+                    progress: progress?.find(({ id }) => id === model.id) ?? {
+                        id: model.id,
                         lastStep: 0,
                         completed: false,
                     },
@@ -97,16 +97,16 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return {
             ...domainModel,
-            progress: progress?.find(({ id }) => id === module.id) ?? {
-                id: module.id,
+            progress: progress?.find(({ id }) => id === model.id) ?? {
+                id: model.id,
                 lastStep: 0,
                 completed: false,
             },
         };
     }
 
-    public async update(module: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
-        const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...module });
+    public async update(model: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
+        const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...model });
         await this.saveDataStore(newModule);
     }
 
@@ -136,8 +136,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         for (const id of ids) {
             const defaultModule = this.builtinModules[id];
             if (defaultModule) {
-                const module = await this.buildPersistedModel(defaultModule);
-                await this.saveDataStore(module);
+                const model = await this.buildPersistedModel(defaultModule);
+                await this.saveDataStore(model);
             }
         }
     }
@@ -319,10 +319,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 ...contents,
                 steps: contents.steps.map((step, stepIdx) => ({
                     ...step,
-                    id: `${module.id}-step-${stepIdx}`,
+                    id: `${model.id}-step-${stepIdx}`,
                     pages: step.pages.map((page, pageIdx) => ({
                         ...page,
-                        id: `${module.id}-page-${stepIdx}-${pageIdx}`,
+                        id: `${model.id}-page-${stepIdx}-${pageIdx}`,
                     })),
                 })),
             },
