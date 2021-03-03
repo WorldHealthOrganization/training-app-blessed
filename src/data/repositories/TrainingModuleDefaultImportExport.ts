@@ -7,8 +7,7 @@ import { fromPairs } from "../../types/utils";
 import { promiseMap } from "../../utils/promises";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { getUrls, PersistedTrainingModule, replaceUrls, setUser } from "../entities/PersistedTrainingModule";
-import { User } from "../entities/User";
+import { getUrls, PersistedTrainingModule, replaceUrls } from "../entities/PersistedTrainingModule";
 import { TrainingModuleDefaultRepository } from "./TrainingModuleDefaultRepository";
 
 export type Mapping = MappingItem[];
@@ -32,7 +31,7 @@ export class TrainingModuleDefaultImportExport {
         private storageClient: StorageClient
     ) {}
 
-    public async import(currentUser: User, files: File[]): Promise<PersistedTrainingModule[]> {
+    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
         const modules = await promiseMap(files, async file => {
             const zip = new JSZip();
             const contents = await zip.loadAsync(file);
@@ -42,11 +41,11 @@ export class TrainingModuleDefaultImportExport {
             const modulePaths = this.getModulePaths(contents);
 
             return promiseMap(modulePaths, async modulePath => {
-                const module = await this.getJsonFromFile<PersistedTrainingModule>(zip, modulePath);
-                if (!module) return;
-                const moduleWithNewUser = setUser(module, currentUser);
-                const moduleWithMappedUrls = replaceUrls(moduleWithNewUser, urlMapping);
-                await this.trainingModuleRepository.saveDataStore(moduleWithMappedUrls);
+                const model = await this.getJsonFromFile<PersistedTrainingModule>(zip, modulePath);
+                if (!model) return;
+
+                const moduleWithMappedUrls = replaceUrls(model, urlMapping);
+                await this.trainingModuleRepository.saveDataStore(moduleWithMappedUrls, { recreate: true });
                 return moduleWithMappedUrls;
             });
         });

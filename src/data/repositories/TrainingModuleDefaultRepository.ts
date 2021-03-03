@@ -113,8 +113,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
-        const currentUser = await this.config.getUser();
-        return this.getImportExportModule().import(currentUser, files);
+        return this.getImportExportModule().import(files);
     }
 
     public async export(ids: string[]): Promise<void> {
@@ -275,14 +274,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return persistedModel;
     }
 
-    public async saveDataStore(model: PersistedTrainingModule) {
+    public async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean }) {
         const currentUser = await this.config.getUser();
-        const lastUpdatedBy = { id: currentUser.id, name: currentUser.name };
+        const user = { id: currentUser.id, name: currentUser.name };
+        const date = new Date().toISOString();
 
         await this.storageClient.saveObjectInCollection<PersistedTrainingModule>(Namespaces.TRAINING_MODULES, {
             ...model,
-            lastUpdated: new Date().toISOString(),
-            lastUpdatedBy,
+            lastUpdatedBy: user,
+            lastUpdated: date,
+            user: options?.recreate ? user : model.user,
+            created: options?.recreate ? date : model.created,
         });
     }
 
