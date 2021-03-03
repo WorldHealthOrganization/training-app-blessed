@@ -11,4 +11,3 @@ export interface InstanceRepository {
 export interface UploadFileOptions {
     id?: string;
 }
-

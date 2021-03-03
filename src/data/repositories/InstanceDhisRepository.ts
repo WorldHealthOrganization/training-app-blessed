@@ -6,6 +6,7 @@ import { D2Api } from "../../types/d2-api";
 import { cache, clearCache } from "../../utils/cache";
 import { UserSearch } from "../entities/SearchUser";
 import { getD2APiFromInstance } from "../utils/d2-api";
+import { getUid } from "../utils/uid";
 
 export class InstanceDhisRepository implements InstanceRepository {
     private api: D2Api;
@@ -22,9 +23,12 @@ export class InstanceDhisRepository implements InstanceRepository {
         const blob = new Blob([data], { type: mime });
         const resized = mime.startsWith("image") ? await resizeFile(blob) : blob;
 
+        const fileData = await arrayBufferToString(data);
+        const fileId = getUid(fileData);
+
         const { id } = await this.api.files
             .upload({
-                id: options.id,
+                id: options.id ?? fileId,
                 name: `[Training App] Uploaded file`,
                 data: resized,
             })
@@ -84,3 +88,20 @@ const resizeFile = (file: Blob): Promise<Blob> => {
         Resizer.imageFileResizer(file, 600, 600, "PNG", 100, 0, blob => resolve(blob as Blob), "blob");
     });
 };
+
+function arrayBufferToString(buffer: ArrayBuffer, encoding = "UTF-8"): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        const blob = new Blob([buffer], { type: "text/plain" });
+        const reader = new FileReader();
+
+        reader.onload = ev => {
+            if (ev.target) {
+                resolve(ev.target.result as string);
+            } else {
+                reject(new Error("Could not convert array to string!"));
+            }
+        };
+
+        reader.readAsText(blob, encoding);
+    });
+}

@@ -559,7 +559,11 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <Dropzone ref={fileRef} accept={"application/zip"} onDrop={handleFileUpload}>
+            <Dropzone
+                ref={fileRef}
+                accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
+                onDrop={handleFileUpload}
+            >
                 <ObjectsTable<ListItem>
                     rows={rows}
                     columns={columns}

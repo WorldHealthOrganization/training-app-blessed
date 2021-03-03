@@ -4,12 +4,10 @@ import _ from "lodash";
 import moment from "moment";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { fromPairs } from "../../types/utils";
-import { getUid } from "../../utils/dhis2";
 import { promiseMap } from "../../utils/promises";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { getUrls, PersistedTrainingModule, replaceUrls, setUser } from "../entities/PersistedTrainingModule";
-import { User } from "../entities/User";
+import { getUrls, PersistedTrainingModule, replaceUrls } from "../entities/PersistedTrainingModule";
 import { TrainingModuleDefaultRepository } from "./TrainingModuleDefaultRepository";
 
 export type Mapping = MappingItem[];
@@ -33,7 +31,7 @@ export class TrainingModuleDefaultImportExport {
         private storageClient: StorageClient
     ) {}
 
-    public async import(currentUser: User, files: File[]): Promise<PersistedTrainingModule[]> {
+    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
         const modules = await promiseMap(files, async file => {
             const zip = new JSZip();
             const contents = await zip.loadAsync(file);
@@ -43,11 +41,11 @@ export class TrainingModuleDefaultImportExport {
             const modulePaths = this.getModulePaths(contents);
 
             return promiseMap(modulePaths, async modulePath => {
-                const module = await this.getJsonFromFile<PersistedTrainingModule>(zip, modulePath);
-                if (!module) return;
-                const moduleWithNewUser = setUser(module, currentUser);
-                const moduleWithMappedUrls = replaceUrls(moduleWithNewUser, urlMapping);
-                await this.trainingModuleRepository.saveDataStore(moduleWithMappedUrls);
+                const model = await this.getJsonFromFile<PersistedTrainingModule>(zip, modulePath);
+                if (!model) return;
+
+                const moduleWithMappedUrls = replaceUrls(model, urlMapping);
+                await this.trainingModuleRepository.saveDataStore(moduleWithMappedUrls, { recreate: true });
                 return moduleWithMappedUrls;
             });
         });
@@ -110,9 +108,7 @@ export class TrainingModuleDefaultImportExport {
     ) {
         const fileUrlByFilename = fromPairs(
             await promiseMap(fileContents, async ({ filename, arrayBuffer }) => {
-                const fileData = await arrayBufferToString(arrayBuffer);
-                const fileId = getUid(fileData);
-                const fileUrl = await this.instanceRepository.uploadFile(arrayBuffer, { id: fileId });
+                const fileUrl = await this.instanceRepository.uploadFile(arrayBuffer);
                 return [filename, fileUrl];
             })
         );
@@ -173,21 +169,4 @@ export class TrainingModuleDefaultImportExport {
         const blob = new Blob([json], { type: "application/json" });
         zip.file(path, blob);
     }
-}
-
-function arrayBufferToString(buffer: ArrayBuffer, encoding = "UTF-8"): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-        const blob = new Blob([buffer], { type: "text/plain" });
-        const reader = new FileReader();
-
-        reader.onload = ev => {
-            if (ev.target) {
-                resolve(ev.target.result as string);
-            } else {
-                reject(new Error("Could not convert array to string!"));
-            }
-        };
-
-        reader.readAsText(blob, encoding);
-    });
 }

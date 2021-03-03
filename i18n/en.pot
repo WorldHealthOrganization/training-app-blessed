@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-03T12:49:11.708Z\n"
-"PO-Revision-Date: 2021-03-03T12:49:11.708Z\n"
+"POT-Creation-Date: 2021-03-03T14:21:05.794Z\n"
+"PO-Revision-Date: 2021-03-03T14:21:05.794Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -21,6 +21,60 @@ msgid "Field {{field}} is not valid"
 msgstr ""
 
 msgid "Tutorial"
+msgstr ""
+
+msgid "Code *"
+msgstr ""
+
+msgid "Name *"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Icon *"
+msgstr ""
+
+msgid "Add sub-section"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Add category"
+msgstr ""
+
+msgid "Add section"
+msgstr ""
+
+msgid "Assign module"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Section"
+msgstr ""
+
+msgid "Sub-section"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Training module"
+msgstr ""
+
+msgid "You must select a module"
+msgstr ""
+
+msgid "Select a module"
 msgstr ""
 
 msgid "Edit markdown"
@@ -60,12 +114,6 @@ msgid "Title *"
 msgstr ""
 
 msgid "Field must have a value"
-msgstr ""
-
-msgid "Code *"
-msgstr ""
-
-msgid "Name *"
 msgstr ""
 
 msgid "PoEditor Project id"
@@ -231,9 +279,6 @@ msgid "Final"
 msgstr ""
 
 msgid "Exit"
-msgstr ""
-
-msgid "Edit"
 msgstr ""
 
 msgid "Create"

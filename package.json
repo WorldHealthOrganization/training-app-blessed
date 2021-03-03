@@ -132,7 +132,8 @@
         },
         "activities": {
             "dhis": {
-                "href": "*"
+                "href": "*",
+                "namespace": "training-app"
             }
         }
     }
