@@ -55,20 +55,17 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
         }
     }
 
-    public async get(key: string): Promise<LandingNode | undefined> {
-        const pages = await this.list();
-        return pages.find(({ id }) => id === key);
-    }
-
     public async updateChild(node: LandingNode): Promise<void> {
         const updatedNodes = extractChildrenNodes(node, node.parent);
         await this.storageClient.saveObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, updatedNodes);
     }
 
     public async removeChilds(ids: string[]): Promise<void> {
-        const nodes = await this.list();
+        const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
         const toDelete = _(nodes)
             .filter(({ id }) => ids.includes(id))
+            .map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
+            .compact()
             .flatMap(node => [node.id, extractChildrenNodes(node, node.parent).map(({ id }) => id)])
             .flatten()
             .value();
