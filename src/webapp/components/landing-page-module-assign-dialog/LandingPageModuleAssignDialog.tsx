@@ -1,8 +1,9 @@
-import { ConfirmationDialog, ConfirmationDialogProps, Dropdown } from "@eyeseetea/d2-ui-components";
+import { ConfirmationDialog, ConfirmationDialogProps, Dropdown, useSnackbar } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import { generateUid } from "../../../data/utils/uid";
 import { LandingNode } from "../../../domain/entities/LandingPage";
+import i18n from "../../../locales";
 import { useAppContext } from "../../contexts/app-context";
 
 export const LandingPageModuleAssignDialog: React.FC<LandingPageModuleAssignDialogProps> = ({
@@ -11,6 +12,8 @@ export const LandingPageModuleAssignDialog: React.FC<LandingPageModuleAssignDial
     ...props
 }) => {
     const { modules, translate } = useAppContext();
+
+    const snackbar = useSnackbar();
 
     const [value, setValue] = useState<string>();
 
@@ -21,7 +24,10 @@ export const LandingPageModuleAssignDialog: React.FC<LandingPageModuleAssignDial
 
     const save = useCallback(() => {
         const { name } = modules.find(({ id }) => id === value) ?? {};
-        if (!value || !name) return;
+        if (!value || !name) {
+            snackbar.error(i18n.t("You must select a module"));
+            return;
+        }
 
         onSave({
             id: generateUid(),
@@ -42,7 +48,13 @@ export const LandingPageModuleAssignDialog: React.FC<LandingPageModuleAssignDial
 
     return (
         <ConfirmationDialog fullWidth={true} {...props} maxWidth={"md"} onSave={save}>
-            <Dropdown items={items} onChange={setValue} value={value} hideEmpty={true} />
+            <Dropdown
+                label={i18n.t("Select a module")}
+                items={items}
+                onChange={setValue}
+                value={value}
+                hideEmpty={true}
+            />
         </ConfirmationDialog>
     );
 };

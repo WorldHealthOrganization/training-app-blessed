@@ -129,7 +129,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                     updateAssignDialog({
                         title: i18n.t("Assign module"),
                         parent,
-                        onCancel: () => updateEditDialog(null),
+                        onCancel: () => updateAssignDialog(null),
                         onSave: async node => {
                             updateAssignDialog(null);
                             await usecases.landings.update(node);
@@ -160,7 +160,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                         },
                     });
                 },
-                isActive: nodes => _.every(nodes, item => item.id !== "module"),
+                isActive: nodes => _.every(nodes, item => item.type !== "module"),
             },
             {
                 name: "remove",
