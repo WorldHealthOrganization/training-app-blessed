@@ -11,6 +11,7 @@ import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
+import { GetShowAllModulesUseCase } from "../domain/usecases/GetShowAllModulesUseCase";
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
@@ -19,6 +20,7 @@ import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { ResetModuleDefaultValueUseCase } from "../domain/usecases/ResetModuleDefaultValueUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SearchUsersUseCase } from "../domain/usecases/SearchUsersUseCase";
+import { SetShowAllModulesUseCase } from "../domain/usecases/SetShowAllModulesUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
 import { UpdateLandingChildUseCase } from "../domain/usecases/UpdateLandingChildUseCase";
 import { UpdateModuleUseCase } from "../domain/usecases/UpdateModuleUseCase";
@@ -62,6 +64,8 @@ export function getCompositionRoot(baseUrl: string) {
                 updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(configRepository),
                 savePoEditorToken: new SavePoEditorTokenUseCase(configRepository),
                 existsPoEditorToken: new ExistsPoEditorTokenUseCase(configRepository),
+                getShowAllModules: new GetShowAllModulesUseCase(configRepository),
+                setShowAllModules: new SetShowAllModulesUseCase(configRepository),
             }),
             user: getExecute({
                 checkSettingsPermissions: new CheckSettingsPermissionsUseCase(configRepository),

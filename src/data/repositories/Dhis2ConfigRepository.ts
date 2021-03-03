@@ -93,6 +93,20 @@ export class Dhis2ConfigRepository implements ConfigRepository {
         });
     }
 
+    public async getShowAllModules(): Promise<boolean> {
+        const { showAllModules = true } = await this.getConfig();
+        return showAllModules;
+    }
+
+    public async setShowAllModules(showAllModules: boolean): Promise<void> {
+        const config = await this.getConfig();
+
+        await this.storageClient.saveObject<PersistedConfig>(Namespaces.CONFIG, {
+            ...config,
+            showAllModules,
+        });
+    }
+
     private async getConfig(): Promise<PersistedConfig> {
         const config = await this.storageClient.getObject<PersistedConfig>(Namespaces.CONFIG);
 

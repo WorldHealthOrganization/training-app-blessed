@@ -119,7 +119,7 @@ const Item: React.FC<{
 };
 
 export const HomePage: React.FC = () => {
-    const { setAppState, hasSettingsAccess, modules, landings } = useAppContext();
+    const { setAppState, hasSettingsAccess, modules, landings, showAllModules } = useAppContext();
 
     const [history, updateHistory] = useState<LandingNode[]>([]);
 
@@ -165,6 +165,8 @@ export const HomePage: React.FC = () => {
         const mainLanding = landings[0];
         if (!mainLanding || mainLanding.type !== "page") return undefined;
 
+        if (!showAllModules) return mainLanding;
+
         return {
             ...mainLanding,
             children: [
@@ -203,7 +205,7 @@ export const HomePage: React.FC = () => {
                 },
             ],
         };
-    }, [history, modules, landings]);
+    }, [history, modules, landings, showAllModules]);
 
     const isRoot = history.length === 0;
 

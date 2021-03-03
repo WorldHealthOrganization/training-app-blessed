@@ -20,13 +20,17 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     const [modules, setModules] = useState<TrainingModule[]>([]);
     const [landings, setLandings] = useState<LandingNode[]>([]);
     const [hasSettingsAccess, setHasSettingsAccess] = useState(false);
+    const [showAllModules, setShowAllModules] = useState(false);
     const translate = buildTranslate(locale);
 
     const reload = useCallback(async () => {
         const modules = await compositionRoot.usecases.modules.list();
         const landings = await compositionRoot.usecases.landings.list();
+        const showAllModules = await compositionRoot.usecases.config.getShowAllModules();
+
         setModules(modules);
         setLandings(landings);
+        setShowAllModules(showAllModules);
         return modules;
     }, [compositionRoot]);
 
@@ -43,6 +47,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
 
     useEffect(() => {
         compositionRoot.usecases.user.checkSettingsPermissions().then(setHasSettingsAccess);
+        compositionRoot.usecases.config.getShowAllModules().then(setShowAllModules);
     }, [compositionRoot]);
 
     useEffect(() => {
@@ -61,6 +66,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
                 translate,
                 reload,
                 hasSettingsAccess,
+                showAllModules,
             }}
         >
             {children}
@@ -82,6 +88,7 @@ export function useAppContext(): UseAppContextResult {
         translate,
         reload,
         hasSettingsAccess,
+        showAllModules,
     } = context;
     const { usecases } = compositionRoot;
     const [module, setCurrentModule] = useState<TrainingModule>();
@@ -105,6 +112,7 @@ export function useAppContext(): UseAppContextResult {
         translate,
         reload,
         hasSettingsAccess,
+        showAllModules,
     };
 }
 
@@ -127,6 +135,7 @@ export interface AppContextState {
     translate: TranslateMethod;
     reload: ReloadMethod;
     hasSettingsAccess: boolean;
+    showAllModules: boolean;
 }
 
 interface UseAppContextResult {
@@ -140,4 +149,5 @@ interface UseAppContextResult {
     translate: TranslateMethod;
     reload: ReloadMethod;
     hasSettingsAccess: boolean;
+    showAllModules: boolean;
 }

@@ -21,7 +21,7 @@ import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 
 export const SettingsPage: React.FC = () => {
-    const { modules, landings, reload, usecases, setAppState } = useAppContext();
+    const { modules, landings, reload, usecases, setAppState, showAllModules } = useAppContext();
 
     const snackbar = useSnackbar();
 
@@ -83,6 +83,11 @@ export const SettingsPage: React.FC = () => {
     const openAddModule = useCallback(() => {
         setAppState({ type: "CREATE_MODULE" });
     }, [setAppState]);
+
+    const toggleShowAllModules = useCallback(async () => {
+        await usecases.config.setShowAllModules(!showAllModules);
+        await reload();
+    }, [showAllModules, reload, usecases]);
 
     const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
         () => ({
@@ -205,6 +210,20 @@ export const SettingsPage: React.FC = () => {
                         <ListItemText
                             primary={i18n.t("Connection with POEditor")}
                             secondary={i18n.t("Connect the application with POEditor to sync translations")}
+                        />
+                    </ListItem>
+
+                    <ListItem button onClick={toggleShowAllModules}>
+                        <ListItemIcon>
+                            <Icon>{showAllModules ? "visibility" : "visibility_off"}</Icon>
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={i18n.t("Show list with modules on main landing page")}
+                            secondary={
+                                showAllModules
+                                    ? i18n.t("A list with all the existing modules is visible")
+                                    : i18n.t("The list with all the existing  modules is hidden")
+                            }
                         />
                     </ListItem>
                 </Group>
