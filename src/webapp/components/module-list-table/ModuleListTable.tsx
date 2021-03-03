@@ -66,7 +66,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 }
             }
         },
-        [snackbar, refreshRows, usecases]
+        [snackbar, refreshRows, usecases, loading]
     );
 
     const deleteModules = useCallback(
