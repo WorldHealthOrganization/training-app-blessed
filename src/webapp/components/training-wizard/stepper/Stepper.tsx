@@ -1,30 +1,18 @@
 import { WizardStep, WizardStepperProps } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
-import React, { useCallback } from "react";
+import React from "react";
 import styled from "styled-components";
 import { arrayFill } from "../../../../utils/array";
-import { useAppContext } from "../../../contexts/app-context";
 import { TrainingWizardStepProps } from "../TrainingWizard";
 import { Bullet } from "./Bullet";
 
-export const Stepper = ({
+export const Stepper: React.FC<StepperProps> = ({
     steps,
     currentStepKey,
     markAllCompleted = false,
     lastClickableStepIndex = -1,
-}: StepperProps) => {
-    const { setAppState } = useAppContext();
-
-    const moveStep = useCallback(
-        (step: number) => {
-            setAppState(appState => {
-                if (appState.type !== "TRAINING") return appState;
-                return { ...appState, step, content: 1 };
-            });
-        },
-        [setAppState]
-    );
-
+    onMove,
+}) => {
     if (steps.length === 0) return null;
 
     const index = _(steps).findIndex(step => step.key === currentStepKey);
@@ -42,7 +30,7 @@ export const Stepper = ({
                         current={index === stepIndex}
                         completed={markAllCompleted || index < stepIndex}
                         last={index === totalSteps - 1}
-                        onClick={lastClickableStepIndex !== -1 ? () => moveStep(index + 1) : undefined}
+                        onClick={lastClickableStepIndex !== -1 ? () => onMove(index + 1, 1) : undefined}
                     />
                 </Step>
             ))}
@@ -53,6 +41,7 @@ export const Stepper = ({
 export interface StepperProps extends WizardStepperProps {
     steps: Array<WizardStep & { props?: TrainingWizardStepProps }>;
     markAllCompleted?: boolean;
+    onMove: (step: number, content: number) => void;
 }
 
 const ProgressBar = styled.div`

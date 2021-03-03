@@ -5,10 +5,76 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-02-16T07:53:42.190Z\n"
-"PO-Revision-Date: 2021-02-16T07:53:42.190Z\n"
+"POT-Creation-Date: 2021-03-03T14:21:05.794Z\n"
+"PO-Revision-Date: 2021-03-03T14:21:05.794Z\n"
+
+msgid "Field {{field}} cannot be blank"
+msgstr ""
+
+msgid "You need to select at least one {{field}}"
+msgstr ""
+
+msgid "Field {{field}} needs to be a valid url"
+msgstr ""
+
+msgid "Field {{field}} is not valid"
+msgstr ""
 
 msgid "Tutorial"
+msgstr ""
+
+msgid "Code *"
+msgstr ""
+
+msgid "Name *"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Icon *"
+msgstr ""
+
+msgid "Add sub-section"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Add category"
+msgstr ""
+
+msgid "Add section"
+msgstr ""
+
+msgid "Assign module"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Section"
+msgstr ""
+
+msgid "Sub-section"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Training module"
+msgstr ""
+
+msgid "You must select a module"
+msgstr ""
+
+msgid "Select a module"
 msgstr ""
 
 msgid "Edit markdown"
@@ -23,6 +89,9 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+msgid "Back"
+msgstr ""
+
 msgid "Move window"
 msgstr ""
 
@@ -35,16 +104,82 @@ msgstr ""
 msgid "Minimize window"
 msgstr ""
 
+msgid "Note: The sharing settings are only applied to the current module"
+msgstr ""
+
+msgid "Add new step"
+msgstr ""
+
+msgid "Title *"
+msgstr ""
+
 msgid "Field must have a value"
 msgstr ""
 
-msgid "Code must be unique"
+msgid "PoEditor Project id"
 msgstr ""
 
-msgid "Edit module"
+msgid "Icon"
 msgstr ""
 
-msgid "Add module"
+msgid "Welcome page"
+msgstr ""
+
+msgid "Identifier"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "General info"
+msgstr ""
+
+msgid "Contents"
+msgstr ""
+
+msgid "Access"
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Couldn't read the file because it's not valid"
+msgstr ""
+
+msgid "Importing module(s)"
+msgstr ""
+
+msgid "Imported {{n}} modules"
+msgstr ""
+
+msgid "Are you sure you want to delete the selected modules?"
+msgstr ""
+
+msgid "This action cannot be reversed"
+msgstr ""
+
+msgid "Deleting modules"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Delete modules"
+msgstr ""
+
+msgid "Are you sure you want to delete the selected step and its pages?"
+msgstr ""
+
+msgid "Delete step"
+msgstr ""
+
+msgid "Are you sure you want to delete the selected page?"
+msgstr ""
+
+msgid "Delete page"
+msgstr ""
+
+msgid "Add new page"
 msgstr ""
 
 msgid "Edit contents of {{name}}"
@@ -53,16 +188,49 @@ msgstr ""
 msgid "Installing application"
 msgstr ""
 
+msgid "Are you sure you want to reset selected modules to its default value?"
+msgstr ""
+
+msgid "This action cannot be reversed."
+msgstr ""
+
+msgid "Resetting modules to default value"
+msgstr ""
+
+msgid "Successfully resetted modules to default value"
+msgstr ""
+
+msgid "Reset app to factory settings"
+msgstr ""
+
+msgid "Exporting module(s)"
+msgstr ""
+
 msgid "Initialize project in POEditor"
 msgstr ""
 
 msgid "App is not installed in this instance"
 msgstr ""
 
-msgid "Push local translations to POEditor"
+msgid "Add module"
+msgstr ""
+
+msgid "Add step"
+msgstr ""
+
+msgid "Add page"
+msgstr ""
+
+msgid "Edit module"
+msgstr ""
+
+msgid "Edit page"
 msgstr ""
 
 msgid "Delete module"
+msgstr ""
+
+msgid "Push local translations to POEditor"
 msgstr ""
 
 msgid "Move up"
@@ -71,10 +239,19 @@ msgstr ""
 msgid "Move down"
 msgstr ""
 
-msgid "Edit contents"
+msgid "Install app"
 msgstr ""
 
-msgid "Install app"
+msgid "Restore to factory settings"
+msgstr ""
+
+msgid "Export module"
+msgstr ""
+
+msgid "Import modules"
+msgstr ""
+
+msgid "Help"
 msgstr ""
 
 msgid "Close"
@@ -98,16 +275,34 @@ msgstr ""
 msgid "Welcome"
 msgstr ""
 
-msgid "Contents"
-msgstr ""
-
 msgid "Final"
 msgstr ""
 
-msgid "Summary"
+msgid "Exit"
 msgstr ""
 
-msgid "Exit"
+msgid "Create"
+msgstr ""
+
+msgid "Training app"
+msgstr ""
+
+msgid "Cancel module editing?"
+msgstr ""
+
+msgid "Cancel module creation?"
+msgstr ""
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Create module"
 msgstr ""
 
 msgid "Continue Tutorial"
@@ -142,19 +337,7 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
-msgid "Reset progress"
-msgstr ""
-
-msgid "Here is your progress on DHIS2 training"
-msgstr ""
-
-msgid "Select one of these tutorials to continue learning:"
-msgstr ""
-
-msgid "Back"
-msgstr ""
-
-msgid "Help"
+msgid "Welcome to training on DHIS2"
 msgstr ""
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
@@ -169,13 +352,28 @@ msgstr ""
 msgid "Only accessible to system administrators"
 msgstr ""
 
+msgid "Unable to update module contents"
+msgstr ""
+
+msgid "Unable to move item"
+msgstr ""
+
+msgid "Unable to add step"
+msgstr ""
+
+msgid "Unable to add page"
+msgstr ""
+
+msgid "Unable to remove step"
+msgstr ""
+
+msgid "Unable to remove page"
+msgstr ""
+
 msgid "Connection with POEditor"
 msgstr ""
 
 msgid "POEditor token"
-msgstr ""
-
-msgid "Training app"
 msgstr ""
 
 msgid "Permissions"
@@ -185,6 +383,9 @@ msgid "Access to Settings"
 msgstr ""
 
 msgid "Connect the application with POEditor to sync translations"
+msgstr ""
+
+msgid "Landing page"
 msgstr ""
 
 msgid "Training modules"

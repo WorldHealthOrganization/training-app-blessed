@@ -1,12 +1,12 @@
 import _ from "lodash";
-import { Either } from "../../domain/entities/Either";
-import { isValidTrainingType, TrainingModule, TrainingModuleBuilder } from "../../domain/entities/TrainingModule";
+import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
+import { swapById } from "../../utils/array";
 import { promiseMap } from "../../utils/promises";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
@@ -14,7 +14,9 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
-import { PersistedTrainingModule, TranslationConnection } from "../entities/PersistedTrainingModule";
+import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
+import { validateUserPermission } from "../entities/User";
+import { TrainingModuleDefaultImportExport } from "./TrainingModuleDefaultImportExport";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -58,15 +60,16 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                         authority => userAuthorities.includes("ALL") || userAuthorities.includes(authority)
                     );
                 })
+                .filter(model => validateUserPermission(model, "read", currentUser))
                 .value();
 
-            return promiseMap(modules, async module => {
-                const model = await this.buildDomainModel(module);
+            return promiseMap(modules, async persistedModel => {
+                const model = await this.buildDomainModel(persistedModel);
 
                 return {
                     ...model,
-                    progress: progress?.find(({ id }) => id === module.id) ?? {
-                        id: module.id,
+                    progress: progress?.find(({ id }) => id === model.id) ?? {
+                        id: model.id,
                         lastStep: 0,
                         completed: false,
                     },
@@ -92,64 +95,39 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         return {
             ...domainModel,
-            progress: progress?.find(({ id }) => id === module.id) ?? {
-                id: module.id,
+            progress: progress?.find(({ id }) => id === model.id) ?? {
+                id: model.id,
                 lastStep: 0,
                 completed: false,
             },
         };
     }
 
-    public async create({ id, name, poEditorProject }: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>> {
-        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES
-        );
-        const exists = !!items.find(item => item.id === id);
-        if (exists) return Either.error("CODE_EXISTS");
-
-        const newModel = await this.buildPersistedModel({
-            id,
-            name: { key: "module-name", referenceValue: name, translations: {} },
-            type: "app",
-            _version: 1,
-            revision: 1,
-            dhisVersionRange: "",
-            dhisAppKey: "",
-            dhisLaunchUrl: "",
-            dhisAuthorities: [],
-            disabled: false,
-            contents: {
-                welcome: { key: "module-welcome", referenceValue: "", translations: {} },
-                steps: [],
-            },
-            translation: {
-                provider: poEditorProject ? "poeditor" : "NONE",
-                project: poEditorProject,
-            },
-        });
-
-        await this.saveDataStore(newModel);
-        return Either.success(undefined);
+    public async update(model: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
+        const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...model });
+        await this.saveDataStore(newModule);
     }
 
-    public async edit({ id, name, poEditorProject }: TrainingModuleBuilder): Promise<void> {
-        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES
-        );
+    private getImportExportModule() {
+        return new TrainingModuleDefaultImportExport(this, this.instanceRepository, this.storageClient);
+    }
 
-        const item = items.find(item => item.id === id);
-        if (!item) return;
+    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
+        return this.getImportExportModule().import(files);
+    }
 
-        const newItem = {
-            ...item,
-            name: name,
-            translation: {
-                provider: poEditorProject ? "poeditor" : "NONE",
-                project: poEditorProject,
-            },
-        };
+    public async export(ids: string[]): Promise<void> {
+        return this.getImportExportModule().export(ids);
+    }
 
-        await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, newItem);
+    public async resetDefaultValue(ids: string[]): Promise<void> {
+        for (const id of ids) {
+            const defaultModule = this.builtinModules[id];
+            if (defaultModule) {
+                const model = await this.buildPersistedModel(defaultModule);
+                await this.saveDataStore(model);
+            }
+        }
     }
 
     public async delete(ids: string[]): Promise<void> {
@@ -163,17 +141,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             Namespaces.TRAINING_MODULES
         );
 
-        const index1 = _.findIndex(items, ({ id }) => id === id1);
-        const index2 = _.findIndex(items, ({ id }) => id === id2);
-
-        const item1 = items[_.findIndex(items, ({ id }) => id === id1)];
-        const item2 = items[_.findIndex(items, ({ id }) => id === id2)];
-        if (!item1 || !item2) return;
-
-        items[index1] = item2;
-        items[index2] = item1;
-
-        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
+        const newItems = swapById(items, id1, id2);
+        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, newItems);
     }
 
     public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
@@ -305,14 +274,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return persistedModel;
     }
 
-    private async saveDataStore(model: PersistedTrainingModule) {
+    public async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean }) {
         const currentUser = await this.config.getUser();
-        const lastUpdatedBy = { id: currentUser.id, name: currentUser.name };
+        const user = { id: currentUser.id, name: currentUser.name };
+        const date = new Date().toISOString();
 
-        await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, {
+        await this.storageClient.saveObjectInCollection<PersistedTrainingModule>(Namespaces.TRAINING_MODULES, {
             ...model,
-            lastUpdated: new Date(),
-            lastUpdatedBy,
+            lastUpdatedBy: user,
+            lastUpdated: date,
+            user: options?.recreate ? user : model.user,
+            created: options?.recreate ? date : model.created,
         });
     }
 
@@ -328,14 +300,25 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
 
-        const { name, created, lastUpdated, type, ...rest } = model;
+        const { created, lastUpdated, type, contents, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
+        const currentUser = await this.config.getUser();
 
         return {
             ...rest,
-            name: name.referenceValue,
-            displayName: name,
+            contents: {
+                ...contents,
+                steps: contents.steps.map((step, stepIdx) => ({
+                    ...step,
+                    id: `${model.id}-step-${stepIdx}`,
+                    pages: step.pages.map((page, pageIdx) => ({
+                        ...page,
+                        id: `${model.id}-page-${stepIdx}-${pageIdx}`,
+                    })),
+                })),
+            },
             installed: await this.instanceRepository.isAppInstalledByUrl(model.dhisLaunchUrl),
+            editable: validateUserPermission(model, "write", currentUser),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,
@@ -346,15 +329,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const currentUser = await this.config.getUser();
         const defaultUser = { id: currentUser.id, name: currentUser.name };
 
-        // TODO: This is hard-coded for now
-        const translation =
-            model.translation?.provider === "poeditor" && model.translation?.project
-                ? (model.translation as TranslationConnection)
-                : { provider: "NONE" as const, project: undefined };
-
         return {
-            ...model,
-            translation,
             created: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             publicAccess: "--------",
@@ -363,6 +338,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             user: defaultUser,
             lastUpdatedBy: defaultUser,
             lastTranslationSync: new Date().toISOString(),
+            ...model,
         };
     }
 }

@@ -1,17 +1,18 @@
 import { useConfig } from "@dhis2/app-runtime";
-import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import { LoadingProvider, SnackbarProvider } from "@eyeseetea/d2-ui-components";
+import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import React from "react";
 import { HashRouter } from "react-router-dom";
 import i18n from "../../locales";
-import { CompositionRoot } from "../CompositionRoot";
+import { getCompositionRoot } from "../CompositionRoot";
 import { AppContextProvider } from "../contexts/app-context";
 import { AppRoute } from "../router/AppRoute";
 import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
 import "./App.css";
+import { EditPage } from "./edit/EditPage";
 import { ExitPage } from "./exit/ExitPage";
 import { FinalPage } from "./final/FinalPage";
 import { HomePage } from "./home/HomePage";
@@ -81,11 +82,23 @@ export const routes: AppRoute[] = [
         paths: ["/settings"],
         element: <SettingsPage />,
     },
+    {
+        key: "edit",
+        name: () => i18n.t("Edit"),
+        paths: ["/edit/:module"],
+        element: <EditPage edit={true} />,
+    },
+    {
+        key: "create",
+        name: () => i18n.t("Create"),
+        paths: ["/create"],
+        element: <EditPage edit={false} />,
+    },
 ];
 
 const App: React.FC<{ locale: string }> = ({ locale }) => {
     const { baseUrl } = useConfig();
-    const compositionRoot = new CompositionRoot(baseUrl);
+    const compositionRoot = getCompositionRoot(baseUrl);
 
     return (
         <AppContextProvider routes={routes} compositionRoot={compositionRoot} locale={locale}>

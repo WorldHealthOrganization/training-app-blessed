@@ -1,18 +1,24 @@
-import { Wizard } from "@eyeseetea/d2-ui-components";
+import { Wizard, WizardNavigationProps, WizardStepperProps } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback, useMemo, useRef } from "react";
 import styled from "styled-components";
-import { extractStepFromKey, TrainingModule } from "../../../domain/entities/TrainingModule";
-import { useAppContext } from "../../contexts/app-context";
-import { Modal } from "../modal/Modal";
-import { ModalContent } from "../modal/ModalContent";
+import { extractStepFromKey, PartialTrainingModule } from "../../../domain/entities/TrainingModule";
+import { TranslateMethod } from "../../../domain/entities/TranslatableText";
 import { Navigation } from "./navigation/Navigation";
 import { Stepper } from "./stepper/Stepper";
 import { MarkdownContentStep } from "./steps/MarkdownContentStep";
 
 export interface TrainingWizardProps {
-    onClose: () => void;
-    module?: TrainingModule;
+    className?: string;
+    translate: TranslateMethod;
+    module: PartialTrainingModule;
+    onClose?: () => void;
+    onGoHome?: () => void;
+    currentStep: string;
+    onChangeStep: (step: number, contents: number) => void;
+    minimized?: boolean;
+    onMinimize?: () => void;
+    updateProgress?: (moduleId: string, progress: number) => Promise<void>;
 }
 
 export interface TrainingWizardStepProps {
@@ -27,13 +33,11 @@ export interface TrainingWizardStepProps {
     totalContents?: number;
 }
 
-export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module }) => {
-    const { appState, setAppState, usecases, translate } = useAppContext();
+export const TrainingWizard: React.FC<TrainingWizardProps> = props => {
+    const { className, translate, module, currentStep, onChangeStep, minimized, updateProgress } = props;
     const lastStep = useRef<string>();
 
-    const minimized = useMemo(() => appState.type === "TRAINING" && appState.state === "MINIMIZED", [appState]);
-
-    const wizardSteps = useMemo(() => {
+    const steps = useMemo(() => {
         if (!module) return [];
         return _.flatMap(module.contents.steps, ({ title, subtitle, pages }, step) =>
             pages.map((content, position) => {
@@ -59,11 +63,9 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
         );
     }, [module, minimized, translate]);
 
-    const stepKey = useMemo(() => {
-        if (appState.type !== "TRAINING" || !module) return undefined;
-        const key = `${module.id}-${appState.step}-${appState.content}`;
-        return wizardSteps.find(step => step.key === key) ? key : wizardSteps[0]?.key;
-    }, [appState, module, wizardSteps]);
+    const validStepKey = useMemo(() => {
+        return steps.find(step => step.key === currentStep) ? currentStep : steps[0]?.key;
+    }, [currentStep, steps]);
 
     const onStepChange = useCallback(
         async (stepKey: string) => {
@@ -74,46 +76,35 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = ({ onClose, module 
 
             const prevStep = extractStepFromKey(lastStep?.current ?? "");
             const isOneStepChange = !!prevStep && Math.abs(currentStep.step - prevStep.step) === 1;
-            const shouldUpdateProgress = isOneStepChange && !module.progress.completed;
+            const shouldUpdateProgress = isOneStepChange && module.progress && !module.progress.completed;
 
-            if (shouldUpdateProgress) {
-                await usecases.progress.update(module.id, currentStep.step - 1);
+            if (updateProgress && shouldUpdateProgress) {
+                await updateProgress(module.id, currentStep.step - 1);
             }
 
             lastStep.current = stepKey;
-            setAppState(appState => {
-                if (appState.type !== "TRAINING") return appState;
-                return { ...appState, ...currentStep };
-            });
+            onChangeStep(currentStep.step, currentStep.content);
         },
-        [setAppState, module, usecases]
+        [module, updateProgress, onChangeStep]
     );
 
-    const minimize = useCallback(() => {
-        setAppState(appState => {
-            if (appState.type !== "TRAINING") return appState;
-            const state = appState.state === "MINIMIZED" ? "OPEN" : "MINIMIZED";
-            return { ...appState, state };
-        });
-    }, [setAppState]);
+    const WizardStepper = (props: WizardStepperProps) => <Stepper {...props} onMove={step => onChangeStep(step, 1)} />;
+    const WizardNavigation = (props: WizardNavigationProps) => (
+        <Navigation {...props} onMove={step => onChangeStep(step, 1)} />
+    );
 
-    const goHome = useCallback(() => {
-        setAppState({ type: "HOME" });
-    }, [setAppState]);
-
-    if (!module || wizardSteps.length === 0) return null;
+    if (!module || steps.length === 0) return null;
 
     return (
-        <StyledModal onClose={onClose} onGoHome={goHome} onMinimize={minimize} minimized={minimized} allowDrag={true}>
-            <StyledWizard
-                steps={wizardSteps}
-                stepKey={stepKey}
-                onStepChange={onStepChange}
-                initialStepKey={wizardSteps[0]?.key}
-                StepperComponent={minimized ? EmptyComponent : Stepper}
-                NavigationComponent={minimized ? EmptyComponent : Navigation}
-            />
-        </StyledModal>
+        <StyledWizard
+            className={className}
+            steps={steps}
+            stepKey={validStepKey}
+            onStepChange={onStepChange}
+            initialStepKey={steps[0]?.key}
+            StepperComponent={minimized ? EmptyComponent : WizardStepper}
+            NavigationComponent={minimized ? EmptyComponent : WizardNavigation}
+        />
     );
 };
 
@@ -124,24 +115,7 @@ const StyledWizard = styled(Wizard)`
         box-shadow: none;
         background-color: inherit;
         margin: inherit;
-        height: 100%;
-    }
-`;
-
-const StyledModal = styled(Modal)`
-    position: fixed;
-    margin: 6px;
-    bottom: 20px;
-    right: 40px;
-    height: ${({ minimized }) => (minimized ? "inherit" : "75%")};
-
-    ${ModalContent} {
-        padding: 0px 15px;
-        max-height: 75%;
-    }
-
-    ${StyledWizard} .MuiPaper-root {
-        padding: ${({ minimized }) => (minimized ? "35px 0px 20px" : "inherit")};
+        padding: 0;
     }
 `;
 

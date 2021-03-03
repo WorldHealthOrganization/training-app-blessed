@@ -1,23 +1,36 @@
+import FileType from "file-type/browser";
+import Resizer from "react-image-file-resizer";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
-import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
+import { InstanceRepository, UploadFileOptions } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
-import { StoreApp } from "../entities/StoreApp";
+import { cache, clearCache } from "../../utils/cache";
+import { UserSearch } from "../entities/SearchUser";
 import { getD2APiFromInstance } from "../utils/d2-api";
+import { getUid } from "../utils/uid";
 
 export class InstanceDhisRepository implements InstanceRepository {
     private api: D2Api;
+    public baseUrl: string;
 
     constructor(config: ConfigRepository) {
         this.api = getD2APiFromInstance(config.getInstance());
+        this.baseUrl = this.api.baseUrl;
     }
 
-    public async uploadFile(data: ArrayBuffer): Promise<string> {
-        const blob = new Blob([data], { type: "image/jpeg" });
+    public async uploadFile(data: ArrayBuffer, options: UploadFileOptions = {}): Promise<string> {
+        const type = await FileType.fromBuffer(data);
+        const { mime = "application/unknown" } = type ?? {};
+        const blob = new Blob([data], { type: mime });
+        const resized = mime.startsWith("image") ? await resizeFile(blob) : blob;
+
+        const fileData = await arrayBufferToString(data);
+        const fileId = getUid(fileData);
 
         const { id } = await this.api.files
             .upload({
+                id: options.id ?? fileId,
                 name: `[Training App] Uploaded file`,
-                data: blob,
+                data: resized,
             })
             .getData();
 
@@ -25,6 +38,8 @@ export class InstanceDhisRepository implements InstanceRepository {
     }
 
     public async installApp(appName: string): Promise<boolean> {
+        clearCache(this.isAppInstalledByUrl, this);
+
         const storeApps = await this.listStoreApps();
         const { versions = [] } = storeApps.find(({ name }) => name === appName) ?? {};
         const latestVersion = versions[0]?.id;
@@ -39,6 +54,15 @@ export class InstanceDhisRepository implements InstanceRepository {
         return true;
     }
 
+    public async searchUsers(query: string): Promise<UserSearch> {
+        const options = {
+            fields: { id: true, displayName: true },
+            filter: { displayName: { ilike: query } },
+        };
+
+        return this.api.metadata.get({ users: options, userGroups: options }).getData();
+    }
+    @cache()
     public async isAppInstalledByUrl(launchUrl: string): Promise<boolean> {
         try {
             await this.api.baseConnection.request({ method: "get", url: launchUrl }).getData();
@@ -49,7 +73,7 @@ export class InstanceDhisRepository implements InstanceRepository {
         return true;
     }
 
-    private async listStoreApps(): Promise<StoreApp[]> {
+    private async listStoreApps() {
         try {
             return this.api.appHub.list().getData();
         } catch (error) {
@@ -57,4 +81,27 @@ export class InstanceDhisRepository implements InstanceRepository {
             return [];
         }
     }
+}
+
+const resizeFile = (file: Blob): Promise<Blob> => {
+    return new Promise(resolve => {
+        Resizer.imageFileResizer(file, 600, 600, "PNG", 100, 0, blob => resolve(blob as Blob), "blob");
+    });
+};
+
+function arrayBufferToString(buffer: ArrayBuffer, encoding = "UTF-8"): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        const blob = new Blob([buffer], { type: "text/plain" });
+        const reader = new FileReader();
+
+        reader.onload = ev => {
+            if (ev.target) {
+                resolve(ev.target.result as string);
+            } else {
+                reject(new Error("Could not convert array to string!"));
+            }
+        };
+
+        reader.readAsText(blob, encoding);
+    });
 }

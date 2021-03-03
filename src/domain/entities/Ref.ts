@@ -11,15 +11,12 @@ export const NamedRefModel = Schema.extend(
     })
 );
 
-export const DatedRefModel = Schema.extend(
-    NamedRefModel,
-    Schema.object({
-        user: NamedRefModel,
-        created: Schema.date,
-        lastUpdated: Schema.date,
-        lastUpdatedBy: NamedRefModel,
-    })
-);
+export const DatedPropertiesModel = Schema.object({
+    user: NamedRefModel,
+    created: Schema.date,
+    lastUpdated: Schema.date,
+    lastUpdatedBy: NamedRefModel,
+});
 
 export const SharingSettingModel = Schema.object({
     access: Schema.string,
@@ -27,17 +24,17 @@ export const SharingSettingModel = Schema.object({
     name: Schema.string,
 });
 
-export const SharedRefModel = Schema.extend(
-    DatedRefModel,
-    Schema.object({
-        publicAccess: Schema.string,
-        userAccesses: Schema.array(SharingSettingModel),
-        userGroupAccesses: Schema.array(SharingSettingModel),
-    })
-);
+export const SharedPropertiesModel = Schema.object({
+    publicAccess: Schema.string,
+    userAccesses: Schema.array(SharingSettingModel),
+    userGroupAccesses: Schema.array(SharingSettingModel),
+});
+
+export const BaseMetadataModel = Schema.extend(DatedPropertiesModel, SharedPropertiesModel);
 
 export type Ref = GetSchemaType<typeof RefModel>;
 export type NamedRef = GetSchemaType<typeof NamedRefModel>;
-export type DatedRef = GetSchemaType<typeof DatedRefModel>;
-export type SharedRef = GetSchemaType<typeof SharedRefModel>;
+export type DatedProperties = GetSchemaType<typeof DatedPropertiesModel>;
+export type SharedProperties = GetSchemaType<typeof SharedPropertiesModel>;
 export type SharingSetting = GetSchemaType<typeof SharingSettingModel>;
+export type BaseMetadata = GetSchemaType<typeof BaseMetadataModel>;

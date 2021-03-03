@@ -1,8 +1,9 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import ReactMde from "react-mde";
+import ReactMde, { getDefaultToolbarCommands } from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import styled from "styled-components";
+import { addNoteCommand } from "./AddNoteCommand";
 
 export interface MarkdownEditorProps {
     value: string;
@@ -33,13 +34,11 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 <ReactMde
                     value={value}
                     onChange={onChange}
-                    selectedTab={"write"}
                     paste={onUpload ? { saveImage } : undefined}
-                    childProps={{
-                        writeButton: {
-                            tabIndex: -1,
-                        },
-                    }}
+                    commands={{ "add-note": addNoteCommand }}
+                    toolbarCommands={[...getDefaultToolbarCommands(), ["add-note"]]}
+                    minEditorHeight={500}
+                    disablePreview={true}
                 />
             </Children>
             <Children>{markdownPreview(value)}</Children>

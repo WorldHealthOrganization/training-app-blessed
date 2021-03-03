@@ -1,6 +1,9 @@
+import { PartialBy } from "../../types/utils";
 import { GetSchemaType, Schema } from "../../utils/codec";
-import { SharedRefModel } from "./Ref";
+import { BaseMetadataModel } from "./Ref";
 import { TranslatableTextModel } from "./TranslatableText";
+import { TranslationConnectionModel } from "./TranslationProvider";
+import { ModelValidation } from "./Validation";
 
 export const TrainingModuleTypeModel = Schema.oneOf([
     Schema.exact("app"),
@@ -9,9 +12,10 @@ export const TrainingModuleTypeModel = Schema.oneOf([
 ]);
 
 export const TrainingModuleStepModel = Schema.object({
+    id: Schema.string,
     title: TranslatableTextModel,
     subtitle: Schema.optional(TranslatableTextModel),
-    pages: Schema.array(TranslatableTextModel),
+    pages: Schema.array(Schema.extend(TranslatableTextModel, Schema.object({ id: Schema.string }))),
 });
 
 export const TrainingModuleContentsModel = Schema.object({
@@ -20,13 +24,12 @@ export const TrainingModuleContentsModel = Schema.object({
 });
 
 export const TrainingModuleModel = Schema.extend(
-    SharedRefModel,
+    BaseMetadataModel,
     Schema.object({
-        displayName: TranslatableTextModel,
-        translation: Schema.object({
-            provider: Schema.string,
-            project: Schema.optional(Schema.string),
-        }),
+        id: Schema.string,
+        name: TranslatableTextModel,
+        icon: Schema.string,
+        translation: TranslationConnectionModel,
         type: TrainingModuleTypeModel,
         disabled: Schema.optionalSafe(Schema.boolean, false),
         progress: Schema.object({
@@ -39,7 +42,9 @@ export const TrainingModuleModel = Schema.extend(
         dhisVersionRange: Schema.string,
         dhisAppKey: Schema.string,
         dhisLaunchUrl: Schema.string,
+        dhisAuthorities: Schema.array(Schema.string),
         installed: Schema.boolean,
+        editable: Schema.boolean,
     })
 );
 
@@ -48,11 +53,19 @@ export type TrainingModuleType = GetSchemaType<typeof TrainingModuleTypeModel>;
 export type TrainingModuleStep = GetSchemaType<typeof TrainingModuleStepModel>;
 export type TrainingModuleContents = GetSchemaType<typeof TrainingModuleContentsModel>;
 
-export interface TrainingModuleBuilder {
-    id: string;
-    name: string;
-    poEditorProject: string;
-}
+export type PartialTrainingModule = PartialBy<
+    TrainingModule,
+    | "user"
+    | "created"
+    | "lastUpdated"
+    | "lastUpdatedBy"
+    | "publicAccess"
+    | "userAccesses"
+    | "userGroupAccesses"
+    | "progress"
+    | "installed"
+    | "editable"
+>;
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
     const match = /^.*-(\d*)-(\d*)$/.exec(key);
@@ -66,4 +79,35 @@ export const extractStepFromKey = (key: string): { step: number; content: number
 
 export const isValidTrainingType = (type: string): type is TrainingModuleType => {
     return ["app", "core", "widget"].includes(type);
+};
+
+export const trainingModuleValidations: ModelValidation[] = [
+    {
+        property: "id",
+        validation: "hasValue",
+        alias: "code",
+    },
+    {
+        property: "name.referenceValue",
+        validation: "hasValue",
+        alias: "name",
+    },
+];
+
+export const defaultTrainingModule: PartialTrainingModule = {
+    id: "",
+    name: { key: "module-name", referenceValue: "", translations: {} },
+    icon: "",
+    type: "app",
+    revision: 1,
+    dhisVersionRange: "",
+    dhisAppKey: "",
+    dhisLaunchUrl: "",
+    dhisAuthorities: [],
+    disabled: false,
+    translation: { provider: "NONE" },
+    contents: {
+        welcome: { key: "module-welcome", referenceValue: "", translations: {} },
+        steps: [],
+    },
 };

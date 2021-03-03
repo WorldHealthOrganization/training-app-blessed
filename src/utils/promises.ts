@@ -9,3 +9,7 @@ export function promiseMap<T, S>(inputValues: T[], mapper: (value: T) => Promise
         );
     return inputValues.reduce(reducer, Promise.resolve([]));
 }
+
+export const wait = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};

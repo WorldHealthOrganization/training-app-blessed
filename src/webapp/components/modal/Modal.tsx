@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Draggable, { ControlPosition, DraggableData, DraggableEvent, DraggableProps } from "react-draggable";
+import { ControlPosition, DraggableData, DraggableEvent } from "react-draggable";
 import styled from "styled-components";
+import { DragContainer } from "../drag-container/DragContainer";
 import { ModalHeader, ModalHeaderProps } from "./ModalHeader";
 
 export const Modal: React.FC<ModalProps> = ({
@@ -9,6 +10,7 @@ export const Modal: React.FC<ModalProps> = ({
     onClose,
     onMinimize,
     onGoHome,
+    onGoBack,
     onSettings,
     minimized,
     allowDrag,
@@ -26,13 +28,14 @@ export const Modal: React.FC<ModalProps> = ({
     }, [minimized]);
 
     return (
-        <StyledDraggable disabled={!allowDrag} handle={`#${dragId}`} position={position} onDrag={clearPosition}>
+        <DragContainer disabled={!allowDrag} handle={`#${dragId}`} position={position} onDrag={clearPosition}>
             <ModalWrapper center={centerChildren}>
                 <ModalBody id={dragId} className={className}>
                     <ModalHeader
                         minimized={minimized}
                         onClose={onClose}
                         onGoHome={onGoHome}
+                        onGoBack={onGoBack}
                         onSettings={onSettings}
                         onMinimize={onMinimize}
                         allowDrag={allowDrag}
@@ -40,7 +43,7 @@ export const Modal: React.FC<ModalProps> = ({
                     {children}
                 </ModalBody>
             </ModalWrapper>
-        </StyledDraggable>
+        </DragContainer>
     );
 };
 
@@ -70,26 +73,4 @@ export const ModalBody = styled.div`
     pointer-events: auto;
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12),
         0 5px 5px -3px rgba(0, 0, 0, 0.2);
-`;
-
-const CustomDraggable: React.FC<Partial<DraggableProps> & { className?: string }> = ({
-    className,
-    children,
-    ...rest
-}) => {
-    return (
-        <Draggable {...rest} defaultClassName={className}>
-            {children}
-        </Draggable>
-    );
-};
-
-const StyledDraggable = styled(CustomDraggable)`
-    /* Required to allow clicks on items behind draggable region */
-    pointer-events: none;
-
-    /* Required to not loose dragging focus if cursor goes outside of draggable region */
-    :active {
-        pointer-events: all;
-    }
 `;

@@ -30,4 +30,39 @@ export const MarkdownViewer = styled(Viewer)`
         border-radius: 1em;
         user-drag: none;
     }
+
+    details > summary {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        outline: none;
+        list-style: none;
+        list-style-type: none;
+        font-size: 33px;
+        font-weight: 100;
+        text-align: left;
+        user-select: none;
+    }
+
+    details > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details > summary::before {
+        content: url(./img/note.svg);
+        margin-right: 20px;
+        top: 3px;
+        position: relative;
+    }
+
+    details > summary::after {
+        content: "keyboard_arrow_down";
+        font-size: 35px;
+        margin-left: 10px;
+        font-family: "Material Icons";
+    }
+
+    details[open] > summary::after {
+        transform: rotate(180deg);
+    }
 `;

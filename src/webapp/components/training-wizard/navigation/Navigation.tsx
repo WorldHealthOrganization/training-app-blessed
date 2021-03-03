@@ -2,40 +2,44 @@ import { WizardNavigationProps } from "@eyeseetea/d2-ui-components";
 import _ from "lodash";
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import { extractStepFromKey } from "../../../../domain/entities/TrainingModule";
 import i18n from "../../../../locales";
 import { arrayFill } from "../../../../utils/array";
-import { useAppContext } from "../../../contexts/app-context";
 import { MainButton } from "../../main-button/MainButton";
 import { NavigationBullet } from "./NavigationBullet";
 
-export const Navigation: React.FC<WizardNavigationProps> = ({ steps, onNext, onPrev, currentStepKey }) => {
-    const { setAppState } = useAppContext();
-
+export const Navigation: React.FC<NavigationProps> = ({
+    steps,
+    onNext,
+    onPrev,
+    onMove,
+    disableNext,
+    disablePrev,
+    currentStepKey = "",
+}) => {
     const index = _(steps).findIndex(step => step.key === currentStepKey);
     const currentStepIndex = index >= 0 ? index : 0;
     const currentStep = steps[currentStepIndex];
 
     const prev = useCallback(() => {
-        if (currentStepIndex > 0) {
-            onPrev();
+        const currentStep = extractStepFromKey(currentStepKey);
+
+        if (currentStep && disablePrev) {
+            onMove(currentStep.step - 1, 1);
         } else {
-            setAppState(appState => {
-                if (appState.type !== "TRAINING") return appState;
-                return { type: "TRAINING_DIALOG", dialog: "contents", module: appState.module };
-            });
+            onPrev();
         }
-    }, [onPrev, setAppState, currentStepIndex]);
+    }, [onMove, onPrev, currentStepKey, disablePrev]);
 
     const next = useCallback(() => {
-        if (currentStepIndex !== steps.length - 1) {
-            onNext();
+        const currentStep = extractStepFromKey(currentStepKey);
+
+        if (currentStep && disableNext) {
+            onMove(currentStep.step + 1, 1);
         } else {
-            setAppState(appState => {
-                if (appState.type !== "TRAINING") return appState;
-                return { type: "TRAINING_DIALOG", dialog: "final", module: appState.module };
-            });
+            onNext();
         }
-    }, [onNext, setAppState, currentStepIndex, steps]);
+    }, [onMove, onNext, currentStepKey, disableNext]);
 
     if (steps.length === 0 || !currentStep) return null;
     const { contentIndex = 0, totalContents = 0 } = (currentStep.props as unknown) as any;
@@ -66,6 +70,10 @@ export const Navigation: React.FC<WizardNavigationProps> = ({ steps, onNext, onP
         </ModalFooter>
     );
 };
+
+export interface NavigationProps extends WizardNavigationProps {
+    onMove: (step: number, content: number) => void;
+}
 
 const ModalFooter = styled.div`
     overflow: hidden;
