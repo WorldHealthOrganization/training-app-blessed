@@ -20,7 +20,7 @@ export const ModalContent = styled(ModalContentBase)`
     width: ${({ bigger }) => (bigger ? "700px" : "inherit")};
 
     padding: 0px 15px;
-    max-height: 550px;
+    max-height: 50vh;
 
     margin: 0;
     overflow-x: hidden;
