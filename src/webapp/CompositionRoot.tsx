@@ -15,6 +15,7 @@ import { GetShowAllModulesUseCase } from "../domain/usecases/GetShowAllModulesUs
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
+import { ListInstalledAppsUseCase } from "../domain/usecases/ListInstalledAppsUseCase";
 import { ListLandingChildrenUseCase } from "../domain/usecases/ListLandingChildrenUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { ResetModuleDefaultValueUseCase } from "../domain/usecases/ResetModuleDefaultValueUseCase";
@@ -74,6 +75,7 @@ export function getCompositionRoot(baseUrl: string) {
                 uploadFile: new UploadFileUseCase(instanceRepository),
                 installApp: new InstallAppUseCase(instanceRepository, trainingModuleRepository),
                 searchUsers: new SearchUsersUseCase(instanceRepository),
+                listInstalledApps: new ListInstalledAppsUseCase(instanceRepository),
             }),
         },
     };

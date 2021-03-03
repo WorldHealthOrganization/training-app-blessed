@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-03T14:21:05.794Z\n"
+"POT-Creation-Date: 2021-03-03T15:33:25.532Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,14 +122,20 @@ msgstr "Token de POEditor"
 msgid "Icon"
 msgstr ""
 
-msgid "Welcome page"
-msgstr "Bienvenido"
+msgid "Launch application"
+msgstr ""
+
+msgid "DHIS2 application"
+msgstr ""
 
 msgid "Identifier"
 msgstr ""
 
 msgid "Name"
 msgstr ""
+
+msgid "Welcome page"
+msgstr "Bienvenido"
 
 msgid "General info"
 msgstr ""
@@ -383,6 +389,15 @@ msgid "Access to Settings"
 msgstr ""
 
 msgid "Connect the application with POEditor to sync translations"
+msgstr ""
+
+msgid "Show list with modules on main landing page"
+msgstr ""
+
+msgid "A list with all the existing modules is visible"
+msgstr ""
+
+msgid "The list with all the existing  modules is hidden"
 msgstr ""
 
 msgid "Landing page"

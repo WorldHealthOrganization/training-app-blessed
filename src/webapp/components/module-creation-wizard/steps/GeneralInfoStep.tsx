@@ -7,9 +7,6 @@ import { TrainingModule } from "../../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../../domain/entities/TranslatableText";
 import { updateTranslation } from "../../../../domain/helpers/TrainingModuleHelpers";
 import { useAppContext } from "../../../contexts/app-context";
-import { MarkdownEditor } from "../../markdown-editor/MarkdownEditor";
-import { MarkdownViewer } from "../../markdown-viewer/MarkdownViewer";
-import { ModalBody } from "../../modal";
 import { ModuleCreationWizardStepProps } from "./index";
 
 export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ module, onChange, isEdit }) => {
@@ -118,12 +115,13 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
             </Row>
 
             <Row>
-                <h3>{i18n.t("Welcome page")}</h3>
-                <MarkdownEditor
-                    value={module.contents.welcome.referenceValue}
-                    onChange={value => onChangeTranslation(module.contents.welcome, value)}
-                    markdownPreview={markdown => <StepPreview value={markdown} />}
-                    onUpload={data => usecases.instance.uploadFile(data)}
+                <h3>{i18n.t("Launch application")}</h3>
+
+                <TextField
+                    fullWidth={true}
+                    label={i18n.t("DHIS2 application")}
+                    value={module.dhisLaunchUrl}
+                    onChange={onChangeField("dhisLaunchUrl")}
                 />
             </Row>
         </React.Fragment>
@@ -133,23 +131,6 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
 const Row = styled.div`
     margin-bottom: 25px;
 `;
-
-const StyledModalBody = styled(ModalBody)`
-    max-width: 600px;
-`;
-
-const StepPreview: React.FC<{
-    className?: string;
-    value?: string;
-}> = ({ className, value }) => {
-    if (!value) return null;
-
-    return (
-        <StyledModalBody className={className}>
-            <MarkdownViewer source={value} center={true} />
-        </StyledModalBody>
-    );
-};
 
 const IconContainer = styled.div`
     margin-right: 60px;

@@ -1,5 +1,6 @@
 import FileType from "file-type/browser";
 import Resizer from "react-image-file-resizer";
+import { InstalledApp } from "../../domain/entities/InstalledApp";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository, UploadFileOptions } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
@@ -62,6 +63,7 @@ export class InstanceDhisRepository implements InstanceRepository {
 
         return this.api.metadata.get({ users: options, userGroups: options }).getData();
     }
+
     @cache()
     public async isAppInstalledByUrl(launchUrl: string): Promise<boolean> {
         try {
@@ -71,6 +73,18 @@ export class InstanceDhisRepository implements InstanceRepository {
         }
 
         return true;
+    }
+
+    @cache()
+    public async listInstalledApps(): Promise<InstalledApp[]> {
+        const apps = await this.api.get<DhisInstalledApp[]>("/apps").getData();
+
+        return apps.map(app => ({
+            name: app.name,
+            version: app.name,
+            fullLaunchUrl: app.launchUrl,
+            launchUrl: app.launchUrl.replace(this.api.baseUrl, ""),
+        }));
     }
 
     private async listStoreApps() {
@@ -104,4 +118,20 @@ function arrayBufferToString(buffer: ArrayBuffer, encoding = "UTF-8"): Promise<s
 
         reader.readAsText(blob, encoding);
     });
+}
+
+interface DhisInstalledApp {
+    version: string;
+    name: string;
+    appType: "APP" | "RESOURCE" | "DASHBOARD_WIDGET" | "TRACKER_DASHBOARD_WIDGET";
+    appStorageSource: string;
+    folderName: string;
+    icons: Record<string, string>;
+    developer: Record<string, string>;
+    activities: Record<string, unknown>;
+    launchUrl: string;
+    appState: string;
+    key: string;
+    launch_path: string;
+    default_locale: string;
 }

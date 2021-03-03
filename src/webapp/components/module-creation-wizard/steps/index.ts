@@ -5,6 +5,7 @@ import { AccessStep } from "./AccessStep";
 import { ContentsStep } from "./ContentsStep";
 import { GeneralInfoStep } from "./GeneralInfoStep";
 import { SummaryStep } from "./SummaryStep";
+import { WelcomePageStep } from "./WelcomePageStep";
 
 export interface ModuleCreationWizardStep extends WizardStep {
     validationKeys: string[];
@@ -27,6 +28,12 @@ export const moduleCreationWizardSteps: ModuleCreationWizardStep[] = [
         label: i18n.t("General info"),
         component: GeneralInfoStep,
         validationKeys: ["id", "name.referenceValue"],
+    },
+    {
+        key: "welcome-page",
+        label: i18n.t("Welcome page"),
+        component: WelcomePageStep,
+        validationKeys: ["contents.welcome.referenceValue"],
     },
     {
         key: "contents",

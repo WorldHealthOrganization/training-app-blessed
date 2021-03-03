@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-03T14:21:05.794Z\n"
-"PO-Revision-Date: 2021-03-03T14:21:05.794Z\n"
+"POT-Creation-Date: 2021-03-03T15:33:25.532Z\n"
+"PO-Revision-Date: 2021-03-03T15:33:25.532Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -122,13 +122,19 @@ msgstr ""
 msgid "Icon"
 msgstr ""
 
-msgid "Welcome page"
+msgid "Launch application"
+msgstr ""
+
+msgid "DHIS2 application"
 msgstr ""
 
 msgid "Identifier"
 msgstr ""
 
 msgid "Name"
+msgstr ""
+
+msgid "Welcome page"
 msgstr ""
 
 msgid "General info"
@@ -383,6 +389,15 @@ msgid "Access to Settings"
 msgstr ""
 
 msgid "Connect the application with POEditor to sync translations"
+msgstr ""
+
+msgid "Show list with modules on main landing page"
+msgstr ""
+
+msgid "A list with all the existing modules is visible"
+msgstr ""
+
+msgid "The list with all the existing  modules is hidden"
 msgstr ""
 
 msgid "Landing page"
