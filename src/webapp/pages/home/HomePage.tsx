@@ -12,11 +12,10 @@ import { useAppContext } from "../../contexts/app-context";
 const Item: React.FC<{
     currentPage: LandingNode;
     openPage: (page: LandingNode) => void;
-    openModule: (module: string, step: number) => void;
 }> = props => {
-    const { currentPage, openModule, openPage } = props;
+    const { currentPage, openPage } = props;
 
-    const { translate, modules, reload } = useAppContext();
+    const { translate, reload } = useAppContext();
 
     useEffect(() => {
         reload();
@@ -76,34 +75,6 @@ const Item: React.FC<{
                 {currentPage.children.map(node => (
                     <Item key={`node-${node.id}`} {...props} currentPage={node} />
                 ))}
-
-                <Cardboard rowSize={3} key={`group-${currentPage.id}`}>
-                    {currentPage.modules.map(moduleId => {
-                        const module = modules.find(({ id }) => id === moduleId);
-                        if (!module) return null;
-
-                        const percentage = module
-                            ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
-                            : undefined;
-
-                        const handleClick = () => {
-                            openModule(module.id, module.progress.completed ? 0 : module.progress.lastStep + 1);
-                        };
-
-                        const name = translate(module.name);
-
-                        return (
-                            <BigCard
-                                key={`card-${moduleId}`}
-                                label={name}
-                                progress={module?.progress.completed ? 100 : percentage}
-                                onClick={handleClick}
-                                disabled={module?.disabled}
-                                icon={module?.icon ? <img src={module.icon} alt={`Icon for ${name}`} /> : undefined}
-                            />
-                        );
-                    })}
-                </Cardboard>
             </GroupContainer>
         );
     }
@@ -131,34 +102,6 @@ const Item: React.FC<{
                         );
                     })}
                 </Cardboard>
-
-                <Cardboard rowSize={3} key={`group-${currentPage.id}`}>
-                    {currentPage.modules.map(moduleId => {
-                        const module = modules.find(({ id }) => id === moduleId);
-                        if (!module) return null;
-
-                        const percentage = module
-                            ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
-                            : undefined;
-
-                        const handleClick = () => {
-                            openModule(module.id, module.progress.completed ? 0 : module.progress.lastStep + 1);
-                        };
-
-                        const name = translate(module.name);
-
-                        return (
-                            <BigCard
-                                key={`card-${moduleId}`}
-                                label={name}
-                                progress={module?.progress.completed ? 100 : percentage}
-                                onClick={handleClick}
-                                disabled={module?.disabled}
-                                icon={module?.icon ? <img src={module.icon} alt={`Icon for ${name}`} /> : undefined}
-                            />
-                        );
-                    })}
-                </Cardboard>
             </GroupContainer>
         );
     }
@@ -179,34 +122,6 @@ const Item: React.FC<{
                 ) : null}
 
                 {currentPage.content ? <MarkdownViewer source={translate(currentPage.content)} /> : null}
-
-                <Cardboard rowSize={3} key={`group-${currentPage.id}`}>
-                    {currentPage.modules.map(moduleId => {
-                        const module = modules.find(({ id }) => id === moduleId);
-                        if (!module) return null;
-
-                        const percentage = module
-                            ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
-                            : undefined;
-
-                        const handleClick = () => {
-                            openModule(module.id, module.progress.completed ? 0 : module.progress.lastStep + 1);
-                        };
-
-                        const name = translate(module.name);
-
-                        return (
-                            <BigCard
-                                key={`card-${moduleId}`}
-                                label={name}
-                                progress={module?.progress.completed ? 100 : percentage}
-                                onClick={handleClick}
-                                disabled={module?.disabled}
-                                icon={module?.icon ? <img src={module.icon} alt={`Icon for ${name}`} /> : undefined}
-                            />
-                        );
-                    })}
-                </Cardboard>
             </GroupContainer>
         );
     }
@@ -215,7 +130,7 @@ const Item: React.FC<{
 };
 
 export const HomePage: React.FC = () => {
-    const { setAppState, hasSettingsAccess, modules, landings, showAllModules } = useAppContext();
+    const { setAppState, hasSettingsAccess, modules, translate, landings, showAllModules } = useAppContext();
 
     const [history, updateHistory] = useState<LandingNode[]>([]);
 
@@ -256,54 +171,12 @@ export const HomePage: React.FC = () => {
 
     //@ts-ignore
     const currentPage = useMemo<LandingNode | undefined>(() => {
-        if (history[0]) return history[0];
-
-        const mainLanding = landings[0];
-        if (!mainLanding) return undefined;
-
-        if (!showAllModules) return mainLanding;
-
-        return {
-            ...mainLanding,
-            children: [
-                ...mainLanding.children,
-                {
-                    id: "all-modules",
-                    type: "module-group",
-                    level: 1,
-                    icon: undefined,
-                    name: {
-                        key: "data-entry-generic-title",
-                        referenceValue: "All modules",
-                        translations: {},
-                    },
-                    title: {
-                        key: "data-entry-generic-title",
-                        referenceValue: "All modules",
-                        translations: {},
-                    },
-                    description: {
-                        key: "data-entry-generic-description",
-                        referenceValue: "Select a module below to learn how to use applications in DHIS2:",
-                        translations: {},
-                    },
-                    children: modules.map(module => ({
-                        id: module.id,
-                        type: "module",
-                        level: 1,
-                        moduleId: module.id,
-                        name: module.name,
-                        title: undefined,
-                        description: undefined,
-                        children: undefined,
-                        icon: undefined,
-                    })),
-                },
-            ],
-        };
+        return history[0] ?? landings[0];
     }, [history, modules, landings, showAllModules]);
 
     const isRoot = history.length === 0;
+
+    const pageModules = isRoot && showAllModules ? modules.map(({ id }) => id) : currentPage?.modules ?? [];
 
     return (
         <StyledModal
@@ -317,7 +190,45 @@ export const HomePage: React.FC = () => {
             <ContentWrapper>
                 {currentPage ? (
                     <ModalContent>
-                        <Item currentPage={currentPage} openModule={loadModule} openPage={openPage} />
+                        <Item currentPage={currentPage} openPage={openPage} />
+
+                        {isRoot && showAllModules ? (
+                            <ModalParagraph size={28} align={"left"}>
+                                {i18n.t("Select a module below to learn how to use applications in DHIS2:")}
+                            </ModalParagraph>
+                        ) : null}
+
+                        <Cardboard rowSize={3} key={`group-${currentPage.id}`}>
+                            {pageModules.map(moduleId => {
+                                const module = modules.find(({ id }) => id === moduleId);
+                                if (!module) return null;
+
+                                const percentage = module
+                                    ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
+                                    : undefined;
+
+                                const handleClick = () => {
+                                    loadModule(module.id, module.progress.completed ? 0 : module.progress.lastStep + 1);
+                                };
+
+                                const name = translate(module.name);
+
+                                return (
+                                    <BigCard
+                                        key={`card-${moduleId}`}
+                                        label={name}
+                                        progress={module?.progress.completed ? 100 : percentage}
+                                        onClick={handleClick}
+                                        disabled={module?.disabled}
+                                        icon={
+                                            module?.icon ? (
+                                                <img src={module.icon} alt={`Icon for ${name}`} />
+                                            ) : undefined
+                                        }
+                                    />
+                                );
+                            })}
+                        </Cardboard>
                     </ModalContent>
                 ) : null}
             </ContentWrapper>
