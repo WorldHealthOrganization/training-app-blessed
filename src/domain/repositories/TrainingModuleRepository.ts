@@ -1,3 +1,4 @@
+import { PersistedTrainingModule } from "../../data/entities/PersistedTrainingModule";
 import { TrainingModule } from "../entities/TrainingModule";
 
 export interface TrainingModuleRepository {
@@ -11,4 +12,5 @@ export interface TrainingModuleRepository {
     initializeTranslation(id: string): Promise<void>;
     resetDefaultValue(ids: string[]): Promise<void>;
     export(ids: string[]): Promise<void>;
+    import(files: File[]): Promise<PersistedTrainingModule[]>;
 }

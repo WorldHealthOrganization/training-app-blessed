@@ -53,12 +53,20 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         async (files: File[], rejections: FileRejection[]) => {
             if (files.length === 0 && rejections.length > 0) {
                 snackbar.error(i18n.t("Couldn't read the file because it's not valid"));
-                return;
+            } else {
+                loading.show(true, i18n.t("Importing module(s)"));
+                try {
+                    const modules = await usecases.modules.import(files);
+                    snackbar.success(i18n.t("Imported {{n}} modules", { n: modules.length }));
+                    await refreshRows();
+                } catch (err) {
+                    snackbar.error((err && err.message) || err.toString());
+                } finally {
+                    loading.reset();
+                }
             }
-
-            snackbar.info("Import not implemented yet");
         },
-        [snackbar]
+        [snackbar, refreshRows, usecases, loading]
     );
 
     const deleteModules = useCallback(
@@ -301,7 +309,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const exportModule = useCallback(
         async (ids: string[]) => {
             if (!ids[0]) return;
-            loading.show(true, i18n.t("Exporting module"));
+            loading.show(true, i18n.t("Exporting module(s)"));
             await usecases.modules.export(ids);
             loading.reset();
         },
@@ -551,7 +559,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <Dropzone ref={fileRef} accept={"application/json"} onDrop={handleFileUpload}>
+            <Dropzone ref={fileRef} accept={"application/zip"} onDrop={handleFileUpload}>
                 <ObjectsTable<ListItem>
                     rows={rows}
                     columns={columns}
