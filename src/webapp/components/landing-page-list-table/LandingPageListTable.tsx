@@ -36,7 +36,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
             {
                 name: "content",
                 text: "Content",
-                getValue: item => item.content ? <StepPreview value={item.content.referenceValue} /> : "-",
+                getValue: item => (item.content ? <StepPreview value={item.content.referenceValue} /> : "-"),
             },
             {
                 name: "icon",
@@ -55,13 +55,14 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 text: i18n.t("Add section"),
                 icon: <Icon>add</Icon>,
                 onClick: ids => {
-                    const parent = ids[0];
+                    const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
                     if (!parent) return;
 
                     updateEditDialog({
                         title: i18n.t("Add section"),
                         type: "section",
-                        parent,
+                        parent: parent.id,
+                        order: parent.children.length,
                         onCancel: () => updateEditDialog(null),
                         onSave: async node => {
                             updateEditDialog(null);
@@ -77,13 +78,14 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 text: i18n.t("Add sub-section"),
                 icon: <Icon>add</Icon>,
                 onClick: ids => {
-                    const parent = ids[0];
+                    const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
                     if (!parent) return;
 
                     updateEditDialog({
                         title: i18n.t("Add sub-section"),
                         type: "sub-section",
-                        parent,
+                        parent: parent.id,
+                        order: parent.children.length,
                         onCancel: () => updateEditDialog(null),
                         onSave: async node => {
                             updateEditDialog(null);
@@ -99,13 +101,14 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 text: i18n.t("Add category"),
                 icon: <Icon>add</Icon>,
                 onClick: ids => {
-                    const parent = ids[0];
+                    const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
                     if (!parent) return;
 
                     updateEditDialog({
                         title: i18n.t("Add category"),
                         type: "category",
-                        parent,
+                        parent: parent.id,
+                        order: parent.children.length,
                         onCancel: () => updateEditDialog(null),
                         onSave: async node => {
                             updateEditDialog(null);
@@ -129,6 +132,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                         type: node.type,
                         parent: node.parent,
                         initialNode: node,
+                        order: node.order ?? 0,
                         onCancel: () => updateEditDialog(null),
                         onSave: async node => {
                             updateEditDialog(null);

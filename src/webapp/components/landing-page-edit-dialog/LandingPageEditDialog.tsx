@@ -17,12 +17,13 @@ import { MarkdownEditor } from "../markdown-editor/MarkdownEditor";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { ModalBody } from "../modal";
 
-const buildDefaultNode = (type: LandingNodeType, parent: string) => {
+const buildDefaultNode = (type: LandingNodeType, parent: string, order: number) => {
     return {
         id: generateUid(),
         type,
         parent,
         icon: "",
+        order,
         name: { key: "", referenceValue: "", translations: {} },
         title: undefined,
         content: undefined,
@@ -32,12 +33,12 @@ const buildDefaultNode = (type: LandingNodeType, parent: string) => {
 };
 
 export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props => {
-    const { type, parent, initialNode, onSave } = props;
+    const { type, parent, order, initialNode, onSave } = props;
 
     const { modules, translate, usecases } = useAppContext();
     const snackbar = useSnackbar();
 
-    const [value, setValue] = useState<LandingNode>(initialNode ?? buildDefaultNode(type, parent));
+    const [value, setValue] = useState<LandingNode>(initialNode ?? buildDefaultNode(type, parent, order));
     const [errors, setErrors] = useState<Dictionary<string | undefined>>({});
 
     const items = useMemo(() => modules.map(({ id, name }) => ({ value: id, text: translate(name) })), [
@@ -185,6 +186,7 @@ export interface LandingPageEditDialogProps extends Omit<ConfirmationDialogProps
     initialNode?: LandingNode;
     type: LandingNodeType;
     parent: string;
+    order: number;
     onSave: (value: LandingNode) => void;
 }
 

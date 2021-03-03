@@ -15,6 +15,7 @@ export interface LandingNode {
     parent: string;
     type: LandingNodeType;
     icon: string;
+    order: number | undefined;
     name: TranslatableText;
     title: TranslatableText | undefined;
     content: TranslatableText | undefined;
@@ -27,6 +28,7 @@ export const LandingNodeModel: Codec<LandingNode> = Schema.object({
     parent: Schema.string,
     type: LandingPageNodeTypeModel,
     icon: Schema.optionalSafe(Schema.string, ""),
+    order: Schema.optional(Schema.integer),
     name: TranslatableTextModel,
     title: Schema.optional(TranslatableTextModel),
     content: Schema.optional(TranslatableTextModel),

@@ -17,18 +17,19 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
 
     public async list(): Promise<LandingNode[]> {
         try {
-            const pages = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(
+            const persisted = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(
                 Namespaces.LANDING_PAGES
             );
 
-            const root = pages?.find(({ parent }) => parent === "none");
+            const root = persisted?.find(({ parent }) => parent === "none");
 
-            if (pages.length === 0 || !root) {
+            if (persisted.length === 0 || !root) {
                 const root = {
                     id: generateUid(),
                     parent: "none",
                     type: "root" as const,
                     icon: "",
+                    order: undefined,
                     name: {
                         key: "root-name",
                         referenceValue: "Main landing page",
@@ -43,7 +44,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
                 return [{ ...root, children: [] }];
             }
 
-            const validation = LandingNodeModel.decode(buildDomainLandingNode(root, pages));
+            const validation = LandingNodeModel.decode(buildDomainLandingNode(root, persisted));
 
             if (validation.isLeft()) {
                 throw new Error(validation.extract());
@@ -75,10 +76,14 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
     }
 }
 
-const buildDomainLandingNode = (root: PersistedLandingPage, items: PersistedLandingPage[]): unknown => {
+const buildDomainLandingNode = (root: PersistedLandingPage, items: PersistedLandingPage[]): LandingNode => {
     return {
         ...root,
-        children: items.filter(({ parent }) => parent === root.id).map(node => buildDomainLandingNode(node, items)),
+        children: _(items)
+            .filter(({ parent }) => parent === root.id)
+            .sortBy(item => item.order ?? 1000)
+            .map((node, order) => ({ order, ...buildDomainLandingNode(node, items) }))
+            .value(),
     };
 };
 
