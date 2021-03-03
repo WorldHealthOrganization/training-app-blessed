@@ -3,9 +3,11 @@ import { Dictionary } from "../../types/utils";
 export type Color = "primary" | "secondary" | "default" | "inherit";
 export type ColorPalette = "main" | "light" | "dark";
 
+const defaultColor = "#43CBCB";
+
 const theme: Dictionary<Dictionary<string>> = {
     main: {
-        primary: "#43CBCB",
+        primary: defaultColor,
         secondary: "#ff8f02",
     },
     light: {
@@ -19,5 +21,5 @@ const theme: Dictionary<Dictionary<string>> = {
 };
 
 export const getColor = (color: Color, palette: ColorPalette = "main") => {
-    return theme[palette][color] ?? theme.main.primary;
+    return theme[palette]?.[color] ?? defaultColor;
 };

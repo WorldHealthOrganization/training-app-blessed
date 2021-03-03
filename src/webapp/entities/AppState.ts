@@ -1,7 +1,14 @@
 import { ReactRouterMatch } from "../router/AppRoute";
 
 export type TrainingStateType = "OPEN" | "MINIMIZED";
-export type AppStateType = "HOME" | "TRAINING" | "TRAINING_DIALOG" | "UNKNOWN" | "SETTINGS";
+export type AppStateType =
+    | "HOME"
+    | "TRAINING"
+    | "TRAINING_DIALOG"
+    | "UNKNOWN"
+    | "SETTINGS"
+    | "EDIT_MODULE"
+    | "CREATE_MODULE";
 
 interface BaseAppState {
     type: AppStateType;
@@ -35,12 +42,23 @@ interface SettingsAppState extends BaseAppState {
     type: "SETTINGS";
 }
 
+interface EditAppState extends BaseAppState {
+    type: "EDIT_MODULE";
+    module: string;
+}
+
+interface CreateAppState extends BaseAppState {
+    type: "CREATE_MODULE";
+}
+
 export type AppState =
     | UnknownAppState
     | HomeAppState
     | TrainingAppState
     | TrainingDialogAppState
-    | SettingsAppState;
+    | SettingsAppState
+    | EditAppState
+    | CreateAppState;
 
 export const buildPathFromState = (state: AppState): string => {
     switch (state.type) {
@@ -52,6 +70,10 @@ export const buildPathFromState = (state: AppState): string => {
             return `/tutorial/${state.module}/${state.dialog}`;
         case "SETTINGS":
             return `/settings`;
+        case "EDIT_MODULE":
+            return `/edit/${state.module}`;
+        case "CREATE_MODULE":
+            return `/create`;
         default:
             return "/";
     }
@@ -64,23 +86,27 @@ export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
                 return { type: "HOME" };
             case "/tutorial/:key":
             case "/tutorial/:key/welcome":
-                return { type: "TRAINING_DIALOG", dialog: "welcome", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "welcome", module: match.params.key ?? "" };
             case "/tutorial/:key/contents":
-                return { type: "TRAINING_DIALOG", dialog: "contents", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "contents", module: match.params.key ?? "" };
             case "/tutorial/:key/summary":
-                return { type: "TRAINING_DIALOG", dialog: "summary", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "summary", module: match.params.key ?? "" };
             case "/tutorial/:key/final":
-                return { type: "TRAINING_DIALOG", dialog: "final", module: match.params.key };
+                return { type: "TRAINING_DIALOG", dialog: "final", module: match.params.key ?? "" };
             case "/tutorial/:key/:step/:content":
                 return {
                     type: "TRAINING",
-                    module: match.params.key,
-                    step: parseInt(match.params.step),
-                    content: parseInt(match.params.content),
+                    module: match.params.key ?? "",
+                    step: parseInt(match.params.step ?? ""),
+                    content: parseInt(match.params.content ?? ""),
                     state: "OPEN",
                 };
             case "/settings":
                 return { type: "SETTINGS" };
+            case "/edit/:module":
+                return { type: "EDIT_MODULE", module: match.params.module ?? "" };
+            case "/create":
+                return { type: "CREATE_MODULE" };
         }
     }
     return { type: "HOME" };

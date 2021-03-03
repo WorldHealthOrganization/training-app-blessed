@@ -16,9 +16,7 @@ export class CancelableResponse<Data> {
         return this.response.then(({ data }) => data);
     }
 
-    map<MappedData>(
-        mapper: (response: HttpResponse<Data>) => MappedData
-    ): CancelableResponse<MappedData> {
+    map<MappedData>(mapper: (response: HttpResponse<Data>) => MappedData): CancelableResponse<MappedData> {
         const { cancel, response } = this;
         const mappedResponse = response.then(
             (response_: HttpResponse<Data>): HttpResponse<MappedData> => ({

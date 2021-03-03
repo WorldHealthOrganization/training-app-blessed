@@ -1,4 +1,4 @@
-import { useLoading } from "d2-ui-components";
+import { useLoading } from "@eyeseetea/d2-ui-components";
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 

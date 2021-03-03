@@ -29,12 +29,7 @@ export const WelcomePage = () => {
     if (!module) return null;
 
     return (
-        <StyledModal
-            onMinimize={minimize}
-            onClose={exitTutorial}
-            onGoHome={goHome}
-            centerChildren={true}
-        >
+        <StyledModal onMinimize={minimize} onClose={exitTutorial} onGoHome={goHome} centerChildren={true}>
             <WelcomePageContent welcome={translate(module.contents.welcome)} />
             <ModalFooter>
                 <MainButton color="secondary" onClick={exitTutorial}>
@@ -53,6 +48,12 @@ const StyledModal = styled(Modal)`
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    ${ModalContent} {
+        padding-top: 25px;
+        height: 100%;
+        max-height: unset;
+    }
 `;
 
 export const WelcomePageContent: React.FC<{ welcome: string }> = ({ welcome }) => {

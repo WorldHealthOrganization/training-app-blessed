@@ -1,38 +1,29 @@
-import { useConfig } from "@dhis2/app-runtime";
-import { ConfirmationDialog, ShareUpdate, Sharing, SharingRule } from "d2-ui-components";
+import { ConfirmationDialog, ShareUpdate, Sharing, SharingRule } from "@eyeseetea/d2-ui-components";
 import React, { useCallback } from "react";
-import { SharedRef, SharingSetting } from "../../../domain/entities/Ref";
+import { SharedProperties, SharingSetting } from "../../../domain/entities/Ref";
 import i18n from "../../../locales";
-import { D2Api } from "../../../types/d2-api";
+import { useAppContext } from "../../contexts/app-context";
 
-interface PermissionsDialogProps {
-    object: Pick<SharedRef, "name" | "userAccesses" | "userGroupAccesses" | "publicAccess">;
+export type SharedUpdate = Partial<Pick<SharedProperties, "userAccesses" | "userGroupAccesses" | "publicAccess">>;
+export type PermissionsObject = Required<SharedUpdate> & { name: string };
+
+export interface PermissionsDialogProps {
+    object: PermissionsObject;
     onChange: (sharedUpdate: SharedUpdate) => Promise<void>;
     allowPublicAccess?: boolean;
     allowExternalAccess?: boolean;
     onClose: () => void;
 }
 
-export type SharedUpdate = Partial<
-    Pick<SharedRef, "userAccesses" | "userGroupAccesses" | "publicAccess">
->;
-
-export default function PermissionsDialog({
+export const PermissionsDialog: React.FC<PermissionsDialogProps> = ({
     object,
     allowPublicAccess,
     allowExternalAccess,
     onClose,
     onChange,
-}: PermissionsDialogProps) {
-    // TODO: Move to data layer
-    const { baseUrl } = useConfig();
-    const search = useCallback(
-        (query: string) => {
-            const api = new D2Api({ baseUrl });
-            return searchUsers(api, query);
-        },
-        [baseUrl]
-    );
+}) => {
+    const { usecases } = useAppContext();
+    const search = (query: string) => usecases.instance.searchUsers(query);
 
     const metaObject = {
         meta: { allowPublicAccess, allowExternalAccess },
@@ -56,12 +47,7 @@ export default function PermissionsDialog({
     );
 
     return (
-        <ConfirmationDialog
-            isOpen={true}
-            fullWidth={true}
-            onCancel={onClose}
-            cancelText={i18n.t("Close")}
-        >
+        <ConfirmationDialog isOpen={true} fullWidth={true} onCancel={onClose} cancelText={i18n.t("Close")}>
             <Sharing
                 meta={metaObject}
                 showOptions={{
@@ -75,16 +61,7 @@ export default function PermissionsDialog({
             />
         </ConfirmationDialog>
     );
-}
-
-function searchUsers(api: D2Api, query: string) {
-    const options = {
-        fields: { id: true, displayName: true },
-        filter: { displayName: { ilike: query } },
-    };
-    return api.metadata.get({ users: options, userGroups: options }).getData();
-}
-
+};
 const mapSharingSettings = (settings?: SharingRule[]): SharingSetting[] | undefined => {
     return settings?.map(item => {
         return { id: item.id, access: item.access, name: item.displayName };

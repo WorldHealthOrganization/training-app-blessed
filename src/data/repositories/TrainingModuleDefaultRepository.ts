@@ -1,15 +1,12 @@
 import _ from "lodash";
-import { Either } from "../../domain/entities/Either";
-import {
-    isValidTrainingType,
-    TrainingModule,
-    TrainingModuleBuilder,
-} from "../../domain/entities/TrainingModule";
+import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
+import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { Dictionary } from "../../types/utils";
+import { swapById } from "../../utils/array";
 import { promiseMap } from "../../utils/promises";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
@@ -17,17 +14,17 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
-import {
-    PersistedTrainingModule,
-    TranslationConnection,
-} from "../entities/PersistedTrainingModule";
+import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
+import { validateUserPermission } from "../entities/User";
+import { TrainingModuleDefaultImportExport } from "./TrainingModuleDefaultImportExport";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
 
-    constructor(private config: ConfigRepository) {
+    constructor(private config: ConfigRepository, private instanceRepository: InstanceRepository) {
+        //@ts-ignore FIXME: Add decoding to enforce types
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
@@ -35,26 +32,20 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async list(): Promise<TrainingModule[]> {
         try {
-            const dataStoreModules = await this.storageClient.listObjectsInCollection<
-                PersistedTrainingModule
-            >(Namespaces.TRAINING_MODULES);
+            const dataStoreModules = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
+                Namespaces.TRAINING_MODULES
+            );
 
             const missingModuleKeys = _(this.builtinModules)
                 .values()
                 .compact()
-                .differenceBy(dataStoreModules, ({ id, revision }: JSONTrainingModule) =>
-                    [id, revision].join("-")
-                )
+                .differenceBy(dataStoreModules, ({ id, revision }: JSONTrainingModule) => [id, revision].join("-"))
                 .map(({ id }) => id)
                 .value();
 
-            const missingModules = await promiseMap(missingModuleKeys, key =>
-                this.createBuiltin(key)
-            );
+            const missingModules = await promiseMap(missingModuleKeys, key => this.createBuiltin(key));
 
-            const progress = await this.progressStorageClient.getObject<UserProgress[]>(
-                Namespaces.PROGRESS
-            );
+            const progress = await this.progressStorageClient.getObject<UserProgress[]>(Namespaces.PROGRESS);
 
             const currentUser = await this.config.getUser();
 
@@ -62,25 +53,23 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 .compact()
                 .uniqBy("id")
                 .filter(({ dhisAuthorities }) => {
-                    const userAuthorities = currentUser.userRoles.flatMap(
-                        ({ authorities }) => authorities
-                    );
+                    const userAuthorities = currentUser.userRoles.flatMap(({ authorities }) => authorities);
 
                     return _.every(
                         dhisAuthorities,
-                        authority =>
-                            userAuthorities.includes("ALL") || userAuthorities.includes(authority)
+                        authority => userAuthorities.includes("ALL") || userAuthorities.includes(authority)
                     );
                 })
+                .filter(model => validateUserPermission(model, "read", currentUser))
                 .value();
 
-            return promiseMap(modules, async module => {
-                const model = await this.buildDomainModel(module);
+            return promiseMap(modules, async persistedModel => {
+                const model = await this.buildDomainModel(persistedModel);
 
                 return {
                     ...model,
-                    progress: progress?.find(({ id }) => id === module.id) ?? {
-                        id: module.id,
+                    progress: progress?.find(({ id }) => id === model.id) ?? {
+                        id: model.id,
                         lastStep: 0,
                         completed: false,
                     },
@@ -92,79 +81,53 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async get(key: string): Promise<TrainingModule | undefined> {
-        const dataStoreModel = await this.storageClient.getObjectInCollection<
-            PersistedTrainingModule
-        >(Namespaces.TRAINING_MODULES, key);
+        const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES,
+            key
+        );
 
         const model = dataStoreModel ?? (await this.createBuiltin(key));
         if (!model) return undefined;
 
-        const progress = await this.progressStorageClient.getObject<UserProgress[]>(
-            Namespaces.PROGRESS
-        );
+        const progress = await this.progressStorageClient.getObject<UserProgress[]>(Namespaces.PROGRESS);
 
         const domainModel = await this.buildDomainModel(model);
 
         return {
             ...domainModel,
-            progress: progress?.find(({ id }) => id === module.id) ?? {
-                id: module.id,
+            progress: progress?.find(({ id }) => id === model.id) ?? {
+                id: model.id,
                 lastStep: 0,
                 completed: false,
             },
         };
     }
 
-    public async create({
-        id,
-        name,
-        poEditorProject,
-    }: TrainingModuleBuilder): Promise<Either<"CODE_EXISTS", void>> {
-        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES
-        );
-        const exists = !!items.find(item => item.id === id);
-        if (exists) return Either.error("CODE_EXISTS");
-
-        const newModel = await this.buildPersistedModel({
-            id,
-            name: { key: "module-name", referenceValue: name, translations: {} },
-            type: "app",
-            _version: 1,
-            revision: 1,
-            dhisVersionRange: "",
-            dhisAppKey: "",
-            dhisLaunchUrl: "",
-            dhisAuthorities: [],
-            disabled: false,
-            contents: {
-                welcome: { key: "module-welcome", referenceValue: "", translations: {} },
-                steps: [],
-            },
-        });
-
-        const translation: TranslationConnection = poEditorProject
-            ? { provider: "poeditor", project: poEditorProject }
-            : { provider: "NONE" };
-
-        await this.saveDataStore({ ...newModel, translation });
-        return Either.success(undefined);
+    public async update(model: Pick<TrainingModule, "id" | "name"> & Partial<TrainingModule>): Promise<void> {
+        const newModule = await this.buildPersistedModel({ _version: 1, ...defaultTrainingModule, ...model });
+        await this.saveDataStore(newModule);
     }
 
-    public async edit({ id, name, poEditorProject }: TrainingModuleBuilder): Promise<void> {
-        const items = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
-            Namespaces.TRAINING_MODULES
-        );
+    private getImportExportModule() {
+        return new TrainingModuleDefaultImportExport(this, this.instanceRepository, this.storageClient);
+    }
 
-        const item = items.find(item => item.id === id);
-        if (!item) return;
+    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
+        return this.getImportExportModule().import(files);
+    }
 
-        const translation: TranslationConnection = poEditorProject
-            ? { provider: "poeditor", project: poEditorProject }
-            : { provider: "NONE" };
+    public async export(ids: string[]): Promise<void> {
+        return this.getImportExportModule().export(ids);
+    }
 
-        const newItem = { ...item, name: name, translation };
-        await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, newItem);
+    public async resetDefaultValue(ids: string[]): Promise<void> {
+        for (const id of ids) {
+            const defaultModule = this.builtinModules[id];
+            if (defaultModule) {
+                const model = await this.buildPersistedModel(defaultModule);
+                await this.saveDataStore(model);
+            }
+        }
     }
 
     public async delete(ids: string[]): Promise<void> {
@@ -178,12 +141,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             Namespaces.TRAINING_MODULES
         );
 
-        const index1 = _.findIndex(items, ({ id }) => id === id1);
-        const index2 = _.findIndex(items, ({ id }) => id === id2);
-        if (index1 === -1 || index2 === -1) return;
-
-        [items[index1], items[index2]] = [items[index2], items[index1]];
-        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
+        const newItems = swapById(items, id1, id2);
+        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, newItems);
     }
 
     public async updateProgress(id: string, lastStep: number, completed: boolean): Promise<void> {
@@ -208,8 +167,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
             // Fetch translations and update local model
             const languagesResponse = await api.languages.list({ id: project });
-            const poeditorLanguages =
-                languagesResponse.value.data?.languages.map(({ code }) => code) ?? [];
+            const poeditorLanguages = languagesResponse.value.data?.languages.map(({ code }) => code) ?? [];
 
             const dictionary = _(
                 await promiseMap(poeditorLanguages, async language => {
@@ -225,16 +183,14 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             )
                 .flatten()
                 .groupBy(item => item.term)
-                .mapValues(items =>
-                    _.fromPairs(items.map(({ language, value }) => [language, value]))
-                )
+                .mapValues(items => _.fromPairs(items.map(({ language, value }) => [language, value])))
                 .value();
 
             const translatedModel: PersistedTrainingModule = {
                 ...model,
                 name: {
                     ...model.name,
-                    translations: dictionary[model.name.key],
+                    translations: dictionary[model.name.key] ?? {},
                 },
                 contents: {
                     ...model.contents,
@@ -303,11 +259,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     private extractTranslations(model: PersistedTrainingModule): TranslatableText[] {
-        const steps = _.flatMap(model.contents.steps, step => [
-            step.title,
-            step.subtitle,
-            ...step.pages,
-        ]);
+        const steps = _.flatMap(model.contents.steps, step => [step.title, step.subtitle, ...step.pages]);
 
         return _.compact([model.name, model.contents.welcome, ...steps]);
     }
@@ -322,14 +274,17 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return persistedModel;
     }
 
-    private async saveDataStore(model: PersistedTrainingModule) {
+    public async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean }) {
         const currentUser = await this.config.getUser();
-        const lastUpdatedBy = { id: currentUser.id, name: currentUser.name };
+        const user = { id: currentUser.id, name: currentUser.name };
+        const date = new Date().toISOString();
 
-        await this.storageClient.saveObjectInCollection(Namespaces.TRAINING_MODULES, {
+        await this.storageClient.saveObjectInCollection<PersistedTrainingModule>(Namespaces.TRAINING_MODULES, {
             ...model,
-            lastUpdated: new Date(),
-            lastUpdatedBy,
+            lastUpdatedBy: user,
+            lastUpdated: date,
+            user: options?.recreate ? user : model.user,
+            created: options?.recreate ? date : model.created,
         });
     }
 
@@ -340,18 +295,30 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
     */
 
-    private async buildDomainModel(
-        model: PersistedTrainingModule
-    ): Promise<Omit<TrainingModule, "progress">> {
+    private async buildDomainModel(model: PersistedTrainingModule): Promise<Omit<TrainingModule, "progress">> {
         if (model._version !== 1) {
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
 
-        const { created, lastUpdated, type, ...rest } = model;
+        const { created, lastUpdated, type, contents, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
+        const currentUser = await this.config.getUser();
 
         return {
             ...rest,
+            contents: {
+                ...contents,
+                steps: contents.steps.map((step, stepIdx) => ({
+                    ...step,
+                    id: `${model.id}-step-${stepIdx}`,
+                    pages: step.pages.map((page, pageIdx) => ({
+                        ...page,
+                        id: `${model.id}-page-${stepIdx}-${pageIdx}`,
+                    })),
+                })),
+            },
+            installed: await this.instanceRepository.isAppInstalledByUrl(model.dhisLaunchUrl),
+            editable: validateUserPermission(model, "write", currentUser),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,
@@ -362,15 +329,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const currentUser = await this.config.getUser();
         const defaultUser = { id: currentUser.id, name: currentUser.name };
 
-        // TODO: This is hard-coded for now
-        const translation: TranslationConnection =
-            model.translation?.provider === "poeditor" && model.translation?.project
-                ? (model.translation as TranslationConnection)
-                : { provider: "NONE" };
-
         return {
-            ...model,
-            translation,
             created: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             publicAccess: "--------",
@@ -379,6 +338,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             user: defaultUser,
             lastUpdatedBy: defaultUser,
             lastTranslationSync: new Date().toISOString(),
+            ...model,
         };
     }
 }

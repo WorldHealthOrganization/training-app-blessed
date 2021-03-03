@@ -1,19 +1,34 @@
 import { Fab } from "@material-ui/core";
 import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
+import { wait } from "../../../utils/promises";
+import { DragContainer } from "../drag-container/DragContainer";
 
 export interface ActionButtonProps {
     onClick: () => void;
 }
 
 export const ActionButton: React.FC<ActionButtonProps> = ({ onClick }) => {
+    const [isDragging, setDragging] = useState<boolean>(false);
+
+    const onDrag = useCallback(() => {
+        setDragging(true);
+    }, []);
+
+    const onStop = useCallback(() => {
+        // Workaround to prevent click on dragging the button
+        wait(250).then(() => setDragging(false));
+    }, []);
+
     return (
-        <StyledFab variant="extended" size="large" color="primary" onClick={onClick}>
-            <EmojiObjectsIcon />
-            <p>{i18n.t("Tutorial")}</p>
-        </StyledFab>
+        <DragContainer onDrag={onDrag} onStop={onStop}>
+            <StyledFab variant="extended" size="large" color="primary" onClick={isDragging ? undefined : onClick}>
+                <EmojiObjectsIcon />
+                <p>{i18n.t("Tutorial")}</p>
+            </StyledFab>
+        </DragContainer>
     );
 };
 
@@ -24,6 +39,7 @@ const StyledFab = styled(Fab)`
     right: 40px;
     display: inline-flex;
     cursor: pointer;
+    pointer-events: auto;
     align-items: center;
     padding: 0px 20px;
     color: #fff;
