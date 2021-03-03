@@ -470,7 +470,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 icon: <Icon>arrow_upwards</Icon>,
                 onClick: moveUp,
                 isActive: rows => {
-                    return !!tableActions.swap && _.every(rows, ({ position }) => position !== 0);
+                    return !!tableActions.swap && _.every(rows, ({ position, editable }) => position !== 0 && editable);
                 },
             },
             {
@@ -480,7 +480,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 onClick: moveDown,
                 isActive: rows => {
                     return (
-                        !!tableActions.swap && _.every(rows, ({ position, lastPosition }) => position !== lastPosition)
+                        !!tableActions.swap &&
+                        _.every(rows, ({ position, lastPosition, editable }) => position !== lastPosition && editable)
                     );
                 },
             },
@@ -590,6 +591,7 @@ export interface ListItemStep {
     pages: ListItemPage[];
     position: number;
     lastPosition: number;
+    editable: boolean;
 }
 
 export interface ListItemPage {
@@ -623,6 +625,7 @@ export const buildListSteps = (module: PartialTrainingModule, steps: TrainingMod
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
+        editable: module.editable ?? false,
         pages: pages.map(({ id: pageId, ...value }, pageIdx) => ({
             id: pageId,
             stepId,
