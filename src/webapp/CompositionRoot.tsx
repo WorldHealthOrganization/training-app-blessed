@@ -1,5 +1,6 @@
 import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepository";
 import { InstanceDhisRepository } from "../data/repositories/InstanceDhisRepository";
+import { LandingPageDefaultRepository } from "../data/repositories/LandingPageDefaultRepository";
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
 import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSettingsPermissionsUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
@@ -12,6 +13,7 @@ import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPer
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
+import { ListLandingsUseCase } from "../domain/usecases/ListLandingsUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { ResetModuleDefaultValueUseCase } from "../domain/usecases/ResetModuleDefaultValueUseCase";
 import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
@@ -26,6 +28,7 @@ export function getCompositionRoot(baseUrl: string) {
     const configRepository = new Dhis2ConfigRepository(baseUrl);
     const instanceRepository = new InstanceDhisRepository(configRepository);
     const trainingModuleRepository = new TrainingModuleDefaultRepository(configRepository, instanceRepository);
+    const landingPageRepository = new LandingPageDefaultRepository(configRepository);
 
     return {
         usecases: {
@@ -38,6 +41,9 @@ export function getCompositionRoot(baseUrl: string) {
                 resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
                 export: new ExportModulesUseCase(trainingModuleRepository),
                 import: new ImportModulesUseCase(trainingModuleRepository),
+            }),
+            landings: getExecute({
+                list: new ListLandingsUseCase(landingPageRepository),
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),

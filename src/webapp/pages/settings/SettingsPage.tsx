@@ -2,7 +2,6 @@ import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
 import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { TempLandingPage } from "../../../domain/entities/LandingPage";
 import { Permission } from "../../../domain/entities/Permission";
 import {
     addPage,
@@ -22,7 +21,7 @@ import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 
 export const SettingsPage: React.FC = () => {
-    const { modules, reload, usecases, setAppState } = useAppContext();
+    const { modules, landings, reload, usecases, setAppState } = useAppContext();
 
     const snackbar = useSnackbar();
 
@@ -212,7 +211,7 @@ export const SettingsPage: React.FC = () => {
 
                 <Title>{i18n.t("Landing page")}</Title>
 
-                <LandingPageListTable nodes={[TempLandingPage]} />
+                <LandingPageListTable nodes={landings} />
 
                 <Title>{i18n.t("Training modules")}</Title>
 
