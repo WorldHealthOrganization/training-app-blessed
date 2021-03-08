@@ -22,7 +22,7 @@ export class InstanceDhisRepository implements InstanceRepository {
         const type = await FileType.fromBuffer(data);
         const { mime = "application/unknown" } = type ?? {};
         const blob = new Blob([data], { type: mime });
-        const resized = mime.startsWith("image") ? await resizeFile(blob) : blob;
+        const resized = ["image/jpeg", "image/png"].includes(mime) ? await resizeFile(blob) : blob;
 
         const fileData = await arrayBufferToString(data);
         const fileId = getUid(fileData);
