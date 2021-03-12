@@ -16,6 +16,7 @@ import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
+import { getMajorVersion } from "../utils/d2-api";
 import { TrainingModuleDefaultImportExport } from "./TrainingModuleDefaultImportExport";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
@@ -303,6 +304,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const { created, lastUpdated, type, contents, ...rest } = model;
         const validType = isValidTrainingType(type) ? type : "app";
         const currentUser = await this.config.getUser();
+        const instanceVersion = await this.instanceRepository.getVersion();
 
         return {
             ...rest,
@@ -319,6 +321,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             },
             installed: await this.instanceRepository.isAppInstalledByUrl(model.dhisLaunchUrl),
             editable: validateUserPermission(model, "write", currentUser),
+            compatible: validateDhisVersion(model, instanceVersion),
             created: new Date(created),
             lastUpdated: new Date(lastUpdated),
             type: validType,
@@ -341,4 +344,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             ...model,
         };
     }
+}
+
+function validateDhisVersion(model: PersistedTrainingModule, instanceVersion: string): boolean {
+    const moduleVersions = _.compact(model.dhisVersionRange.split(","));
+    if (moduleVersions.length === 0) return true;
+
+    return _.some(moduleVersions, version => getMajorVersion(version) === getMajorVersion(instanceVersion));
 }

@@ -8,6 +8,7 @@ export interface InstanceRepository {
     isAppInstalledByUrl(launchUrl: string): Promise<boolean>;
     searchUsers(query: string): Promise<UserSearch>;
     listInstalledApps(): Promise<InstalledApp[]>;
+    getVersion(): Promise<string>;
 }
 
 export interface UploadFileOptions {
