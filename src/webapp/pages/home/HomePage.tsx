@@ -190,9 +190,10 @@ const AdditionalComponents: React.FC<{
                     const module = modules.find(({ id }) => id === moduleId);
                     if (!module) return null;
 
-                    const percentage = module
-                        ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
-                        : undefined;
+                    const percentage =
+                        module && module.contents.steps.length > 0
+                            ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
+                            : undefined;
 
                     const handleClick = () => {
                         loadModule(module.id, module.progress.completed ? 0 : module.progress.lastStep + 1);
