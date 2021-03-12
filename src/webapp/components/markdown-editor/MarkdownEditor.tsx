@@ -4,6 +4,7 @@ import ReactMde, { getDefaultToolbarCommands } from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import styled from "styled-components";
 import { addNoteCommand } from "./AddNoteCommand";
+import { saveFileCommand } from "./SaveFileCommand";
 
 export interface MarkdownEditorProps {
     value: string;
@@ -34,8 +35,8 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 <ReactMde
                     value={value}
                     onChange={onChange}
-                    paste={onUpload ? { saveImage } : undefined}
-                    commands={{ "add-note": addNoteCommand }}
+                    paste={onUpload ? { saveImage, command: "save-file" } : undefined}
+                    commands={{ "add-note": addNoteCommand, "save-file": saveFileCommand }}
                     toolbarCommands={[...getDefaultToolbarCommands(), ["add-note"]]}
                     minEditorHeight={500}
                     disablePreview={true}
