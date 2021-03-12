@@ -42,9 +42,9 @@ export const Bullet = styled(BaseBullet)`
         position: absolute;
         bottom: 12px;
         height: 3px;
-        width: 100%;
+        width: 80%;
         background-color: ${getColor("primary")};
-        margin-left: -4px;
+        margin-left: 10px;
     }
 `;
 
