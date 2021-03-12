@@ -1,37 +1,25 @@
+import _ from "lodash";
 import { Command, CommandContext, ExecuteOptions, PasteCommandContext } from "react-mde";
 import i18n from "../../../locales";
 
 function dataTransferToArray(items: DataTransferItemList): Array<File> {
-    const result = [];
-    for (const index in items) {
-        const item = items[index];
-        if (item && item.kind === "file") {
-            const file = item.getAsFile();
-            if (file !== null) result.push(file);
-        }
-    }
-    return result;
+    return _(items)
+        .map(item => {
+            if (item.kind !== "file") return undefined;
+            return item.getAsFile();
+        })
+        .compact()
+        .value();
 }
 
 function fileListToArray(list: FileList | null): Array<File> {
-    if (list === null) return [];
-
-    const result = [];
-    for (let i = 0; i < list.length; i++) {
-        const item = list[0];
-        if (item) result.push(item);
-    }
-    return result;
+    return _.compact(list);
 }
 
 export const saveFileCommand: Command = {
     async execute({ textApi, context }: ExecuteOptions): Promise<void> {
-        if (!context) {
-            throw new Error("wrong context");
-        }
-
-        const pasteContext = context as PasteCommandContext;
-        const { event, saveImage } = pasteContext;
+        if (!context) throw new Error("Context not defined");
+        const { event, saveImage } = context as PasteCommandContext;
 
         const items = isPasteEvent(context)
             ? dataTransferToArray((event as React.ClipboardEvent).clipboardData.items)
@@ -39,7 +27,7 @@ export const saveFileCommand: Command = {
             ? dataTransferToArray((event as React.DragEvent).dataTransfer.items)
             : fileListToArray((event as React.ChangeEvent<HTMLInputElement>).target.files);
 
-        for (const index in items) {
+        for (const blob of items) {
             const initialState = textApi.getState();
             const breaksBeforeCount = getBreaksNeededForEmptyLineBefore(
                 initialState.text,
@@ -47,37 +35,36 @@ export const saveFileCommand: Command = {
             );
 
             const breaksBefore = Array(breaksBeforeCount + 1).join("\n");
-            const placeHolder = `${breaksBefore}![${i18n.t("Uploading image...")}]()`;
+            const placeHolder = `${breaksBefore}![${i18n.t("Uploading file...")}]()`;
 
             textApi.replaceSelection(placeHolder);
 
-            const blob = items[index];
-            if (blob) {
-                const blobContents = await readFileAsync(blob);
-                const savingImage = saveImage(blobContents);
-                const imageUrl = (await savingImage.next()).value;
+            const blobContents = await readFileAsync(blob);
+            const saveFileAction = saveImage(blobContents);
+            const fileUrl = (await saveFileAction.next()).value;
 
-                const newState = textApi.getState();
+            const newState = textApi.getState();
 
-                const uploadingText = newState.text.substr(initialState.selection.start, placeHolder.length);
+            const uploadingText = newState.text.substr(initialState.selection.start, placeHolder.length);
 
-                if (uploadingText === placeHolder) {
-                    // In this case, the user did not touch the placeholder. Good user
-                    // we will replace it with the real one that came from the server
-                    textApi.setSelectionRange({
-                        start: initialState.selection.start,
-                        end: initialState.selection.start + placeHolder.length,
-                    });
+            if (uploadingText === placeHolder) {
+                // In this case, the user did not touch the placeholder. Good user
+                // we will replace it with the real one that came from the server
+                textApi.setSelectionRange({
+                    start: initialState.selection.start,
+                    end: initialState.selection.start + placeHolder.length,
+                });
 
-                    const realImageMarkdown = imageUrl ? `${breaksBefore}![image](${imageUrl})` : "";
-                    const selectionDelta = realImageMarkdown.length - placeHolder.length;
+                const isImage = true; // TODO
+                const imageMark = isImage ? "!" : "";
+                const realMarkdown = fileUrl ? `${breaksBefore}${imageMark}[Uploaded file](${fileUrl})` : "";
+                const selectionDelta = realMarkdown.length - placeHolder.length;
 
-                    textApi.replaceSelection(realImageMarkdown);
-                    textApi.setSelectionRange({
-                        start: newState.selection.start + selectionDelta,
-                        end: newState.selection.end + selectionDelta,
-                    });
-                }
+                textApi.replaceSelection(realMarkdown);
+                textApi.setSelectionRange({
+                    start: newState.selection.start + selectionDelta,
+                    end: newState.selection.end + selectionDelta,
+                });
             }
         }
     },
