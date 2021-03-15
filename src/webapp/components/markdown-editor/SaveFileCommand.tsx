@@ -1,3 +1,4 @@
+import FileType from "file-type/browser";
 import _ from "lodash";
 import { Command, CommandContext, ExecuteOptions, PasteCommandContext } from "react-mde";
 import i18n from "../../../locales";
@@ -35,13 +36,14 @@ export const saveFileCommand: Command = {
             );
 
             const breaksBefore = Array(breaksBeforeCount + 1).join("\n");
-            const placeHolder = `${breaksBefore}![${i18n.t("Uploading file...")}]()`;
+            const placeHolder = `${breaksBefore}[${i18n.t("Uploading file...")}]()`;
 
             textApi.replaceSelection(placeHolder);
 
             const blobContents = await readFileAsync(blob);
             const saveFileAction = saveImage(blobContents);
             const fileUrl = (await saveFileAction.next()).value;
+            const type = await FileType.fromBuffer(blobContents);
 
             const newState = textApi.getState();
 
@@ -55,7 +57,7 @@ export const saveFileCommand: Command = {
                     end: initialState.selection.start + placeHolder.length,
                 });
 
-                const isImage = true; // TODO
+                const isImage = type?.mime.startsWith("image/");
                 const imageMark = isImage ? "!" : "";
                 const realMarkdown = fileUrl ? `${breaksBefore}${imageMark}[Uploaded file](${fileUrl})` : "";
                 const selectionDelta = realMarkdown.length - placeHolder.length;
