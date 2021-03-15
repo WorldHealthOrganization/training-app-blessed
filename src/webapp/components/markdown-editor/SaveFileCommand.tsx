@@ -1,4 +1,4 @@
-import FileType from "file-type/browser";
+import FileType, { FileTypeResult } from "file-type/browser";
 import _ from "lodash";
 import { Command, CommandContext, ExecuteOptions, PasteCommandContext } from "react-mde";
 import i18n from "../../../locales";
@@ -42,7 +42,7 @@ export const saveFileCommand: Command = {
 
             const blobContents = await readFileAsync(blob);
             const saveFileAction = saveImage(blobContents);
-            const fileUrl = (await saveFileAction.next()).value;
+            const fileUrl = (await saveFileAction.next()).value as string;
             const type = await FileType.fromBuffer(blobContents);
 
             const newState = textApi.getState();
@@ -57,9 +57,7 @@ export const saveFileCommand: Command = {
                     end: initialState.selection.start + placeHolder.length,
                 });
 
-                const isImage = type?.mime.startsWith("image/");
-                const imageMark = isImage ? "!" : "";
-                const realMarkdown = fileUrl ? `${breaksBefore}${imageMark}[Uploaded file](${fileUrl})` : "";
+                const realMarkdown = `${breaksBefore}${getMarkdown(fileUrl, type)}`;
                 const selectionDelta = realMarkdown.length - placeHolder.length;
 
                 textApi.replaceSelection(realMarkdown);
@@ -71,6 +69,21 @@ export const saveFileCommand: Command = {
         }
     },
 };
+
+function getMarkdown(fileUrl: string, type?: FileTypeResult): string {
+    // Detect and add images inline (markdown)
+    if (type?.mime.startsWith("image/")) {
+        return `![Uploaded file](${fileUrl})`;
+    }
+    
+    // Detect and add pdf preview (HTML5)
+    if (type?.mime === "application/pdf") {
+        return `<embed src="${fileUrl}" width="100%" height="600px" />`;
+    }
+
+    // Fail-safe markdown download link
+    return `[Uploaded file](${fileUrl})`;
+}
 
 function isPasteEvent(context: CommandContext): context is PasteCommandContext {
     return ((context as PasteCommandContext).event as React.ClipboardEvent).clipboardData !== undefined;
