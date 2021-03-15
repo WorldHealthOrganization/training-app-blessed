@@ -53,7 +53,7 @@ export abstract class StorageClient {
         const oldData: Ref[] = (await this.getObject(key)) ?? [];
         const foundIndex = _.findIndex(oldData, item => item.id === element.id);
         const arrayIndex = foundIndex === -1 ? oldData.length : foundIndex;
-
+        
         // Save base element directly into collection: model
         await this.saveObject(key, [...oldData.slice(0, arrayIndex), baseElement, ...oldData.slice(arrayIndex + 1)]);
 

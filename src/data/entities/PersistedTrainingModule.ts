@@ -14,25 +14,21 @@ export interface PersistedTrainingModule extends JSONTrainingModule {
     lastUpdatedBy: NamedRef;
     lastTranslationSync: string;
 }
-
-// Full-fledged url regexp are extremely slow, so let's use a very simple on that covers our use-cases:
-//   [Some link](http://some-link.com/path?x=1)
-//   [Some link](http://some-link.com/path?x=1 "Title")
-//   <img src="http://some-link.com/path?x=1">
 const urlRegExp = /https?:\/\/[^\\"\s)]+/g;
 
-export function getUrls(module: PersistedTrainingModule): string[] {
+export function getUrls(landingPage: PersistedTrainingModule): string[] {
     // For simplicity, process directly the JSON representation of the module
-    const json = JSON.stringify(module);
+    const json = JSON.stringify(landingPage);
     const urls = Array.from(json.matchAll(urlRegExp)).map(groups => groups[0]);
     return _(urls).compact().uniq().value();
 }
 
 export function replaceUrls(
-    module: PersistedTrainingModule,
+    landingPage: PersistedTrainingModule,
     urlMapping: Record<string, string>
 ): PersistedTrainingModule {
-    const json = JSON.stringify(module);
+    const json = JSON.stringify(landingPage);
     const json2 = json.replace(urlRegExp, url => urlMapping[url] || url);
     return JSON.parse(json2);
 }
+

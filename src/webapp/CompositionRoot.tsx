@@ -8,11 +8,13 @@ import { DeleteLandingChildUseCase } from "../domain/usecases/DeleteLandingChild
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
+import { ExportLandingPagesUseCase } from "../domain/usecases/ExportLandingPagesUseCase";
 import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 import { GetShowAllModulesUseCase } from "../domain/usecases/GetShowAllModulesUseCase";
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
+//import { ImportLandingPagesUseCase } from "../domain/usecases/ImportLandingPagesUseCase";
 import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
 import { ListInstalledAppsUseCase } from "../domain/usecases/ListInstalledAppsUseCase";
@@ -33,7 +35,7 @@ export function getCompositionRoot(baseUrl: string) {
     const configRepository = new Dhis2ConfigRepository(baseUrl);
     const instanceRepository = new InstanceDhisRepository(configRepository);
     const trainingModuleRepository = new TrainingModuleDefaultRepository(configRepository, instanceRepository);
-    const landingPageRepository = new LandingPageDefaultRepository(configRepository);
+    const landingPageRepository = new LandingPageDefaultRepository(configRepository, instanceRepository);
 
     return {
         usecases: {
@@ -51,6 +53,9 @@ export function getCompositionRoot(baseUrl: string) {
                 list: new ListLandingChildrenUseCase(landingPageRepository),
                 update: new UpdateLandingChildUseCase(landingPageRepository),
                 delete: new DeleteLandingChildUseCase(landingPageRepository),
+                export: new ExportLandingPagesUseCase(landingPageRepository),
+                //import: new ImportLandingPagesUseCase(landingPageRepository),
+
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),

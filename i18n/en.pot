@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-03-03T22:48:02.634Z\n"
-"PO-Revision-Date: 2021-03-03T22:48:02.634Z\n"
+"POT-Creation-Date: 2021-03-12T14:05:15.314Z\n"
+"PO-Revision-Date: 2021-03-12T14:05:15.314Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -47,6 +47,15 @@ msgstr ""
 msgid "Contents"
 msgstr ""
 
+msgid "Couldn't read the file because it's not valid"
+msgstr ""
+
+msgid "Importing landing pages(s)"
+msgstr ""
+
+msgid "Imported {{n}} landing pages"
+msgstr ""
+
 msgid "Add section"
 msgstr ""
 
@@ -60,6 +69,15 @@ msgid "Edit"
 msgstr ""
 
 msgid "Delete"
+msgstr ""
+
+msgid "Export landing page"
+msgstr ""
+
+msgid "Exporting landing page(s)"
+msgstr ""
+
+msgid "Import landing pages"
 msgstr ""
 
 msgid "Landing page"
@@ -138,9 +156,6 @@ msgid "Access"
 msgstr ""
 
 msgid "Summary"
-msgstr ""
-
-msgid "Couldn't read the file because it's not valid"
 msgstr ""
 
 msgid "Importing module(s)"

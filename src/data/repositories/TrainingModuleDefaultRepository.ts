@@ -17,6 +17,7 @@ import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
 import { TrainingModuleDefaultImportExport } from "./TrainingModuleDefaultImportExport";
+import { DefaultImportExport } from "./DefaultImportExport";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
@@ -109,15 +110,27 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     private getImportExportModule() {
-        return new TrainingModuleDefaultImportExport(this, this.instanceRepository, this.storageClient);
+        return new TrainingModuleDefaultImportExport(this, this.instanceRepository);
     }
+    //, this.instanceRepository, this.storageClient
+    private getDefaultImportExport() {
+        return new DefaultImportExport(this.instanceRepository);
+    }
+
 
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
         return this.getImportExportModule().import(files);
     }
 
     public async export(ids: string[]): Promise<void> {
-        return this.getImportExportModule().export(ids);
+        const modules = await promiseMap(ids, async id => {
+            const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+                Namespaces.TRAINING_MODULES,
+                id
+            );
+            return dataStoreModel;
+        });
+        return this.getDefaultImportExport().export(modules, "module-");
     }
 
     public async resetDefaultValue(ids: string[]): Promise<void> {

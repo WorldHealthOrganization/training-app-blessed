@@ -7,12 +7,16 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PersistedLandingPage } from "../entities/PersistedLandingPage";
 import { generateUid } from "../utils/uid";
+import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
+import { DefaultImportExport } from "./DefaultImportExport";
 
 export class LandingPageDefaultRepository implements LandingPageRepository {
     private storageClient: StorageClient;
 
-    constructor(config: ConfigRepository) {
+
+    constructor(config: ConfigRepository, private instanceRepository: InstanceRepository) {
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
+
     }
 
     public async list(): Promise<LandingNode[]> {
@@ -56,6 +60,31 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
             return [];
         }
     }
+
+    private getDefaultImportExport() {
+        return new DefaultImportExport(this.instanceRepository);
+    }
+
+    public async saveDataStore(model: PersistedLandingPage) {
+        await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, {
+            ...model
+        });
+    }
+
+    public async export(ids: string[]): Promise<void> {
+        //format data properly and THEN pass the data to the function
+        const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
+        const toExport = _(nodes)
+        .filter(({ id }) => ids.includes(id))
+        .map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
+        .compact()
+        .value();
+        return this.getDefaultImportExport().export(toExport, "landing-page-");
+    }
+
+   /*public async import(files: File[]): Promise<PersistedLandingPage[]> {
+        return this.getDefaultImportExport().import(files);
+    }*/
 
     public async updateChild(node: LandingNode): Promise<void> {
         const updatedNodes = extractChildrenNodes(node, node.parent);
