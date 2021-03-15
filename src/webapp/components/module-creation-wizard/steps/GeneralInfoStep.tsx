@@ -180,7 +180,8 @@ const DHISVersionSelector = styled(MultipleDropdown)`
     margin-left: -10px;
     margin-top: 10px;
 
-    div,label {
+    div,
+    label {
         color: black;
     }
 `;
