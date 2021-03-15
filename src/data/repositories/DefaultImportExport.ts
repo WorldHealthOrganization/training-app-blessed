@@ -29,10 +29,11 @@ export class DefaultImportExport {
         filesFolder: "files",
     };
 
-    constructor(
-        private instanceRepository: InstanceRepository,
-    ) {}    
-    public async export(parts: (PersistedTrainingModule | PersistedLandingPage | undefined)[], prefix: string): Promise<void> {
+    constructor(private instanceRepository: InstanceRepository) {}
+    public async export(
+        parts: (PersistedTrainingModule | PersistedLandingPage | undefined)[],
+        prefix: string
+    ): Promise<void> {
         const zip = new JSZip();
         const mappedParts = await promiseMap(parts, async part => {
             const name = _.kebabCase(prefix + part?.name.referenceValue);
@@ -79,7 +80,7 @@ export class DefaultImportExport {
         });
 
         return _.compact(files);
-    }   
+    }
 
     private addJsonToZip(zip: JSZip, path: string, contents: unknown) {
         const json = JSON.stringify(contents, null, 4);
@@ -93,5 +94,4 @@ export class DefaultImportExport {
         const urls = Array.from(json.matchAll(urlRegExp)).map(groups => groups[0]);
         return _(urls).compact().uniq().value();
     }
-
 }

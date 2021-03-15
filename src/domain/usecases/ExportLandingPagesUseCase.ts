@@ -1,5 +1,4 @@
 import { UseCase } from "../../webapp/CompositionRoot";
-//import { LandingNode } from "../entities/LandingPage";
 import { LandingPageRepository } from "../repositories/LandingPageRepository";
 
 export class ExportLandingPagesUseCase implements UseCase {

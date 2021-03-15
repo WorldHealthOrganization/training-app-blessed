@@ -516,7 +516,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 name: "export-module",
                 text: i18n.t("Export module"),
                 icon: <Icon>cloud_download</Icon>,
-                onClick:  exportModule,
+                onClick: exportModule,
                 isActive: rows => {
                     return _.every(rows, item => item.rowType === "module");
                 },

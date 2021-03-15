@@ -2,7 +2,7 @@ import {
     ConfirmationDialog,
     ConfirmationDialogProps,
     MultipleDropdown,
-    useSnackbar
+    useSnackbar,
 } from "@eyeseetea/d2-ui-components";
 import { TextField } from "@material-ui/core";
 import React, { ChangeEvent, useCallback, useMemo, useState } from "react";

@@ -14,7 +14,6 @@ import { ModalBody } from "../modal";
 //import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
 //import { FileRejection } from "react-dropzone";
 
-
 export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
     const { usecases, reload } = useAppContext();
 
@@ -46,7 +45,6 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
         },
         [snackbar, reload, usecases, loading]
     );*/
-
 
     const columns: TableColumn<LandingNode>[] = useMemo(
         () => [
@@ -192,11 +190,11 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 text: i18n.t("Export landing page"),
                 icon: <Icon>cloud_download</Icon>,
                 onClick: async (ids: string[]) => {
-                        if (!ids[0]) return;
-                        loading.show(true, i18n.t("Exporting landing page(s)"));
-                        await usecases.landings.export(ids);
-                        loading.reset();
-                    },
+                    if (!ids[0]) return;
+                    loading.show(true, i18n.t("Exporting landing page(s)"));
+                    await usecases.landings.export(ids);
+                    loading.reset();
+                },
                 isActive: nodes => _.every(nodes, item => item.type === "root"),
                 multiple: true,
             },
@@ -214,7 +212,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
         ],
         [openImportDialog]
     );*/
-        /*
+    /*
         <Dropzone
                 ref={fileRef}
                 accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
@@ -225,7 +223,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
         */
     return (
         <React.Fragment>
-            {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}           
+            {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
             <ObjectsTable<LandingNode> rows={nodes} columns={columns} actions={actions} childrenKeys={["children"]} />
         </React.Fragment>
     );

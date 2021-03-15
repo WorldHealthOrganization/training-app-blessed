@@ -70,7 +70,8 @@
         "manifest": "d2-manifest package.json build/manifest.webapp",
         "cy:verify": "cypress verify",
         "cy:e2e:open": "CYPRESS_E2E=true cypress open",
-        "cy:e2e:run": "CYPRESS_E2E=true cypress run --browser chrome"
+        "cy:e2e:run": "CYPRESS_E2E=true cypress run --browser chrome",
+        "prepare": "husky install"
     },
     "husky": {
         "hooks": {
@@ -113,7 +114,7 @@
         "eslint-plugin-prettier": "3.3.1",
         "eslint-plugin-react": "7.22.0",
         "eslint-plugin-react-hooks": "4.2.0",
-        "husky": "5.1.2",
+        "husky": "5",
         "jest": "26.6.3",
         "prettier": "2.2.1",
         "react-test-renderer": "17.0.1",

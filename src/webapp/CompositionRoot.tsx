@@ -55,7 +55,6 @@ export function getCompositionRoot(baseUrl: string) {
                 delete: new DeleteLandingChildUseCase(landingPageRepository),
                 export: new ExportLandingPagesUseCase(landingPageRepository),
                 //import: new ImportLandingPagesUseCase(landingPageRepository),
-
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),

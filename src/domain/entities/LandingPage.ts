@@ -10,27 +10,6 @@ export const LandingPageNodeTypeModel = Schema.oneOf([
 ]);
 
 export type LandingNodeType = GetSchemaType<typeof LandingPageNodeTypeModel>;
-// Full-fledged url regexp are extremely slow, so let's use a very simple on that covers our use-cases:
-//   [Some link](http://some-link.com/path?x=1)
-//   [Some link](http://some-link.com/path?x=1 "Title")
-//   <img src="http://some-link.com/path?x=1">
-const urlRegExp = /https?:\/\/[^\\"\s)]+/g;
-
-export function getUrls(landingPage: LandingNode): string[] {
-    // For simplicity, process directly the JSON representation of the module
-    const json = JSON.stringify(landingPage);
-    const urls = Array.from(json.matchAll(urlRegExp)).map(groups => groups[0]);
-    return _(urls).compact().uniq().value();
-}
-
-export function replaceUrls(
-    landingPage: LandingNode,
-    urlMapping: Record<string, string>
-): LandingNode {
-    const json = JSON.stringify(landingPage);
-    const json2 = json.replace(urlRegExp, url => urlMapping[url] || url);
-    return JSON.parse(json2);
-}
 
 export interface LandingNode {
     id: string;

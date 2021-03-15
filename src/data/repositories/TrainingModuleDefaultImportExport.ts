@@ -23,8 +23,8 @@ export class TrainingModuleDefaultImportExport {
 
     constructor(
         private trainingModuleRepository: TrainingModuleDefaultRepository,
-        private instanceRepository: InstanceRepository,
-        ) {}
+        private instanceRepository: InstanceRepository
+    ) {}
 
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
         const modules = await promiseMap(files, async file => {

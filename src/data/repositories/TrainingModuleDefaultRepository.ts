@@ -117,7 +117,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         return new DefaultImportExport(this.instanceRepository);
     }
 
-
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
         return this.getImportExportModule().import(files);
     }

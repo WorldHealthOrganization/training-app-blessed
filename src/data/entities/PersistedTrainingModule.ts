@@ -31,4 +31,3 @@ export function replaceUrls(
     const json2 = json.replace(urlRegExp, url => urlMapping[url] || url);
     return JSON.parse(json2);
 }
-
