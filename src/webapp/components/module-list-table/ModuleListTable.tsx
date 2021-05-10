@@ -347,6 +347,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                         {!item.installed && item.rowType === "module" ? (
                             <AlertIcon tooltip={i18n.t("App is not installed in this instance")} />
                         ) : null}
+                        {!item.compatible && item.rowType === "module" ? (
+                            <AlertIcon tooltip={i18n.t("Module does not support this DHIS2 version")} />
+                        ) : null}
                     </div>
                 ),
             },

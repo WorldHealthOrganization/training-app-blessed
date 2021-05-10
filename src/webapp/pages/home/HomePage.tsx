@@ -188,7 +188,7 @@ const AdditionalComponents: React.FC<{
             <Cardboard rowSize={3} key={`group-${currentPage.id}`}>
                 {pageModules.map(moduleId => {
                     const module = modules.find(({ id }) => id === moduleId);
-                    if (!module) return null;
+                    if (!module || !module.compatible) return null;
 
                     const percentage = module
                         ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)

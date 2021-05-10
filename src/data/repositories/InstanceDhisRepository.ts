@@ -18,6 +18,12 @@ export class InstanceDhisRepository implements InstanceRepository {
         this.baseUrl = this.api.baseUrl;
     }
 
+    @cache()
+    public async getVersion(): Promise<string> {
+        const { version } = await this.api.system.info.getData();
+        return version;
+    }
+
     public async uploadFile(data: ArrayBuffer, options: UploadFileOptions = {}): Promise<string> {
         const type = await FileType.fromBuffer(data);
         const { mime = "application/unknown" } = type ?? {};
