@@ -28,10 +28,7 @@ export class ImportExportClient {
 
     constructor(private instanceRepository: InstanceRepository, private prefix: string) {}
 
-    public async import<T>(
-        files: File[],
-        save: (file: T, options: { recreate?: boolean }) => Promise<void>
-    ): Promise<T[]> {
+    public async import<T>(files: File[]): Promise<T[]> {
         const modules = await promiseMap(files, async file => {
             const zip = new JSZip();
             const contents = await zip.loadAsync(file);
@@ -42,11 +39,7 @@ export class ImportExportClient {
 
             return promiseMap(modulePaths, async modulePath => {
                 const model = await this.getJsonFromFile<T>(zip, modulePath);
-                if (!model) return;
-
-                const moduleWithMappedUrls = replaceUrls(model, urlMapping);
-                await save(moduleWithMappedUrls, { recreate: true });
-                return moduleWithMappedUrls;
+                return model ? replaceUrls(model, urlMapping) : undefined;
             });
         });
 

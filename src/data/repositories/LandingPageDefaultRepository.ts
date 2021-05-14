@@ -44,7 +44,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
                     modules: [],
                 };
 
-                await this.saveDataStore(root);
+                await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, root);
                 return [{ ...root, children: [] }];
             }
 
@@ -61,23 +61,23 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
         }
     }
 
-    public async saveDataStore(model: PersistedLandingPage) {
-        await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, model);
-    }
-
     public async export(ids: string[]): Promise<void> {
         const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
         const toExport = _(nodes)
             .filter(({ id }) => ids.includes(id))
-            .map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
-            .compact()
+            .flatMap(node => extractChildrenNodes(buildDomainLandingNode(node, nodes), node.parent))
+            .flatten()
             .value();
 
         return this.importExportClient.export(toExport);
     }
 
     public async import(files: File[]): Promise<PersistedLandingPage[]> {
-        return this.importExportClient.import<PersistedLandingPage>(files, model => this.saveDataStore(model));
+        const items = await this.importExportClient.import<PersistedLandingPage>(files);
+        // TODO: Do not overwrite existing landing page
+        await this.storageClient.saveObject(Namespaces.LANDING_PAGES, items);
+
+        return items;
     }
 
     public async updateChild(node: LandingNode): Promise<void> {

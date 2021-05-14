@@ -1,4 +1,6 @@
 import {
+    ConfirmationDialog,
+    ConfirmationDialogProps,
     ObjectsTable,
     TableAction,
     TableColumn,
@@ -19,16 +21,15 @@ import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
 import { ModalBody } from "../modal";
 
-// Import/Export is disabled for now
-const enableImportExport = false;
-
 export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: boolean }> = ({ nodes, isLoading }) => {
     const { usecases, reload } = useAppContext();
 
-    const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
     const loading = useLoading();
     const snackbar = useSnackbar();
     const fileRef = useRef<DropzoneRef>(null);
+
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
+    const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
 
     const openImportDialog = useCallback(async () => {
         fileRef.current?.openDialog();
@@ -41,9 +42,21 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
             } else {
                 loading.show(true, i18n.t("Importing landing pages(s)"));
                 try {
-                    const modules = await usecases.landings.import(files);
-                    snackbar.success(i18n.t("Imported {{n}} landing pages", { n: modules.length }));
-                    await reload();
+                    updateDialog({
+                        title: i18n.t("Importing a new landing page"),
+                        description: i18n.t("This action will overwrite the existing landing page. Are you sure?"),
+                        onSave: async () => {
+                            const landings = await usecases.landings.import(files);
+                            snackbar.success(i18n.t("Imported {{n}} landing pages", { n: landings.length }));
+                            await reload();
+                            updateDialog(null);
+                        },
+                        onCancel: () => {
+                            updateDialog(null);
+                        },
+                        saveText: i18n.t("Yes"),
+                        cancelText: i18n.t("No"),
+                    });
                 } catch (err) {
                     snackbar.error((err && err.message) || err.toString());
                 } finally {
@@ -88,155 +101,149 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
     );
 
     const actions: TableAction<LandingNode>[] = useMemo(
-        () =>
-            _.compact([
-                {
-                    name: "add-section",
-                    text: i18n.t("Add section"),
-                    icon: <Icon>add</Icon>,
-                    onClick: ids => {
-                        const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
-                        if (!parent) return;
+        () => [
+            {
+                name: "add-section",
+                text: i18n.t("Add section"),
+                icon: <Icon>add</Icon>,
+                onClick: ids => {
+                    const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
+                    if (!parent) return;
 
-                        updateEditDialog({
-                            title: i18n.t("Add section"),
-                            type: "section",
-                            parent: parent.id,
-                            order: parent.children.length,
-                            onCancel: () => updateEditDialog(null),
-                            onSave: async node => {
-                                updateEditDialog(null);
-                                await usecases.landings.update(node);
-                                await reload();
-                            },
-                        });
-                    },
-                    isActive: nodes => _.every(nodes, item => item.type === "root"),
+                    updateEditDialog({
+                        title: i18n.t("Add section"),
+                        type: "section",
+                        parent: parent.id,
+                        order: parent.children.length,
+                        onCancel: () => updateEditDialog(null),
+                        onSave: async node => {
+                            updateEditDialog(null);
+                            await usecases.landings.update(node);
+                            await reload();
+                        },
+                    });
                 },
-                {
-                    name: "add-sub-section",
-                    text: i18n.t("Add sub-section"),
-                    icon: <Icon>add</Icon>,
-                    onClick: ids => {
-                        const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
-                        if (!parent) return;
+                isActive: nodes => _.every(nodes, item => item.type === "root"),
+            },
+            {
+                name: "add-sub-section",
+                text: i18n.t("Add sub-section"),
+                icon: <Icon>add</Icon>,
+                onClick: ids => {
+                    const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
+                    if (!parent) return;
 
-                        updateEditDialog({
-                            title: i18n.t("Add sub-section"),
-                            type: "sub-section",
-                            parent: parent.id,
-                            order: parent.children.length,
-                            onCancel: () => updateEditDialog(null),
-                            onSave: async node => {
-                                updateEditDialog(null);
-                                await usecases.landings.update(node);
-                                await reload();
-                            },
-                        });
-                    },
-                    isActive: nodes => _.every(nodes, item => item.type === "section"),
+                    updateEditDialog({
+                        title: i18n.t("Add sub-section"),
+                        type: "sub-section",
+                        parent: parent.id,
+                        order: parent.children.length,
+                        onCancel: () => updateEditDialog(null),
+                        onSave: async node => {
+                            updateEditDialog(null);
+                            await usecases.landings.update(node);
+                            await reload();
+                        },
+                    });
                 },
-                {
-                    name: "add-category",
-                    text: i18n.t("Add category"),
-                    icon: <Icon>add</Icon>,
-                    onClick: ids => {
-                        const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
-                        if (!parent) return;
+                isActive: nodes => _.every(nodes, item => item.type === "section"),
+            },
+            {
+                name: "add-category",
+                text: i18n.t("Add category"),
+                icon: <Icon>add</Icon>,
+                onClick: ids => {
+                    const parent = flattenRows(nodes).find(({ id }) => id === ids[0]);
+                    if (!parent) return;
 
-                        updateEditDialog({
-                            title: i18n.t("Add category"),
-                            type: "category",
-                            parent: parent.id,
-                            order: parent.children.length,
-                            onCancel: () => updateEditDialog(null),
-                            onSave: async node => {
-                                updateEditDialog(null);
-                                await usecases.landings.update(node);
-                                await reload();
-                            },
-                        });
-                    },
-                    isActive: nodes => _.every(nodes, item => item.type === "sub-section" || item.type === "category"),
+                    updateEditDialog({
+                        title: i18n.t("Add category"),
+                        type: "category",
+                        parent: parent.id,
+                        order: parent.children.length,
+                        onCancel: () => updateEditDialog(null),
+                        onSave: async node => {
+                            updateEditDialog(null);
+                            await usecases.landings.update(node);
+                            await reload();
+                        },
+                    });
                 },
-                {
-                    name: "edit",
-                    text: i18n.t("Edit"),
-                    icon: <Icon>edit</Icon>,
-                    onClick: ids => {
-                        const node = flattenRows(nodes).find(({ id }) => id === ids[0]);
-                        if (!node) return;
+                isActive: nodes => _.every(nodes, item => item.type === "sub-section" || item.type === "category"),
+            },
+            {
+                name: "edit",
+                text: i18n.t("Edit"),
+                icon: <Icon>edit</Icon>,
+                onClick: ids => {
+                    const node = flattenRows(nodes).find(({ id }) => id === ids[0]);
+                    if (!node) return;
 
-                        updateEditDialog({
-                            title: i18n.t("Edit"),
-                            type: node.type,
-                            parent: node.parent,
-                            initialNode: node,
-                            order: node.order ?? 0,
-                            onCancel: () => updateEditDialog(null),
-                            onSave: async node => {
-                                updateEditDialog(null);
-                                await usecases.landings.update(node);
-                                await reload();
-                            },
-                        });
-                    },
-                    isActive: nodes => _.every(nodes, item => item.type !== "root"),
+                    updateEditDialog({
+                        title: i18n.t("Edit"),
+                        type: node.type,
+                        parent: node.parent,
+                        initialNode: node,
+                        order: node.order ?? 0,
+                        onCancel: () => updateEditDialog(null),
+                        onSave: async node => {
+                            updateEditDialog(null);
+                            await usecases.landings.update(node);
+                            await reload();
+                        },
+                    });
                 },
-                {
-                    name: "remove",
-                    text: i18n.t("Delete"),
-                    icon: <Icon>delete</Icon>,
-                    multiple: true,
-                    onClick: async ids => {
-                        await usecases.landings.delete(ids);
-                        await reload();
-                    },
-                    isActive: nodes => _.every(nodes, item => item.id !== "root"),
+                isActive: nodes => _.every(nodes, item => item.type !== "root"),
+            },
+            {
+                name: "remove",
+                text: i18n.t("Delete"),
+                icon: <Icon>delete</Icon>,
+                multiple: true,
+                onClick: async ids => {
+                    await usecases.landings.delete(ids);
+                    await reload();
                 },
-                enableImportExport
-                    ? {
-                          name: "export-landing-page",
-                          text: i18n.t("Export landing page"),
-                          icon: <Icon>cloud_download</Icon>,
-                          onClick: async (ids: string[]) => {
-                              if (!ids[0]) return;
-                              loading.show(true, i18n.t("Exporting landing page(s)"));
-                              await usecases.landings.export(ids);
-                              loading.reset();
-                          },
-                          isActive: nodes => _.every(nodes, item => item.type === "root"),
-                          multiple: true,
-                      }
-                    : undefined,
-            ]),
+                isActive: nodes => _.every(nodes, item => item.id !== "root"),
+            },
+            {
+                name: "export-landing-page",
+                text: i18n.t("Export landing page"),
+                icon: <Icon>cloud_download</Icon>,
+                onClick: async (ids: string[]) => {
+                    if (!ids[0]) return;
+                    loading.show(true, i18n.t("Exporting landing page(s)"));
+                    await usecases.landings.export(ids);
+                    loading.reset();
+                },
+                isActive: nodes => _.every(nodes, item => item.type === "root"),
+                multiple: true,
+            },
+        ],
         [usecases, reload, loading, nodes]
     );
 
     const globalActions: TableGlobalAction[] | undefined = useMemo(
-        () =>
-            enableImportExport
-                ? [
-                      {
-                          name: "import",
-                          text: i18n.t("Import landing pages"),
-                          icon: <Icon>arrow_upward</Icon>,
-                          onClick: openImportDialog,
-                      },
-                  ]
-                : undefined,
+        () => [
+            {
+                name: "import",
+                text: i18n.t("Import landing pages"),
+                icon: <Icon>arrow_upward</Icon>,
+                onClick: openImportDialog,
+            },
+        ],
         [openImportDialog]
     );
 
     return (
         <React.Fragment>
+            {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
             {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
 
             <Dropzone
                 ref={fileRef}
                 accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
                 onDrop={handleFileUpload}
-                disabled={!enableImportExport}
             >
                 <ObjectsTable<LandingNode>
                     rows={nodes}
