@@ -1,6 +1,7 @@
 import _ from "lodash";
 import i18n from "../../locales";
 import { Ref } from "./Ref";
+import { TrainingModuleStep } from "./TrainingModule";
 
 export interface ValidationError {
     property: string;
@@ -31,8 +32,13 @@ const availableValidations = {
     },
     hasItems: {
         error: "cannot_be_empty",
-        getDescription: (field: string) => i18n.t("You need to select at least one {{field}}", { field }),
+        getDescription: (field: string) => i18n.t("You need to add at least one {{field}}", { field }),
         check: (array?: unknown[]) => !array || array.length === 0,
+    },
+    hasPages: {
+        error: "has_pages",
+        getDescription: (field: string) => i18n.t("All steps need to have at least one page", { field }),
+        check: (array?: TrainingModuleStep[]) => _.some(array, ({ pages }) => !pages || pages.length === 0),
     },
     isUrl: {
         error: "invalid_url",

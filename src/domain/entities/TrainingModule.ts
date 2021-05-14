@@ -94,6 +94,15 @@ export const trainingModuleValidations: ModelValidation[] = [
         validation: "hasValue",
         alias: "name",
     },
+    {
+        property: "contents.steps",
+        validation: "hasItems",
+        alias: "step",
+    },
+    {
+        property: "contents.steps",
+        validation: "hasPages",
+    },
 ];
 
 export const defaultTrainingModule: PartialTrainingModule = {
