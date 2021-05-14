@@ -1,25 +1,30 @@
-//TableGlobalAction, useSnackbar
-import { ObjectsTable, TableAction, TableColumn, useLoading } from "@eyeseetea/d2-ui-components";
+import {
+    ObjectsTable,
+    TableAction,
+    TableColumn,
+    TableGlobalAction,
+    useLoading,
+    useSnackbar,
+} from "@eyeseetea/d2-ui-components";
 import { Icon } from "@material-ui/core";
 import _ from "lodash";
-//useCallback, useRef
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { FileRejection } from "react-dropzone";
 import styled from "styled-components";
 import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import { useAppContext } from "../../contexts/app-context";
+import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
 import { ModalBody } from "../modal";
-//import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
-//import { FileRejection } from "react-dropzone";
 
 export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
     const { usecases, reload } = useAppContext();
 
     const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
     const loading = useLoading();
-    /*const snackbar = useSnackbar();
+    const snackbar = useSnackbar();
     const fileRef = useRef<DropzoneRef>(null);
 
     const openImportDialog = useCallback(async () => {
@@ -44,7 +49,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
             }
         },
         [snackbar, reload, usecases, loading]
-    );*/
+    );
 
     const columns: TableColumn<LandingNode>[] = useMemo(
         () => [
@@ -201,7 +206,8 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
         ],
         [usecases, reload, loading, nodes]
     );
-    /*const globalActions: TableGlobalAction[] = useMemo(
+
+    const globalActions: TableGlobalAction[] = useMemo(
         () => [
             {
                 name: "import",
@@ -211,20 +217,24 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
             },
         ],
         [openImportDialog]
-    );*/
-    /*
-        <Dropzone
+    );
+
+    return (
+        <React.Fragment>
+            {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
+            <Dropzone
                 ref={fileRef}
                 accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
                 onDrop={handleFileUpload}
             >
-            <ObjectsTable<LandingNode> rows={nodes} columns={columns} actions={actions} globalActions={globalActions} childrenKeys={["children"]} />
-            </Dropzone>
-        */
-    return (
-        <React.Fragment>
-            {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
-            <ObjectsTable<LandingNode> rows={nodes} columns={columns} actions={actions} childrenKeys={["children"]} />
+                <ObjectsTable<LandingNode>
+                    rows={nodes}
+                    columns={columns}
+                    actions={actions}
+                    globalActions={globalActions}
+                    childrenKeys={["children"]}
+                />
+            </Dropzone>{" "}
         </React.Fragment>
     );
 };
