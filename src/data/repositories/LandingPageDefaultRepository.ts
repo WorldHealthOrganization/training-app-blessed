@@ -68,7 +68,6 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
     }
 
     public async export(ids: string[]): Promise<void> {
-        //format data properly and THEN pass the data to the function
         const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
         const toExport = _(nodes)
             .filter(({ id }) => ids.includes(id))
@@ -79,9 +78,9 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
         return this.importExportClient.export(toExport);
     }
 
-    /*public async import(files: File[]): Promise<PersistedLandingPage[]> {
-        return this.getDefaultImportExport().import(files);
-    }*/
+    public async import(files: File[]): Promise<PersistedLandingPage[]> {
+        return this.importExportClient.import(files, this.saveDataStore);
+    }
 
     public async updateChild(node: LandingNode): Promise<void> {
         const updatedNodes = extractChildrenNodes(node, node.parent);

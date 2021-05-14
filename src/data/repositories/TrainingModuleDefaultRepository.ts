@@ -116,13 +116,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async export(ids: string[]): Promise<void> {
-        const modules = await promiseMap(ids, async id => {
-            const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-                Namespaces.TRAINING_MODULES,
-                id
-            );
-            return dataStoreModel;
-        });
+        const modules = await promiseMap(ids, id =>
+            this.storageClient.getObjectInCollection<PersistedTrainingModule>(Namespaces.TRAINING_MODULES, id)
+        );
 
         return this.importExportClient.export(modules);
     }
