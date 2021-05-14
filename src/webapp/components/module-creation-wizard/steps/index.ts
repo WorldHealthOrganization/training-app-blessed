@@ -39,7 +39,7 @@ export const moduleCreationWizardSteps: ModuleCreationWizardStep[] = [
         key: "contents",
         label: i18n.t("Contents"),
         component: ContentsStep,
-        validationKeys: [],
+        validationKeys: ["contents.steps"],
     },
     {
         key: "access",

@@ -90,7 +90,7 @@ export const TrainingWizard: React.FC<TrainingWizardProps> = props => {
 
     const WizardStepper = (props: WizardStepperProps) => <Stepper {...props} onMove={step => onChangeStep(step, 1)} />;
     const WizardNavigation = (props: WizardNavigationProps) => (
-        <Navigation {...props} onMove={step => onChangeStep(step, 1)} />
+        <Navigation {...props} onMove={(step, content) => onChangeStep(step, content)} />
     );
 
     if (!module || steps.length === 0) return null;

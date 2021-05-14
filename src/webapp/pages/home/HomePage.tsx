@@ -1,4 +1,5 @@
 import _ from "lodash";
+import CircularProgress from "material-ui/CircularProgress";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { LandingNode } from "../../../domain/entities/LandingPage";
@@ -16,12 +17,7 @@ const Item: React.FC<{
     loadModule: (module: string, step: number) => void;
 }> = props => {
     const { currentPage, openPage } = props;
-
-    const { translate, reload } = useAppContext();
-
-    useEffect(() => {
-        reload();
-    }, [reload]);
+    const { translate } = useAppContext();
 
     if (currentPage.type === "root") {
         return (
@@ -88,7 +84,7 @@ const Item: React.FC<{
                         currentPage={currentPage}
                         isRoot={props.isRoot}
                         loadModule={props.loadModule}
-                    />{" "}
+                    />
                 </ModalContent>
             </GroupContainer>
         );
@@ -188,11 +184,12 @@ const AdditionalComponents: React.FC<{
             <Cardboard rowSize={3} key={`group-${currentPage.id}`}>
                 {pageModules.map(moduleId => {
                     const module = modules.find(({ id }) => id === moduleId);
-                    if (!module) return null;
+                    if (!module || !module.compatible) return null;
 
-                    const percentage = module
-                        ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
-                        : undefined;
+                    const percentage =
+                        module && module.contents.steps.length > 0
+                            ? Math.round((module.progress.lastStep / module.contents.steps.length) * 100)
+                            : undefined;
 
                     const handleClick = () => {
                         loadModule(module.id, module.progress.completed ? 0 : module.progress.lastStep + 1);
@@ -216,8 +213,8 @@ const AdditionalComponents: React.FC<{
     );
 };
 
-export const HomePage: React.FC = () => {
-    const { setAppState, hasSettingsAccess, landings } = useAppContext();
+export const HomePage: React.FC = React.memo(() => {
+    const { setAppState, hasSettingsAccess, landings, reload, isLoading } = useAppContext();
 
     const [history, updateHistory] = useState<LandingNode[]>([]);
 
@@ -262,6 +259,10 @@ export const HomePage: React.FC = () => {
 
     const isRoot = history.length === 0;
 
+    useEffect(() => {
+        reload();
+    }, [reload]);
+
     return (
         <StyledModal
             onSettings={hasSettingsAccess ? openSettings : undefined}
@@ -270,15 +271,22 @@ export const HomePage: React.FC = () => {
             onGoBack={!isRoot ? goBack : undefined}
             onGoHome={!isRoot ? goHome : undefined}
             centerChildren={true}
+            allowDrag={true}
         >
             <ContentWrapper>
-                {currentPage ? (
+                {isLoading ? (
+                    <Progress color={"white"} size={65} />
+                ) : currentPage ? (
                     <Item isRoot={isRoot} loadModule={loadModule} currentPage={currentPage} openPage={openPage} />
                 ) : null}
             </ContentWrapper>
         </StyledModal>
     );
-};
+});
+
+const Progress = styled(CircularProgress)`
+    margin: 100px 50px;
+`;
 
 const StyledModal = styled(Modal)`
     position: fixed;
@@ -304,6 +312,8 @@ const ContentWrapper = styled.div`
 `;
 
 const LogoContainer = styled.div`
+    margin-top: 15px;
+
     img {
         margin: 0 30px;
         user-drag: none;
@@ -358,5 +368,9 @@ const MarkdownContents = styled(MarkdownViewer)`
         line-height: 47px;
         font-weight: 700;
         margin: 0;
+    }
+
+    h2 {
+        text-align: left;
     }
 `;

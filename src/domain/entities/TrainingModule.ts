@@ -44,6 +44,7 @@ export const TrainingModuleModel = Schema.extend(
         dhisLaunchUrl: Schema.string,
         dhisAuthorities: Schema.array(Schema.string),
         installed: Schema.boolean,
+        compatible: Schema.boolean,
         editable: Schema.boolean,
     })
 );
@@ -65,6 +66,7 @@ export type PartialTrainingModule = PartialBy<
     | "progress"
     | "installed"
     | "editable"
+    | "compatible"
 >;
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
@@ -91,6 +93,15 @@ export const trainingModuleValidations: ModelValidation[] = [
         property: "name.referenceValue",
         validation: "hasValue",
         alias: "name",
+    },
+    {
+        property: "contents.steps",
+        validation: "hasItems",
+        alias: "step",
+    },
+    {
+        property: "contents.steps",
+        validation: "hasPages",
     },
 ];
 
