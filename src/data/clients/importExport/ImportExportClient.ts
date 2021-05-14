@@ -83,30 +83,6 @@ export class ImportExportClient {
         }
     }
 
-    private async getFiles(urls: string[], baseUrlWithCredentials: string) {
-        const files = await promiseMap(urls, async url => {
-            // When fetching resources from our DHIS2 instance in development, we need credentials=include,
-            // but other servers may fail when requested with credentials.
-            const credentials = url.startsWith(baseUrlWithCredentials) ? "include" : "omit";
-            const blob = await fetch(url, { credentials })
-                .then(res => (res.status >= 200 && res.status < 300 && !res.redirected ? res : Promise.reject()))
-                .then(res => res.blob())
-                // Make sure we capture only image URLs
-                .then(blob => (blob.type.startsWith("image/") ? blob : Promise.reject()))
-                .catch(_err => null);
-
-            return blob ? { url, blob } : null;
-        });
-
-        return _.compact(files);
-    }
-
-    private addJsonToZip(zip: JSZip, path: string, contents: unknown) {
-        const json = JSON.stringify(contents, null, 4);
-        const blob = new Blob([json], { type: "application/json" });
-        zip.file(path, blob);
-    }
-
     private getModulePaths(contents: JSZip) {
         return _(contents.files)
             .pickBy((_zip, path) => path.startsWith(this.prefix))
@@ -157,6 +133,30 @@ export class ImportExportClient {
         const blob = await obj.async("blob");
         const text = await blob.text();
         return JSON.parse(text) as T;
+    }
+
+    private async getFiles(urls: string[], baseUrlWithCredentials: string) {
+        const files = await promiseMap(urls, async url => {
+            // When fetching resources from our DHIS2 instance in development, we need credentials=include,
+            // but other servers may fail when requested with credentials.
+            const credentials = url.startsWith(baseUrlWithCredentials) ? "include" : "omit";
+            const blob = await fetch(url, { credentials })
+                .then(res => (res.status >= 200 && res.status < 300 && !res.redirected ? res : Promise.reject()))
+                .then(res => res.blob())
+                // Make sure we capture only image URLs
+                .then(blob => (blob.type.startsWith("image/") ? blob : Promise.reject()))
+                .catch(_err => null);
+
+            return blob ? { url, blob } : null;
+        });
+
+        return _.compact(files);
+    }
+
+    private addJsonToZip(zip: JSZip, path: string, contents: unknown) {
+        const json = JSON.stringify(contents, null, 4);
+        const blob = new Blob([json], { type: "application/json" });
+        zip.file(path, blob);
     }
 }
 
