@@ -307,7 +307,7 @@ const ContentWrapper = styled.div`
 
 const LogoContainer = styled.div`
     margin-top: 15px;
-    
+
     img {
         margin: 0 30px;
         user-drag: none;

@@ -1,14 +1,28 @@
+import _ from "lodash";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import styled from "styled-components";
 
+const components = {
+    blockquote: ({ children, ...props }: any) => (
+        <details>
+            <summary>{props.title ?? "Note"}</summary>
+            {children?.length === 1 && _.isString(children[0]) ? (
+                <ReactMarkdown>{children[0]}</ReactMarkdown>
+            ) : (
+                children
+            )}
+        </details>
+    ),
+};
+
 export const SimpleMarkdownViewer: React.FC<{ className?: string; source: string; center?: boolean }> = ({
     className,
     source,
 }) => (
-    <ReactMarkdown className={className} rehypePlugins={[rehypeSanitize, rehypeRaw]}>
+    <ReactMarkdown className={className} rehypePlugins={[rehypeRaw, rehypeSanitize]} components={components}>
         {source}
     </ReactMarkdown>
 );
