@@ -18,18 +18,21 @@ export class InstanceDhisRepository implements InstanceRepository {
         this.baseUrl = this.api.baseUrl;
     }
 
+    @cache()
+    public async getVersion(): Promise<string> {
+        const { version } = await this.api.system.info.getData();
+        return version;
+    }
+
     public async uploadFile(data: ArrayBuffer, options: UploadFileOptions = {}): Promise<string> {
         const type = await FileType.fromBuffer(data);
         const { mime = "application/unknown" } = type ?? {};
         const blob = new Blob([data], { type: mime });
         const resized = ["image/jpeg", "image/png"].includes(mime) ? await resizeFile(blob) : blob;
 
-        const fileData = await arrayBufferToString(data);
-        const fileId = getUid(fileData);
-
         const { id } = await this.api.files
             .upload({
-                id: options.id ?? fileId,
+                id: options.id ?? getUid(await arrayBufferToString(data)),
                 name: `[Training App] Uploaded file`,
                 data: resized,
             })

@@ -1,11 +1,13 @@
+import { MultipleDropdown } from "@eyeseetea/d2-ui-components";
 import i18n from "@eyeseetea/d2-ui-components/locales";
 import { TextField } from "@material-ui/core";
-import _, { Dictionary } from "lodash";
+import { Dictionary } from "lodash";
 import React, { ChangeEvent, useCallback, useState } from "react";
 import styled from "styled-components";
 import { TrainingModule } from "../../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../../domain/entities/TranslatableText";
 import { updateTranslation } from "../../../../domain/helpers/TrainingModuleHelpers";
+import { ComponentParameter } from "../../../../types/utils";
 import { useAppContext } from "../../../contexts/app-context";
 import { ModuleCreationWizardStepProps } from "./index";
 
@@ -51,6 +53,13 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
     const onChangeTranslation = useCallback(
         (text: TranslatableText, value: string) => {
             onChange(module => updateTranslation(module, text.key, value));
+        },
+        [onChange]
+    );
+
+    const onChangeDhisVersionRange = useCallback<ComponentParameter<typeof MultipleDropdown, "onChange">>(
+        values => {
+            onChange(module => ({ ...module, dhisVersionRange: values.join(",") }));
         },
         [onChange]
     );
@@ -115,6 +124,17 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
             </Row>
 
             <Row>
+                <h3>{i18n.t("DHIS2 Compatibility")}</h3>
+
+                <DHISVersionSelector
+                    label={i18n.t("Compatible versions")}
+                    items={dhisVersions}
+                    values={module.dhisVersionRange.split(",")}
+                    onChange={onChangeDhisVersionRange}
+                />
+            </Row>
+
+            <Row>
                 <h3>{i18n.t("Launch application")}</h3>
 
                 <TextField
@@ -154,3 +174,23 @@ const IconUpload = styled.div`
 const FileInput = styled.input`
     outline: none;
 `;
+
+const DHISVersionSelector = styled(MultipleDropdown)`
+    width: 100%;
+    margin-left: -10px;
+    margin-top: 10px;
+
+    div,
+    label {
+        color: black;
+    }
+`;
+
+const dhisVersions = [
+    { value: "2.30", text: "2.30" },
+    { value: "2.31", text: "2.31" },
+    { value: "2.32", text: "2.32" },
+    { value: "2.33", text: "2.33" },
+    { value: "2.34", text: "2.34" },
+    { value: "2.35", text: "2.35" },
+];
