@@ -112,7 +112,9 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
-        return this.importExportClient.import(files, this.saveDataStore);
+        return this.importExportClient.import<PersistedTrainingModule>(files, (model, options) =>
+            this.saveDataStore(model, options)
+        );
     }
 
     public async export(ids: string[]): Promise<void> {

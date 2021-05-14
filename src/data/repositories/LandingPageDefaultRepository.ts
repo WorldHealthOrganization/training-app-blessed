@@ -77,7 +77,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
     }
 
     public async import(files: File[]): Promise<PersistedLandingPage[]> {
-        return this.importExportClient.import(files, this.saveDataStore);
+        return this.importExportClient.import<PersistedLandingPage>(files, model => this.saveDataStore(model));
     }
 
     public async updateChild(node: LandingNode): Promise<void> {
