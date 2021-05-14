@@ -8,13 +8,15 @@ import { StorageClient } from "../clients/storage/StorageClient";
 import { PersistedLandingPage } from "../entities/PersistedLandingPage";
 import { generateUid } from "../utils/uid";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
-import { DefaultImportExport } from "./DefaultImportExport";
+import { ImportExportClient } from "../clients/importExport/ImportExportClient";
 
 export class LandingPageDefaultRepository implements LandingPageRepository {
     private storageClient: StorageClient;
+    private importExportClient: ImportExportClient;
 
-    constructor(config: ConfigRepository, private instanceRepository: InstanceRepository) {
+    constructor(config: ConfigRepository, instanceRepository: InstanceRepository) {
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
+        this.importExportClient = new ImportExportClient(instanceRepository, "landing-page-");
     }
 
     public async list(): Promise<LandingNode[]> {
@@ -59,10 +61,6 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
         }
     }
 
-    private getDefaultImportExport() {
-        return new DefaultImportExport(this.instanceRepository);
-    }
-
     public async saveDataStore(model: PersistedLandingPage) {
         await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, {
             ...model,
@@ -77,7 +75,8 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
             .map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
             .compact()
             .value();
-        return this.getDefaultImportExport().export(toExport, "landing-page-");
+
+        return this.importExportClient.export(toExport);
     }
 
     /*public async import(files: File[]): Promise<PersistedLandingPage[]> {

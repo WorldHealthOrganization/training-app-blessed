@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { Codec, GetSchemaType, Schema } from "../../utils/codec";
 import { TranslatableText, TranslatableTextModel } from "./TranslatableText";
 

@@ -9,6 +9,7 @@ import { Dictionary } from "../../types/utils";
 import { swapById } from "../../utils/array";
 import { promiseMap } from "../../utils/promises";
 import { BuiltinModules } from "../assets/modules/BuiltinModules";
+import { ImportExportClient } from "../clients/importExport/ImportExportClient";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
@@ -17,19 +18,19 @@ import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
 import { getMajorVersion } from "../utils/d2-api";
-import { TrainingModuleDefaultImportExport } from "./TrainingModuleDefaultImportExport";
-import { DefaultImportExport } from "./DefaultImportExport";
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private builtinModules: Dictionary<JSONTrainingModule | undefined>;
     private storageClient: StorageClient;
     private progressStorageClient: StorageClient;
+    private importExportClient: ImportExportClient;
 
     constructor(private config: ConfigRepository, private instanceRepository: InstanceRepository) {
         //@ts-ignore FIXME: Add decoding to enforce types
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
+        this.importExportClient = new ImportExportClient(this.instanceRepository, "module-");
     }
 
     public async list(): Promise<TrainingModule[]> {
@@ -110,16 +111,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.saveDataStore(newModule);
     }
 
-    private getImportExportModule() {
-        return new TrainingModuleDefaultImportExport(this, this.instanceRepository);
-    }
-    //, this.instanceRepository, this.storageClient
-    private getDefaultImportExport() {
-        return new DefaultImportExport(this.instanceRepository);
-    }
-
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
-        return this.getImportExportModule().import(files);
+        return this.importExportClient.import(files, this.saveDataStore);
     }
 
     public async export(ids: string[]): Promise<void> {
@@ -130,7 +123,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             );
             return dataStoreModel;
         });
-        return this.getDefaultImportExport().export(modules, "module-");
+
+        return this.importExportClient.export(modules);
     }
 
     public async resetDefaultValue(ids: string[]): Promise<void> {
