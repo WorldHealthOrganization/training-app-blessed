@@ -2,13 +2,10 @@ import FileSaver from "file-saver";
 import JSZip from "jszip";
 import _ from "lodash";
 import moment from "moment";
-import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
-import { fromPairs } from "../../types/utils";
-import { promiseMap } from "../../utils/promises";
-import { Namespaces } from "../clients/storage/Namespaces";
-import { StorageClient } from "../clients/storage/StorageClient";
-import { getUrls, PersistedTrainingModule, replaceUrls } from "../entities/PersistedTrainingModule";
-import { TrainingModuleDefaultRepository } from "./TrainingModuleDefaultRepository";
+import { TranslatableText } from "../../../domain/entities/TranslatableText";
+import { InstanceRepository } from "../../../domain/repositories/InstanceRepository";
+import { fromPairs } from "../../../types/utils";
+import { promiseMap } from "../../../utils/promises";
 
 export type Mapping = MappingItem[];
 
@@ -18,20 +15,23 @@ export interface MappingItem {
     type: string;
 }
 
-export class TrainingModuleDefaultImportExport {
+export interface ExportableItem {
+    id: string;
+    name: TranslatableText;
+}
+
+export class ImportExportClient {
     exportConfig = {
-        modulePrefix: "module-",
         filesMapper: "files.json",
         filesFolder: "files",
     };
 
-    constructor(
-        private trainingModuleRepository: TrainingModuleDefaultRepository,
-        private instanceRepository: InstanceRepository,
-        private storageClient: StorageClient
-    ) {}
+    constructor(private instanceRepository: InstanceRepository, private prefix: string) {}
 
-    public async import(files: File[]): Promise<PersistedTrainingModule[]> {
+    public async import<T>(
+        files: File[],
+        save: (file: T, options: { recreate?: boolean }) => Promise<void>
+    ): Promise<T[]> {
         const modules = await promiseMap(files, async file => {
             const zip = new JSZip();
             const contents = await zip.loadAsync(file);
@@ -41,41 +41,32 @@ export class TrainingModuleDefaultImportExport {
             const modulePaths = this.getModulePaths(contents);
 
             return promiseMap(modulePaths, async modulePath => {
-                const model = await this.getJsonFromFile<PersistedTrainingModule>(zip, modulePath);
+                const model = await this.getJsonFromFile<T>(zip, modulePath);
                 if (!model) return;
 
                 const moduleWithMappedUrls = replaceUrls(model, urlMapping);
-                await this.trainingModuleRepository.saveDataStore(moduleWithMappedUrls, { recreate: true });
+                await save(moduleWithMappedUrls, { recreate: true });
                 return moduleWithMappedUrls;
             });
         });
 
         return _.compact(_.flatten(modules));
     }
-    public async export(ids: string[]): Promise<void> {
+
+    public async export<T extends ExportableItem>(parts: Array<T | undefined>): Promise<void> {
         const zip = new JSZip();
-
-        const modules = await promiseMap(ids, async id => {
-            const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-                Namespaces.TRAINING_MODULES,
-                id
-            );
-
-            if (!dataStoreModel) return;
-
-            const name = _.kebabCase(this.exportConfig.modulePrefix + dataStoreModel.name.referenceValue);
-            this.addJsonToZip(zip, name + ".json", dataStoreModel);
-            return dataStoreModel;
+        const mappedParts = await promiseMap(parts, async part => {
+            const name = _.kebabCase(`${this.prefix}-${part?.name.referenceValue}`);
+            this.addJsonToZip(zip, name + ".json", part);
+            return part;
         });
-
-        await this.addFiles(_.compact(modules), zip);
-
+        await this.addFiles(_.compact(mappedParts), zip);
         const blob = await zip.generateAsync({ type: "blob" });
         const date = moment().format("YYYYMMDDHHmm");
-        FileSaver.saveAs(blob, `training-modules-${date}.zip`);
+        FileSaver.saveAs(blob, `${this.prefix}-${date}.zip`);
     }
 
-    private async addFiles(modules: PersistedTrainingModule[], zip: JSZip) {
+    private async addFiles<T extends ExportableItem>(modules: Array<T | undefined>, zip: JSZip) {
         const urls = _(modules).flatMap(getUrls).uniq().value();
         const files = await this.getFiles(urls, this.instanceRepository.baseUrl);
 
@@ -92,11 +83,9 @@ export class TrainingModuleDefaultImportExport {
         }
     }
 
-    /* Private methods */
-
     private getModulePaths(contents: JSZip) {
         return _(contents.files)
-            .pickBy((_zip, path) => path.startsWith(this.exportConfig.modulePrefix))
+            .pickBy((_zip, path) => path.startsWith(this.prefix))
             .keys()
             .compact()
             .value();
@@ -169,4 +158,23 @@ export class TrainingModuleDefaultImportExport {
         const blob = new Blob([json], { type: "application/json" });
         zip.file(path, blob);
     }
+}
+
+// Full-fledged url regexp are extremely slow, so let's use a very simple on that covers our use-cases:
+//   [Some link](http://some-link.com/path?x=1)
+//   [Some link](http://some-link.com/path?x=1 "Title")
+//   <img src="http://some-link.com/path?x=1">
+const urlRegExp = /https?:\/\/[^\\"\s)]+/g;
+
+function getUrls<T>(module: T): string[] {
+    // For simplicity, process directly the JSON representation of the module
+    const json = JSON.stringify(module);
+    const urls = Array.from(json.matchAll(urlRegExp)).map(groups => groups[0]);
+    return _(urls).compact().uniq().value();
+}
+
+function replaceUrls<T>(module: T, urlMapping: Record<string, string>): T {
+    const json = JSON.stringify(module);
+    const json2 = json.replace(urlRegExp, url => urlMapping[url] || url);
+    return JSON.parse(json2);
 }

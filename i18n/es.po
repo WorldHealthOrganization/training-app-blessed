@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-15T07:33:51.679Z\n"
+"POT-Creation-Date: 2021-05-14T05:45:06.938Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,17 @@ msgstr ""
 msgid "Contents"
 msgstr "Contenidos"
 
+msgid "Couldn't read the file because it's not valid"
+msgstr ""
+
+#, fuzzy
+msgid "Importing landing pages(s)"
+msgstr "Importando módulo(s)"
+
+#, fuzzy
+msgid "Imported {{n}} landing pages"
+msgstr "{{n}} módulos importados"
+
 msgid "Add section"
 msgstr ""
 
@@ -61,6 +72,18 @@ msgstr ""
 
 msgid "Delete"
 msgstr "Borrar"
+
+#, fuzzy
+msgid "Export landing page"
+msgstr "Bienvenido"
+
+#, fuzzy
+msgid "Exporting landing page(s)"
+msgstr "Exportando módulo(s)"
+
+#, fuzzy
+msgid "Import landing pages"
+msgstr "Bienvenido"
 
 msgid "Landing page"
 msgstr "Bienvenido"
@@ -148,9 +171,6 @@ msgstr ""
 
 msgid "Summary"
 msgstr "Fin"
-
-msgid "Couldn't read the file because it's not valid"
-msgstr ""
 
 msgid "Importing module(s)"
 msgstr "Importando módulo(s)"

@@ -7,12 +7,16 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PersistedLandingPage } from "../entities/PersistedLandingPage";
 import { generateUid } from "../utils/uid";
+import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
+import { ImportExportClient } from "../clients/importExport/ImportExportClient";
 
 export class LandingPageDefaultRepository implements LandingPageRepository {
     private storageClient: StorageClient;
+    private importExportClient: ImportExportClient;
 
-    constructor(config: ConfigRepository) {
+    constructor(config: ConfigRepository, instanceRepository: InstanceRepository) {
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
+        this.importExportClient = new ImportExportClient(instanceRepository, "landing-pages");
     }
 
     public async list(): Promise<LandingNode[]> {
@@ -40,7 +44,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
                     modules: [],
                 };
 
-                await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, root);
+                await this.saveDataStore(root);
                 return [{ ...root, children: [] }];
             }
 
@@ -55,6 +59,25 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
             console.error(error);
             return [];
         }
+    }
+
+    public async saveDataStore(model: PersistedLandingPage) {
+        await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, model);
+    }
+
+    public async export(ids: string[]): Promise<void> {
+        const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
+        const toExport = _(nodes)
+            .filter(({ id }) => ids.includes(id))
+            .map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
+            .compact()
+            .value();
+
+        return this.importExportClient.export(toExport);
+    }
+
+    public async import(files: File[]): Promise<PersistedLandingPage[]> {
+        return this.importExportClient.import<PersistedLandingPage>(files, model => this.saveDataStore(model));
     }
 
     public async updateChild(node: LandingNode): Promise<void> {

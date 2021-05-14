@@ -1,6 +1,7 @@
 import FileType, { FileTypeResult } from "file-type/browser";
 import _ from "lodash";
 import { Command, CommandContext, ExecuteOptions, PasteCommandContext } from "react-mde";
+import { PasteOptions } from "react-mde/lib/definitions/types";
 import i18n from "../../../locales";
 
 function dataTransferToArray(items: DataTransferItemList): Array<File> {
@@ -17,14 +18,15 @@ function fileListToArray(list: FileList | null): Array<File> {
     return _.compact(list);
 }
 
-interface SaveFileContext extends Omit<PasteCommandContext, "saveImage"> {
-    saveImage: (data: ArrayBuffer, name?: string) => AsyncGenerator<string, boolean>;
+interface CustomPasteOptions extends Omit<PasteOptions, "saveImage"> {
+    saveImage: (data: ArrayBuffer, file?: File) => AsyncGenerator<string, boolean>;
 }
 
 export const saveFileCommand: Command = {
     async execute({ textApi, context }: ExecuteOptions): Promise<void> {
         if (!context) throw new Error("Context not defined");
-        const { event, saveImage } = context as SaveFileContext;
+        const { event, pasteOptions } = context as PasteCommandContext;
+        const { saveImage } = pasteOptions as CustomPasteOptions;
 
         const items = isPasteEvent(context)
             ? dataTransferToArray((event as React.ClipboardEvent).clipboardData.items)
@@ -45,7 +47,7 @@ export const saveFileCommand: Command = {
             textApi.replaceSelection(placeHolder);
 
             const blobContents = await readFileAsync(blob);
-            const saveFileAction = saveImage(blobContents, blob.name);
+            const saveFileAction = saveImage(blobContents, blob);
             const fileUrl = (await saveFileAction.next()).value as string;
             const type = await FileType.fromBuffer(blobContents);
 
