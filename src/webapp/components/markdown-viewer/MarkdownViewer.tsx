@@ -31,6 +31,10 @@ export const MarkdownViewer = styled(Viewer)`
         user-drag: none;
     }
 
+    a {
+        color: white;
+    }
+
     details > summary {
         cursor: pointer;
         display: flex;

@@ -3,12 +3,14 @@ import ReactMarkdown from "react-markdown";
 import ReactMde, { getDefaultToolbarCommands } from "react-mde";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import styled from "styled-components";
+import { allFilesMimeType } from "../../../utils/files";
 import { addNoteCommand } from "./AddNoteCommand";
+import { saveFileCommand } from "./SaveFileCommand";
 
 export interface MarkdownEditorProps {
     value: string;
     onChange: (value: string) => void;
-    onUpload?: (data: ArrayBuffer) => Promise<string | undefined>;
+    onUpload?: (data: ArrayBuffer, name?: string) => Promise<string | undefined>;
     markdownPreview?: (markdown: string) => React.ReactNode;
 }
 
@@ -18,10 +20,10 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     onUpload,
     markdownPreview = defaultPreviewMarkdown,
 }) => {
-    const saveImage = async function* (data: ArrayBuffer) {
+    const saveImage = async function* (data: ArrayBuffer, name?: string) {
         if (!onUpload) return false;
 
-        const url = await onUpload(data);
+        const url = await onUpload(data, name);
         if (!url) return false;
 
         yield url;
@@ -34,8 +36,8 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 <ReactMde
                     value={value}
                     onChange={onChange}
-                    paste={onUpload ? { saveImage } : undefined}
-                    commands={{ "add-note": addNoteCommand }}
+                    paste={onUpload ? { saveImage, command: "save-file", accept: allFilesMimeType } : undefined}
+                    commands={{ "add-note": addNoteCommand, "save-file": saveFileCommand }}
                     toolbarCommands={[...getDefaultToolbarCommands(), ["add-note"]]}
                     minEditorHeight={500}
                     disablePreview={true}

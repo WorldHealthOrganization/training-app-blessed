@@ -19,6 +19,7 @@ import styled from "styled-components";
 import { PartialTrainingModule, TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import i18n from "../../../locales";
+import { zipMimeType } from "../../../utils/files";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
 import { AlertIcon } from "../alert-icon/AlertIcon";
@@ -563,11 +564,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <Dropzone
-                ref={fileRef}
-                accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
-                onDrop={handleFileUpload}
-            >
+            <Dropzone ref={fileRef} accept={zipMimeType} onDrop={handleFileUpload}>
                 <ObjectsTable<ListItem>
                     rows={rows}
                     columns={columns}

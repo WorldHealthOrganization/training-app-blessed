@@ -8,6 +8,7 @@ import { TrainingModule } from "../../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../../domain/entities/TranslatableText";
 import { updateTranslation } from "../../../../domain/helpers/TrainingModuleHelpers";
 import { ComponentParameter } from "../../../../types/utils";
+import { imagesMimeType } from "../../../../utils/files";
 import { useAppContext } from "../../../contexts/app-context";
 import { ModuleCreationWizardStepProps } from "./index";
 
@@ -119,7 +120,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                         </IconContainer>
                     ) : null}
 
-                    <FileInput type="file" onChange={handleFileUpload} />
+                    <FileInput type="file" onChange={handleFileUpload} accept={imagesMimeType} />
                 </IconUpload>
             </Row>
 
