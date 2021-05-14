@@ -3,9 +3,9 @@ import { TextField } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
 
 export const InputDialog: React.FC<InputDialogProps> = props => {
-    const { inputLabel, onSave } = props;
+    const { inputLabel, onSave, initialValue = "" } = props;
 
-    const [value, setValue] = useState<string>("");
+    const [value, setValue] = useState<string>(initialValue);
 
     const save = useCallback(() => {
         onSave(value);
@@ -26,4 +26,5 @@ export const InputDialog: React.FC<InputDialogProps> = props => {
 export interface InputDialogProps extends Omit<ConfirmationDialogProps, "onSave"> {
     inputLabel: string;
     onSave: (value: string) => void;
+    initialValue?: string;
 }

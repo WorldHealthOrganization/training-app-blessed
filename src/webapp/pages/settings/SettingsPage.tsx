@@ -21,7 +21,7 @@ import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 
 export const SettingsPage: React.FC = () => {
-    const { modules, landings, reload, usecases, setAppState, showAllModules } = useAppContext();
+    const { modules, landings, reload, usecases, setAppState, showAllModules, isLoading } = useAppContext();
 
     const snackbar = useSnackbar();
 
@@ -146,6 +146,10 @@ export const SettingsPage: React.FC = () => {
         usecases.config.getSettingsPermissions().then(setSettingsPermissions);
     }, [usecases]);
 
+    useEffect(() => {
+        reload();
+    }, [reload]);
+
     return (
         <DhisPage>
             {!!permissionsType && (
@@ -230,7 +234,7 @@ export const SettingsPage: React.FC = () => {
 
                 <Title>{i18n.t("Landing page")}</Title>
 
-                <LandingPageListTable nodes={landings} />
+                <LandingPageListTable nodes={landings} isLoading={isLoading} />
 
                 <Title>{i18n.t("Training modules")}</Title>
 
@@ -239,6 +243,7 @@ export const SettingsPage: React.FC = () => {
                     refreshRows={refreshModules}
                     tableActions={tableActions}
                     onActionButtonClick={openAddModule}
+                    isLoading={isLoading}
                 />
             </Container>
         </DhisPage>

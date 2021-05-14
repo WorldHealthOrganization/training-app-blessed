@@ -1,19 +1,71 @@
-import { ObjectsTable, TableAction, TableColumn } from "@eyeseetea/d2-ui-components";
+import {
+    ConfirmationDialog,
+    ConfirmationDialogProps,
+    ObjectsTable,
+    TableAction,
+    TableColumn,
+    TableGlobalAction,
+    useLoading,
+    useSnackbar,
+} from "@eyeseetea/d2-ui-components";
 import { Icon } from "@material-ui/core";
 import _ from "lodash";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { FileRejection } from "react-dropzone";
 import styled from "styled-components";
 import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import { useAppContext } from "../../contexts/app-context";
+import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
 import { ModalBody } from "../modal";
 
-export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
+export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: boolean }> = ({ nodes, isLoading }) => {
     const { usecases, reload } = useAppContext();
 
+    const loading = useLoading();
+    const snackbar = useSnackbar();
+    const fileRef = useRef<DropzoneRef>(null);
+
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
     const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
+
+    const openImportDialog = useCallback(async () => {
+        fileRef.current?.openDialog();
+    }, [fileRef]);
+
+    const handleFileUpload = useCallback(
+        async (files: File[], rejections: FileRejection[]) => {
+            if (files.length === 0 && rejections.length > 0) {
+                snackbar.error(i18n.t("Couldn't read the file because it's not valid"));
+            } else {
+                loading.show(true, i18n.t("Importing landing pages(s)"));
+                try {
+                    updateDialog({
+                        title: i18n.t("Importing a new landing page"),
+                        description: i18n.t("This action will overwrite the existing landing page. Are you sure?"),
+                        onSave: async () => {
+                            const landings = await usecases.landings.import(files);
+                            snackbar.success(i18n.t("Imported {{n}} landing pages", { n: landings.length }));
+                            await reload();
+                            updateDialog(null);
+                        },
+                        onCancel: () => {
+                            updateDialog(null);
+                        },
+                        saveText: i18n.t("Yes"),
+                        cancelText: i18n.t("No"),
+                    });
+                } catch (err) {
+                    snackbar.error((err && err.message) || err.toString());
+                } finally {
+                    loading.reset();
+                }
+            }
+        },
+        [snackbar, reload, usecases, loading]
+    );
 
     const columns: TableColumn<LandingNode>[] = useMemo(
         () => [
@@ -154,15 +206,54 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                 },
                 isActive: nodes => _.every(nodes, item => item.id !== "root"),
             },
+            {
+                name: "export-landing-page",
+                text: i18n.t("Export landing page"),
+                icon: <Icon>cloud_download</Icon>,
+                onClick: async (ids: string[]) => {
+                    if (!ids[0]) return;
+                    loading.show(true, i18n.t("Exporting landing page(s)"));
+                    await usecases.landings.export(ids);
+                    loading.reset();
+                },
+                isActive: nodes => _.every(nodes, item => item.type === "root"),
+                multiple: true,
+            },
         ],
-        [usecases, reload, nodes]
+        [usecases, reload, loading, nodes]
+    );
+
+    const globalActions: TableGlobalAction[] | undefined = useMemo(
+        () => [
+            {
+                name: "import",
+                text: i18n.t("Import landing pages"),
+                icon: <Icon>arrow_upward</Icon>,
+                onClick: openImportDialog,
+            },
+        ],
+        [openImportDialog]
     );
 
     return (
         <React.Fragment>
+            {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
             {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
 
-            <ObjectsTable<LandingNode> rows={nodes} columns={columns} actions={actions} childrenKeys={["children"]} />
+            <Dropzone
+                ref={fileRef}
+                accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
+                onDrop={handleFileUpload}
+            >
+                <ObjectsTable<LandingNode>
+                    rows={nodes}
+                    columns={columns}
+                    actions={actions}
+                    globalActions={globalActions}
+                    childrenKeys={["children"]}
+                    loading={isLoading}
+                />
+            </Dropzone>
         </React.Fragment>
     );
 };

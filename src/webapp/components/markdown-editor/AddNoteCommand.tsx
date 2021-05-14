@@ -2,14 +2,11 @@ import { Command } from "react-mde";
 import NotesIcon from "@material-ui/icons/Notes";
 import styled from "styled-components";
 
-const startText = `<details>
-  <summary>Note</summary>
-  <p>
-    `;
+const startText = `<blockquote title="Note">
+`;
 
 const endText = `
-  </p>
-</details>`;
+</blockquote>`;
 
 export const addNoteCommand: Command = {
     icon: () => <Icon />,

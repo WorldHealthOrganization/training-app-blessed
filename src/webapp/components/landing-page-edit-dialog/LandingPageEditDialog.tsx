@@ -2,7 +2,7 @@ import {
     ConfirmationDialog,
     ConfirmationDialogProps,
     MultipleDropdown,
-    useSnackbar
+    useSnackbar,
 } from "@eyeseetea/d2-ui-components";
 import { TextField } from "@material-ui/core";
 import React, { ChangeEvent, useCallback, useMemo, useState } from "react";
@@ -38,10 +38,13 @@ export const LandingPageEditDialog: React.FC<LandingPageEditDialogProps> = props
 
     const [value, setValue] = useState<LandingNode>(initialNode ?? buildDefaultNode(type, parent, order));
 
-    const items = useMemo(() => modules.map(({ id, name }) => ({ value: id, text: translate(name) })), [
-        modules,
-        translate,
-    ]);
+    const items = useMemo(
+        () =>
+            modules
+                .filter(({ compatible }) => compatible)
+                .map(({ id, name }) => ({ value: id, text: translate(name) })),
+        [modules, translate]
+    );
 
     const save = useCallback(() => {
         if (!value.name.referenceValue) {

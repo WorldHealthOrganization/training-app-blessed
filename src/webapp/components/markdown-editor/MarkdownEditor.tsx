@@ -1,14 +1,17 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import ReactMde, { getDefaultToolbarCommands } from "react-mde";
+import { PasteOptions } from "react-mde/lib/definitions/types";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import styled from "styled-components";
+import { allFilesMimeType } from "../../../utils/files";
+import { SimpleMarkdownViewer } from "../markdown-viewer/MarkdownViewer";
 import { addNoteCommand } from "./AddNoteCommand";
+import { saveFileCommand } from "./SaveFileCommand";
 
 export interface MarkdownEditorProps {
     value: string;
     onChange: (value: string) => void;
-    onUpload?: (data: ArrayBuffer) => Promise<string | undefined>;
+    onUpload?: (data: ArrayBuffer, file: File) => Promise<string | undefined>;
     markdownPreview?: (markdown: string) => React.ReactNode;
 }
 
@@ -18,15 +21,17 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     onUpload,
     markdownPreview = defaultPreviewMarkdown,
 }) => {
-    const saveImage = async function* (data: ArrayBuffer) {
+    const saveImage = async function* (data: ArrayBuffer, file: File) {
         if (!onUpload) return false;
 
-        const url = await onUpload(data);
+        const url = await onUpload(data, file);
         if (!url) return false;
 
         yield url;
         return true;
     };
+
+    const pasteOptions = { saveImage, command: "save-file", accept: allFilesMimeType } as PasteOptions;
 
     return (
         <Container>
@@ -34,8 +39,8 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                 <ReactMde
                     value={value}
                     onChange={onChange}
-                    paste={onUpload ? { saveImage } : undefined}
-                    commands={{ "add-note": addNoteCommand }}
+                    paste={onUpload ? pasteOptions : undefined}
+                    commands={{ "add-note": addNoteCommand, "save-file": saveFileCommand }}
                     toolbarCommands={[...getDefaultToolbarCommands(), ["add-note"]]}
                     minEditorHeight={500}
                     disablePreview={true}
@@ -68,4 +73,4 @@ const Children = styled.div`
     width: 49%;
 `;
 
-const defaultPreviewMarkdown = (markdown: string) => <ReactMarkdown source={markdown} />;
+const defaultPreviewMarkdown = (markdown: string) => <SimpleMarkdownViewer source={markdown} />;

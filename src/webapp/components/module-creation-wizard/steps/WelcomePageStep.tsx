@@ -26,7 +26,7 @@ export const WelcomePageStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                 value={module.contents.welcome.referenceValue}
                 onChange={value => onChangeTranslation(module.contents.welcome, value)}
                 markdownPreview={markdown => <StepPreview value={markdown} />}
-                onUpload={data => usecases.instance.uploadFile(data)}
+                onUpload={(data, file) => usecases.instance.uploadFile(data, file.name)}
             />
         </Row>
     );

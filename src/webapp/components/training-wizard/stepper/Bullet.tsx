@@ -44,7 +44,7 @@ export const Bullet = styled(BaseBullet)`
         height: 3px;
         width: 100%;
         background-color: ${getColor("primary")};
-        margin-left: -4px;
+        z-index: -1;
     }
 `;
 

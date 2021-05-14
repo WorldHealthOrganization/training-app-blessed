@@ -10,7 +10,7 @@ import { ExitPage } from "../pages/exit/ExitPage";
 import { AppRoute, buildRoutes } from "./AppRoute";
 
 export const Router: React.FC = () => {
-    const { appState, routes, setAppState, module } = useAppContext();
+    const { appState, routes, setAppState, module, reload } = useAppContext();
     const { baseUrl } = useConfig();
     const navigate = useNavigate();
     const location = useLocation();
@@ -56,8 +56,11 @@ export const Router: React.FC = () => {
     // Load state with initial path
     useEffect(() => {
         const match = matchRoutes(routerRoutes, startPage);
-        if (match) setAppState(buildStateFromPath(match));
-    }, [routerRoutes, startPage, setAppState]);
+        if (match) {
+            setAppState(buildStateFromPath(match));
+            reload();
+        }
+    }, [routerRoutes, startPage, setAppState, reload]);
 
     return (
         <React.Fragment>
