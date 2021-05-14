@@ -41,6 +41,14 @@ export const Navigation: React.FC<NavigationProps> = ({
         }
     }, [onMove, onNext, currentStepKey, disableNext]);
 
+    const jump = useCallback(
+        (index: number) => {
+            const currentStep = extractStepFromKey(currentStepKey);
+            if (currentStep) onMove(currentStep.step, index);
+        },
+        [onMove, currentStepKey]
+    );
+
     if (steps.length === 0 || !currentStep) return null;
     const { contentIndex = 0, totalContents = 0 } = currentStep.props as unknown as any;
 
@@ -56,7 +64,11 @@ export const Navigation: React.FC<NavigationProps> = ({
             <ProgressBar>
                 {totalContents > 1
                     ? arrayFill(totalContents).map(value => (
-                          <NavigationBullet key={value} completed={value === contentIndex} />
+                          <NavigationBullet
+                              key={value}
+                              completed={value === contentIndex}
+                              onClick={() => jump(value + 1)}
+                          />
                       ))
                     : null}
             </ProgressBar>
