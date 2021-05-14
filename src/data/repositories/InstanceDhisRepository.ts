@@ -29,12 +29,12 @@ export class InstanceDhisRepository implements InstanceRepository {
         const { mime = "application/unknown", ext } = type ?? {};
         const blob = new Blob([data], { type: mime });
         const resized = ["image/jpeg", "image/png"].includes(mime) ? await resizeFile(blob) : blob;
-        const extension = ext ? `.${ext}` : "";
+        const name = options.name ?? `Uploaded file${ext ? `.${ext}` : ""}`;
 
         const { id } = await this.api.files
             .upload({
                 id: options.id ?? getUid(await arrayBufferToString(data)),
-                name: `[Training App] Uploaded file${extension}`,
+                name: `[Training App] ${name}`,
                 data: resized,
             })
             .getData();

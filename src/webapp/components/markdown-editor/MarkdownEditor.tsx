@@ -10,7 +10,7 @@ import { saveFileCommand } from "./SaveFileCommand";
 export interface MarkdownEditorProps {
     value: string;
     onChange: (value: string) => void;
-    onUpload?: (data: ArrayBuffer) => Promise<string | undefined>;
+    onUpload?: (data: ArrayBuffer, name?: string) => Promise<string | undefined>;
     markdownPreview?: (markdown: string) => React.ReactNode;
 }
 
@@ -20,10 +20,10 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     onUpload,
     markdownPreview = defaultPreviewMarkdown,
 }) => {
-    const saveImage = async function* (data: ArrayBuffer) {
+    const saveImage = async function* (data: ArrayBuffer, name?: string) {
         if (!onUpload) return false;
 
-        const url = await onUpload(data);
+        const url = await onUpload(data, name);
         if (!url) return false;
 
         yield url;

@@ -17,10 +17,14 @@ function fileListToArray(list: FileList | null): Array<File> {
     return _.compact(list);
 }
 
+interface SaveFileContext extends Omit<PasteCommandContext, "saveImage"> {
+    saveImage: (data: ArrayBuffer, name?: string) => AsyncGenerator<string, boolean>;
+}
+
 export const saveFileCommand: Command = {
     async execute({ textApi, context }: ExecuteOptions): Promise<void> {
         if (!context) throw new Error("Context not defined");
-        const { event, saveImage } = context as PasteCommandContext;
+        const { event, saveImage } = context as SaveFileContext;
 
         const items = isPasteEvent(context)
             ? dataTransferToArray((event as React.ClipboardEvent).clipboardData.items)
@@ -41,7 +45,7 @@ export const saveFileCommand: Command = {
             textApi.replaceSelection(placeHolder);
 
             const blobContents = await readFileAsync(blob);
-            const saveFileAction = saveImage(blobContents);
+            const saveFileAction = saveImage(blobContents, blob.name);
             const fileUrl = (await saveFileAction.next()).value as string;
             const type = await FileType.fromBuffer(blobContents);
 
@@ -75,7 +79,7 @@ function getMarkdown(fileUrl: string, type?: FileTypeResult): string {
     if (type?.mime.startsWith("image/")) {
         return `![Uploaded file](${fileUrl})`;
     }
-    
+
     // Detect and add pdf preview (HTML5)
     if (type?.mime === "application/pdf") {
         return `<embed src="${fileUrl}" width="100%" height="600px" />`;
