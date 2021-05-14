@@ -42,7 +42,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     }, [onMove, onNext, currentStepKey, disableNext]);
 
     if (steps.length === 0 || !currentStep) return null;
-    const { contentIndex = 0, totalContents = 0 } = (currentStep.props as unknown) as any;
+    const { contentIndex = 0, totalContents = 0 } = currentStep.props as unknown as any;
 
     return (
         <ModalFooter>

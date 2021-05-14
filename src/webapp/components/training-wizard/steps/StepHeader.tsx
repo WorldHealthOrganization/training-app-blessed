@@ -1,15 +1,15 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
+import { SimpleMarkdownViewer } from "../../markdown-viewer/MarkdownViewer";
 
-export const StepHeader: React.FC<StepHeaderProps> = ({ index, title, subtitle }) => {
+export const StepHeader: React.FC<StepHeaderProps> = ({ index, title, subtitle = "" }) => {
     return (
         <Wrapper>
             <Bullet>{index}</Bullet>
             <Content>
                 <Title>{title}</Title>
                 <br></br>
-                <Subtitle source={subtitle} escapeHtml={false} />
+                <Subtitle source={subtitle} />
             </Content>
         </Wrapper>
     );
@@ -48,7 +48,7 @@ const Title = styled.span`
     margin: 0px 0px 30px 0px;
 `;
 
-const Subtitle = styled(ReactMarkdown)`
+const Subtitle = styled(SimpleMarkdownViewer)`
     color: #ff8f02;
     font-size: 18px;
     line-height: 0;

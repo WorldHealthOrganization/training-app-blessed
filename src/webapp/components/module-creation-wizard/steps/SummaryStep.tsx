@@ -17,10 +17,10 @@ export const SummaryStep: React.FC<ModuleCreationWizardStepProps> = ({ module, o
         onClose();
     }, [onClose, onSave]);
 
-    const movePage = useCallback((step: number, content: number) => setStepKey(`${module.id}-${step}-${content}`), [
-        setStepKey,
-        module,
-    ]);
+    const movePage = useCallback(
+        (step: number, content: number) => setStepKey(`${module.id}-${step}-${content}`),
+        [setStepKey, module]
+    );
 
     return (
         <Container>
