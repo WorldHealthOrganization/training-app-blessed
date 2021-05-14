@@ -116,6 +116,7 @@ export const validHtml = {
     },
     tagNames: [
         "embed",
+        "iframe",
         "h1",
         "h2",
         "h3",
@@ -180,6 +181,7 @@ export const validHtml = {
     ],
     attributes: {
         embed: ["src"],
+        iframe: ["src"],
         a: ["href"],
         img: ["src", "longDesc"],
         input: [
