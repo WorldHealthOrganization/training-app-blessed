@@ -34,10 +34,11 @@ export interface ModuleListTableProps {
     refreshRows?: () => Promise<void>;
     tableActions: ModuleListTableAction;
     onActionButtonClick?: (event: React.MouseEvent<unknown>) => void;
+    isLoading?: boolean;
 }
 
 export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
-    const { rows, tableActions, onActionButtonClick, refreshRows = async () => {} } = props;
+    const { rows, tableActions, onActionButtonClick, refreshRows = async () => {}, isLoading } = props;
     const { usecases } = useAppContext();
 
     const loading = useLoading();
@@ -575,6 +576,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     childrenKeys={["steps", "welcome", "pages"]}
                     sorting={{ field: "position", order: "asc" }}
                     onActionButtonClick={onActionButtonClick}
+                    loading={isLoading}
                 />
             </Dropzone>
         </PageWrapper>

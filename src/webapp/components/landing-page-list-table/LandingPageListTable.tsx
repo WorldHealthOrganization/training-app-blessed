@@ -22,7 +22,7 @@ import { ModalBody } from "../modal";
 // Import/Export is disabled for now
 const enableImportExport = false;
 
-export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes }) => {
+export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: boolean }> = ({ nodes, isLoading }) => {
     const { usecases, reload } = useAppContext();
 
     const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
@@ -231,6 +231,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
     return (
         <React.Fragment>
             {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
+
             <Dropzone
                 ref={fileRef}
                 accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
@@ -243,8 +244,9 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[] }> = ({ nodes
                     actions={actions}
                     globalActions={globalActions}
                     childrenKeys={["children"]}
+                    loading={isLoading}
                 />
-            </Dropzone>{" "}
+            </Dropzone>
         </React.Fragment>
     );
 };
