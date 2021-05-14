@@ -143,6 +143,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     label={i18n.t("DHIS2 application")}
                     value={module.dhisLaunchUrl}
                     onChange={onChangeField("dhisLaunchUrl")}
+                    placeholder={"/dhis-web-dashboard/index.html"}
                 />
             </Row>
         </React.Fragment>
