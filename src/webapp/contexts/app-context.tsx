@@ -21,17 +21,24 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     const [landings, setLandings] = useState<LandingNode[]>([]);
     const [hasSettingsAccess, setHasSettingsAccess] = useState(false);
     const [showAllModules, setShowAllModules] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const translate = buildTranslate(locale);
 
     const reload = useCallback(async () => {
+        setIsLoading(true);
+        await compositionRoot.usecases.translations.fetch();
+
         const modules = await compositionRoot.usecases.modules.list();
         const landings = await compositionRoot.usecases.landings.list();
         const showAllModules = await compositionRoot.usecases.config.getShowAllModules();
 
+        cacheImages(JSON.stringify(modules));
+        cacheImages(JSON.stringify(landings));
+
         setModules(modules);
         setLandings(landings);
         setShowAllModules(showAllModules);
-        return modules;
+        setIsLoading(false);
     }, [compositionRoot]);
 
     const updateAppState = useCallback((update: AppState | ((prevState: AppState) => AppState)) => {
@@ -42,17 +49,9 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     }, []);
 
     useEffect(() => {
-        reload().then(modules => cacheImages(JSON.stringify(modules)));
-    }, [reload]);
-
-    useEffect(() => {
         compositionRoot.usecases.user.checkSettingsPermissions().then(setHasSettingsAccess);
         compositionRoot.usecases.config.getShowAllModules().then(setShowAllModules);
     }, [compositionRoot]);
-
-    useEffect(() => {
-        compositionRoot.usecases.translations.fetch().then(() => reload());
-    }, [compositionRoot, reload]);
 
     return (
         <AppContext.Provider
@@ -65,6 +64,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
                 landings,
                 translate,
                 reload,
+                isLoading,
                 hasSettingsAccess,
                 showAllModules,
             }}
@@ -87,6 +87,7 @@ export function useAppContext(): UseAppContextResult {
         landings,
         translate,
         reload,
+        isLoading,
         hasSettingsAccess,
         showAllModules,
     } = context;
@@ -111,13 +112,14 @@ export function useAppContext(): UseAppContextResult {
         module,
         translate,
         reload,
+        isLoading,
         hasSettingsAccess,
         showAllModules,
     };
 }
 
 type AppStateUpdateMethod = (oldState: AppState) => AppState;
-type ReloadMethod = () => Promise<TrainingModule[]>;
+type ReloadMethod = () => Promise<void>;
 
 export interface AppContextProviderProps {
     routes: AppRoute[];
@@ -134,6 +136,7 @@ export interface AppContextState {
     compositionRoot: CompositionRoot;
     translate: TranslateMethod;
     reload: ReloadMethod;
+    isLoading: boolean;
     hasSettingsAccess: boolean;
     showAllModules: boolean;
 }
@@ -148,6 +151,7 @@ interface UseAppContextResult {
     module?: TrainingModule;
     translate: TranslateMethod;
     reload: ReloadMethod;
+    isLoading: boolean;
     hasSettingsAccess: boolean;
     showAllModules: boolean;
 }
