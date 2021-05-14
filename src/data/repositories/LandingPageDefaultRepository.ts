@@ -16,7 +16,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
 
     constructor(config: ConfigRepository, instanceRepository: InstanceRepository) {
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
-        this.importExportClient = new ImportExportClient(instanceRepository, "landing-page-");
+        this.importExportClient = new ImportExportClient(instanceRepository, "landing-pages");
     }
 
     public async list(): Promise<LandingNode[]> {

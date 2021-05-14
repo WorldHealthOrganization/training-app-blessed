@@ -56,7 +56,7 @@ export class ImportExportClient {
     public async export<T extends ExportableItem>(parts: Array<T | undefined>): Promise<void> {
         const zip = new JSZip();
         const mappedParts = await promiseMap(parts, async part => {
-            const name = _.kebabCase(this.prefix + part?.name.referenceValue);
+            const name = _.kebabCase(`${this.prefix}-${part?.name.referenceValue}`);
             this.addJsonToZip(zip, name + ".json", part);
             return part;
         });

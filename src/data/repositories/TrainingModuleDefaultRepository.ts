@@ -30,7 +30,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         this.builtinModules = BuiltinModules;
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
         this.progressStorageClient = new DataStoreStorageClient("user", config.getInstance());
-        this.importExportClient = new ImportExportClient(this.instanceRepository, "module-");
+        this.importExportClient = new ImportExportClient(this.instanceRepository, "training-modules");
     }
 
     public async list(): Promise<TrainingModule[]> {
