@@ -271,6 +271,7 @@ export const HomePage: React.FC = () => {
             onGoBack={!isRoot ? goBack : undefined}
             onGoHome={!isRoot ? goHome : undefined}
             centerChildren={true}
+            allowDrag={true}
         >
             <ContentWrapper>
                 {currentPage ? (
@@ -305,6 +306,8 @@ const ContentWrapper = styled.div`
 `;
 
 const LogoContainer = styled.div`
+    margin-top: 15px;
+    
     img {
         margin: 0 30px;
         user-drag: none;
