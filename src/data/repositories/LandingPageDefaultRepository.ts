@@ -44,7 +44,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
                     modules: [],
                 };
 
-                await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, root);
+                await this.saveDataStore(root);
                 return [{ ...root, children: [] }];
             }
 
@@ -62,9 +62,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
     }
 
     public async saveDataStore(model: PersistedLandingPage) {
-        await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, {
-            ...model,
-        });
+        await this.storageClient.saveObjectInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES, model);
     }
 
     public async export(ids: string[]): Promise<void> {
