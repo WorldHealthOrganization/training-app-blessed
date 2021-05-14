@@ -360,4 +360,8 @@ const MarkdownContents = styled(MarkdownViewer)`
         font-weight: 700;
         margin: 0;
     }
+
+    h2 {
+        text-align: left;
+    }
 `;
