@@ -98,7 +98,7 @@ const StyledModal = styled(Modal)`
     height: 600px;
 
     ${ModalContent} {
-        height: unset;
+        max-height: unset;
     }
 
     ${ModalTitle} {

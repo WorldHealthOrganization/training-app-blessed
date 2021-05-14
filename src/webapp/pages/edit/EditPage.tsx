@@ -25,7 +25,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
     }, [setAppState]);
 
     const saveModule = useCallback(async () => {
-        await usecases.modules.update({ ...stateModule, id:  _.kebabCase(stateModule.id)});
+        await usecases.modules.update({ ...stateModule, id: _.kebabCase(stateModule.id) });
         await reload();
     }, [stateModule, usecases, reload]);
 

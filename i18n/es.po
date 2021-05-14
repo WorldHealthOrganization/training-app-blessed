@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-03-03T22:48:02.634Z\n"
+"POT-Creation-Date: 2021-05-14T14:57:18.440Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11,7 +11,10 @@ msgstr ""
 msgid "Field {{field}} cannot be blank"
 msgstr ""
 
-msgid "You need to select at least one {{field}}"
+msgid "You need to add at least one {{field}}"
+msgstr ""
+
+msgid "All steps need to have at least one page"
 msgstr ""
 
 msgid "Field {{field}} needs to be a valid url"
@@ -47,6 +50,30 @@ msgstr ""
 msgid "Contents"
 msgstr "Contenidos"
 
+msgid "Couldn't read the file because it's not valid"
+msgstr ""
+
+#, fuzzy
+msgid "Importing landing pages(s)"
+msgstr "Importando módulo(s)"
+
+#, fuzzy
+msgid "Importing a new landing page"
+msgstr "Importando módulo(s)"
+
+msgid "This action will overwrite the existing landing page. Are you sure?"
+msgstr ""
+
+#, fuzzy
+msgid "Imported {{n}} landing pages"
+msgstr "{{n}} módulos importados"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "No"
+msgstr "No"
+
 msgid "Add section"
 msgstr ""
 
@@ -61,6 +88,18 @@ msgstr ""
 
 msgid "Delete"
 msgstr "Borrar"
+
+#, fuzzy
+msgid "Export landing page"
+msgstr "Bienvenido"
+
+#, fuzzy
+msgid "Exporting landing page(s)"
+msgstr "Exportando módulo(s)"
+
+#, fuzzy
+msgid "Import landing pages"
+msgstr "Bienvenido"
 
 msgid "Landing page"
 msgstr "Bienvenido"
@@ -79,6 +118,9 @@ msgstr "Editar markdown"
 
 msgid "Save"
 msgstr "Guardar"
+
+msgid "Uploading file..."
+msgstr ""
 
 msgid "Home"
 msgstr "Inicio"
@@ -119,6 +161,12 @@ msgstr ""
 msgid "PoEditor Project id"
 msgstr "Token de POEditor"
 
+msgid "DHIS2 Compatibility"
+msgstr ""
+
+msgid "Compatible versions"
+msgstr ""
+
 msgid "Launch application"
 msgstr ""
 
@@ -139,9 +187,6 @@ msgstr ""
 
 msgid "Summary"
 msgstr "Fin"
-
-msgid "Couldn't read the file because it's not valid"
-msgstr ""
 
 msgid "Importing module(s)"
 msgstr "Importando módulo(s)"
@@ -207,6 +252,9 @@ msgid "Initialize project in POEditor"
 msgstr ""
 
 msgid "App is not installed in this instance"
+msgstr ""
+
+msgid "Module does not support this DHIS2 version"
 msgstr ""
 
 msgid "Add module"
@@ -292,12 +340,6 @@ msgstr ""
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
 msgstr ""
-
-msgid "Yes"
-msgstr "Sí"
-
-msgid "No"
-msgstr "No"
 
 msgid "Create module"
 msgstr "Crear modulo"

@@ -109,7 +109,6 @@ export class Dhis2ConfigRepository implements ConfigRepository {
 
     private async getConfig(): Promise<PersistedConfig> {
         const config = await this.storageClient.getObject<PersistedConfig>(Namespaces.CONFIG);
-
         return config ?? {};
     }
 }

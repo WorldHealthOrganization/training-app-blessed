@@ -7,12 +7,16 @@ import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
 import { PersistedLandingPage } from "../entities/PersistedLandingPage";
 import { generateUid } from "../utils/uid";
+import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
+import { ImportExportClient } from "../clients/importExport/ImportExportClient";
 
 export class LandingPageDefaultRepository implements LandingPageRepository {
     private storageClient: StorageClient;
+    private importExportClient: ImportExportClient;
 
-    constructor(config: ConfigRepository) {
+    constructor(config: ConfigRepository, instanceRepository: InstanceRepository) {
         this.storageClient = new DataStoreStorageClient("global", config.getInstance());
+        this.importExportClient = new ImportExportClient(instanceRepository, "landing-pages");
     }
 
     public async list(): Promise<LandingNode[]> {
@@ -55,6 +59,25 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
             console.error(error);
             return [];
         }
+    }
+
+    public async export(ids: string[]): Promise<void> {
+        const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
+        const toExport = _(nodes)
+            .filter(({ id }) => ids.includes(id))
+            .flatMap(node => extractChildrenNodes(buildDomainLandingNode(node, nodes), node.parent))
+            .flatten()
+            .value();
+
+        return this.importExportClient.export(toExport);
+    }
+
+    public async import(files: File[]): Promise<PersistedLandingPage[]> {
+        const items = await this.importExportClient.import<PersistedLandingPage>(files);
+        // TODO: Do not overwrite existing landing page
+        await this.storageClient.saveObject(Namespaces.LANDING_PAGES, items);
+
+        return items;
     }
 
     public async updateChild(node: LandingNode): Promise<void> {

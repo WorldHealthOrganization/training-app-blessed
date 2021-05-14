@@ -1,6 +1,7 @@
 import _ from "lodash";
 import i18n from "../../locales";
 import { Ref } from "./Ref";
+import { TrainingModuleStep } from "./TrainingModule";
 
 export interface ValidationError {
     property: string;
@@ -15,7 +16,8 @@ export interface ModelValidation {
 }
 
 // Diego Perini (License: MIT)
-const urlRegExp = /^(?:(?:https?:\/\/)?localhost(?::\d{2,5})?)$|(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
+const urlRegExp =
+    /^(?:(?:https?:\/\/)?localhost(?::\d{2,5})?)$|(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$/i;
 
 const availableValidations = {
     hasText: {
@@ -30,8 +32,13 @@ const availableValidations = {
     },
     hasItems: {
         error: "cannot_be_empty",
-        getDescription: (field: string) => i18n.t("You need to select at least one {{field}}", { field }),
+        getDescription: (field: string) => i18n.t("You need to add at least one {{field}}", { field }),
         check: (array?: unknown[]) => !array || array.length === 0,
+    },
+    hasPages: {
+        error: "has_pages",
+        getDescription: (field: string) => i18n.t("All steps need to have at least one page", { field }),
+        check: (array?: TrainingModuleStep[]) => _.some(array, ({ pages }) => !pages || pages.length === 0),
     },
     isUrl: {
         error: "invalid_url",

@@ -19,6 +19,7 @@ import styled from "styled-components";
 import { PartialTrainingModule, TrainingModule, TrainingModuleStep } from "../../../domain/entities/TrainingModule";
 import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import i18n from "../../../locales";
+import { zipMimeType } from "../../../utils/files";
 import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
 import { AlertIcon } from "../alert-icon/AlertIcon";
@@ -33,10 +34,11 @@ export interface ModuleListTableProps {
     refreshRows?: () => Promise<void>;
     tableActions: ModuleListTableAction;
     onActionButtonClick?: (event: React.MouseEvent<unknown>) => void;
+    isLoading?: boolean;
 }
 
 export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
-    const { rows, tableActions, onActionButtonClick, refreshRows = async () => {} } = props;
+    const { rows, tableActions, onActionButtonClick, refreshRows = async () => {}, isLoading } = props;
     const { usecases } = useAppContext();
 
     const loading = useLoading();
@@ -347,6 +349,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                         {!item.installed && item.rowType === "module" ? (
                             <AlertIcon tooltip={i18n.t("App is not installed in this instance")} />
                         ) : null}
+                        {!item.compatible && item.rowType === "module" ? (
+                            <AlertIcon tooltip={i18n.t("Module does not support this DHIS2 version")} />
+                        ) : null}
                     </div>
                 ),
             },
@@ -560,11 +565,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <Dropzone
-                ref={fileRef}
-                accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
-                onDrop={handleFileUpload}
-            >
+            <Dropzone ref={fileRef} accept={zipMimeType} onDrop={handleFileUpload}>
                 <ObjectsTable<ListItem>
                     rows={rows}
                     columns={columns}
@@ -575,6 +576,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     childrenKeys={["steps", "welcome", "pages"]}
                     sorting={{ field: "position", order: "asc" }}
                     onActionButtonClick={onActionButtonClick}
+                    loading={isLoading}
                 />
             </Dropzone>
         </PageWrapper>
