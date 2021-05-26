@@ -113,7 +113,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async import(files: File[]): Promise<PersistedTrainingModule[]> {
         const items = await this.importExportClient.import<PersistedTrainingModule>(files);
-        await this.storageClient.saveObject(Namespaces.TRAINING_MODULES, items);
+        await promiseMap(items, module => this.saveDataStore(module, { recreate: true }));
 
         return items;
     }
@@ -286,7 +286,23 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const date = new Date().toISOString();
 
         await this.storageClient.saveObjectInCollection<PersistedTrainingModule>(Namespaces.TRAINING_MODULES, {
-            ...model,
+            _version: model._version,
+            id: model.id,
+            name: model.name,
+            icon: model.icon,
+            type: model.type,
+            disabled: model.disabled,
+            contents: model.contents,
+            translation: model.translation,
+            lastTranslationSync: model.lastTranslationSync,
+            revision: model.revision,
+            dhisVersionRange: model.dhisVersionRange,
+            dhisAppKey: model.dhisAppKey,
+            dhisLaunchUrl: model.dhisLaunchUrl,
+            dhisAuthorities: model.dhisAuthorities,
+            publicAccess: model.publicAccess,
+            userAccesses: model.userAccesses,
+            userGroupAccesses: model.userGroupAccesses,
             lastUpdatedBy: user,
             lastUpdated: date,
             user: options?.recreate ? user : model.user,
