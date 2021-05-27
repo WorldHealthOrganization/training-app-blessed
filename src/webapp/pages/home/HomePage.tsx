@@ -23,7 +23,6 @@ const Item: React.FC<{
         return (
             <React.Fragment>
                 <LogoContainer>
-                    <img src="img/logo-dhis.svg" alt="DHIS2" />
                     <img src="img/logo-who.svg" alt="World Health Organization" />
                 </LogoContainer>
                 <ModalTitle bold={true} big={true}>
