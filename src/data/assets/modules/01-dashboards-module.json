@@ -11,6 +11,7 @@
     "dhisLaunchUrl": "/dhis-web-dashboard",
     "dhisAuthorities": ["M_dhis-web-dashboard"],
     "translation": { "provider": "poeditor", "project": "390493" },
+    "publicAccess": "r-------",
     "contents": {
         "welcome": {
             "key": "module-welcome",
