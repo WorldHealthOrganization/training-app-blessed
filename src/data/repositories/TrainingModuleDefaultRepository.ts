@@ -21,7 +21,7 @@ import { getMajorVersion } from "../utils/d2-api";
 const defaultModules = [
     "dashboards",
     "data-entry",
-    "capture",
+    "event-capture",
     "event-visualizer",
     "data-visualizer",
     "pivot-tables",
