@@ -53,20 +53,17 @@ msgstr "Contenidos"
 msgid "Couldn't read the file because it's not valid"
 msgstr ""
 
-#, fuzzy
 msgid "Importing landing pages(s)"
-msgstr "Importando módulo(s)"
+msgstr ""
 
-#, fuzzy
 msgid "Importing a new landing page"
-msgstr "Importando módulo(s)"
+msgstr ""
 
 msgid "This action will overwrite the existing landing page. Are you sure?"
 msgstr ""
 
-#, fuzzy
 msgid "Imported {{n}} landing pages"
-msgstr "{{n}} módulos importados"
+msgstr ""
 
 msgid "Yes"
 msgstr "Sí"
@@ -89,17 +86,14 @@ msgstr ""
 msgid "Delete"
 msgstr "Borrar"
 
-#, fuzzy
 msgid "Export landing page"
-msgstr "Bienvenido"
+msgstr ""
 
-#, fuzzy
 msgid "Exporting landing page(s)"
-msgstr "Exportando módulo(s)"
+msgstr ""
 
-#, fuzzy
 msgid "Import landing pages"
-msgstr "Bienvenido"
+msgstr ""
 
 msgid "Landing page"
 msgstr "Bienvenido"
@@ -447,6 +441,3 @@ msgstr ""
 
 msgid "Start Tutorial"
 msgstr "Empezar tutorial"
-
-#~ msgid "Assign module"
-#~ msgstr "Asignar modulo"
