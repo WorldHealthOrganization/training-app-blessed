@@ -28,7 +28,7 @@ export class ImportExportClient {
 
     constructor(private instanceRepository: InstanceRepository, private prefix: string) {}
 
-    public async import<T>(files: File[]): Promise<T[]> {
+    public async import<T>(files: Blob[]): Promise<T[]> {
         const modules = await promiseMap(files, async file => {
             const zip = new JSZip();
             const contents = await zip.loadAsync(file);

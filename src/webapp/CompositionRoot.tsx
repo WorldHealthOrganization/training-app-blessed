@@ -15,7 +15,6 @@ import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPer
 import { GetShowAllModulesUseCase } from "../domain/usecases/GetShowAllModulesUseCase";
 import { ImportLandingPagesUseCase } from "../domain/usecases/ImportLandingPagesUseCase";
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
-import { InitializeTranslationsUseCase } from "../domain/usecases/InitializeTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
 import { ListInstalledAppsUseCase } from "../domain/usecases/ListInstalledAppsUseCase";
 import { ListLandingChildrenUseCase } from "../domain/usecases/ListLandingChildrenUseCase";
@@ -58,7 +57,6 @@ export function getCompositionRoot(baseUrl: string) {
             }),
             translations: getExecute({
                 fetch: new FetchTranslationsUseCase(trainingModuleRepository),
-                publishTerms: new InitializeTranslationsUseCase(trainingModuleRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(trainingModuleRepository),

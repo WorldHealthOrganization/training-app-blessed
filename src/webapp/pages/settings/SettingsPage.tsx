@@ -111,7 +111,6 @@ export const SettingsPage: React.FC = () => {
                 if (module) await usecases.modules.update(updateOrder(module, from, to));
                 else snackbar.error(i18n.t("Unable to move item"));
             },
-            publishTranslations: ({ id }) => usecases.translations.publishTerms(id),
             uploadFile: ({ data }) => usecases.instance.uploadFile(data),
             installApp: ({ id }) => usecases.instance.installApp(id),
             addStep: async ({ id, title }) => {

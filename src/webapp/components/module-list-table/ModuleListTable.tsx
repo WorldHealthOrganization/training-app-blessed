@@ -318,17 +318,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [loading, usecases]
     );
 
-    const publishTranslations = useCallback(
-        async (ids: string[]) => {
-            if (!tableActions.publishTranslations || !ids[0]) return;
-
-            loading.show(true, i18n.t("Initialize project in POEditor"));
-            await tableActions.publishTranslations({ id: ids[0] });
-            loading.reset();
-        },
-        [tableActions, loading]
-    );
-
     const onTableChange = useCallback(({ selection }: TableState<ListItem>) => {
         setSelection(selection);
     }, []);
@@ -460,19 +449,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 },
             },
             {
-                name: "push-translations",
-                text: i18n.t("Push local translations to POEditor"),
-                icon: <Icon>publish</Icon>,
-                onClick: publishTranslations,
-                isActive: rows => {
-                    return (
-                        isDebug &&
-                        !!tableActions.publishTranslations &&
-                        _.every(rows, item => item.rowType === "module")
-                    );
-                },
-            },
-            {
                 name: "move-up",
                 text: i18n.t("Move up"),
                 icon: <Icon>arrow_upwards</Icon>,
@@ -538,7 +514,6 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             moveDown,
             editContents,
             installApp,
-            publishTranslations,
             addModule,
             addPage,
             addStep,
@@ -679,8 +654,6 @@ const PageWrapper = styled.div`
     }
 `;
 
-const isDebug = process.env.NODE_ENV === "development";
-
 export type ModuleListTableAction = {
     openEditModulePage?: (params: { id: string }) => void;
     openCreateModulePage?: () => void;
@@ -692,7 +665,6 @@ export type ModuleListTableAction = {
     deleteModules?: (params: { ids: string[] }) => Promise<void>;
     resetModules?: (params: { ids: string[] }) => Promise<void>;
     swap?: (params: { type: "module" | "step" | "page"; id: string; from: string; to: string }) => Promise<void>;
-    publishTranslations?: (params: { id: string }) => Promise<void>;
     uploadFile?: (params: { data: ArrayBuffer }) => Promise<string>;
     installApp?: (params: { id: string }) => Promise<boolean>;
 };
