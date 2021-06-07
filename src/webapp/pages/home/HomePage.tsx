@@ -216,6 +216,7 @@ export const HomePage: React.FC = React.memo(() => {
     const { setAppState, hasSettingsAccess, landings, reload, isLoading } = useAppContext();
 
     const [history, updateHistory] = useState<LandingNode[]>([]);
+    const [isLoadingLong, setLoadingLong] = useState<boolean>(false);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -262,6 +263,12 @@ export const HomePage: React.FC = React.memo(() => {
         reload();
     }, [reload]);
 
+    useEffect(() => {
+        setTimeout(function () {
+            setLoadingLong(true);
+        }, 8000);
+    }, []);
+
     return (
         <StyledModal
             onSettings={hasSettingsAccess ? openSettings : undefined}
@@ -274,7 +281,12 @@ export const HomePage: React.FC = React.memo(() => {
         >
             <ContentWrapper>
                 {isLoading ? (
-                    <Progress color={"white"} size={65} />
+                    <React.Fragment>
+                        <Progress color={"white"} size={65} />
+                        {isLoadingLong ? (
+                            <p>{i18n.t("First load can take a couple of minutes, please wait...")}</p>
+                        ) : null}
+                    </React.Fragment>
                 ) : currentPage ? (
                     <Item isRoot={isRoot} loadModule={loadModule} currentPage={currentPage} openPage={openPage} />
                 ) : null}
