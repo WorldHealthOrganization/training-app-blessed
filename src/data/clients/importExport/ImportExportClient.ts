@@ -132,7 +132,7 @@ export class ImportExportClient {
         const files = await promiseMap(urls, async url => {
             // When fetching resources from our DHIS2 instance in development, we need credentials=include,
             // but other servers may fail when requested with credentials.
-            const credentials = url.startsWith(baseUrlWithCredentials) ? "include" : "omit";
+            const credentials = !url.startsWith("http") || url.startsWith(baseUrlWithCredentials) ? "include" : "omit";
             const blob = await fetch(url, { credentials })
                 .then(res => (res.status >= 200 && res.status < 300 && !res.redirected ? res : Promise.reject()))
                 .then(res => res.blob())
@@ -157,7 +157,7 @@ export class ImportExportClient {
 //   [Some link](http://some-link.com/path?x=1)
 //   [Some link](http://some-link.com/path?x=1 "Title")
 //   <img src="http://some-link.com/path?x=1">
-const urlRegExp = /https?:\/\/[^\\"\s)]+/g;
+const urlRegExp = /(https?:\/\/|\.\.\/)[^\\"\s)]+/g;
 
 function getUrls<T>(module: T): string[] {
     // For simplicity, process directly the JSON representation of the module
