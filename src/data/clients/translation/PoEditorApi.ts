@@ -15,7 +15,7 @@ export class PoEditorApi {
         const HttpClientImpl = backend === "fetch" ? FetchHttpClient : AxiosHttpClient;
 
         this.client = new HttpClientImpl({
-            baseUrl: `http://dev2.eyeseetea.com:8080/https://api.poeditor.com/v${apiVersion}/`,
+            baseUrl: `https://dev.eyeseetea.com/cors/api.poeditor.com/v${apiVersion}/`,
             credentials: "ignore",
         });
     }

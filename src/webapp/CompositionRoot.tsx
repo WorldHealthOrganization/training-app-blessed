@@ -6,21 +6,20 @@ import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSetting
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { DeleteLandingChildUseCase } from "../domain/usecases/DeleteLandingChildUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
-import { ExistsPoEditorTokenUseCase } from "../domain/usecases/ExistsPoEditorTokenUseCase";
 import { ExportLandingPagesUseCase } from "../domain/usecases/ExportLandingPagesUseCase";
 import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
-import { FetchTranslationsUseCase } from "../domain/usecases/FetchTranslationsUseCase";
+import { ExportTranslationsUseCase } from "../domain/usecases/ExportTranslationsUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 import { GetShowAllModulesUseCase } from "../domain/usecases/GetShowAllModulesUseCase";
 import { ImportLandingPagesUseCase } from "../domain/usecases/ImportLandingPagesUseCase";
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
+import { ImportTranslationsUseCase } from "../domain/usecases/ImportTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
 import { ListInstalledAppsUseCase } from "../domain/usecases/ListInstalledAppsUseCase";
 import { ListLandingChildrenUseCase } from "../domain/usecases/ListLandingChildrenUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
 import { ResetModuleDefaultValueUseCase } from "../domain/usecases/ResetModuleDefaultValueUseCase";
-import { SavePoEditorTokenUseCase } from "../domain/usecases/SavePoEditorTokenUseCase";
 import { SearchUsersUseCase } from "../domain/usecases/SearchUsersUseCase";
 import { SetShowAllModulesUseCase } from "../domain/usecases/SetShowAllModulesUseCase";
 import { SwapModuleOrderUseCase } from "../domain/usecases/SwapModuleOrderUseCase";
@@ -56,7 +55,8 @@ export function getCompositionRoot(baseUrl: string) {
                 import: new ImportLandingPagesUseCase(landingPageRepository),
             }),
             translations: getExecute({
-                fetch: new FetchTranslationsUseCase(trainingModuleRepository),
+                export: new ExportTranslationsUseCase(trainingModuleRepository),
+                import: new ImportTranslationsUseCase(trainingModuleRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(trainingModuleRepository),
@@ -65,8 +65,6 @@ export function getCompositionRoot(baseUrl: string) {
             config: getExecute({
                 getSettingsPermissions: new GetSettingsPermissionsUseCase(configRepository),
                 updateSettingsPermissions: new UpdateSettingsPermissionsUseCase(configRepository),
-                savePoEditorToken: new SavePoEditorTokenUseCase(configRepository),
-                existsPoEditorToken: new ExistsPoEditorTokenUseCase(configRepository),
                 getShowAllModules: new GetShowAllModulesUseCase(configRepository),
                 setShowAllModules: new SetShowAllModulesUseCase(configRepository),
             }),

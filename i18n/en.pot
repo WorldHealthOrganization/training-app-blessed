@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-07T17:10:52.222Z\n"
-"PO-Revision-Date: 2021-06-07T17:10:52.222Z\n"
+"POT-Creation-Date: 2021-06-10T09:52:30.325Z\n"
+"PO-Revision-Date: 2021-06-10T09:52:30.325Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -279,6 +279,12 @@ msgid "Restore to factory settings"
 msgstr ""
 
 msgid "Export module"
+msgstr ""
+
+msgid "Export JSON translations"
+msgstr ""
+
+msgid "Import JSON translations"
 msgstr ""
 
 msgid "Import modules"

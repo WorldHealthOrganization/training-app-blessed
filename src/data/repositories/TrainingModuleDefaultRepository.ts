@@ -1,5 +1,8 @@
+import FileSaver from "file-saver";
+import JSZip from "jszip";
 import _ from "lodash";
 import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
+import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
@@ -12,7 +15,6 @@ import { ImportExportClient } from "../clients/importExport/ImportExportClient";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
@@ -164,75 +166,69 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
     }
 
-    public async updateTranslations(key: string): Promise<void> {
-        try {
-            const token = await this.config.getPoEditorToken();
-            const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-                Namespaces.TRAINING_MODULES,
-                key
-            );
+    public async exportTranslations(key: string): Promise<void> {
+        const model = await this.get(key);
+        if (!model) throw new Error(`Module ${key} not found`);
 
-            if (!model || model.translation.provider === "NONE" || !token) return;
-            const api = new PoEditorApi(token);
-            const project = parseInt(model.translation.project);
+        const foo = _.compact([
+            model.name,
+            model.contents.welcome,
+            ..._.flatMap(model.contents.steps, step => [step.title, step.subtitle, ...step.pages]),
+        ]);
 
-            // Fetch translations and update local model
-            const languagesResponse = await api.languages.list({ id: project });
-            const poeditorLanguages = languagesResponse.value.data?.languages.map(({ code }) => code) ?? [];
+        const referenceStrings = _.fromPairs(foo.map(({ key, referenceValue }) => [key, referenceValue]));
+        const translatedStrings = _(foo)
+            .flatMap(({ key, translations }) => _.toPairs(translations).map(([lang, value]) => ({ lang, key, value })))
+            .groupBy("lang")
+            .mapValues(array => _.fromPairs(array.map(({ key, value }) => [key, value])))
+            .value();
 
-            const dictionary = _(
-                await promiseMap(poeditorLanguages, async language => {
-                    const translationResponse = await api.terms.list({ id: project, language });
-                    return (
-                        translationResponse.value.data?.terms.map(({ term, translation }) => ({
-                            term,
-                            language,
-                            value: translation.content,
-                        })) ?? []
-                    );
-                })
-            )
-                .flatten()
-                .groupBy(item => item.term)
-                .mapValues(items => _.fromPairs(items.map(({ language, value }) => [language, value])))
-                .value();
+        const files = _.toPairs({ ...translatedStrings, en: referenceStrings });
+        const zip = new JSZip();
 
-            const translatedModel: PersistedTrainingModule = {
-                ...model,
-                name: {
-                    ...model.name,
-                    translations: dictionary[model.name.key] ?? {},
-                },
-                contents: {
-                    ...model.contents,
-                    welcome: {
-                        ...model.contents.welcome,
-                        translations: dictionary[model.contents.welcome.key] ?? {},
-                    },
-                    steps: model.contents.steps.map(step => ({
-                        ...step,
-                        title: {
-                            ...step.title,
-                            translations: dictionary[step.title.key] ?? {},
-                        },
-                        subtitle: step.subtitle
-                            ? {
-                                  ...step.subtitle,
-                                  translations: dictionary[step.subtitle.key] ?? {},
-                              }
-                            : undefined,
-                        pages: step.pages.map(page => ({
-                            ...page,
-                            translations: dictionary[page.key] ?? {},
-                        })),
-                    })),
-                },
-            };
-
-            await this.saveDataStore(translatedModel);
-        } catch (error) {
-            console.error(error);
+        for (const [lang, contents] of files) {
+            const json = JSON.stringify(contents, null, 4);
+            const blob = new Blob([json], { type: "application/json" });
+            zip.file(`${lang}.json`, blob);
         }
+
+        const blob = await zip.generateAsync({ type: "blob" });
+        FileSaver.saveAs(blob, `translations-${model.name.referenceValue}-.zip`);
+    }
+
+    public async importTranslations(key: string, language: string, terms: Record<string, string>): Promise<void> {
+        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES,
+            key
+        );
+        if (!model) throw new Error(`Module ${key} not found`);
+
+        const translate = <T extends TranslatableText>(item: T, language: string, term: string | undefined): T => {
+            if (term === undefined) {
+                return item;
+            } else if (language === "en") {
+                return { ...item, referenceValue: term };
+            } else {
+                return { ...item, translations: { ...item.translations, [language]: term } };
+            }
+        };
+
+        const translatedModel: PersistedTrainingModule = {
+            ...model,
+            name: translate(model.name, language, terms[model.name.key]),
+            contents: {
+                ...model.contents,
+                welcome: translate(model.contents.welcome, language, terms[model.contents.welcome.key]),
+                steps: model.contents.steps.map(step => ({
+                    ...step,
+                    title: translate(step.title, language, terms[step.title.key]),
+                    subtitle: step.subtitle ? translate(step.subtitle, language, terms[step.subtitle.key]) : undefined,
+                    pages: step.pages.map(page => translate(page, language, terms[page.key])),
+                })),
+            },
+        };
+
+        console.log(translatedModel)
     }
 
     private async importDefaultModule(id: string): Promise<PersistedTrainingModule | undefined> {
@@ -261,8 +257,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             type: model.type,
             disabled: model.disabled,
             contents: model.contents,
-            translation: model.translation,
-            lastTranslationSync: model.lastTranslationSync,
             revision: model.revision,
             dhisVersionRange: model.dhisVersionRange,
             dhisAppKey: model.dhisAppKey,
@@ -329,7 +323,6 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             userGroupAccesses: [],
             user: defaultUser,
             lastUpdatedBy: defaultUser,
-            lastTranslationSync: new Date().toISOString(),
             ...model,
         };
     }
