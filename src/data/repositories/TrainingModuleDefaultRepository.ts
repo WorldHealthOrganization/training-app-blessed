@@ -90,6 +90,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 };
             });
         } catch (error) {
+            console.error(error);
             return [];
         }
     }
@@ -240,9 +241,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     private async listDefaultModules(): Promise<DefaultModule[]> {
         try {
             const blob = await this.assetClient.request<Blob>({ method: "get", url: `/modules/config.json` }).getData();
-
             const text = await blob.text();
-            return JSON.parse(text);
+
+            const { modules } = JSON.parse(text);
+            return modules;
         } catch (e) {
             console.error(e);
             return [];
