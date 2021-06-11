@@ -12,7 +12,7 @@ export interface MarkdownEditorProps {
     value: string;
     onChange: (value: string) => void;
     onUpload?: (data: ArrayBuffer, file: File) => Promise<string | undefined>;
-    markdownPreview?: (markdown: string) => React.ReactNode | undefined;
+    markdownPreview?: (markdown: string) => React.ReactNode;
 }
 
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({

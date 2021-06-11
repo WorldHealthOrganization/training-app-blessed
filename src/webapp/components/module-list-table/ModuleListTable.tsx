@@ -64,7 +64,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     const modules = await usecases.modules.import(files);
                     snackbar.success(i18n.t("Imported {{n}} modules", { n: modules.length }));
                     await refreshRows();
-                } catch (err: any) {
+                } catch (err) {
                     snackbar.error((err && err.message) || err.toString());
                 } finally {
                     loading.reset();
@@ -77,7 +77,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const handleTranslationUpload = useCallback(
         async (key: string, lang: string, terms: Record<string, string>) => {
             await usecases.translations.import(key, lang, terms);
-            snackbar.success(i18n.t("Imported {{count}} translation terms", {count: _.keys(terms).length}))
+            snackbar.success(i18n.t("Imported {{count}} translation terms", { count: _.keys(terms).length }));
         },
         [usecases, snackbar]
     );
@@ -593,7 +593,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     childrenKeys={["steps", "welcome", "pages"]}
                     sorting={{ field: "position", order: "asc" }}
                     onActionButtonClick={onActionButtonClick}
-                    loading={isLoading ?? false}
+                    loading={isLoading}
                 />
             </Dropzone>
         </PageWrapper>
@@ -680,7 +680,7 @@ const StepPreview: React.FC<{
     if (!value) return null;
 
     return (
-        <StyledModalBody className={className ?? "modal-body"}>
+        <StyledModalBody className={className}>
             <MarkdownViewer source={value} />
         </StyledModalBody>
     );
