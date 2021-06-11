@@ -44,6 +44,7 @@ export const TrainingModuleModel = Schema.extend(
         installed: Schema.boolean,
         compatible: Schema.boolean,
         editable: Schema.boolean,
+        outdated: Schema.boolean,
     })
 );
 
@@ -65,6 +66,7 @@ export type PartialTrainingModule = PartialBy<
     | "installed"
     | "editable"
     | "compatible"
+    | "outdated"
 >;
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {

@@ -384,6 +384,13 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                         {!item.compatible && item.rowType === "module" ? (
                             <AlertIcon tooltip={i18n.t("Module does not support this DHIS2 version")} />
                         ) : null}
+                        {item.outdated && item.rowType === "module" ? (
+                            <AlertIcon
+                                tooltip={i18n.t(
+                                    "There's a new version of this module, please reset to default values to update"
+                                )}
+                            />
+                        ) : null}
                     </div>
                 ),
             },
@@ -611,7 +618,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     return (
         <PageWrapper>
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
-            {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
+            {inputDialogProps && <InputDialog isOpen={true} fullWidth={true} maxWidth={"md"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
             <ImportTranslationDialog ref={translationImportRef} onSave={handleTranslationUpload} />
