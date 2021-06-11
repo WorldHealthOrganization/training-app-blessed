@@ -23,7 +23,6 @@ const Item: React.FC<{
         return (
             <React.Fragment>
                 <LogoContainer>
-                    <img src="img/logo-dhis.svg" alt="DHIS2" />
                     <img src="img/logo-who.svg" alt="World Health Organization" />
                 </LogoContainer>
                 <ModalTitle bold={true} big={true}>
@@ -171,7 +170,10 @@ const AdditionalComponents: React.FC<{
 }> = ({ isRoot, currentPage, loadModule }) => {
     const { modules, translate, showAllModules } = useAppContext();
 
-    const pageModules = isRoot && showAllModules ? modules.map(({ id }) => id) : currentPage?.modules ?? [];
+    const pageModules =
+        isRoot && showAllModules
+            ? modules.filter(({ builtin }) => builtin).map(({ id }) => id)
+            : currentPage?.modules ?? [];
 
     return (
         <React.Fragment>
@@ -217,6 +219,7 @@ export const HomePage: React.FC = React.memo(() => {
     const { setAppState, hasSettingsAccess, landings, reload, isLoading } = useAppContext();
 
     const [history, updateHistory] = useState<LandingNode[]>([]);
+    const [isLoadingLong, setLoadingLong] = useState<boolean>(false);
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -263,6 +266,12 @@ export const HomePage: React.FC = React.memo(() => {
         reload();
     }, [reload]);
 
+    useEffect(() => {
+        setTimeout(function () {
+            setLoadingLong(true);
+        }, 8000);
+    }, []);
+
     return (
         <StyledModal
             onSettings={hasSettingsAccess ? openSettings : undefined}
@@ -275,7 +284,12 @@ export const HomePage: React.FC = React.memo(() => {
         >
             <ContentWrapper>
                 {isLoading ? (
-                    <Progress color={"white"} size={65} />
+                    <React.Fragment>
+                        <Progress color={"white"} size={65} />
+                        {isLoadingLong ? (
+                            <p>{i18n.t("First load can take a couple of minutes, please wait...")}</p>
+                        ) : null}
+                    </React.Fragment>
                 ) : currentPage ? (
                     <Item isRoot={isRoot} loadModule={loadModule} currentPage={currentPage} openPage={openPage} />
                 ) : null}

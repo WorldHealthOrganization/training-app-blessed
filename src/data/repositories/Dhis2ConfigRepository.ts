@@ -60,20 +60,6 @@ export class Dhis2ConfigRepository implements ConfigRepository {
         return this.instance;
     }
 
-    public async setPoEditorToken(token: string): Promise<void> {
-        const config = await this.getConfig();
-
-        await this.storageClient.saveObject<PersistedConfig>(Namespaces.CONFIG, {
-            ...config,
-            poeditorToken: token,
-        });
-    }
-
-    public async getPoEditorToken(): Promise<string | undefined> {
-        const { poeditorToken } = await this.getConfig();
-        return poeditorToken;
-    }
-
     public async getSettingsPermissions(): Promise<Permission> {
         const config = await this.getConfig();
         const { users = [], userGroups = [] } = config.settingsPermissions ?? {};

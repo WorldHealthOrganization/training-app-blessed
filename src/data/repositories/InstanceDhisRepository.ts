@@ -39,7 +39,8 @@ export class InstanceDhisRepository implements InstanceRepository {
             })
             .getData();
 
-        return `${this.api.apiPath}/documents/${id}/data`;
+        const rootPath = process.env.NODE_ENV === "development" ? this.api.apiPath : "../..";
+        return `${rootPath}/documents/${id}/data`;
     }
 
     public async installApp(appName: string): Promise<boolean> {

@@ -9,7 +9,7 @@
 # production
 manifest.webapp
 /build
-*.zip
+training-app.zip
 
 # misc
 .DS_Store
