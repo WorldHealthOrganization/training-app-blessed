@@ -1,6 +1,7 @@
 import AbortController from "abort-controller";
 import MockAdapter from "axios-mock-adapter";
 import btoa from "btoa";
+import iconv from "iconv-lite";
 import "isomorphic-fetch";
 import _ from "lodash";
 import qs from "qs";
@@ -50,16 +51,10 @@ export class FetchHttpClient implements HttpClient {
         const response: Promise<HttpResponse<Data>> = fetchResponse
             .then(async res => {
                 const headers = getHeadersRecord(res.headers);
-                const encoding = getCharset(headers);
-                const dataIsJson = (headers["content-type"] || "").includes("json");
+                const data = await getResponseData(res, dataType);
 
-                const decoder = new TextDecoder(encoding);
-                const arrayBuffer = await res.arrayBuffer();
-                const content = decoder.decode(arrayBuffer);
-
-                const data = (dataIsJson ? JSON.parse(content) : content) as Data;
                 if (!validateStatus(res.status)) raiseHttpError(options, res, data);
-                return { status: res.status, data, headers };
+                return { status: res.status, data: data as Data, headers };
             })
             .catch(error => {
                 if (error.request) throw error;
@@ -117,4 +112,22 @@ function joinPath(...parts: (string | undefined | null)[]): string {
         .map(part => (part ? part.replace(/^\/+|\/+$/g, "") : null))
         .compact()
         .join("/");
+}
+
+async function getResponseData(res: Response, type: HttpRequest["dataType"]): Promise<unknown> {
+    if (type === "raw") {
+        return res.blob();
+    }
+
+    const headers = getHeadersRecord(res.headers);
+    const encoding = getCharset(headers);
+
+    const arrayBuffer = await res.arrayBuffer();
+    const content = iconv.decode(Buffer.from(arrayBuffer), encoding);
+
+    if ((headers["content-type"] || "").includes("json")) {
+        return JSON.parse(content);
+    }
+
+    return content;
 }

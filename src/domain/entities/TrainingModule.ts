@@ -2,7 +2,6 @@ import { PartialBy } from "../../types/utils";
 import { GetSchemaType, Schema } from "../../utils/codec";
 import { BaseMetadataModel } from "./Ref";
 import { TranslatableTextModel } from "./TranslatableText";
-import { TranslationConnectionModel } from "./TranslationProvider";
 import { ModelValidation } from "./Validation";
 
 export const TrainingModuleTypeModel = Schema.oneOf([
@@ -29,7 +28,6 @@ export const TrainingModuleModel = Schema.extend(
         id: Schema.string,
         name: TranslatableTextModel,
         icon: Schema.string,
-        translation: TranslationConnectionModel,
         type: TrainingModuleTypeModel,
         disabled: Schema.optionalSafe(Schema.boolean, false),
         progress: Schema.object({
@@ -46,6 +44,8 @@ export const TrainingModuleModel = Schema.extend(
         installed: Schema.boolean,
         compatible: Schema.boolean,
         editable: Schema.boolean,
+        outdated: Schema.boolean,
+        builtin: Schema.boolean,
     })
 );
 
@@ -67,6 +67,8 @@ export type PartialTrainingModule = PartialBy<
     | "installed"
     | "editable"
     | "compatible"
+    | "outdated"
+    | "builtin"
 >;
 
 export const extractStepFromKey = (key: string): { step: number; content: number } | null => {
@@ -116,7 +118,6 @@ export const defaultTrainingModule: PartialTrainingModule = {
     dhisLaunchUrl: "",
     dhisAuthorities: [],
     disabled: false,
-    translation: { provider: "NONE" },
     contents: {
         welcome: { key: "module-welcome", referenceValue: "", translations: {} },
         steps: [],
