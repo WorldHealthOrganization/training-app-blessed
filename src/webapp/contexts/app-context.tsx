@@ -26,7 +26,6 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
 
     const reload = useCallback(async () => {
         setIsLoading(true);
-        await compositionRoot.usecases.translations.fetch();
 
         const modules = await compositionRoot.usecases.modules.list();
         const landings = await compositionRoot.usecases.landings.list();

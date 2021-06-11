@@ -1,10 +1,14 @@
+import FileSaver from "file-saver";
+import JSZip from "jszip";
 import _ from "lodash";
 import { defaultTrainingModule, isValidTrainingType, TrainingModule } from "../../domain/entities/TrainingModule";
+import { TranslatableText } from "../../domain/entities/TranslatableText";
 import { UserProgress } from "../../domain/entities/UserProgress";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { swapById } from "../../utils/array";
+import { cache } from "../../utils/cache";
 import { promiseMap } from "../../utils/promises";
 import { FetchHttpClient } from "../clients/http/FetchHttpClient";
 import { HttpClient } from "../clients/http/HttpClient";
@@ -12,23 +16,10 @@ import { ImportExportClient } from "../clients/importExport/ImportExportClient";
 import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
 import { Namespaces } from "../clients/storage/Namespaces";
 import { StorageClient } from "../clients/storage/StorageClient";
-import { PoEditorApi } from "../clients/translation/PoEditorApi";
 import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
 import { getMajorVersion } from "../utils/d2-api";
-
-const defaultModules = [
-    "dashboards",
-    "data-entry",
-    "event-capture",
-    "event-visualizer",
-    "data-visualizer",
-    "pivot-tables",
-    "maps",
-    "bulk-load",
-    "tracker-capture",
-];
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private storageClient: StorageClient;
@@ -45,19 +36,31 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async list(): Promise<TrainingModule[]> {
         try {
+            const currentUser = await this.config.getUser();
+            const progress = await this.progressStorageClient.getObject<UserProgress[]>(Namespaces.PROGRESS);
             const dataStoreModules = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
                 Namespaces.TRAINING_MODULES
             );
 
+            const defaultModules = await this.listDefaultModules();
+
             const missingModuleKeys = _.difference(
-                defaultModules,
+                defaultModules.map(({ id }) => id),
                 dataStoreModules.map(({ id }) => id)
             );
 
-            const missingModules = await promiseMap(missingModuleKeys, key => this.importDefaultModule(key));
-            const progress = await this.progressStorageClient.getObject<UserProgress[]>(Namespaces.PROGRESS);
+            const [outdatedModules, updatableModules] = _(dataStoreModules)
+                .filter(({ id, revision }) => {
+                    const builtIn = defaultModules.find(item => item.id === id);
+                    return !!builtIn && builtIn.revision > revision;
+                })
+                .partition(({ dirty }) => dirty)
+                .value();
 
-            const currentUser = await this.config.getUser();
+            const missingModules = await promiseMap(
+                [...missingModuleKeys, ...updatableModules.map(({ id }) => id)],
+                key => this.importDefaultModule(key)
+            );
 
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
@@ -78,6 +81,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
                 return {
                     ...model,
+                    outdated: !!outdatedModules.find(({ id }) => model.id === id),
                     progress: progress?.find(({ id }) => id === model.id) ?? {
                         id: model.id,
                         lastStep: 0,
@@ -86,11 +90,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 };
             });
         } catch (error) {
+            console.error(error);
             return [];
         }
     }
 
     public async get(key: string): Promise<TrainingModule | undefined> {
+        const defaultModules = await this.listDefaultModules();
         const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES,
             key
@@ -103,8 +109,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const domainModel = await this.buildDomainModel(model);
 
+        const outdated = (defaultModules.find(({ id }) => model.id === id)?.revision ?? 0) > model.revision;
+
         return {
             ...domainModel,
+            outdated,
             progress: progress?.find(({ id }) => id === model.id) ?? {
                 id: model.id,
                 lastStep: 0,
@@ -135,9 +144,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async resetDefaultValue(ids: string[]): Promise<void> {
         for (const id of ids) {
-            if (defaultModules.includes(id)) {
-                await this.importDefaultModule(id);
-            }
+            await this.importDefaultModule(id);
         }
     }
 
@@ -164,83 +171,98 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         });
     }
 
-    public async updateTranslations(key: string): Promise<void> {
+    public async exportTranslations(key: string): Promise<void> {
+        const model = await this.get(key);
+        if (!model) throw new Error(`Module ${key} not found`);
+
+        const foo = _.compact([
+            model.name,
+            model.contents.welcome,
+            ..._.flatMap(model.contents.steps, step => [step.title, step.subtitle, ...step.pages]),
+        ]);
+
+        const referenceStrings = _.fromPairs(foo.map(({ key, referenceValue }) => [key, referenceValue]));
+        const translatedStrings = _(foo)
+            .flatMap(({ key, translations }) => _.toPairs(translations).map(([lang, value]) => ({ lang, key, value })))
+            .groupBy("lang")
+            .mapValues(array => _.fromPairs(array.map(({ key, value }) => [key, value])))
+            .value();
+
+        const files = _.toPairs({ ...translatedStrings, en: referenceStrings });
+        const zip = new JSZip();
+
+        for (const [lang, contents] of files) {
+            const json = JSON.stringify(contents, null, 4);
+            const blob = new Blob([json], { type: "application/json" });
+            zip.file(`${lang}.json`, blob);
+        }
+
+        const blob = await zip.generateAsync({ type: "blob" });
+        const moduleName = _.kebabCase(model.name.referenceValue);
+        FileSaver.saveAs(blob, `translations-${moduleName}-.zip`);
+    }
+
+    public async importTranslations(key: string, language: string, terms: Record<string, string>): Promise<void> {
+        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES,
+            key
+        );
+        if (!model) throw new Error(`Module ${key} not found`);
+
+        const translate = <T extends TranslatableText>(item: T, language: string, term: string | undefined): T => {
+            if (term === undefined) {
+                return item;
+            } else if (language === "en") {
+                return { ...item, referenceValue: term };
+            } else {
+                return { ...item, translations: { ...item.translations, [language]: term } };
+            }
+        };
+
+        const translatedModel: PersistedTrainingModule = {
+            ...model,
+            name: translate(model.name, language, terms[model.name.key]),
+            contents: {
+                ...model.contents,
+                welcome: translate(model.contents.welcome, language, terms[model.contents.welcome.key]),
+                steps: model.contents.steps.map(step => ({
+                    ...step,
+                    title: translate(step.title, language, terms[step.title.key]),
+                    subtitle: step.subtitle ? translate(step.subtitle, language, terms[step.subtitle.key]) : undefined,
+                    pages: step.pages.map(page => translate(page, language, terms[page.key])),
+                })),
+            },
+        };
+
+        await this.saveDataStore(translatedModel);
+    }
+
+    @cache()
+    private async listDefaultModules(): Promise<DefaultModule[]> {
         try {
-            const token = await this.config.getPoEditorToken();
-            const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
-                Namespaces.TRAINING_MODULES,
-                key
-            );
+            const blob = await this.assetClient.request<Blob>({ method: "get", url: `/modules/config.json` }).getData();
+            const text = await blob.text();
 
-            if (!model || model.translation.provider === "NONE" || !token) return;
-            const api = new PoEditorApi(token);
-            const project = parseInt(model.translation.project);
-
-            // Fetch translations and update local model
-            const languagesResponse = await api.languages.list({ id: project });
-            const poeditorLanguages = languagesResponse.value.data?.languages.map(({ code }) => code) ?? [];
-
-            const dictionary = _(
-                await promiseMap(poeditorLanguages, async language => {
-                    const translationResponse = await api.terms.list({ id: project, language });
-                    return (
-                        translationResponse.value.data?.terms.map(({ term, translation }) => ({
-                            term,
-                            language,
-                            value: translation.content,
-                        })) ?? []
-                    );
-                })
-            )
-                .flatten()
-                .groupBy(item => item.term)
-                .mapValues(items => _.fromPairs(items.map(({ language, value }) => [language, value])))
-                .value();
-
-            const translatedModel: PersistedTrainingModule = {
-                ...model,
-                name: {
-                    ...model.name,
-                    translations: dictionary[model.name.key] ?? {},
-                },
-                contents: {
-                    ...model.contents,
-                    welcome: {
-                        ...model.contents.welcome,
-                        translations: dictionary[model.contents.welcome.key] ?? {},
-                    },
-                    steps: model.contents.steps.map(step => ({
-                        ...step,
-                        title: {
-                            ...step.title,
-                            translations: dictionary[step.title.key] ?? {},
-                        },
-                        subtitle: step.subtitle
-                            ? {
-                                  ...step.subtitle,
-                                  translations: dictionary[step.subtitle.key] ?? {},
-                              }
-                            : undefined,
-                        pages: step.pages.map(page => ({
-                            ...page,
-                            translations: dictionary[page.key] ?? {},
-                        })),
-                    })),
-                },
-            };
-
-            await this.saveDataStore(translatedModel);
-        } catch (error) {
-            console.error(error);
+            const { modules } = JSON.parse(text);
+            return modules;
+        } catch (e) {
+            console.error(e);
+            return [];
         }
     }
 
     private async importDefaultModule(id: string): Promise<PersistedTrainingModule | undefined> {
-        if (!defaultModules.includes(id)) return undefined;
+        const defaultModules = await this.listDefaultModules();
+        const defaultModule = defaultModules.find(item => item.id === id);
+        if (!defaultModule) return undefined;
 
         try {
             const blob = await this.assetClient.request<Blob>({ method: "get", url: `/modules/${id}.zip` }).getData();
-            const modules = await this.import([blob]);
+            const modules = await this.importExportClient.import<PersistedTrainingModule>([blob]);
+            await promiseMap(modules, module =>
+                this.saveDataStore(module, { recreate: true, revision: defaultModule.revision })
+            );
+
             return modules[0];
         } catch (error) {
             // Module not found
@@ -248,7 +270,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
     }
 
-    private async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean }) {
+    private async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean; revision?: number }) {
         const currentUser = await this.config.getUser();
         const user = { id: currentUser.id, name: currentUser.name };
         const date = new Date().toISOString();
@@ -261,9 +283,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             type: model.type,
             disabled: model.disabled,
             contents: model.contents,
-            translation: model.translation,
-            lastTranslationSync: model.lastTranslationSync,
-            revision: model.revision,
+            revision: options?.revision ?? model.revision,
             dhisVersionRange: model.dhisVersionRange,
             dhisAppKey: model.dhisAppKey,
             dhisLaunchUrl: model.dhisLaunchUrl,
@@ -275,17 +295,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             lastUpdated: date,
             user: options?.recreate ? user : model.user,
             created: options?.recreate ? date : model.created,
+            dirty: !options?.recreate,
         });
     }
 
-    /** TODO: Implement multiple providers (other than poeditor)
-    private async getTranslationClient(): Promise<TranslationClient | undefined> {
-        const token = await this.config.getPoEditorToken();
-        return token ? new PoEditorTranslationClient(token) : undefined;
-    }
-    */
-
-    private async buildDomainModel(model: PersistedTrainingModule): Promise<Omit<TrainingModule, "progress">> {
+    private async buildDomainModel(
+        model: PersistedTrainingModule
+    ): Promise<Omit<TrainingModule, "progress" | "outdated">> {
         if (model._version !== 1) {
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
@@ -329,7 +345,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             userGroupAccesses: [],
             user: defaultUser,
             lastUpdatedBy: defaultUser,
-            lastTranslationSync: new Date().toISOString(),
+            dirty: true,
             ...model,
         };
     }
@@ -340,4 +356,9 @@ function validateDhisVersion(model: PersistedTrainingModule, instanceVersion: st
     if (moduleVersions.length === 0) return true;
 
     return _.some(moduleVersions, version => getMajorVersion(version) === getMajorVersion(instanceVersion));
+}
+
+interface DefaultModule {
+    id: string;
+    revision: number;
 }

@@ -28,13 +28,6 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                         });
                         return;
                     }
-                    case "translation": {
-                        const project = event.target.value as string;
-                        onChange(module => {
-                            return { ...module, translation: { provider: "poeditor", project } };
-                        });
-                        return;
-                    }
                     default: {
                         onChange(module => {
                             return { ...module, [field]: event.target.value as string };
@@ -98,15 +91,6 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     onChange={event => onChangeTranslation(module.name, event.target.value)}
                     error={!!errors["name"]}
                     helperText={errors["name"]}
-                />
-            </Row>
-
-            <Row>
-                <TextField
-                    fullWidth={true}
-                    label={i18n.t("PoEditor Project id")}
-                    value={module.translation.provider !== "NONE" ? module.translation.project : ""}
-                    onChange={onChangeField("translation")}
                 />
             </Row>
 

@@ -1,5 +1,5 @@
-import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
-import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText, TextField } from "@material-ui/core";
+import { useSnackbar } from "@eyeseetea/d2-ui-components";
+import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
@@ -25,21 +25,8 @@ export const SettingsPage: React.FC = () => {
 
     const snackbar = useSnackbar();
 
-    const [poEditorToken, setPoEditorToken] = useState<string>();
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
-    const [existsPoEditorToken, setExistsPoEditorToken] = useState<boolean>(false);
-    const [isPOEditorDialogOpen, setPOEditorDialogOpen] = useState(false);
     const [settingsPermissions, setSettingsPermissions] = useState<Permission>();
-
-    const defaultToken = existsPoEditorToken ? "HIDDEN_TOKEN" : "";
-
-    const updateToken = useCallback(
-        (event: React.ChangeEvent<{ value: string }>) => {
-            usecases.config.savePoEditorToken(event.target.value);
-            setPoEditorToken(event.target.value);
-        },
-        [usecases]
-    );
 
     const openTraining = useCallback(() => {
         setAppState({ type: "HOME" });
@@ -138,10 +125,6 @@ export const SettingsPage: React.FC = () => {
     );
 
     useEffect(() => {
-        usecases.config.existsPoEditorToken().then(setExistsPoEditorToken);
-    }, [usecases]);
-
-    useEffect(() => {
         usecases.config.getSettingsPermissions().then(setSettingsPermissions);
     }, [usecases]);
 
@@ -172,27 +155,6 @@ export const SettingsPage: React.FC = () => {
                 />
             )}
 
-            <ConfirmationDialog
-                isOpen={isPOEditorDialogOpen}
-                title={i18n.t("Connection with POEditor")}
-                onCancel={() => setPOEditorDialogOpen(false)}
-                cancelText={i18n.t("Close")}
-                maxWidth={"md"}
-                fullWidth={true}
-            >
-                <form>
-                    <TextField
-                        name="token"
-                        type="password"
-                        autoComplete="new-password"
-                        fullWidth={true}
-                        label={i18n.t("POEditor token")}
-                        value={poEditorToken ?? defaultToken}
-                        onChange={updateToken}
-                    />
-                </form>
-            </ConfirmationDialog>
-
             <Header title={i18n.t("Settings")} onBackClick={openTraining} />
 
             <Container>
@@ -204,16 +166,6 @@ export const SettingsPage: React.FC = () => {
                             <Icon>settings</Icon>
                         </ListItemIcon>
                         <ListItemText primary={i18n.t("Access to Settings")} secondary={buildSharingDescription()} />
-                    </ListItem>
-
-                    <ListItem button onClick={() => setPOEditorDialogOpen(true)}>
-                        <ListItemIcon>
-                            <Icon>translate</Icon>
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={i18n.t("Connection with POEditor")}
-                            secondary={i18n.t("Connect the application with POEditor to sync translations")}
-                        />
                     </ListItem>
 
                     <ListItem button onClick={toggleShowAllModules}>
