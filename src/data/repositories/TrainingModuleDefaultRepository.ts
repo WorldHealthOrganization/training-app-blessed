@@ -8,6 +8,7 @@ import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository } from "../../domain/repositories/InstanceRepository";
 import { TrainingModuleRepository } from "../../domain/repositories/TrainingModuleRepository";
 import { swapById } from "../../utils/array";
+import { cache } from "../../utils/cache";
 import { promiseMap } from "../../utils/promises";
 import { FetchHttpClient } from "../clients/http/FetchHttpClient";
 import { HttpClient } from "../clients/http/HttpClient";
@@ -19,18 +20,6 @@ import { JSONTrainingModule } from "../entities/JSONTrainingModule";
 import { PersistedTrainingModule } from "../entities/PersistedTrainingModule";
 import { validateUserPermission } from "../entities/User";
 import { getMajorVersion } from "../utils/d2-api";
-
-const defaultModules = [
-    "dashboards",
-    "data-entry",
-    "event-capture",
-    "event-visualizer",
-    "data-visualizer",
-    "pivot-tables",
-    "maps",
-    "bulk-load",
-    "tracker-capture",
-];
 
 export class TrainingModuleDefaultRepository implements TrainingModuleRepository {
     private storageClient: StorageClient;
@@ -47,19 +36,31 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async list(): Promise<TrainingModule[]> {
         try {
+            const currentUser = await this.config.getUser();
+            const progress = await this.progressStorageClient.getObject<UserProgress[]>(Namespaces.PROGRESS);
             const dataStoreModules = await this.storageClient.listObjectsInCollection<PersistedTrainingModule>(
                 Namespaces.TRAINING_MODULES
             );
 
+            const defaultModules = await this.listDefaultModules();
+
             const missingModuleKeys = _.difference(
-                defaultModules,
+                defaultModules.map(({ id }) => id),
                 dataStoreModules.map(({ id }) => id)
             );
 
-            const missingModules = await promiseMap(missingModuleKeys, key => this.importDefaultModule(key));
-            const progress = await this.progressStorageClient.getObject<UserProgress[]>(Namespaces.PROGRESS);
+            const [outdatedModules, updatableModules] = _(dataStoreModules)
+                .filter(({ id, revision }) => {
+                    const builtIn = defaultModules.find(item => item.id === id);
+                    return !!builtIn && builtIn.revision > revision;
+                })
+                .partition(({ dirty }) => dirty)
+                .value();
 
-            const currentUser = await this.config.getUser();
+            const missingModules = await promiseMap(
+                [...missingModuleKeys, ...updatableModules.map(({ id }) => id)],
+                key => this.importDefaultModule(key)
+            );
 
             const modules = _([...dataStoreModules, ...missingModules])
                 .compact()
@@ -80,6 +81,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
                 return {
                     ...model,
+                    outdated: !!outdatedModules.find(({ id }) => model.id === id),
                     progress: progress?.find(({ id }) => id === model.id) ?? {
                         id: model.id,
                         lastStep: 0,
@@ -93,6 +95,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async get(key: string): Promise<TrainingModule | undefined> {
+        const defaultModules = await this.listDefaultModules();
         const dataStoreModel = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES,
             key
@@ -105,8 +108,11 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const domainModel = await this.buildDomainModel(model);
 
+        const outdated = (defaultModules.find(({ id }) => model.id === id)?.revision ?? 0) > model.revision;
+
         return {
             ...domainModel,
+            outdated,
             progress: progress?.find(({ id }) => id === model.id) ?? {
                 id: model.id,
                 lastStep: 0,
@@ -137,9 +143,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     public async resetDefaultValue(ids: string[]): Promise<void> {
         for (const id of ids) {
-            if (defaultModules.includes(id)) {
-                await this.importDefaultModule(id);
-            }
+            await this.importDefaultModule(id);
         }
     }
 
@@ -232,12 +236,31 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         await this.saveDataStore(translatedModel);
     }
 
+    @cache()
+    private async listDefaultModules(): Promise<DefaultModule[]> {
+        try {
+            const blob = await this.assetClient.request<Blob>({ method: "get", url: `/modules/config.json` }).getData();
+
+            const text = await blob.text();
+            return JSON.parse(text);
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    }
+
     private async importDefaultModule(id: string): Promise<PersistedTrainingModule | undefined> {
-        if (!defaultModules.includes(id)) return undefined;
+        const defaultModules = await this.listDefaultModules();
+        const defaultModule = defaultModules.find(item => item.id === id);
+        if (!defaultModule) return undefined;
 
         try {
             const blob = await this.assetClient.request<Blob>({ method: "get", url: `/modules/${id}.zip` }).getData();
-            const modules = await this.import([blob]);
+            const modules = await this.importExportClient.import<PersistedTrainingModule>([blob]);
+            await promiseMap(modules, module =>
+                this.saveDataStore(module, { recreate: true, revision: defaultModule.revision })
+            );
+
             return modules[0];
         } catch (error) {
             // Module not found
@@ -245,7 +268,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
     }
 
-    private async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean }) {
+    private async saveDataStore(model: PersistedTrainingModule, options?: { recreate?: boolean; revision?: number }) {
         const currentUser = await this.config.getUser();
         const user = { id: currentUser.id, name: currentUser.name };
         const date = new Date().toISOString();
@@ -258,7 +281,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             type: model.type,
             disabled: model.disabled,
             contents: model.contents,
-            revision: model.revision,
+            revision: options?.revision ?? model.revision,
             dhisVersionRange: model.dhisVersionRange,
             dhisAppKey: model.dhisAppKey,
             dhisLaunchUrl: model.dhisLaunchUrl,
@@ -270,17 +293,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             lastUpdated: date,
             user: options?.recreate ? user : model.user,
             created: options?.recreate ? date : model.created,
+            dirty: !options?.recreate,
         });
     }
 
-    /** TODO: Implement multiple providers (other than poeditor)
-    private async getTranslationClient(): Promise<TranslationClient | undefined> {
-        const token = await this.config.getPoEditorToken();
-        return token ? new PoEditorTranslationClient(token) : undefined;
-    }
-    */
-
-    private async buildDomainModel(model: PersistedTrainingModule): Promise<Omit<TrainingModule, "progress">> {
+    private async buildDomainModel(
+        model: PersistedTrainingModule
+    ): Promise<Omit<TrainingModule, "progress" | "outdated">> {
         if (model._version !== 1) {
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }
@@ -324,6 +343,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             userGroupAccesses: [],
             user: defaultUser,
             lastUpdatedBy: defaultUser,
+            dirty: true,
             ...model,
         };
     }
@@ -334,4 +354,9 @@ function validateDhisVersion(model: PersistedTrainingModule, instanceVersion: st
     if (moduleVersions.length === 0) return true;
 
     return _.some(moduleVersions, version => getMajorVersion(version) === getMajorVersion(instanceVersion));
+}
+
+interface DefaultModule {
+    id: string;
+    revision: number;
 }
