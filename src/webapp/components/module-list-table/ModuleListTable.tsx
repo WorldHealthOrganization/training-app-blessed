@@ -634,34 +634,34 @@ export interface ListItemPage {
 }
 
 export const buildListModules = (modules: TrainingModule[]): ListItemModule[] => {
-    return modules.map((module, moduleIdx) => ({
-        ...module,
-        name: module.name.referenceValue,
+    return modules.map((model, moduleIdx) => ({
+        ...model,
+        name: model.name.referenceValue,
         rowType: "module",
         position: moduleIdx,
         lastPosition: modules.length - 1,
-        steps: buildListSteps(module, module.contents.steps),
+        steps: buildListSteps(model, model.contents.steps),
     }));
 };
 
-export const buildListSteps = (module: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
+export const buildListSteps = (model: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
     return steps.map(({ id: stepId, title, pages }, stepIdx) => ({
         id: stepId,
-        moduleId: module.id,
+        moduleId: model.id,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
-        editable: module.editable ?? false,
+        editable: model.editable ?? true,
         pages: pages.map(({ id: pageId, ...value }, pageIdx) => ({
             id: pageId,
             stepId,
-            moduleId: module.id,
+            moduleId: model.id,
             name: `Page ${pageIdx + 1}`,
             rowType: "page",
             position: pageIdx,
             lastPosition: pages.length - 1,
-            editable: module.editable ?? false,
+            editable: model.editable ?? true,
             value,
         })),
     }));
