@@ -179,4 +179,6 @@ const dhisVersions = [
     { value: "2.33", text: "2.33" },
     { value: "2.34", text: "2.34" },
     { value: "2.35", text: "2.35" },
+    { value: "2.36", text: "2.36" },
+    { value: "2.37", text: "2.37" },
 ];
