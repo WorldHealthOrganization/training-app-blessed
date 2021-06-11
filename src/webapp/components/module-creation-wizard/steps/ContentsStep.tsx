@@ -53,7 +53,7 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module, 
 
     return (
         <React.Fragment>
-            {dialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
+            {dialogProps && <InputDialog isOpen={true} fullWidth={true} maxWidth={"md"} {...dialogProps} />}
 
             <ModuleListTable
                 rows={buildListSteps(module, module.contents.steps)}

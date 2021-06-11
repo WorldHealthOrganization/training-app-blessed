@@ -8,8 +8,8 @@ export interface TrainingModuleRepository {
     delete(ids: string[]): Promise<void>;
     swapOrder(id1: string, id2: string): Promise<void>;
     updateProgress(id: string, lastStep: number, completed: boolean): Promise<void>;
-    updateTranslations(id: string): Promise<void>;
-    initializeTranslation(id: string): Promise<void>;
+    exportTranslations(key: string): Promise<void>;
+    importTranslations(key: string, language: string, terms: Record<string, string>): Promise<void>;
     resetDefaultValue(ids: string[]): Promise<void>;
     export(ids: string[]): Promise<void>;
     import(files: File[]): Promise<PersistedTrainingModule[]>;

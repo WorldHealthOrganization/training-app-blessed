@@ -21,6 +21,8 @@ export const validateUserPermission = (
     const { user, publicAccess = "--------", userAccesses = [], userGroupAccesses = [] } = item;
     const token = permission === "read" ? "r" : "w";
 
+    const isAdmin = isSuperAdmin(currentUser);
+
     const isUserOwner = user.id === currentUser?.id;
     const isPublic = publicAccess.substring(0, 2).includes(token);
 
@@ -34,5 +36,9 @@ export const validateUserPermission = (
             .intersectionBy(currentUser?.userGroups || [], "id")
             .value().length > 0;
 
-    return isUserOwner || isPublic || hasUserAccess || hasGroupAccess;
+    return isAdmin || isUserOwner || isPublic || hasUserAccess || hasGroupAccess;
+};
+
+export const isSuperAdmin = (user: User): boolean => {
+    return _.flatMap(user.userRoles, ({ authorities }) => authorities).includes("ALL");
 };
