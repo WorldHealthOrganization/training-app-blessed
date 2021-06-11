@@ -29,10 +29,6 @@ export const ModalContent = styled(ModalContentBase)`
     scrollbar-width: thin;
     scrollbar-color: #fff #6894b5;
 
-    * {
-        margin-right: 10px;
-    }
-
     ::-webkit-scrollbar {
         width: 20px;
     }

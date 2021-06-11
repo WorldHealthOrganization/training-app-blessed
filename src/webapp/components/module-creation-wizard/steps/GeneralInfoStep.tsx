@@ -28,13 +28,6 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                         });
                         return;
                     }
-                    case "translation": {
-                        const project = event.target.value as string;
-                        onChange(module => {
-                            return { ...module, translation: { provider: "poeditor", project } };
-                        });
-                        return;
-                    }
                     default: {
                         onChange(module => {
                             return { ...module, [field]: event.target.value as string };
@@ -98,15 +91,6 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
                     onChange={event => onChangeTranslation(module.name, event.target.value)}
                     error={!!errors["name"]}
                     helperText={errors["name"]}
-                />
-            </Row>
-
-            <Row>
-                <TextField
-                    fullWidth={true}
-                    label={i18n.t("PoEditor Project id")}
-                    value={module.translation.provider !== "NONE" ? module.translation.project : ""}
-                    onChange={onChangeField("translation")}
                 />
             </Row>
 
@@ -195,4 +179,6 @@ const dhisVersions = [
     { value: "2.33", text: "2.33" },
     { value: "2.34", text: "2.34" },
     { value: "2.35", text: "2.35" },
+    { value: "2.36", text: "2.36" },
+    { value: "2.37", text: "2.37" },
 ];

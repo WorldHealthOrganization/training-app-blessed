@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-05-14T14:57:18.440Z\n"
+"POT-Creation-Date: 2021-06-11T07:07:05.941Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +25,21 @@ msgstr ""
 
 msgid "Tutorial"
 msgstr "Tutorial"
+
+msgid "You need to select a module and a language"
+msgstr ""
+
+msgid "File is not a valid translation JSON dictionary"
+msgstr ""
+
+msgid "Import translation"
+msgstr ""
+
+msgid "Module to add translation"
+msgstr ""
+
+msgid "Language to add translation"
+msgstr ""
 
 msgid "Field name is mandatory"
 msgstr ""
@@ -53,20 +68,17 @@ msgstr "Contenidos"
 msgid "Couldn't read the file because it's not valid"
 msgstr ""
 
-#, fuzzy
 msgid "Importing landing pages(s)"
-msgstr "Importando módulo(s)"
+msgstr ""
 
-#, fuzzy
 msgid "Importing a new landing page"
-msgstr "Importando módulo(s)"
+msgstr ""
 
 msgid "This action will overwrite the existing landing page. Are you sure?"
 msgstr ""
 
-#, fuzzy
 msgid "Imported {{n}} landing pages"
-msgstr "{{n}} módulos importados"
+msgstr ""
 
 msgid "Yes"
 msgstr "Sí"
@@ -89,17 +101,14 @@ msgstr ""
 msgid "Delete"
 msgstr "Borrar"
 
-#, fuzzy
 msgid "Export landing page"
-msgstr "Bienvenido"
+msgstr ""
 
-#, fuzzy
 msgid "Exporting landing page(s)"
-msgstr "Exportando módulo(s)"
+msgstr ""
 
-#, fuzzy
 msgid "Import landing pages"
-msgstr "Bienvenido"
+msgstr ""
 
 msgid "Landing page"
 msgstr "Bienvenido"
@@ -158,9 +167,6 @@ msgstr "El campo debe tener un valor"
 msgid "Code *"
 msgstr ""
 
-msgid "PoEditor Project id"
-msgstr "Token de POEditor"
-
 msgid "DHIS2 Compatibility"
 msgstr ""
 
@@ -194,6 +200,12 @@ msgstr "Importando módulo(s)"
 msgid "Imported {{n}} modules"
 msgstr "{{n}} módulos importados"
 
+#, fuzzy
+msgid "Imported {{count}} translation terms"
+msgid_plural "Imported {{count}} translation terms"
+msgstr[0] "{{n}} módulos importados"
+msgstr[1] "{{n}} módulos importados"
+
 msgid "Are you sure you want to delete the selected modules?"
 msgstr ""
 
@@ -224,6 +236,10 @@ msgstr "Borrar página"
 msgid "Add new page"
 msgstr ""
 
+#, fuzzy
+msgid "Edit step"
+msgstr "Paso siguiente"
+
 msgid "Edit contents of {{name}}"
 msgstr "Editar contenidos de {{name}}"
 
@@ -248,13 +264,18 @@ msgstr ""
 msgid "Exporting module(s)"
 msgstr "Exportando módulo(s)"
 
-msgid "Initialize project in POEditor"
+msgid "Exporting translations"
 msgstr ""
 
 msgid "App is not installed in this instance"
 msgstr ""
 
 msgid "Module does not support this DHIS2 version"
+msgstr ""
+
+msgid ""
+"There's a new version of this module, please reset to default values to "
+"update"
 msgstr ""
 
 msgid "Add module"
@@ -275,9 +296,6 @@ msgstr "Editar página"
 msgid "Delete module"
 msgstr "Eliminar modulo"
 
-msgid "Push local translations to POEditor"
-msgstr ""
-
 msgid "Move up"
 msgstr "Mover arriba"
 
@@ -293,8 +311,14 @@ msgstr ""
 msgid "Export module"
 msgstr "Exportar módulo"
 
+msgid "Export JSON translations"
+msgstr ""
+
 msgid "Import modules"
 msgstr "Importar módulos"
+
+msgid "Import JSON translations"
+msgstr ""
 
 msgid "Help"
 msgstr ""
@@ -382,6 +406,9 @@ msgstr ""
 msgid "What do you want to learn in DHIS2?"
 msgstr ""
 
+msgid "First load can take a couple of minutes, please wait..."
+msgstr ""
+
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
 msgstr ""
 
@@ -412,19 +439,10 @@ msgstr ""
 msgid "Unable to remove page"
 msgstr ""
 
-msgid "Connection with POEditor"
-msgstr ""
-
-msgid "POEditor token"
-msgstr "Token de POEditor"
-
 msgid "Permissions"
 msgstr "Permisos"
 
 msgid "Access to Settings"
-msgstr ""
-
-msgid "Connect the application with POEditor to sync translations"
 msgstr ""
 
 msgid "Show list with modules on main landing page"
@@ -454,5 +472,8 @@ msgstr ""
 msgid "Start Tutorial"
 msgstr "Empezar tutorial"
 
-#~ msgid "Assign module"
-#~ msgstr "Asignar modulo"
+#~ msgid "PoEditor Project id"
+#~ msgstr "Token de POEditor"
+
+#~ msgid "POEditor token"
+#~ msgstr "Token de POEditor"

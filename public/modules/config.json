@@ -1,0 +1,13 @@
+{
+    "modules": [
+        { "id": "dashboards", "revision": 5 },
+        { "id": "data-entry", "revision": 5 },
+        { "id": "event-capture", "revision": 5 },
+        { "id": "event-visualizer", "revision": 5 },
+        { "id": "data-visualizer", "revision": 5 },
+        { "id": "pivot-tables", "revision": 5 },
+        { "id": "maps", "revision": 5 },
+        { "id": "bulk-load", "revision": 5 },
+        { "id": "tracker-capture", "revision": 5 }
+    ]
+}
