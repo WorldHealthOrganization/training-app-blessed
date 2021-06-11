@@ -82,6 +82,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                 return {
                     ...model,
                     outdated: !!outdatedModules.find(({ id }) => model.id === id),
+                    builtin: !!defaultModules.find(({ id }) => model.id === id),
                     progress: progress?.find(({ id }) => id === model.id) ?? {
                         id: model.id,
                         lastStep: 0,
@@ -109,11 +110,13 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const domainModel = await this.buildDomainModel(model);
 
-        const outdated = (defaultModules.find(({ id }) => model.id === id)?.revision ?? 0) > model.revision;
+        const defaultModule = defaultModules.find(({ id }) => model.id === id);
+        const outdated = !!defaultModule && defaultModule.revision > model.revision;
 
         return {
             ...domainModel,
             outdated,
+            builtin: !!defaultModule,
             progress: progress?.find(({ id }) => id === model.id) ?? {
                 id: model.id,
                 lastStep: 0,
@@ -301,7 +304,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
     private async buildDomainModel(
         model: PersistedTrainingModule
-    ): Promise<Omit<TrainingModule, "progress" | "outdated">> {
+    ): Promise<Omit<TrainingModule, "progress" | "outdated" | "builtin">> {
         if (model._version !== 1) {
             throw new Error(`Unsupported revision of module: ${model._version}`);
         }

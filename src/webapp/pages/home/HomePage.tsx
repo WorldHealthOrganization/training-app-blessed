@@ -170,7 +170,10 @@ const AdditionalComponents: React.FC<{
 }> = ({ isRoot, currentPage, loadModule }) => {
     const { modules, translate, showAllModules } = useAppContext();
 
-    const pageModules = isRoot && showAllModules ? modules.map(({ id }) => id) : currentPage?.modules ?? [];
+    const pageModules =
+        isRoot && showAllModules
+            ? modules.filter(({ builtin }) => builtin).map(({ id }) => id)
+            : currentPage?.modules ?? [];
 
     return (
         <React.Fragment>
