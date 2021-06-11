@@ -10,4 +10,5 @@ export interface PersistedTrainingModule extends JSONTrainingModule {
     created: string;
     lastUpdated: string;
     lastUpdatedBy: NamedRef;
+    dirty: boolean;
 }

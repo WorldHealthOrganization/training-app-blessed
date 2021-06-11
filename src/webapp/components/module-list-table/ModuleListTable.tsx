@@ -251,7 +251,29 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions, rows, refreshRows]
     );
 
-    const editContents = useCallback(
+    const editStep = useCallback(
+        (ids: string[]) => {
+            const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
+            if (!row || !row.title) return;
+
+            updateInputDialog({
+                title: i18n.t("Edit step"),
+                inputLabel: i18n.t("Title *"),
+                initialValue: row.title.referenceValue,
+                onCancel: () => updateInputDialog(null),
+                onSave: async value => {
+                    updateInputDialog(null);
+                    if (!tableActions.editContents || !row.title || !row.moduleId) return;
+
+                    await tableActions.editContents({ id: row.moduleId, text: row.title, value });
+                    await refreshRows();
+                },
+            });
+        },
+        [tableActions, rows, refreshRows]
+    );
+
+    const editPage = useCallback(
         (ids: string[]) => {
             const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
             if (!row || !row.value) return;
@@ -362,6 +384,13 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                         {!item.compatible && item.rowType === "module" ? (
                             <AlertIcon tooltip={i18n.t("Module does not support this DHIS2 version")} />
                         ) : null}
+                        {item.outdated && item.rowType === "module" ? (
+                            <AlertIcon
+                                tooltip={i18n.t(
+                                    "There's a new version of this module, please reset to default values to update"
+                                )}
+                            />
+                        ) : null}
                     </div>
                 ),
             },
@@ -428,10 +457,21 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 name: "edit-page",
                 text: i18n.t("Edit page"),
                 icon: <Icon>edit</Icon>,
-                onClick: editContents,
+                onClick: editPage,
                 isActive: rows => {
                     return (
                         !!tableActions.editContents && _.every(rows, item => item.rowType === "page" && item.editable)
+                    );
+                },
+            },
+            {
+                name: "edit-step",
+                text: i18n.t("Edit step"),
+                icon: <Icon>edit</Icon>,
+                onClick: editStep,
+                isActive: rows => {
+                    return (
+                        !!tableActions.editContents && _.every(rows, item => item.rowType === "step" && item.editable)
                     );
                 },
             },
@@ -543,7 +583,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             deleteStep,
             moveUp,
             moveDown,
-            editContents,
+            editPage,
+            editStep,
             installApp,
             addModule,
             addPage,
@@ -577,7 +618,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     return (
         <PageWrapper>
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
-            {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
+            {inputDialogProps && <InputDialog isOpen={true} fullWidth={true} maxWidth={"md"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
             <ImportTranslationDialog ref={translationImportRef} onSave={handleTranslationUpload} />
@@ -613,6 +654,7 @@ export interface ListItemModule extends Omit<TrainingModule, "name"> {
 export interface ListItemStep {
     id: string;
     moduleId: string;
+    title: TranslatableText;
     name: string;
     rowType: "step";
     pages: ListItemPage[];
@@ -634,34 +676,35 @@ export interface ListItemPage {
 }
 
 export const buildListModules = (modules: TrainingModule[]): ListItemModule[] => {
-    return modules.map((module, moduleIdx) => ({
-        ...module,
-        name: module.name.referenceValue,
+    return modules.map((model, moduleIdx) => ({
+        ...model,
+        name: model.name.referenceValue,
         rowType: "module",
         position: moduleIdx,
         lastPosition: modules.length - 1,
-        steps: buildListSteps(module, module.contents.steps),
+        steps: buildListSteps(model, model.contents.steps),
     }));
 };
 
-export const buildListSteps = (module: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
+export const buildListSteps = (model: PartialTrainingModule, steps: TrainingModuleStep[]): ListItemStep[] => {
     return steps.map(({ id: stepId, title, pages }, stepIdx) => ({
         id: stepId,
-        moduleId: module.id,
+        moduleId: model.id,
+        title,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
         lastPosition: steps.length - 1,
-        editable: module.editable ?? false,
+        editable: model.editable ?? true,
         pages: pages.map(({ id: pageId, ...value }, pageIdx) => ({
             id: pageId,
             stepId,
-            moduleId: module.id,
+            moduleId: model.id,
             name: `Page ${pageIdx + 1}`,
             rowType: "page",
             position: pageIdx,
             lastPosition: pages.length - 1,
-            editable: module.editable ?? false,
+            editable: model.editable ?? true,
             value,
         })),
     }));

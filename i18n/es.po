@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2021-06-11T05:43:39.353Z\n"
+"POT-Creation-Date: 2021-06-11T07:07:05.941Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -236,6 +236,10 @@ msgstr "Borrar página"
 msgid "Add new page"
 msgstr ""
 
+#, fuzzy
+msgid "Edit step"
+msgstr "Paso siguiente"
+
 msgid "Edit contents of {{name}}"
 msgstr "Editar contenidos de {{name}}"
 
@@ -267,6 +271,11 @@ msgid "App is not installed in this instance"
 msgstr ""
 
 msgid "Module does not support this DHIS2 version"
+msgstr ""
+
+msgid ""
+"There's a new version of this module, please reset to default values to "
+"update"
 msgstr ""
 
 msgid "Add module"
