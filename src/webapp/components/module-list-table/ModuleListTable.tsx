@@ -251,7 +251,29 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [tableActions, rows, refreshRows]
     );
 
-    const editContents = useCallback(
+    const editStep = useCallback(
+        (ids: string[]) => {
+            const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
+            if (!row || !row.title) return;
+
+            updateInputDialog({
+                title: i18n.t("Edit step"),
+                inputLabel: i18n.t("Title *"),
+                initialValue: row.title.referenceValue,
+                onCancel: () => updateInputDialog(null),
+                onSave: async value => {
+                    updateInputDialog(null);
+                    if (!tableActions.editContents || !row.title || !row.moduleId) return;
+
+                    await tableActions.editContents({ id: row.moduleId, text: row.title, value });
+                    await refreshRows();
+                },
+            });
+        },
+        [tableActions, rows, refreshRows]
+    );
+
+    const editPage = useCallback(
         (ids: string[]) => {
             const row = buildChildrenRows(rows).find(({ id }) => id === ids[0]);
             if (!row || !row.value) return;
@@ -428,10 +450,21 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 name: "edit-page",
                 text: i18n.t("Edit page"),
                 icon: <Icon>edit</Icon>,
-                onClick: editContents,
+                onClick: editPage,
                 isActive: rows => {
                     return (
                         !!tableActions.editContents && _.every(rows, item => item.rowType === "page" && item.editable)
+                    );
+                },
+            },
+            {
+                name: "edit-step",
+                text: i18n.t("Edit step"),
+                icon: <Icon>edit</Icon>,
+                onClick: editStep,
+                isActive: rows => {
+                    return (
+                        !!tableActions.editContents && _.every(rows, item => item.rowType === "step" && item.editable)
                     );
                 },
             },
@@ -543,7 +576,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             deleteStep,
             moveUp,
             moveDown,
-            editContents,
+            editPage,
+            editStep,
             installApp,
             addModule,
             addPage,
@@ -613,6 +647,7 @@ export interface ListItemModule extends Omit<TrainingModule, "name"> {
 export interface ListItemStep {
     id: string;
     moduleId: string;
+    title: TranslatableText;
     name: string;
     rowType: "step";
     pages: ListItemPage[];
@@ -648,6 +683,7 @@ export const buildListSteps = (model: PartialTrainingModule, steps: TrainingModu
     return steps.map(({ id: stepId, title, pages }, stepIdx) => ({
         id: stepId,
         moduleId: model.id,
+        title,
         name: `Step ${stepIdx + 1}: ${title.referenceValue}`,
         rowType: "step",
         position: stepIdx,
