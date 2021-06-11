@@ -384,7 +384,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                         {!item.compatible && item.rowType === "module" ? (
                             <AlertIcon tooltip={i18n.t("Module does not support this DHIS2 version")} />
                         ) : null}
-                        {!item.outdated && item.rowType === "module" ? (
+                        {item.outdated && item.rowType === "module" ? (
                             <AlertIcon
                                 tooltip={i18n.t(
                                     "There's a new version of this module, please reset to default values to update"
