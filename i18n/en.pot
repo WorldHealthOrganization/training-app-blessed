@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-10T09:52:30.325Z\n"
-"PO-Revision-Date: 2021-06-10T09:52:30.325Z\n"
+"POT-Creation-Date: 2021-06-11T05:43:39.353Z\n"
+"PO-Revision-Date: 2021-06-11T05:43:39.353Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -24,6 +24,21 @@ msgid "Field {{field}} is not valid"
 msgstr ""
 
 msgid "Tutorial"
+msgstr ""
+
+msgid "You need to select a module and a language"
+msgstr ""
+
+msgid "File is not a valid translation JSON dictionary"
+msgstr ""
+
+msgid "Import translation"
+msgstr ""
+
+msgid "Module to add translation"
+msgstr ""
+
+msgid "Language to add translation"
 msgstr ""
 
 msgid "Field name is mandatory"
@@ -152,9 +167,6 @@ msgstr ""
 msgid "Code *"
 msgstr ""
 
-msgid "PoEditor Project id"
-msgstr ""
-
 msgid "DHIS2 Compatibility"
 msgstr ""
 
@@ -187,6 +199,11 @@ msgstr ""
 
 msgid "Imported {{n}} modules"
 msgstr ""
+
+msgid "Imported {{count}} translation terms"
+msgid_plural "Imported {{count}} translation terms"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Are you sure you want to delete the selected modules?"
 msgstr ""
@@ -242,6 +259,9 @@ msgstr ""
 msgid "Exporting module(s)"
 msgstr ""
 
+msgid "Exporting translations"
+msgstr ""
+
 msgid "App is not installed in this instance"
 msgstr ""
 
@@ -284,10 +304,10 @@ msgstr ""
 msgid "Export JSON translations"
 msgstr ""
 
-msgid "Import JSON translations"
+msgid "Import modules"
 msgstr ""
 
-msgid "Import modules"
+msgid "Import JSON translations"
 msgstr ""
 
 msgid "Help"
@@ -409,19 +429,10 @@ msgstr ""
 msgid "Unable to remove page"
 msgstr ""
 
-msgid "Connection with POEditor"
-msgstr ""
-
-msgid "POEditor token"
-msgstr ""
-
 msgid "Permissions"
 msgstr ""
 
 msgid "Access to Settings"
-msgstr ""
-
-msgid "Connect the application with POEditor to sync translations"
 msgstr ""
 
 msgid "Show list with modules on main landing page"

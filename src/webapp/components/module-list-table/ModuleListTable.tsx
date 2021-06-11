@@ -24,6 +24,7 @@ import { FlattenUnion } from "../../../utils/flatten-union";
 import { useAppContext } from "../../contexts/app-context";
 import { AlertIcon } from "../alert-icon/AlertIcon";
 import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
+import { ImportTranslationDialog, ImportTranslationRef } from "../import-translation-dialog/ImportTranslationDialog";
 import { InputDialog, InputDialogProps } from "../input-dialog/InputDialog";
 import { MarkdownEditorDialog, MarkdownEditorDialogProps } from "../markdown-editor/MarkdownEditorDialog";
 import { MarkdownViewer } from "../markdown-viewer/MarkdownViewer";
@@ -44,8 +45,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     const loading = useLoading();
     const snackbar = useSnackbar();
 
-    const moduleImportFileRef = useRef<DropzoneRef>(null);
-    const translationImportFileRef = useRef<any>(null);
+    const moduleImportRef = useRef<DropzoneRef>(null);
+    const translationImportRef = useRef<ImportTranslationRef>(null);
+
     const [selection, setSelection] = useState<TableSelection[]>([]);
 
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
@@ -70,6 +72,14 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             }
         },
         [snackbar, refreshRows, usecases, loading]
+    );
+
+    const handleTranslationUpload = useCallback(
+        async (key: string, lang: string, terms: Record<string, string>) => {
+            await usecases.translations.import(key, lang, terms);
+            snackbar.success(i18n.t("Imported {{count}} translation terms", {count: _.keys(terms).length}))
+        },
+        [usecases, snackbar]
     );
 
     const deleteModules = useCallback(
@@ -334,8 +344,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     }, []);
 
     const openImportDialog = useCallback(async () => {
-        moduleImportFileRef.current?.openDialog();
-    }, [moduleImportFileRef]);
+        moduleImportRef.current?.openDialog();
+    }, [moduleImportRef]);
 
     const columns: TableColumn<ListItem>[] = useMemo(
         () => [
@@ -517,20 +527,8 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {
                 name: "export-translations",
                 text: i18n.t("Export JSON translations"),
-                icon: <Icon>arrow_down</Icon>,
+                icon: <Icon>translate</Icon>,
                 onClick: exportTranslations,
-                isActive: rows => {
-                    return _.every(rows, item => item.rowType === "module");
-                },
-                multiple: false,
-            },
-            {
-                name: "import-translations",
-                text: i18n.t("Import JSON translations"),
-                icon: <Icon>cloud_upload</Icon>,
-                onClick: () => {
-                    translationImportFileRef.current.click();
-                },
                 isActive: rows => {
                     return _.every(rows, item => item.rowType === "module");
                 },
@@ -553,20 +551,27 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             resetModules,
             exportModule,
             exportTranslations,
-            translationImportFileRef,
         ]
     );
 
     const globalActions: TableGlobalAction[] = useMemo(
         () => [
             {
-                name: "import",
+                name: "import-modules",
                 text: i18n.t("Import modules"),
                 icon: <Icon>arrow_upward</Icon>,
                 onClick: openImportDialog,
             },
+            {
+                name: "import-translations",
+                text: i18n.t("Import JSON translations"),
+                icon: <Icon>translate</Icon>,
+                onClick: () => {
+                    translationImportRef.current?.startImport();
+                },
+            },
         ],
-        [openImportDialog]
+        [openImportDialog, translationImportRef]
     );
 
     return (
@@ -575,27 +580,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <input
-                type="file"
-                name="file"
-                ref={translationImportFileRef}
-                onChange={(event: any) => {
-                    const file = event.target.files[0];
-                    if (file)
-                        updateInputDialog({
-                            title: i18n.t("Import translation"),
-                            inputLabel: i18n.t("Language code (en, es, fr, etc..)"),
-                            onCancel: () => updateInputDialog(null),
-                            onSave: async lang => {
-                                updateInputDialog(null);
-                                await usecases.translations.import("dashboards", lang, file);
-                            },
-                        });
-                }}
-                style={{ display: "none" }}
-            />
+            <ImportTranslationDialog ref={translationImportRef} onSave={handleTranslationUpload} />
 
-            <Dropzone ref={moduleImportFileRef} accept={zipMimeType} onDrop={handleFileUpload}>
+            <Dropzone ref={moduleImportRef} accept={zipMimeType} onDrop={handleFileUpload}>
                 <ObjectsTable<ListItem>
                     rows={rows}
                     columns={columns}

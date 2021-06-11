@@ -193,7 +193,8 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         }
 
         const blob = await zip.generateAsync({ type: "blob" });
-        FileSaver.saveAs(blob, `translations-${model.name.referenceValue}-.zip`);
+        const moduleName = _.kebabCase(model.name.referenceValue);
+        FileSaver.saveAs(blob, `translations-${moduleName}-.zip`);
     }
 
     public async importTranslations(key: string, language: string, terms: Record<string, string>): Promise<void> {
@@ -228,7 +229,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             },
         };
 
-        console.log(translatedModel)
+        await this.saveDataStore(translatedModel);
     }
 
     private async importDefaultModule(id: string): Promise<PersistedTrainingModule | undefined> {

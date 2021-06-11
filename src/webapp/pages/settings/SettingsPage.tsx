@@ -9,7 +9,7 @@ import {
     removePage,
     removeStep,
     updateOrder,
-    updateTranslation
+    updateTranslation,
 } from "../../../domain/helpers/TrainingModuleHelpers";
 import i18n from "../../../locales";
 import { ComponentParameter } from "../../../types/utils";

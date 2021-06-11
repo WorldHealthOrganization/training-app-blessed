@@ -4,10 +4,7 @@ import { TrainingModuleRepository } from "../repositories/TrainingModuleReposito
 export class ImportTranslationsUseCase implements UseCase {
     constructor(private trainingModuleRepository: TrainingModuleRepository) {}
 
-    public async execute(key: string, lang: string, file: File): Promise<void> {
-        const text = await file.text();
-        const terms = JSON.parse(text);
-
+    public async execute(key: string, lang: string, terms: Record<string, string>): Promise<void> {
         await this.trainingModuleRepository.importTranslations(key, lang, terms);
     }
 }
