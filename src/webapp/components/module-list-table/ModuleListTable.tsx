@@ -618,7 +618,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     return (
         <PageWrapper>
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
-            {inputDialogProps && <InputDialog isOpen={true} maxWidth={"xl"} {...inputDialogProps} />}
+            {inputDialogProps && <InputDialog isOpen={true} fullWidth={true} maxWidth={"md"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
             <ImportTranslationDialog ref={translationImportRef} onSave={handleTranslationUpload} />
