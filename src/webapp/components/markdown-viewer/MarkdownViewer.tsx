@@ -16,7 +16,7 @@ const components = {
             )}
         </details>
     ),
-    gif: (props: any) => <video autoPlay loop muted playsInline src={props.src}></video>,
+    "video-gif": (props: any) => <video autoPlay loop muted playsInline src={props.src}></video>,
     pdf: (props: any) => <embed width="100%" height="600px" src={props.src} />,
 };
 
@@ -185,7 +185,7 @@ export const validHtml = {
         "time",
         "wbr",
         "input",
-        "gif",
+        "video-gif",
         "pdf",
     ],
     attributes: {
@@ -203,7 +203,7 @@ export const validHtml = {
         del: ["cite"],
         ins: ["cite"],
         q: ["cite"],
-        gif: ["src"],
+        "video-gif": ["src"],
         pdf: ["src"],
         "*": [
             "abbr",
