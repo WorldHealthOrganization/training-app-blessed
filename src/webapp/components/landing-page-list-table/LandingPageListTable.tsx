@@ -18,6 +18,7 @@ import i18n from "../../../locales";
 import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import { useAppContext } from "../../contexts/app-context";
 import { Dropzone, DropzoneRef } from "../dropzone/Dropzone";
+import { ImportTranslationDialog, ImportTranslationRef } from "../import-translation-dialog/ImportTranslationDialog";
 import { LandingPageEditDialog, LandingPageEditDialogProps } from "../landing-page-edit-dialog/LandingPageEditDialog";
 import { ModalBody } from "../modal";
 
@@ -26,14 +27,16 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
 
     const loading = useLoading();
     const snackbar = useSnackbar();
-    const fileRef = useRef<DropzoneRef>(null);
+
+    const landingImportRef = useRef<DropzoneRef>(null);
+    const translationImportRef = useRef<ImportTranslationRef>(null);
 
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
     const [editDialogProps, updateEditDialog] = useState<LandingPageEditDialogProps | null>(null);
 
     const openImportDialog = useCallback(async () => {
-        fileRef.current?.openDialog();
-    }, [fileRef]);
+        landingImportRef.current?.openDialog();
+    }, [landingImportRef]);
 
     const handleFileUpload = useCallback(
         async (files: File[], rejections: FileRejection[]) => {
@@ -65,6 +68,14 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
             }
         },
         [snackbar, reload, usecases, loading]
+    );
+
+    const handleTranslationUpload = useCallback(
+        async (_key: string | undefined, lang: string, terms: Record<string, string>) => {
+            await usecases.landings.importTranslations(lang, terms);
+            snackbar.success(i18n.t("Imported {{count}} translation terms", { count: _.keys(terms).length }));
+        },
+        [usecases, snackbar]
     );
 
     const columns: TableColumn<LandingNode>[] = useMemo(
@@ -231,8 +242,26 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 icon: <Icon>arrow_upward</Icon>,
                 onClick: openImportDialog,
             },
+            {
+                name: "import-translations",
+                text: i18n.t("Import JSON translations"),
+                icon: <Icon>translate</Icon>,
+                onClick: () => {
+                    translationImportRef.current?.startImport();
+                },
+            },
+            {
+                name: "export-translations",
+                text: i18n.t("Export JSON translations"),
+                icon: <Icon>cloud_download</Icon>,
+                onClick: async () => {
+                    loading.show(true, i18n.t("Exporting translations"));
+                    await usecases.landings.exportTranslations();
+                    loading.reset();
+                },
+            },
         ],
-        [openImportDialog]
+        [openImportDialog, loading, usecases]
     );
 
     return (
@@ -240,8 +269,10 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
             {editDialogProps && <LandingPageEditDialog isOpen={true} {...editDialogProps} />}
 
+            <ImportTranslationDialog type="landing-page" ref={translationImportRef} onSave={handleTranslationUpload} />
+
             <Dropzone
-                ref={fileRef}
+                ref={landingImportRef}
                 accept={"application/zip,application/zip-compressed,application/x-zip-compressed"}
                 onDrop={handleFileUpload}
             >

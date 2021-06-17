@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-11T07:07:05.941Z\n"
-"PO-Revision-Date: 2021-06-11T07:07:05.941Z\n"
+"POT-Creation-Date: 2021-06-17T09:25:46.242Z\n"
+"PO-Revision-Date: 2021-06-17T09:25:46.242Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -26,7 +26,10 @@ msgstr ""
 msgid "Tutorial"
 msgstr ""
 
-msgid "You need to select a module and a language"
+msgid "You need to select a module"
+msgstr ""
+
+msgid "You need to select a language"
 msgstr ""
 
 msgid "File is not a valid translation JSON dictionary"
@@ -86,6 +89,11 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "Imported {{count}} translation terms"
+msgid_plural "Imported {{count}} translation terms"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Add section"
 msgstr ""
 
@@ -108,6 +116,15 @@ msgid "Exporting landing page(s)"
 msgstr ""
 
 msgid "Import landing pages"
+msgstr ""
+
+msgid "Import JSON translations"
+msgstr ""
+
+msgid "Export JSON translations"
+msgstr ""
+
+msgid "Exporting translations"
 msgstr ""
 
 msgid "Landing page"
@@ -200,11 +217,6 @@ msgstr ""
 msgid "Imported {{n}} modules"
 msgstr ""
 
-msgid "Imported {{count}} translation terms"
-msgid_plural "Imported {{count}} translation terms"
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Are you sure you want to delete the selected modules?"
 msgstr ""
 
@@ -262,9 +274,6 @@ msgstr ""
 msgid "Exporting module(s)"
 msgstr ""
 
-msgid "Exporting translations"
-msgstr ""
-
 msgid "App is not installed in this instance"
 msgstr ""
 
@@ -309,13 +318,7 @@ msgstr ""
 msgid "Export module"
 msgstr ""
 
-msgid "Export JSON translations"
-msgstr ""
-
 msgid "Import modules"
-msgstr ""
-
-msgid "Import JSON translations"
 msgstr ""
 
 msgid "Help"

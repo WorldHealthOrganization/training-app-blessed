@@ -6,15 +6,17 @@ import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSetting
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
 import { DeleteLandingChildUseCase } from "../domain/usecases/DeleteLandingChildUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
+import { ExportLandingPagesTranslationsUseCase } from "../domain/usecases/ExportLandingPagesTranslationsUseCase";
 import { ExportLandingPagesUseCase } from "../domain/usecases/ExportLandingPagesUseCase";
 import { ExportModulesUseCase } from "../domain/usecases/ExportModulesUseCase";
-import { ExportTranslationsUseCase } from "../domain/usecases/ExportTranslationsUseCase";
+import { ExportModuleTranslationsUseCase } from "../domain/usecases/ExportModuleTranslationsUseCase";
 import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 import { GetShowAllModulesUseCase } from "../domain/usecases/GetShowAllModulesUseCase";
+import { ImportLandingPagesTranslationsUseCase } from "../domain/usecases/ImportLandingPagesTranslationsUseCase";
 import { ImportLandingPagesUseCase } from "../domain/usecases/ImportLandingPagesUseCase";
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
-import { ImportTranslationsUseCase } from "../domain/usecases/ImportTranslationsUseCase";
+import { ImportModuleTranslationsUseCase } from "../domain/usecases/ImportModuleTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
 import { ListInstalledAppsUseCase } from "../domain/usecases/ListInstalledAppsUseCase";
 import { ListLandingChildrenUseCase } from "../domain/usecases/ListLandingChildrenUseCase";
@@ -46,6 +48,8 @@ export function getCompositionRoot(baseUrl: string) {
                 resetDefaultValue: new ResetModuleDefaultValueUseCase(trainingModuleRepository),
                 export: new ExportModulesUseCase(trainingModuleRepository),
                 import: new ImportModulesUseCase(trainingModuleRepository),
+                exportTranslations: new ExportModuleTranslationsUseCase(trainingModuleRepository),
+                importTranslations: new ImportModuleTranslationsUseCase(trainingModuleRepository),
             }),
             landings: getExecute({
                 list: new ListLandingChildrenUseCase(landingPageRepository),
@@ -53,10 +57,8 @@ export function getCompositionRoot(baseUrl: string) {
                 delete: new DeleteLandingChildUseCase(landingPageRepository),
                 export: new ExportLandingPagesUseCase(landingPageRepository),
                 import: new ImportLandingPagesUseCase(landingPageRepository),
-            }),
-            translations: getExecute({
-                export: new ExportTranslationsUseCase(trainingModuleRepository),
-                import: new ImportTranslationsUseCase(trainingModuleRepository),
+                exportTranslations: new ExportLandingPagesTranslationsUseCase(landingPageRepository),
+                importTranslations: new ImportLandingPagesTranslationsUseCase(landingPageRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(trainingModuleRepository),
