@@ -84,7 +84,11 @@ function getMarkdown(fileUrl: string, type?: FileTypeResult): string {
 
     // Detect and add pdf preview (HTML5)
     if (type?.mime === "application/pdf") {
-        return `<embed src="${fileUrl}" width="100%" height="600px" />`;
+        return `<pdf src="${fileUrl}" />`;
+    }
+
+    if (type?.mime === "image/gif") {
+        return `<gif src="${fileUrl}" />`;
     }
 
     // Fail-safe markdown download link
