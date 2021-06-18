@@ -1,22 +1,32 @@
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 import FileType from "file-type/browser";
+import _ from "lodash";
 import Resizer from "react-image-file-resizer";
 import { InstalledApp } from "../../domain/entities/InstalledApp";
+import { NamedRef } from "../../domain/entities/Ref";
 import { ConfigRepository } from "../../domain/repositories/ConfigRepository";
 import { InstanceRepository, UploadFileOptions } from "../../domain/repositories/InstanceRepository";
 import { D2Api } from "../../types/d2-api";
 import { cache, clearCache } from "../../utils/cache";
+import { getUrls } from "../../utils/urls";
+import { DataStoreStorageClient } from "../clients/storage/DataStoreStorageClient";
+import { Namespaces } from "../clients/storage/Namespaces";
+import { StorageClient } from "../clients/storage/StorageClient";
 import { UserSearch } from "../entities/SearchUser";
 import { getD2APiFromInstance } from "../utils/d2-api";
-import { getUid } from "../utils/uid";
+import { extractUids, getUid } from "../utils/uid";
 
 export class InstanceDhisRepository implements InstanceRepository {
     private api: D2Api;
-    public baseUrl: string;
+    private storageClient: StorageClient;
 
     constructor(config: ConfigRepository) {
         this.api = getD2APiFromInstance(config.getInstance());
-        this.baseUrl = this.api.baseUrl;
+        this.storageClient = new DataStoreStorageClient("global", config.getInstance());
+    }
+
+    public getBaseUrl(): string {
+        return this.api.baseUrl;
     }
 
     @cache()
@@ -57,6 +67,32 @@ export class InstanceDhisRepository implements InstanceRepository {
         }
 
         return true;
+    }
+
+    public async listDanglingDocuments(): Promise<NamedRef[]> {
+        const { objects: allFiles } = await this.api.models.documents
+            .get({
+                filter: { name: { $like: "[Training App]" } },
+                fields: { id: true, name: true },
+                paging: false,
+            })
+            .getData();
+
+        const modules = await this.storageClient.getObject(Namespaces.TRAINING_MODULES);
+        const landings = await this.storageClient.getObject(Namespaces.LANDING_PAGES);
+
+        const allUids = allFiles.map(({ id }) => id);
+        const validUids = _.flatten([...getUrls(modules), ...getUrls(landings)].map(url => extractUids(url)));
+
+        return _(allUids)
+            .difference(validUids)
+            .map(id => allFiles.find(file => file.id === id))
+            .compact()
+            .value();
+    }
+
+    public async deleteDocuments(ids: string[]): Promise<void> {
+        await this.api.metadata.post({ documents: ids.map(id => ({ id })) }, { importStrategy: "DELETE" }).getData();
     }
 
     public async searchUsers(query: string): Promise<UserSearch> {

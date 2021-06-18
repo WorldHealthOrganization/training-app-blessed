@@ -78,7 +78,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         async (key: string | undefined, lang: string, terms: Record<string, string>) => {
             if (!key) return;
             await usecases.modules.importTranslations(key, lang, terms);
-            snackbar.success(i18n.t("Imported {{count}} translation terms", { count: _.keys(terms).length }));
+            snackbar.success(i18n.t("Imported {{total}} translation terms", { total: _.keys(terms).length }));
         },
         [usecases, snackbar]
     );
