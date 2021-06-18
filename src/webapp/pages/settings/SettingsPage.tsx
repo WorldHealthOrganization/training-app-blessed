@@ -1,8 +1,9 @@
-import { useSnackbar } from "@eyeseetea/d2-ui-components";
+import { ConfirmationDialog, ConfirmationDialogProps, useLoading, useSnackbar } from "@eyeseetea/d2-ui-components";
 import { FormGroup, Icon, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Permission } from "../../../domain/entities/Permission";
+import { NamedRef } from "../../../domain/entities/Ref";
 import {
     addPage,
     addStep,
@@ -21,12 +22,15 @@ import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 
 export const SettingsPage: React.FC = () => {
-    const { modules, landings, reload, usecases, setAppState, showAllModules, isLoading } = useAppContext();
+    const { modules, landings, reload, usecases, setAppState, showAllModules, isLoading, isAdmin } = useAppContext();
 
     const snackbar = useSnackbar();
+    const loading = useLoading();
 
     const [permissionsType, setPermissionsType] = useState<string | null>(null);
     const [settingsPermissions, setSettingsPermissions] = useState<Permission>();
+    const [danglingDocuments, setDanglingDocuments] = useState<NamedRef[]>([]);
+    const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
 
     const openTraining = useCallback(() => {
         setAppState({ type: "HOME" });
@@ -62,6 +66,32 @@ export const SettingsPage: React.FC = () => {
             return i18n.t("Only accessible to system administrators");
         }
     }, [settingsPermissions]);
+
+    const cleanUpDanglingDocuments = useCallback(async () => {
+        updateDialog({
+            title: i18n.t("Clean-up unused documents"),
+            description: (
+                <ul>
+                    {danglingDocuments.map(item => (
+                        <li key={item.id}>{`${item.id} ${item.name}`}</li>
+                    ))}
+                </ul>
+            ),
+            onCancel: () => updateDialog(null),
+            onSave: async () => {
+                loading.show(true, i18n.t("Deleting dangling documents"));
+
+                await usecases.instance.deleteDocuments(danglingDocuments.map(({ id }) => id));
+                const newDanglingList = await usecases.instance.listDanglingDocuments();
+                setDanglingDocuments(newDanglingList);
+
+                snackbar.success(i18n.t("Deleted dangling documents"));
+                loading.reset();
+                updateDialog(null);
+            },
+            saveText: i18n.t("Proceed"),
+        });
+    }, [danglingDocuments, loading, snackbar, usecases]);
 
     const refreshModules = useCallback(async () => {
         await reload();
@@ -126,6 +156,7 @@ export const SettingsPage: React.FC = () => {
 
     useEffect(() => {
         usecases.config.getSettingsPermissions().then(setSettingsPermissions);
+        usecases.instance.listDanglingDocuments().then(setDanglingDocuments);
     }, [usecases]);
 
     useEffect(() => {
@@ -134,6 +165,8 @@ export const SettingsPage: React.FC = () => {
 
     return (
         <DhisPage>
+            {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"lg"} fullWidth={true} {...dialogProps} />}
+
             {!!permissionsType && (
                 <PermissionsDialog
                     object={{
@@ -181,6 +214,24 @@ export const SettingsPage: React.FC = () => {
                             }
                         />
                     </ListItem>
+
+                    {isAdmin && (
+                        <ListItem button disabled={danglingDocuments.length === 0} onClick={cleanUpDanglingDocuments}>
+                            <ListItemIcon>
+                                <Icon>delete_forever</Icon>
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={i18n.t("Clean-up unused documents")}
+                                secondary={
+                                    danglingDocuments.length === 0
+                                        ? i18n.t("There are no unused documents to clean")
+                                        : i18n.t("There are {{total}} documents available to clean", {
+                                              total: danglingDocuments.length,
+                                          })
+                                }
+                            />
+                        </ListItem>
+                    )}
                 </Group>
 
                 <Title>{i18n.t("Landing page")}</Title>

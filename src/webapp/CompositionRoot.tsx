@@ -2,8 +2,10 @@ import { Dhis2ConfigRepository } from "../data/repositories/Dhis2ConfigRepositor
 import { InstanceDhisRepository } from "../data/repositories/InstanceDhisRepository";
 import { LandingPageDefaultRepository } from "../data/repositories/LandingPageDefaultRepository";
 import { TrainingModuleDefaultRepository } from "../data/repositories/TrainingModuleDefaultRepository";
+import { CheckAdminAuthorityUseCase } from "../domain/usecases/CheckAdminAuthorityUseCase";
 import { CheckSettingsPermissionsUseCase } from "../domain/usecases/CheckSettingsPermissionsUseCase";
 import { CompleteUserProgressUseCase } from "../domain/usecases/CompleteUserProgressUseCase";
+import { DeleteDocumentsUseCase } from "../domain/usecases/DeleteDocumentsUseCase";
 import { DeleteLandingChildUseCase } from "../domain/usecases/DeleteLandingChildUseCase";
 import { DeleteModulesUseCase } from "../domain/usecases/DeleteModulesUseCase";
 import { ExportLandingPagesTranslationsUseCase } from "../domain/usecases/ExportLandingPagesTranslationsUseCase";
@@ -18,6 +20,7 @@ import { ImportLandingPagesUseCase } from "../domain/usecases/ImportLandingPages
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { ImportModuleTranslationsUseCase } from "../domain/usecases/ImportModuleTranslationsUseCase";
 import { InstallAppUseCase } from "../domain/usecases/InstallAppUseCase";
+import { ListDanglingDocumentsUseCase } from "../domain/usecases/ListDanglingDocumentsUseCase";
 import { ListInstalledAppsUseCase } from "../domain/usecases/ListInstalledAppsUseCase";
 import { ListLandingChildrenUseCase } from "../domain/usecases/ListLandingChildrenUseCase";
 import { ListModulesUseCase } from "../domain/usecases/ListModulesUseCase";
@@ -72,12 +75,15 @@ export function getCompositionRoot(baseUrl: string) {
             }),
             user: getExecute({
                 checkSettingsPermissions: new CheckSettingsPermissionsUseCase(configRepository),
+                checkAdminAuthority: new CheckAdminAuthorityUseCase(configRepository),
             }),
             instance: getExecute({
                 uploadFile: new UploadFileUseCase(instanceRepository),
                 installApp: new InstallAppUseCase(instanceRepository, trainingModuleRepository),
                 searchUsers: new SearchUsersUseCase(instanceRepository),
                 listInstalledApps: new ListInstalledAppsUseCase(instanceRepository),
+                listDanglingDocuments: new ListDanglingDocumentsUseCase(instanceRepository),
+                deleteDocuments: new DeleteDocumentsUseCase(instanceRepository),
             }),
         },
     };

@@ -73,7 +73,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
     const handleTranslationUpload = useCallback(
         async (_key: string | undefined, lang: string, terms: Record<string, string>) => {
             await usecases.landings.importTranslations(lang, terms);
-            snackbar.success(i18n.t("Imported {{count}} translation terms", { count: _.keys(terms).length }));
+            snackbar.success(i18n.t("Imported {{total}} translation terms", { total: _.keys(terms).length }));
         },
         [usecases, snackbar]
     );

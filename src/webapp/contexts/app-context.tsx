@@ -20,6 +20,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
     const [modules, setModules] = useState<TrainingModule[]>([]);
     const [landings, setLandings] = useState<LandingNode[]>([]);
     const [hasSettingsAccess, setHasSettingsAccess] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [showAllModules, setShowAllModules] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const translate = buildTranslate(locale);
@@ -49,6 +50,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
 
     useEffect(() => {
         compositionRoot.usecases.user.checkSettingsPermissions().then(setHasSettingsAccess);
+        compositionRoot.usecases.user.checkAdminAuthority().then(setIsAdmin);
         compositionRoot.usecases.config.getShowAllModules().then(setShowAllModules);
     }, [compositionRoot]);
 
@@ -65,6 +67,7 @@ export const AppContextProvider: React.FC<AppContextProviderProps> = ({
                 reload,
                 isLoading,
                 hasSettingsAccess,
+                isAdmin,
                 showAllModules,
             }}
         >
@@ -88,6 +91,7 @@ export function useAppContext(): UseAppContextResult {
         reload,
         isLoading,
         hasSettingsAccess,
+        isAdmin,
         showAllModules,
     } = context;
     const { usecases } = compositionRoot;
@@ -113,6 +117,7 @@ export function useAppContext(): UseAppContextResult {
         reload,
         isLoading,
         hasSettingsAccess,
+        isAdmin,
         showAllModules,
     };
 }
@@ -137,6 +142,7 @@ export interface AppContextState {
     reload: ReloadMethod;
     isLoading: boolean;
     hasSettingsAccess: boolean;
+    isAdmin: boolean;
     showAllModules: boolean;
 }
 
@@ -152,5 +158,6 @@ interface UseAppContextResult {
     reload: ReloadMethod;
     isLoading: boolean;
     hasSettingsAccess: boolean;
+    isAdmin: boolean;
     showAllModules: boolean;
 }
