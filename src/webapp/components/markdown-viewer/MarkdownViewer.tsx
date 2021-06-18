@@ -16,6 +16,8 @@ const components = {
             )}
         </details>
     ),
+    "video-gif": (props: any) => <video autoPlay loop muted playsInline src={props.src}></video>,
+    pdf: (props: any) => <embed width="100%" height="600px" src={props.src} />,
 };
 
 export const SimpleMarkdownViewer: React.FC<{ className?: string; source: string; center?: boolean }> = ({
@@ -53,6 +55,11 @@ export const MarkdownViewer = styled(SimpleMarkdownViewer)`
     img {
         max-width: 100%;
         border-radius: 1em;
+        user-drag: none;
+    }
+
+    video {
+        max-width: 100%;
         user-drag: none;
     }
 
@@ -178,6 +185,8 @@ export const validHtml = {
         "time",
         "wbr",
         "input",
+        "video-gif",
+        "pdf",
     ],
     attributes: {
         embed: ["src"],
@@ -194,6 +203,8 @@ export const validHtml = {
         del: ["cite"],
         ins: ["cite"],
         q: ["cite"],
+        "video-gif": ["src"],
+        pdf: ["src"],
         "*": [
             "abbr",
             "accept",

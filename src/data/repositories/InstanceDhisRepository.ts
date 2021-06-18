@@ -1,3 +1,4 @@
+import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 import FileType from "file-type/browser";
 import Resizer from "react-image-file-resizer";
 import { InstalledApp } from "../../domain/entities/InstalledApp";
@@ -28,19 +29,17 @@ export class InstanceDhisRepository implements InstanceRepository {
         const type = await FileType.fromBuffer(data);
         const { mime = "application/unknown", ext } = type ?? {};
         const blob = new Blob([data], { type: mime });
-        const resized = ["image/jpeg", "image/png"].includes(mime) ? await resizeFile(blob) : blob;
         const name = options.name ?? `Uploaded file${ext ? `.${ext}` : ""}`;
 
         const { id } = await this.api.files
             .upload({
                 id: options.id ?? getUid(await arrayBufferToString(data)),
                 name: `[Training App] ${name}`,
-                data: resized,
+                data: await transformFile(blob, mime),
             })
             .getData();
 
-        const rootPath = process.env.NODE_ENV === "development" ? this.api.apiPath : "../..";
-        return `${rootPath}/documents/${id}/data`;
+        return `../../documents/${id}/data`;
     }
 
     public async installApp(appName: string): Promise<boolean> {
@@ -102,11 +101,38 @@ export class InstanceDhisRepository implements InstanceRepository {
     }
 }
 
-const resizeFile = (file: Blob): Promise<Blob> => {
-    return new Promise(resolve => {
-        Resizer.imageFileResizer(file, 600, 600, "PNG", 100, 0, blob => resolve(blob as Blob), "blob");
-    });
-};
+async function transformFile(blob: Blob, mime: string): Promise<Blob> {
+    if (["image/jpeg", "image/png"].includes(mime)) {
+        return new Promise(resolve => {
+            Resizer.imageFileResizer(blob, 600, 600, "PNG", 100, 0, blob => resolve(blob as Blob), "blob");
+        });
+    } else if (mime === "image/gif") {
+        try {
+            const ffmpeg = createFFmpeg({ corePath: "https://unpkg.com/@ffmpeg/core/dist/ffmpeg-core.js" });
+
+            await ffmpeg.load();
+            ffmpeg.FS("writeFile", "file.gif", await fetchFile(blob));
+            await ffmpeg.run(
+                "-i",
+                "file.gif",
+                "-movflags",
+                "faststart",
+                "-pix_fmt",
+                "yuv420p",
+                "-vf",
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                "file.mp4"
+            );
+
+            const data = ffmpeg.FS("readFile", "file.mp4");
+            return new Blob([data.buffer], { type: "video/mp4" });
+        } catch (error) {
+            return blob;
+        }
+    }
+
+    return blob;
+}
 
 function arrayBufferToString(buffer: ArrayBuffer, encoding = "UTF-8"): Promise<string> {
     return new Promise<string>((resolve, reject) => {
