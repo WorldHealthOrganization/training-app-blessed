@@ -92,6 +92,11 @@ function getMarkdown(fileUrl: string, type?: FileTypeResult): string {
         return `![Uploaded file](${fileUrl})`;
     }
 
+    // Detect and add videos inline (markdown)
+    if (type?.mime.startsWith("video/")) {
+        return `<video src="${fileUrl}"></video>`;
+    }
+
     // Fail-safe markdown download link
     return `[Uploaded file](${fileUrl})`;
 }
