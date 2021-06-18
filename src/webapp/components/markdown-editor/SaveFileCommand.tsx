@@ -79,7 +79,7 @@ export const saveFileCommand: Command = {
 function getMarkdown(fileUrl: string, type?: FileTypeResult): string {
     // Detect transformed gif files
     if (type?.mime === "image/gif") {
-        return `<video-gif src="${fileUrl}" />`;
+        return `<video-gif src="${fileUrl}"></video-gif>`;
     }
 
     // Detect and add pdf preview (HTML5)
