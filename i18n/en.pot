@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-17T09:25:46.242Z\n"
-"PO-Revision-Date: 2021-06-17T09:25:46.242Z\n"
+"POT-Creation-Date: 2021-06-18T05:26:15.609Z\n"
+"PO-Revision-Date: 2021-06-18T05:26:15.609Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -115,16 +115,16 @@ msgstr ""
 msgid "Exporting landing page(s)"
 msgstr ""
 
-msgid "Import landing pages"
-msgstr ""
-
-msgid "Import JSON translations"
-msgstr ""
-
 msgid "Export JSON translations"
 msgstr ""
 
 msgid "Exporting translations"
+msgstr ""
+
+msgid "Import landing pages"
+msgstr ""
+
+msgid "Import JSON translations"
 msgstr ""
 
 msgid "Landing page"

@@ -230,6 +230,18 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 isActive: nodes => _.every(nodes, item => item.type === "root"),
                 multiple: true,
             },
+            {
+                name: "export-translations",
+                text: i18n.t("Export JSON translations"),
+                icon: <Icon>translate</Icon>,
+                onClick: async () => {
+                    loading.show(true, i18n.t("Exporting translations"));
+                    await usecases.landings.exportTranslations();
+                    loading.reset();
+                },
+                isActive: nodes => _.every(nodes, item => item.type === "root"),
+                multiple: false,
+            },
         ],
         [usecases, reload, loading, nodes]
     );
@@ -250,18 +262,8 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                     translationImportRef.current?.startImport();
                 },
             },
-            {
-                name: "export-translations",
-                text: i18n.t("Export JSON translations"),
-                icon: <Icon>cloud_download</Icon>,
-                onClick: async () => {
-                    loading.show(true, i18n.t("Exporting translations"));
-                    await usecases.landings.exportTranslations();
-                    loading.reset();
-                },
-            },
         ],
-        [openImportDialog, loading, usecases]
+        [openImportDialog]
     );
 
     return (
