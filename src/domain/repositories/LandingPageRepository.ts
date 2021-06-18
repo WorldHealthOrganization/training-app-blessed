@@ -7,4 +7,6 @@ export interface LandingPageRepository {
     import(files: File[]): Promise<PersistedLandingPage[]>;
     updateChild(node: LandingNode): Promise<void>;
     removeChilds(ids: string[]): Promise<void>;
+    exportTranslations(): Promise<void>;
+    importTranslations(language: string, terms: Record<string, string>): Promise<void>;
 }

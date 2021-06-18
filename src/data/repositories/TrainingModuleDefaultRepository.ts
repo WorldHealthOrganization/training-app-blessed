@@ -178,14 +178,14 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         const model = await this.get(key);
         if (!model) throw new Error(`Module ${key} not found`);
 
-        const foo = _.compact([
+        const texts = _.compact([
             model.name,
             model.contents.welcome,
             ..._.flatMap(model.contents.steps, step => [step.title, step.subtitle, ...step.pages]),
         ]);
 
-        const referenceStrings = _.fromPairs(foo.map(({ key, referenceValue }) => [key, referenceValue]));
-        const translatedStrings = _(foo)
+        const referenceStrings = _.fromPairs(texts.map(({ key, referenceValue }) => [key, referenceValue]));
+        const translatedStrings = _(texts)
             .flatMap(({ key, translations }) => _.toPairs(translations).map(([lang, value]) => ({ lang, key, value })))
             .groupBy("lang")
             .mapValues(array => _.fromPairs(array.map(({ key, value }) => [key, value])))
