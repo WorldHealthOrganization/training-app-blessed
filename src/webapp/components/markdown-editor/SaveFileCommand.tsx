@@ -78,7 +78,7 @@ export const saveFileCommand: Command = {
 
 function getMarkdown(fileUrl: string, type?: FileTypeResult): string {
     // Detect transformed gif files
-    if (type?.mime === "image/gif") {
+    if (process.env.NODE_ENV === "development" && type?.mime === "image/gif") {
         return `<video-gif src="${fileUrl}"></video-gif>`;
     }
 

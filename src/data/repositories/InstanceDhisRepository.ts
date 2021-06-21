@@ -142,7 +142,7 @@ async function transformFile(blob: Blob, mime: string): Promise<Blob> {
         return new Promise(resolve => {
             Resizer.imageFileResizer(blob, 600, 600, "PNG", 100, 0, blob => resolve(blob as Blob), "blob");
         });
-    } else if (mime === "image/gif") {
+    } else if (process.env.NODE_ENV === "development" && mime === "image/gif") {
         try {
             const ffmpeg = createFFmpeg({ corePath: "https://unpkg.com/@ffmpeg/core/dist/ffmpeg-core.js" });
 
