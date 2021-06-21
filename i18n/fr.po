@@ -78,7 +78,8 @@ msgid "Importing a new landing page"
 msgstr "Importation d'une nouvelle page de renvoi"
 
 msgid "This action will overwrite the existing landing page. Are you sure?"
-msgstr "Cette action va écraser la page de destination existante. Vous êtes sûr?"
+msgstr ""
+"Cette action va écraser la page de destination existante. Vous êtes sûr?"
 
 msgid "Imported {{n}} landing pages"
 msgstr "Pages de destination {{n}} importées"
@@ -113,17 +114,17 @@ msgstr "Exportation de la page de renvoi"
 msgid "Exporting landing page(s)"
 msgstr "Exportation de page(s) de destination"
 
-msgid "Import landing pages"
-msgstr "Importer des pages de renvoi"
-
-msgid "Import JSON translations"
-msgstr "Importer des traductions JSON"
-
 msgid "Export JSON translations"
 msgstr "Exportation des traductions en JSON"
 
 msgid "Exporting translations"
 msgstr "Exportation des traductions"
+
+msgid "Import landing pages"
+msgstr "Importer des pages de renvoi"
+
+msgid "Import JSON translations"
+msgstr "Importer des traductions JSON"
 
 msgid "Landing page"
 msgstr "Page d'atterrissage"
@@ -168,7 +169,8 @@ msgid "Minimize window"
 msgstr "Réduire la fenêtre"
 
 msgid "Note: The sharing settings are only applied to the current module"
-msgstr "Remarque : les paramètres de partage ne sont appliqués qu'au module actuel"
+msgstr ""
+"Remarque : les paramètres de partage ne sont appliqués qu'au module actuel"
 
 msgid "Add new step"
 msgstr "Ajouter une nouvelle étape"
@@ -255,7 +257,9 @@ msgid "Installing application"
 msgstr "Installation de l'application"
 
 msgid "Are you sure you want to reset selected modules to its default value?"
-msgstr "Êtes-vous sûr de vouloir remettre les modules sélectionnés à leur valeur par défaut?"
+msgstr ""
+"Êtes-vous sûr de vouloir remettre les modules sélectionnés à leur valeur par "
+"défaut?"
 
 msgid "This action cannot be reversed."
 msgstr "Cette action ne peut être inversée."
@@ -278,8 +282,12 @@ msgstr "L'application n'est pas installée dans ce cas"
 msgid "Module does not support this DHIS2 version"
 msgstr "Le module ne supporte pas cette version du DHIS2"
 
-msgid "There's a new version of this module, please reset to default values to update"
-msgstr "Il y a une nouvelle version de ce module, s'il vous plaît réinitialiser aux valeurs par défaut pour mettre à jour"
+msgid ""
+"There's a new version of this module, please reset to default values to "
+"update"
+msgstr ""
+"Il y a une nouvelle version de ce module, s'il vous plaît réinitialiser aux "
+"valeurs par défaut pour mettre à jour"
 
 msgid "Add module"
 msgstr "Ajouter un module"
@@ -360,7 +368,8 @@ msgid "Cancel module creation?"
 msgstr "Annuler la création du module?"
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
-msgstr "Toutes vos modifications seront perdues. Êtes-vous sûr de vouloir continuer?"
+msgstr ""
+"Toutes vos modifications seront perdues. Êtes-vous sûr de vouloir continuer?"
 
 msgid "Create module"
 msgstr "Créer un module"
@@ -374,11 +383,22 @@ msgstr "Tutoriel de sortie"
 msgid "Are you sure you want to exit?"
 msgstr "Vous êtes sûr de vouloir sortir?"
 
-msgid "If you are sure you want to exit, select 'Exit tutorial'. You can relaunch the training tutorial again at any time from the applications menu."
-msgstr "Si vous êtes sûr de vouloir quitter, sélectionnez 'Quitter le tutoriel'. Vous pouvez relancer le tutoriel de formation à tout moment à partir du menu des applications."
+msgid ""
+"If you are sure you want to exit, select 'Exit tutorial'. You can relaunch "
+"the training tutorial again at any time from the applications menu."
+msgstr ""
+"Si vous êtes sûr de vouloir quitter, sélectionnez 'Quitter le tutoriel'. "
+"Vous pouvez relancer le tutoriel de formation à tout moment à partir du menu "
+"des applications."
 
-msgid "If you would like to continue with training, select 'Continue tutorial' below or if you would like to select a different tutorial, click on the 'Home' button."
-msgstr "Si vous souhaitez poursuivre la formation, sélectionnez 'Continuer le tutoriel' ci-dessous ou si vous souhaitez sélectionner un autre tutoriel, cliquez sur le bouton 'Accueil'."
+msgid ""
+"If you would like to continue with training, select 'Continue tutorial' "
+"below or if you would like to select a different tutorial, click on the "
+"'Home' button."
+msgstr ""
+"Si vous souhaitez poursuivre la formation, sélectionnez 'Continuer le "
+"tutoriel' ci-dessous ou si vous souhaitez sélectionner un autre tutoriel, "
+"cliquez sur le bouton 'Accueil'."
 
 msgid "Well done!"
 msgstr "Bien joué!"
@@ -394,16 +414,18 @@ msgstr "Finition"
 
 msgid "Welcome to training on DHIS2"
 msgstr "Bienvenue dans les tutoriels de formation DHIS2\n"
-""
 
 msgid "What do you want to learn in DHIS2?"
 msgstr "Que voulez-vous apprendre dans DHIS2 aujourd'hui?"
 
 msgid "First load can take a couple of minutes, please wait..."
-msgstr "Le premier chargement peut prendre quelques minutes, veuillez patienter..."
+msgstr ""
+"Le premier chargement peut prendre quelques minutes, veuillez patienter..."
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
-msgstr "Accessible aux utilisateurs {{users}} et aux groupes d'utilisateurs {{userGroups}}."
+msgstr ""
+"Accessible aux utilisateurs {{users}} et aux groupes d'utilisateurs "
+"{{userGroups}}."
 
 msgid "Accessible to {{users}} users"
 msgstr "Accessible aux {{users}} utilisateurs"
@@ -482,4 +504,3 @@ msgstr "Début"
 
 msgid "Start Tutorial"
 msgstr "Tutoriel de démarrage"
-
