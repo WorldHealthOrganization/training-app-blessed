@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-18T05:28:13.391Z\n"
-"PO-Revision-Date: 2021-06-18T05:28:13.391Z\n"
+"POT-Creation-Date: 2021-06-21T12:32:50.722Z\n"
+"PO-Revision-Date: 2021-06-21T12:32:50.722Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -150,6 +150,9 @@ msgid "Home"
 msgstr ""
 
 msgid "Settings"
+msgstr ""
+
+msgid "About"
 msgstr ""
 
 msgid "Back"
@@ -350,6 +353,45 @@ msgid "Exit"
 msgstr ""
 
 msgid "Create"
+msgstr ""
+
+msgid "About Training App"
+msgstr ""
+
+msgid "Distributed under GNU GLPv3"
+msgstr ""
+
+msgid ""
+"DHIS2 Training App is a DHIS2 application that aims to provide online "
+"training for end users on common processes performed in DHIS2. The "
+"application contains generic trainings on data entry, data import, "
+"generation of visualizations and creation of dashboards. It also allows "
+"administrators to create their own custom tutorials to guide users through "
+"specific data collection processes (e.g. completion of specific data "
+"collection forms)."
+msgstr ""
+
+msgid ""
+"This application has been entirely funded by the WHO Global Malaria "
+"Programme to support countries using DHIS2 in strengthening the collection "
+"and use of health data. The application has been designed by "
+"[Lushomo](https://lushomo.net) and developed by [EyeSeeTea "
+"SL](http://eyeseetea.com). The source code and release notes can be found "
+"at the [WHO GitHub "
+"repository](https://github.com/WorldHealthOrganization/training-app-blessed)"
+". If you wish to contribute to the development of Training App with new "
+"features, please contact [EyeSeeTea](mailto:hello@eyeseetea.com). To "
+"continue developing the tool in a coordinated manner please always contact "
+"also [WHO](mailto:integrated-data@who.int)"
+msgstr ""
+
+msgid "World Health Organization"
+msgstr ""
+
+msgid "EyeSeeTea"
+msgstr ""
+
+msgid "Lushomo"
 msgstr ""
 
 msgid "Training app"
