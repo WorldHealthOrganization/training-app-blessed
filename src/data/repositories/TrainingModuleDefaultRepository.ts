@@ -202,7 +202,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const blob = await zip.generateAsync({ type: "blob" });
         const moduleName = _.kebabCase(model.name.referenceValue);
-        FileSaver.saveAs(blob, `translations-${moduleName}-.zip`);
+        FileSaver.saveAs(blob, `translations-${moduleName}.zip`);
     }
 
     public async importTranslations(key: string, language: string, terms: Record<string, string>): Promise<void> {
