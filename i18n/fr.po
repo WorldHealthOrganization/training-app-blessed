@@ -9,482 +9,477 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "Field {{field}} cannot be blank"
-msgstr ""
+msgstr "Le champ {{field}} ne peut pas être vide"
 
 msgid "You need to add at least one {{field}}"
-msgstr ""
+msgstr "Vous devez ajouter au moins un {{champ}}."
 
 msgid "All steps need to have at least one page"
-msgstr ""
+msgstr "Toutes les étapes doivent avoir au moins une page"
 
 msgid "Field {{field}} needs to be a valid url"
-msgstr ""
+msgstr "Le champ {{field}} doit être une url valide."
 
 msgid "Field {{field}} is not valid"
-msgstr ""
+msgstr "Le champ {{field}} n'est pas valide"
 
 msgid "Tutorial"
-msgstr ""
+msgstr "Tutoriels"
 
 msgid "You need to select a module"
-msgstr ""
+msgstr "Vous devez sélectionner un module"
 
 msgid "You need to select a language"
-msgstr ""
+msgstr "Vous devez sélectionner une langue"
 
 msgid "File is not a valid translation JSON dictionary"
-msgstr ""
+msgstr "Le fichier n'est pas un dictionnaire JSON de traduction valide"
 
 msgid "Import translation"
-msgstr ""
+msgstr "Traduction à l'importation"
 
 msgid "Module to add translation"
-msgstr ""
+msgstr "Module d'ajout de traduction"
 
 msgid "Language to add translation"
-msgstr ""
+msgstr "Langue pour ajouter la traduction"
 
 msgid "Field name is mandatory"
-msgstr ""
+msgstr "Le nom du champ est obligatoire"
 
 msgid "Identifier"
-msgstr ""
+msgstr "Identifiant"
 
 msgid "Name *"
-msgstr ""
+msgstr "Nom *"
 
 msgid "Title"
-msgstr ""
+msgstr "Titre"
 
 msgid "Icon"
-msgstr ""
+msgstr "Icône"
 
 msgid "Modules"
-msgstr ""
+msgstr "Modules"
 
 msgid "Modules assigned"
-msgstr ""
+msgstr "Modules attribués"
 
 msgid "Contents"
-msgstr ""
+msgstr "Contenu"
 
 msgid "Couldn't read the file because it's not valid"
-msgstr ""
+msgstr "Impossible de lire le fichier car il n'est pas valide."
 
 msgid "Importing landing pages(s)"
-msgstr ""
+msgstr "Importation de pages de renvoi(s)"
 
 msgid "Importing a new landing page"
-msgstr ""
+msgstr "Importation d'une nouvelle page de renvoi"
 
 msgid "This action will overwrite the existing landing page. Are you sure?"
-msgstr ""
+msgstr "Cette action va écraser la page de destination existante. Vous êtes sûr?"
 
 msgid "Imported {{n}} landing pages"
-msgstr ""
+msgstr "Pages de destination {{n}} importées"
 
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 msgid "No"
-msgstr ""
+msgstr "Pas de"
 
 msgid "Imported {{total}} translation terms"
-msgstr ""
+msgstr "Termes de traduction importées {{total}}"
 
 msgid "Add section"
-msgstr ""
+msgstr "Ajouter une section"
 
 msgid "Add sub-section"
-msgstr ""
+msgstr "Ajouter une sous-section"
 
 msgid "Add category"
-msgstr ""
+msgstr "Ajouter une catégorie"
 
 msgid "Edit"
-msgstr ""
+msgstr "Modifier"
 
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 msgid "Export landing page"
-msgstr ""
+msgstr "Exportation de la page de renvoi"
 
 msgid "Exporting landing page(s)"
-msgstr ""
-
-msgid "Export JSON translations"
-msgstr ""
-
-msgid "Exporting translations"
-msgstr ""
+msgstr "Exportation de page(s) de destination"
 
 msgid "Import landing pages"
-msgstr ""
+msgstr "Importer des pages de renvoi"
 
 msgid "Import JSON translations"
-msgstr ""
+msgstr "Importer des traductions JSON"
+
+msgid "Export JSON translations"
+msgstr "Exportation des traductions en JSON"
+
+msgid "Exporting translations"
+msgstr "Exportation des traductions"
 
 msgid "Landing page"
-msgstr ""
+msgstr "Page d'atterrissage"
 
 msgid "Section"
-msgstr ""
+msgstr "Section"
 
 msgid "Sub-section"
-msgstr ""
+msgstr "Sous-section"
 
 msgid "Category"
-msgstr ""
+msgstr "Catégorie"
 
 msgid "Edit markdown"
-msgstr ""
+msgstr "Modifier la démarque"
 
 msgid "Save"
-msgstr ""
+msgstr "Sauvez"
 
 msgid "Uploading file..."
-msgstr ""
+msgstr "Téléchargement du fichier..."
 
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 msgid "Settings"
-msgstr ""
+msgstr "Paramètres"
 
 msgid "Back"
-msgstr ""
+msgstr "Arrière"
 
 msgid "Move window"
-msgstr ""
+msgstr "Déplacer la fenêtre"
 
 msgid "Exit tutorial"
-msgstr ""
+msgstr "Quitter le tutoriel"
 
 msgid "Expand window"
-msgstr ""
+msgstr "Agrandir la fenêtre"
 
 msgid "Minimize window"
-msgstr ""
+msgstr "Réduire la fenêtre"
 
 msgid "Note: The sharing settings are only applied to the current module"
-msgstr ""
+msgstr "Remarque : les paramètres de partage ne sont appliqués qu'au module actuel"
 
 msgid "Add new step"
-msgstr ""
+msgstr "Ajouter une nouvelle étape"
 
 msgid "Title *"
-msgstr ""
+msgstr "Titre *"
 
 msgid "Field must have a value"
-msgstr ""
+msgstr "Le champ doit avoir une valeur"
 
 msgid "Code *"
-msgstr ""
+msgstr "Code *"
 
 msgid "DHIS2 Compatibility"
-msgstr ""
+msgstr "Compatibilité avec le DHIS2"
 
 msgid "Compatible versions"
-msgstr ""
+msgstr "Versions compatibles"
 
 msgid "Launch application"
-msgstr ""
+msgstr "Lancer l'application"
 
 msgid "DHIS2 application"
-msgstr ""
+msgstr "Application DHIS2"
 
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 msgid "Welcome page"
-msgstr ""
+msgstr "Page d'accueil"
 
 msgid "General info"
-msgstr ""
+msgstr "Informations générales"
 
 msgid "Access"
-msgstr ""
+msgstr "Accès"
 
 msgid "Summary"
-msgstr ""
+msgstr "Résumé"
 
 msgid "Importing module(s)"
-msgstr ""
+msgstr "Importation de module(s)"
 
 msgid "Imported {{n}} modules"
-msgstr ""
+msgstr "Modules importés {{n}}"
 
 msgid "Are you sure you want to delete the selected modules?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer les modules sélectionnés ?"
 
 msgid "This action cannot be reversed"
-msgstr ""
+msgstr "Cette action ne peut être inversée"
 
 msgid "Deleting modules"
-msgstr ""
+msgstr "Suppression de modules"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 msgid "Delete modules"
-msgstr ""
+msgstr "Supprimer les modules"
 
 msgid "Are you sure you want to delete the selected step and its pages?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer l'étape sélectionnée et ses pages ?"
 
 msgid "Delete step"
-msgstr ""
+msgstr "Supprimer l'étape"
 
 msgid "Are you sure you want to delete the selected page?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer la page sélectionnée?"
 
 msgid "Delete page"
-msgstr ""
+msgstr "Supprimer la page"
 
 msgid "Add new page"
-msgstr ""
+msgstr "Ajouter une nouvelle page"
 
 msgid "Edit step"
-msgstr ""
+msgstr "Étape d'édition"
 
 msgid "Edit contents of {{name}}"
-msgstr ""
+msgstr "Modifier le contenu de {{nom}}"
 
 msgid "Installing application"
-msgstr ""
+msgstr "Installation de l'application"
 
 msgid "Are you sure you want to reset selected modules to its default value?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir remettre les modules sélectionnés à leur valeur par défaut?"
 
 msgid "This action cannot be reversed."
-msgstr ""
+msgstr "Cette action ne peut être inversée."
 
 msgid "Resetting modules to default value"
-msgstr ""
+msgstr "Remise à la valeur par défaut des modules"
 
 msgid "Successfully resetted modules to default value"
-msgstr ""
+msgstr "Réinitialisation réussie des modules à la valeur par défaut"
 
 msgid "Reset app to factory settings"
-msgstr ""
+msgstr "Réinitialiser l'application aux paramètres d'usine"
 
 msgid "Exporting module(s)"
-msgstr ""
+msgstr "Module(s) d'exportation"
 
 msgid "App is not installed in this instance"
-msgstr ""
+msgstr "L'application n'est pas installée dans ce cas"
 
 msgid "Module does not support this DHIS2 version"
-msgstr ""
+msgstr "Le module ne supporte pas cette version du DHIS2"
 
-msgid ""
-"There's a new version of this module, please reset to default values to "
-"update"
-msgstr ""
+msgid "There's a new version of this module, please reset to default values to update"
+msgstr "Il y a une nouvelle version de ce module, s'il vous plaît réinitialiser aux valeurs par défaut pour mettre à jour"
 
 msgid "Add module"
-msgstr ""
+msgstr "Ajouter un module"
 
 msgid "Add step"
-msgstr ""
+msgstr "Ajouter une étape"
 
 msgid "Add page"
-msgstr ""
+msgstr "Ajouter une page"
 
 msgid "Edit module"
-msgstr ""
+msgstr "Module d'édition"
 
 msgid "Edit page"
-msgstr ""
+msgstr "Modifier la page"
 
 msgid "Delete module"
-msgstr ""
+msgstr "Supprimer le module"
 
 msgid "Move up"
-msgstr ""
+msgstr "Avancez"
 
 msgid "Move down"
-msgstr ""
+msgstr "Descendre"
 
 msgid "Install app"
-msgstr ""
+msgstr "Installer l'application"
 
 msgid "Restore to factory settings"
-msgstr ""
+msgstr "Restaurer les paramètres d'usine"
 
 msgid "Export module"
-msgstr ""
+msgstr "Module d'exportation"
 
 msgid "Import modules"
-msgstr ""
+msgstr "Modules d'importation"
 
 msgid "Help"
-msgstr ""
+msgstr "Aide"
 
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 msgid "Previous step"
-msgstr ""
+msgstr "Étape précédente"
 
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 msgid "Next step"
-msgstr ""
+msgstr "Étape suivante"
 
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 msgid "Sub step {{position}} of {{total}}"
-msgstr ""
+msgstr "Sous-étape {{position}} de {{total}}"
 
 msgid "Welcome"
-msgstr ""
+msgstr "Bienvenue sur"
 
 msgid "Final"
-msgstr ""
+msgstr "Final"
 
 msgid "Exit"
-msgstr ""
+msgstr "Sortie"
 
 msgid "Create"
-msgstr ""
+msgstr "Créer"
 
 msgid "Training app"
-msgstr ""
+msgstr "Application de formation"
 
 msgid "Cancel module editing?"
-msgstr ""
+msgstr "Annuler l'édition du module?"
 
 msgid "Cancel module creation?"
-msgstr ""
+msgstr "Annuler la création du module?"
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
-msgstr ""
+msgstr "Toutes vos modifications seront perdues. Êtes-vous sûr de vouloir continuer?"
 
 msgid "Create module"
-msgstr ""
+msgstr "Créer un module"
 
 msgid "Continue Tutorial"
-msgstr ""
+msgstr "Continuer le tutoriel"
 
 msgid "Exit Tutorial"
-msgstr ""
+msgstr "Tutoriel de sortie"
 
 msgid "Are you sure you want to exit?"
-msgstr ""
+msgstr "Vous êtes sûr de vouloir sortir?"
 
-msgid ""
-"If you are sure you want to exit, select 'Exit tutorial'. You can relaunch "
-"the training tutorial again at any time from the applications menu."
-msgstr ""
+msgid "If you are sure you want to exit, select 'Exit tutorial'. You can relaunch the training tutorial again at any time from the applications menu."
+msgstr "Si vous êtes sûr de vouloir quitter, sélectionnez 'Quitter le tutoriel'. Vous pouvez relancer le tutoriel de formation à tout moment à partir du menu des applications."
 
-msgid ""
-"If you would like to continue with training, select 'Continue tutorial' "
-"below or if you would like to select a different tutorial, click on the "
-"'Home' button."
-msgstr ""
+msgid "If you would like to continue with training, select 'Continue tutorial' below or if you would like to select a different tutorial, click on the 'Home' button."
+msgstr "Si vous souhaitez poursuivre la formation, sélectionnez 'Continuer le tutoriel' ci-dessous ou si vous souhaitez sélectionner un autre tutoriel, cliquez sur le bouton 'Accueil'."
 
 msgid "Well done!"
-msgstr ""
+msgstr "Bien joué!"
 
 msgid "You've completed the {{name}} tutorial!"
-msgstr ""
+msgstr "Tu as terminé le tutoriel {{nom}}!"
 
 msgid "Back to tutorial"
-msgstr ""
+msgstr "Retour au tutoriel"
 
 msgid "Finish"
-msgstr ""
+msgstr "Finition"
 
 msgid "Welcome to training on DHIS2"
-msgstr ""
+msgstr "Bienvenue dans les tutoriels de formation DHIS2\n"
+""
 
 msgid "What do you want to learn in DHIS2?"
-msgstr ""
+msgstr "Que voulez-vous apprendre dans DHIS2 aujourd'hui?"
 
 msgid "First load can take a couple of minutes, please wait..."
-msgstr ""
+msgstr "Le premier chargement peut prendre quelques minutes, veuillez patienter..."
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
-msgstr ""
+msgstr "Accessible aux utilisateurs {{users}} et aux groupes d'utilisateurs {{userGroups}}."
 
 msgid "Accessible to {{users}} users"
-msgstr ""
+msgstr "Accessible aux {{users}} utilisateurs"
 
 msgid "Accessible to {{userGroups}} user groups"
-msgstr ""
+msgstr "Accessible aux groupes d'utilisateurs {{userGroups}}"
 
 msgid "Only accessible to system administrators"
-msgstr ""
+msgstr "Uniquement accessible aux administrateurs du système"
 
 msgid "Clean-up unused documents"
-msgstr ""
+msgstr "Nettoyer les documents inutilisés"
 
 msgid "Deleting dangling documents"
-msgstr ""
+msgstr "Suppression des documents en suspens"
 
 msgid "Deleted dangling documents"
-msgstr ""
+msgstr "Suppression des documents en suspens"
 
 msgid "Proceed"
-msgstr ""
+msgstr "Procédez à"
 
 msgid "Unable to update module contents"
-msgstr ""
+msgstr "Impossible de mettre à jour le contenu du module"
 
 msgid "Unable to move item"
-msgstr ""
+msgstr "Impossible de déplacer l'objet"
 
 msgid "Unable to add step"
-msgstr ""
+msgstr "Impossible d'ajouter une étape"
 
 msgid "Unable to add page"
-msgstr ""
+msgstr "Impossible d'ajouter une page"
 
 msgid "Unable to remove step"
-msgstr ""
+msgstr "Impossible de supprimer l'étape"
 
 msgid "Unable to remove page"
-msgstr ""
+msgstr "Impossible de supprimer la page"
 
 msgid "Permissions"
-msgstr ""
+msgstr "Permissions"
 
 msgid "Access to Settings"
-msgstr ""
+msgstr "Accès aux paramètres"
 
 msgid "Show list with modules on main landing page"
-msgstr ""
+msgstr "Afficher la liste des modules sur la page de destination principale"
 
 msgid "A list with all the existing modules is visible"
-msgstr ""
+msgstr "Une liste avec tous les modules existants est visible"
 
 msgid "The list with all the existing  modules is hidden"
-msgstr ""
+msgstr "La liste avec tous les modules existants est cachée"
 
 msgid "There are no unused documents to clean"
-msgstr ""
+msgstr "Il n'y a pas de documents inutilisés à nettoyer"
 
 msgid "There are {{total}} documents available to clean"
-msgstr ""
+msgstr "Il y a {{total}} documents disponibles à nettoyer"
 
 msgid "Training modules"
-msgstr ""
+msgstr "Modules de formation"
 
 msgid "What did you learn in this tutorial?"
-msgstr ""
+msgstr "Qu'avez-vous appris dans ce tutoriel?"
 
 msgid "What will this tutorial cover?"
-msgstr ""
+msgstr "Que couvrira ce tutoriel?"
 
 msgid "Take another tutorial"
-msgstr ""
+msgstr "Prenez un autre tutoriel"
 
 msgid "Start"
-msgstr ""
+msgstr "Début"
 
 msgid "Start Tutorial"
-msgstr ""
+msgstr "Tutoriel de démarrage"
+

@@ -9,79 +9,79 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 msgid "Field {{field}} cannot be blank"
-msgstr ""
+msgstr "El campo {{field}} no puede estar vacío"
 
 msgid "You need to add at least one {{field}}"
-msgstr ""
+msgstr "Es necesario añadir al menos un {{campo}}"
 
 msgid "All steps need to have at least one page"
-msgstr ""
+msgstr "Todos los pasos deben tener al menos una página"
 
 msgid "Field {{field}} needs to be a valid url"
-msgstr ""
+msgstr "El campo {{field}} debe ser una url válida"
 
 msgid "Field {{field}} is not valid"
-msgstr ""
+msgstr "El campo {{field}} no es válido"
 
 msgid "Tutorial"
 msgstr "Tutorial"
 
 msgid "You need to select a module"
-msgstr ""
+msgstr "Debe seleccionar un módulo"
 
 msgid "You need to select a language"
-msgstr ""
+msgstr "Debe seleccionar un idioma"
 
 msgid "File is not a valid translation JSON dictionary"
-msgstr ""
+msgstr "El archivo no es un diccionario JSON de traducción válido"
 
 msgid "Import translation"
-msgstr ""
+msgstr "Importar traducción"
 
 msgid "Module to add translation"
-msgstr ""
+msgstr "Módulo para añadir la traducción"
 
 msgid "Language to add translation"
-msgstr ""
+msgstr "Idioma para añadir la traducción"
 
 msgid "Field name is mandatory"
-msgstr ""
+msgstr "El nombre del campo es obligatorio"
 
 msgid "Identifier"
-msgstr ""
+msgstr "Identificador"
 
 msgid "Name *"
-msgstr ""
+msgstr "Nombre *"
 
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 msgid "Icon"
-msgstr ""
+msgstr "Icono"
 
 msgid "Modules"
-msgstr ""
+msgstr "Módulos"
 
 msgid "Modules assigned"
-msgstr ""
+msgstr "Módulos asignados"
 
 msgid "Contents"
 msgstr "Contenidos"
 
 msgid "Couldn't read the file because it's not valid"
-msgstr ""
+msgstr "No se ha podido leer el archivo porque no es válido"
 
 msgid "Importing landing pages(s)"
-msgstr ""
+msgstr "Importando páginas de destino"
 
 msgid "Importing a new landing page"
-msgstr ""
+msgstr "Importando una nueva página de destino"
 
 msgid "This action will overwrite the existing landing page. Are you sure?"
-msgstr ""
+msgstr "Esta acción sobrescribirá la página de destino existente. ¿Está seguro?"
 
 msgid "Imported {{n}} landing pages"
-msgstr ""
+msgstr "{{n}} páginas de destino importadas "
 
 msgid "Yes"
 msgstr "Sí"
@@ -89,54 +89,53 @@ msgstr "Sí"
 msgid "No"
 msgstr "No"
 
-#, fuzzy
 msgid "Imported {{total}} translation terms"
-msgstr "{{n}} módulos importados"
+msgstr "{{total}} traducciones importadas"
 
 msgid "Add section"
-msgstr ""
+msgstr "Añadir sección "
 
 msgid "Add sub-section"
-msgstr ""
+msgstr "Añadir sub-sección"
 
 msgid "Add category"
-msgstr ""
+msgstr "Añadir categoría"
 
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 msgid "Delete"
 msgstr "Borrar"
 
 msgid "Export landing page"
-msgstr ""
+msgstr "Exportar la página de destino"
 
 msgid "Exporting landing page(s)"
-msgstr ""
-
-msgid "Export JSON translations"
-msgstr ""
-
-msgid "Exporting translations"
-msgstr ""
+msgstr "Exportar página(s) de destino"
 
 msgid "Import landing pages"
-msgstr ""
+msgstr "Importar páginas de destino"
 
 msgid "Import JSON translations"
-msgstr ""
+msgstr "Importar traducciones JSON"
+
+msgid "Export JSON translations"
+msgstr "Exportar traducciones JSON"
+
+msgid "Exporting translations"
+msgstr "Exportación de traducciones"
 
 msgid "Landing page"
 msgstr "Bienvenido"
 
 msgid "Section"
-msgstr ""
+msgstr "Sección"
 
 msgid "Sub-section"
-msgstr ""
+msgstr "Subsección"
 
 msgid "Category"
-msgstr ""
+msgstr "Categoría"
 
 msgid "Edit markdown"
 msgstr "Editar markdown"
@@ -145,7 +144,7 @@ msgid "Save"
 msgstr "Guardar"
 
 msgid "Uploading file..."
-msgstr ""
+msgstr "Subiendo archivo..."
 
 msgid "Home"
 msgstr "Inicio"
@@ -154,7 +153,7 @@ msgid "Settings"
 msgstr "Ajustes"
 
 msgid "Back"
-msgstr ""
+msgstr "Atrás"
 
 msgid "Move window"
 msgstr "Mover ventana"
@@ -169,43 +168,43 @@ msgid "Minimize window"
 msgstr "Minimizar ventana"
 
 msgid "Note: The sharing settings are only applied to the current module"
-msgstr ""
+msgstr "Nota: Los ajustes de compartición sólo se aplican al módulo actual"
 
 msgid "Add new step"
-msgstr ""
+msgstr "Añadir nuevo paso"
 
 msgid "Title *"
-msgstr ""
+msgstr "Título *"
 
 msgid "Field must have a value"
 msgstr "El campo debe tener un valor"
 
 msgid "Code *"
-msgstr ""
+msgstr "Código * "
 
 msgid "DHIS2 Compatibility"
-msgstr ""
+msgstr "Compatibilidad con DHIS2"
 
 msgid "Compatible versions"
-msgstr ""
+msgstr "Versiones compatibles"
 
 msgid "Launch application"
-msgstr ""
+msgstr "Iniciar aplicación "
 
 msgid "DHIS2 application"
-msgstr ""
+msgstr "Aplicación de DSHI2"
 
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 msgid "Welcome page"
 msgstr "Bienvenido"
 
 msgid "General info"
-msgstr ""
+msgstr "Información general"
 
 msgid "Access"
-msgstr ""
+msgstr "Acceso"
 
 msgid "Summary"
 msgstr "Fin"
@@ -217,82 +216,79 @@ msgid "Imported {{n}} modules"
 msgstr "{{n}} módulos importados"
 
 msgid "Are you sure you want to delete the selected modules?"
-msgstr ""
+msgstr "¿Está seguro de que quiere eliminar los módulos seleccionados?"
 
 msgid "This action cannot be reversed"
-msgstr ""
+msgstr "Esta acción no puede ser revertida"
 
 msgid "Deleting modules"
 msgstr "Eliminando modulo"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "Delete modules"
 msgstr "Eliminar modulos"
 
 msgid "Are you sure you want to delete the selected step and its pages?"
-msgstr ""
+msgstr "¿Está seguro de que quiere eliminar el paso seleccionado y sus páginas?"
 
 msgid "Delete step"
 msgstr "Borrar paso"
 
 msgid "Are you sure you want to delete the selected page?"
-msgstr ""
+msgstr "¿Está seguro de que quiere eliminar la página seleccionada?"
 
 msgid "Delete page"
 msgstr "Borrar página"
 
 msgid "Add new page"
-msgstr ""
+msgstr "Añadir nueva página"
 
-#, fuzzy
 msgid "Edit step"
-msgstr "Paso siguiente"
+msgstr "Editar paso"
 
 msgid "Edit contents of {{name}}"
 msgstr "Editar contenidos de {{name}}"
 
 msgid "Installing application"
-msgstr ""
+msgstr "Instalando aplicación"
 
 msgid "Are you sure you want to reset selected modules to its default value?"
-msgstr ""
+msgstr "¿Está seguro de que quiere restablecer los módulos seleccionados a su valor por defecto?"
 
 msgid "This action cannot be reversed."
-msgstr ""
+msgstr "Esta acción no puede ser revertida."
 
 msgid "Resetting modules to default value"
-msgstr ""
+msgstr "Restablecer los módulos a su valor por defecto"
 
 msgid "Successfully resetted modules to default value"
-msgstr ""
+msgstr "Restablecido con éxito el valor por defecto de los módulos"
 
 msgid "Reset app to factory settings"
-msgstr ""
+msgstr "Restablecer la aplicación a la configuración de fábrica"
 
 msgid "Exporting module(s)"
 msgstr "Exportando módulo(s)"
 
 msgid "App is not installed in this instance"
-msgstr ""
+msgstr "La aplicación no está instalada en esta instancia"
 
 msgid "Module does not support this DHIS2 version"
-msgstr ""
+msgstr "El módulo no es compatible con esta versión de DHIS2"
 
-msgid ""
-"There's a new version of this module, please reset to default values to "
-"update"
-msgstr ""
+msgid "There's a new version of this module, please reset to default values to update"
+msgstr "Hay una nueva versión de este módulo, por favor restablezca los valores por defecto para actualizar"
 
 msgid "Add module"
 msgstr "Añadir modulo"
 
 msgid "Add step"
-msgstr ""
+msgstr "Añadir paso"
 
 msgid "Add page"
-msgstr ""
+msgstr "Añadir página"
 
 msgid "Edit module"
 msgstr "Editar modulo"
@@ -310,10 +306,10 @@ msgid "Move down"
 msgstr "Mover abajo"
 
 msgid "Install app"
-msgstr ""
+msgstr "Instalar aplicación"
 
 msgid "Restore to factory settings"
-msgstr ""
+msgstr "Restablecer la configuración de fábrica"
 
 msgid "Export module"
 msgstr "Exportar módulo"
@@ -322,7 +318,7 @@ msgid "Import modules"
 msgstr "Importar módulos"
 
 msgid "Help"
-msgstr ""
+msgstr "Ayuda"
 
 msgid "Close"
 msgstr "Cerrar"
@@ -340,31 +336,31 @@ msgid "Next"
 msgstr "Siguiente"
 
 msgid "Sub step {{position}} of {{total}}"
-msgstr ""
+msgstr "Sub paso {{posición}} de {{total}}"
 
 msgid "Welcome"
 msgstr "Bienvenido"
 
 msgid "Final"
-msgstr ""
+msgstr "Final"
 
 msgid "Exit"
-msgstr ""
+msgstr "Salir"
 
 msgid "Create"
-msgstr ""
+msgstr "Crear"
 
 msgid "Training app"
-msgstr ""
+msgstr "Aplicación de formación"
 
 msgid "Cancel module editing?"
-msgstr ""
+msgstr "¿Cancelar la edición del módulo?"
 
 msgid "Cancel module creation?"
-msgstr ""
+msgstr "¿Cancelar la creación del módulo?"
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
-msgstr ""
+msgstr "Todos sus cambios se perderán. ¿Desea continuar?"
 
 msgid "Create module"
 msgstr "Crear modulo"
@@ -376,18 +372,13 @@ msgid "Exit Tutorial"
 msgstr "Salir del tutorial"
 
 msgid "Are you sure you want to exit?"
-msgstr ""
+msgstr "¿Seguro que desea salir?"
 
-msgid ""
-"If you are sure you want to exit, select 'Exit tutorial'. You can relaunch "
-"the training tutorial again at any time from the applications menu."
-msgstr ""
+msgid "If you are sure you want to exit, select 'Exit tutorial'. You can relaunch the training tutorial again at any time from the applications menu."
+msgstr "Si está seguro de querer salir, seleccione 'Salir del tutorial'. Puede volver a iniciar el tutorial de formación en cualquier momento desde el menú de aplicaciones."
 
-msgid ""
-"If you would like to continue with training, select 'Continue tutorial' "
-"below or if you would like to select a different tutorial, click on the "
-"'Home' button."
-msgstr ""
+msgid "If you would like to continue with training, select 'Continue tutorial' below or if you would like to select a different tutorial, click on the 'Home' button."
+msgstr "Si desea continuar con la formación, seleccione 'Continuar con el tutorial' a continuación o si desea seleccionar un tutorial diferente, haga clic en el botón 'Inicio'."
 
 msgid "Well done!"
 msgstr "Bien hecho!"
@@ -399,84 +390,82 @@ msgid "Back to tutorial"
 msgstr "Vovler al tutorial"
 
 msgid "Finish"
-msgstr ""
+msgstr "Finalizar"
 
 msgid "Welcome to training on DHIS2"
-msgstr ""
+msgstr "Bienvenido a la formación sobre DHIS2"
 
 msgid "What do you want to learn in DHIS2?"
-msgstr ""
+msgstr "¿Qué quiere aprender en DHIS2?"
 
 msgid "First load can take a couple of minutes, please wait..."
-msgstr ""
+msgstr "La primera carga puede tardar un par de minutos, por favor espere..."
 
 msgid "Accessible to {{users}} users and {{userGroups}} user groups"
-msgstr ""
+msgstr "Accesible para los usuarios {{users}} y los grupos de usuarios {{userGroups}}"
 
 msgid "Accessible to {{users}} users"
-msgstr ""
+msgstr "Accesible para los usuarios de {{users}}"
 
 msgid "Accessible to {{userGroups}} user groups"
-msgstr ""
+msgstr "Accesible a los grupos de usuarios {{userGroups}}"
 
 msgid "Only accessible to system administrators"
-msgstr ""
+msgstr "Sólo accesible para los administradores del sistema"
 
 msgid "Clean-up unused documents"
-msgstr ""
+msgstr "Limpiar los documentos no utilizados"
 
-#, fuzzy
 msgid "Deleting dangling documents"
-msgstr "Eliminando modulo"
+msgstr "Borrando documentos obsoletos"
 
-#, fuzzy
 msgid "Deleted dangling documents"
-msgstr "Eliminando modulo"
+msgstr "Documentos obsoletos borrados"
 
 msgid "Proceed"
-msgstr ""
+msgstr "Proceder"
 
 msgid "Unable to update module contents"
-msgstr ""
+msgstr "No se puede actualizar el contenido del módulo"
 
 msgid "Unable to move item"
-msgstr ""
+msgstr "No se puede mover el artículo"
 
 msgid "Unable to add step"
-msgstr ""
+msgstr "No se puede añadir el paso"
 
 msgid "Unable to add page"
-msgstr ""
+msgstr "No se puede añadir la página"
 
 msgid "Unable to remove step"
-msgstr ""
+msgstr "No se puede eliminar el paso"
 
 msgid "Unable to remove page"
-msgstr ""
+msgstr "No se puede eliminar la página"
 
 msgid "Permissions"
 msgstr "Permisos"
 
 msgid "Access to Settings"
-msgstr ""
+msgstr "Acceso a la configuración"
 
 msgid "Show list with modules on main landing page"
-msgstr ""
+msgstr "Mostrar la lista con los módulos en la página de inicio"
 
 msgid "A list with all the existing modules is visible"
-msgstr ""
+msgstr "Una lista con todos los módulos existentes es visible"
 
 msgid "The list with all the existing  modules is hidden"
-msgstr ""
+msgstr "La lista con todos los módulos existentes está oculta"
 
 msgid "There are no unused documents to clean"
-msgstr ""
+msgstr "No hay documentos no utilizados que limpiar"
 
 msgid "There are {{total}} documents available to clean"
-msgstr ""
+msgstr "Hay {{total}} documentos disponibles para limpiar"
 
 msgid "Training modules"
-msgstr ""
+msgstr "Módulos de formación"
 
 msgid "What did you learn in this tutorial?"
 msgstr "¿Qué ha aprendido en este tutorial?"
@@ -485,10 +474,10 @@ msgid "What will this tutorial cover?"
 msgstr "¿Qué cubrirá este tutorial?"
 
 msgid "Take another tutorial"
-msgstr ""
+msgstr "Otro tutorial "
 
 msgid "Start"
-msgstr ""
+msgstr "Inicio"
 
 msgid "Start Tutorial"
 msgstr "Empezar tutorial"
