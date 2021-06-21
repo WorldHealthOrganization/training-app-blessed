@@ -7,6 +7,7 @@ export type AppStateType =
     | "TRAINING_DIALOG"
     | "UNKNOWN"
     | "SETTINGS"
+    | "ABOUT"
     | "EDIT_MODULE"
     | "CREATE_MODULE";
 
@@ -42,6 +43,10 @@ interface SettingsAppState extends BaseAppState {
     type: "SETTINGS";
 }
 
+interface AboutAppState extends BaseAppState {
+    type: "ABOUT";
+}
+
 interface EditAppState extends BaseAppState {
     type: "EDIT_MODULE";
     module: string;
@@ -57,6 +62,7 @@ export type AppState =
     | TrainingAppState
     | TrainingDialogAppState
     | SettingsAppState
+    | AboutAppState
     | EditAppState
     | CreateAppState;
 
@@ -70,6 +76,8 @@ export const buildPathFromState = (state: AppState): string => {
             return `/tutorial/${state.module}/${state.dialog}`;
         case "SETTINGS":
             return `/settings`;
+        case "ABOUT":
+            return `/about`;
         case "EDIT_MODULE":
             return `/edit/${state.module}`;
         case "CREATE_MODULE":
@@ -103,6 +111,8 @@ export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
                 };
             case "/settings":
                 return { type: "SETTINGS" };
+            case "/about":
+                return { type: "ABOUT" };
             case "/edit/:module":
                 return { type: "EDIT_MODULE", module: match.params.module ?? "" };
             case "/create":
