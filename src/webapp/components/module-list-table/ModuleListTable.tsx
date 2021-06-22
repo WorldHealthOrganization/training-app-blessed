@@ -194,7 +194,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             updateMarkdownDialog({
                 title: i18n.t("Add new page"),
                 markdownPreview: markdown => <StepPreview value={markdown} />,
-                onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
+                onUpload: uploadFile ? (data: ArrayBuffer, file: File) => uploadFile({ data, name: file.name }) : undefined,
                 onCancel: () => updateMarkdownDialog(null),
                 onSave: async value => {
                     updateMarkdownDialog(null);
@@ -285,7 +285,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 title: i18n.t("Edit contents of {{name}}", row),
                 initialValue: row.value.referenceValue,
                 markdownPreview: markdown => <StepPreview value={markdown} />,
-                onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
+                onUpload: uploadFile ? (data: ArrayBuffer, file: File) => uploadFile({ data, name: file.name }) : undefined,
                 onCancel: () => updateMarkdownDialog(null),
                 onSave: async value => {
                     updateMarkdownDialog(null);
@@ -751,6 +751,6 @@ export type ModuleListTableAction = {
     deleteModules?: (params: { ids: string[] }) => Promise<void>;
     resetModules?: (params: { ids: string[] }) => Promise<void>;
     swap?: (params: { type: "module" | "step" | "page"; id: string; from: string; to: string }) => Promise<void>;
-    uploadFile?: (params: { data: ArrayBuffer }) => Promise<string>;
+    uploadFile?: (params: { data: ArrayBuffer, name: string }) => Promise<string>;
     installApp?: (params: { id: string }) => Promise<boolean>;
 };
