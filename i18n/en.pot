@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-21T12:32:50.722Z\n"
-"PO-Revision-Date: 2021-06-21T12:32:50.722Z\n"
+"POT-Creation-Date: 2021-06-22T05:29:07.569Z\n"
+"PO-Revision-Date: 2021-06-22T05:29:07.569Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -90,6 +90,9 @@ msgid "No"
 msgstr ""
 
 msgid "Imported {{total}} translation terms"
+msgstr ""
+
+msgid "Unable to import translation terms"
 msgstr ""
 
 msgid "Add section"
