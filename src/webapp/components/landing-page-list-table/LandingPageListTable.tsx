@@ -72,8 +72,12 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
 
     const handleTranslationUpload = useCallback(
         async (_key: string | undefined, lang: string, terms: Record<string, string>) => {
-            await usecases.landings.importTranslations(lang, terms);
-            snackbar.success(i18n.t("Imported {{total}} translation terms", { total: _.keys(terms).length }));
+            const total = await usecases.landings.importTranslations(lang, terms);
+            if (total > 0) {
+                snackbar.success(i18n.t("Imported {{total}} translation terms", { total }));
+            } else {
+                snackbar.warning(i18n.t("Unable to import translation terms"));
+            }
         },
         [usecases, snackbar]
     );

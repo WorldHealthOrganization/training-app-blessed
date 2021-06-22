@@ -8,5 +8,5 @@ export interface LandingPageRepository {
     updateChild(node: LandingNode): Promise<void>;
     removeChilds(ids: string[]): Promise<void>;
     exportTranslations(): Promise<void>;
-    importTranslations(language: string, terms: Record<string, string>): Promise<void>;
+    importTranslations(language: string, terms: Record<string, string>): Promise<number>;
 }
