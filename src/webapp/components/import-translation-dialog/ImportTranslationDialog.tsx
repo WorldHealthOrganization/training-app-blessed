@@ -20,8 +20,13 @@ export const ImportTranslationDialog = React.forwardRef(
         const inputRef = useRef<any>(null);
 
         const save = useCallback(async () => {
-            if (!selectedModule || !selectedLang || !terms) {
-                snackbar.error(i18n.t("You need to select a module and a language"));
+            if (props.type === "module" && !selectedModule) {
+                snackbar.error(i18n.t("You need to select a module"));
+                return;
+            }
+
+            if (!selectedLang || !terms) {
+                snackbar.error(i18n.t("You need to select a language"));
                 return;
             }
             await props.onSave(selectedModule, selectedLang, terms);
@@ -78,12 +83,14 @@ export const ImportTranslationDialog = React.forwardRef(
                     fullWidth={true}
                 >
                     <Container>
-                        <Select
-                            label={i18n.t("Module to add translation")}
-                            items={buildModuleList(modules, translate)}
-                            onChange={setSelectedModule}
-                            value={selectedModule}
-                        />
+                        {props.type === "module" ? (
+                            <Select
+                                label={i18n.t("Module to add translation")}
+                                items={buildModuleList(modules, translate)}
+                                onChange={setSelectedModule}
+                                value={selectedModule}
+                            />
+                        ) : null}
 
                         <Select
                             label={i18n.t("Language to add translation")}
@@ -112,7 +119,8 @@ export interface ImportTranslationRef {
 }
 
 export interface ImportTranslationDialogProps {
-    onSave: (key: string, lang: string, terms: Record<string, string>) => void | Promise<void>;
+    type: "module" | "landing-page";
+    onSave: (key: string | undefined, lang: string, terms: Record<string, string>) => void | Promise<void>;
 }
 
 function buildModuleList(modules: TrainingModule[], translate: TranslateMethod): DropdownItem[] {

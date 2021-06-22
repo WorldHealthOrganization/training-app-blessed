@@ -5,6 +5,7 @@ import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import HomeIcon from "@material-ui/icons/Home";
 import MinimizeIcon from "@material-ui/icons/Minimize";
 import SettingsIcon from "@material-ui/icons/Settings";
+import AboutIcon from "@material-ui/icons/Info";
 import React from "react";
 import styled from "styled-components";
 import i18n from "../../../locales";
@@ -18,6 +19,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
     onGoBack,
     onMinimize,
     onSettings,
+    onAbout,
 }) => {
     return (
         <div>
@@ -29,6 +31,11 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
             {onSettings ? (
                 <SettingsButton text={i18n.t("Settings")} placement={"right"}>
                     <SettingsIcon onClick={onSettings} />
+                </SettingsButton>
+            ) : null}
+            {onAbout ? (
+                <SettingsButton text={i18n.t("About")} placement={"right"}>
+                    <AboutIcon onClick={onAbout} />
                 </SettingsButton>
             ) : null}
             {onGoBack ? (
@@ -66,6 +73,7 @@ export interface ModalHeaderProps {
     onGoHome?: () => void;
     onMinimize?: () => void;
     onSettings?: () => void;
+    onAbout?: () => void;
     onGoBack?: () => void;
 }
 

@@ -31,13 +31,32 @@ export const updateTranslation = (
     };
 };
 
-export const updateOrder = (module: PartialTrainingModule, id1: string, id2: string): PartialTrainingModule => {
+export const enforceKeyName = (model: PartialTrainingModule): PartialTrainingModule => {
     return {
-        ...module,
+        ...model,
         contents: {
-            ...module.contents,
+            ...model.contents,
+            steps: model.contents.steps.map((step, stepIdx) => ({
+                ...step,
+                id: `${model.id}-step-${stepIdx + 1}`,
+                title: { ...step.title, key: `${model.id}-step-${stepIdx + 1}-title` },
+                pages: step.pages.map((page, pageIdx) => ({
+                    ...page,
+                    id: `${model.id}-page-${stepIdx + 1}-${pageIdx + 1}`,
+                    key: `${model.id}-step-${stepIdx + 1}-${pageIdx + 1}`,
+                })),
+            })),
+        },
+    };
+};
+
+export const updateOrder = (model: PartialTrainingModule, id1: string, id2: string): PartialTrainingModule => {
+    return enforceKeyName({
+        ...model,
+        contents: {
+            ...model.contents,
             steps: swapById(
-                module.contents.steps.map(step => ({
+                model.contents.steps.map(step => ({
                     ...step,
                     pages: swapById(step.pages, id1, id2),
                 })),
@@ -45,20 +64,20 @@ export const updateOrder = (module: PartialTrainingModule, id1: string, id2: str
                 id2
             ),
         },
-    };
+    });
 };
 
-export const addStep = (module: PartialTrainingModule, title: string): PartialTrainingModule => {
-    return {
-        ...module,
+export const addStep = (model: PartialTrainingModule, title: string): PartialTrainingModule => {
+    return enforceKeyName({
+        ...model,
         contents: {
-            ...module.contents,
+            ...model.contents,
             steps: [
-                ...module.contents.steps,
+                ...model.contents.steps,
                 {
-                    id: `${module.id}-step-${module.contents.steps.length}`,
+                    id: `${model.id}-step-${model.contents.steps.length + 1}`,
                     title: {
-                        key: `step-${module.contents.steps.length + 1}-title`,
+                        key: `${model.id}-step-${model.contents.steps.length + 1}-title`,
                         referenceValue: title,
                         translations: {},
                     },
@@ -67,15 +86,15 @@ export const addStep = (module: PartialTrainingModule, title: string): PartialTr
                 },
             ],
         },
-    };
+    });
 };
 
-export const addPage = (module: PartialTrainingModule, stepKey: string, value: string): PartialTrainingModule => {
-    return {
-        ...module,
+export const addPage = (model: PartialTrainingModule, stepKey: string, value: string): PartialTrainingModule => {
+    return enforceKeyName({
+        ...model,
         contents: {
-            ...module.contents,
-            steps: module.contents.steps.map((step, stepIdx) => {
+            ...model.contents,
+            steps: model.contents.steps.map((step, stepIdx) => {
                 if (step.id !== stepKey) return step;
 
                 return {
@@ -83,8 +102,8 @@ export const addPage = (module: PartialTrainingModule, stepKey: string, value: s
                     pages: [
                         ...step.pages,
                         {
-                            id: `${module.id}-page-${stepIdx}-${step.pages.length}`,
-                            key: `step-${stepIdx + 1}-${step.pages.length + 1}`,
+                            id: `${model.id}-page-${stepIdx}-${step.pages.length + 1}`,
+                            key: `${model.id}-step-${stepIdx + 1}-${step.pages.length + 1}`,
                             referenceValue: value,
                             translations: {},
                         },
@@ -92,7 +111,7 @@ export const addPage = (module: PartialTrainingModule, stepKey: string, value: s
                 };
             }),
         },
-    };
+    });
 };
 
 export const removeStep = (module: PartialTrainingModule, stepKey: string): PartialTrainingModule => {

@@ -62,7 +62,7 @@ export const GeneralInfoStep: React.FC<ModuleCreationWizardStepProps> = ({ modul
         (event: ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files ? event.target.files[0] : undefined;
             file?.arrayBuffer().then(async data => {
-                const icon = await usecases.instance.uploadFile(data);
+                const icon = await usecases.instance.uploadFile(data, file.name);
                 onChange(module => ({ ...module, icon }));
             });
         },

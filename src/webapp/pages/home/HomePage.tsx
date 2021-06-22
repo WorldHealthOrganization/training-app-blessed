@@ -225,6 +225,10 @@ export const HomePage: React.FC = React.memo(() => {
         setAppState({ type: "SETTINGS" });
     }, [setAppState]);
 
+    const openAbout = useCallback(() => {
+        setAppState({ type: "ABOUT" });
+    }, [setAppState]);
+
     const minimize = useCallback(() => {
         setAppState(appState => ({ ...appState, minimized: true }));
     }, [setAppState]);
@@ -275,6 +279,7 @@ export const HomePage: React.FC = React.memo(() => {
     return (
         <StyledModal
             onSettings={hasSettingsAccess ? openSettings : undefined}
+            onAbout={openAbout}
             onMinimize={minimize}
             onClose={exitTutorial}
             onGoBack={!isRoot ? goBack : undefined}
