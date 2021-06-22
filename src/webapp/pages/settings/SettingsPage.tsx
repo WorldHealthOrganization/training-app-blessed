@@ -94,8 +94,9 @@ export const SettingsPage: React.FC = () => {
     }, [danglingDocuments, loading, snackbar, usecases]);
 
     const refreshModules = useCallback(async () => {
+        usecases.instance.listDanglingDocuments().then(setDanglingDocuments);
         await reload();
-    }, [reload]);
+    }, [reload, usecases]);
 
     const openAddModule = useCallback(() => {
         setAppState({ type: "CREATE_MODULE" });
