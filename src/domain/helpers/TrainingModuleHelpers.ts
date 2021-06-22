@@ -31,7 +31,7 @@ export const updateTranslation = (
     };
 };
 
-export const enforceKeyName = (model: PartialTrainingModule) => {
+export const enforceKeyName = (model: PartialTrainingModule): PartialTrainingModule => {
     return {
         ...model,
         contents: {
