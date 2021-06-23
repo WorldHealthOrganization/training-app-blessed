@@ -8,7 +8,7 @@ export interface MarkdownEditorDialogProps {
     initialValue?: string;
     onCancel: () => void;
     onSave: (value: string) => void;
-    onUpload?: (data: ArrayBuffer) => Promise<string>;
+    onUpload?: (data: ArrayBuffer, file: File) => Promise<string>;
     markdownPreview?: (markdown: string) => ReactNode;
 }
 

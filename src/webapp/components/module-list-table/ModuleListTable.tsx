@@ -75,9 +75,14 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
     );
 
     const handleTranslationUpload = useCallback(
-        async (key: string, lang: string, terms: Record<string, string>) => {
-            await usecases.translations.import(key, lang, terms);
-            snackbar.success(i18n.t("Imported {{count}} translation terms", { count: _.keys(terms).length }));
+        async (key: string | undefined, lang: string, terms: Record<string, string>) => {
+            if (!key) return;
+            const total = await usecases.modules.importTranslations(key, lang, terms);
+            if (total > 0) {
+                snackbar.success(i18n.t("Imported {{total}} translation terms", { total }));
+            } else {
+                snackbar.warning(i18n.t("Unable to import translation terms"));
+            }
         },
         [usecases, snackbar]
     );
@@ -193,7 +198,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             updateMarkdownDialog({
                 title: i18n.t("Add new page"),
                 markdownPreview: markdown => <StepPreview value={markdown} />,
-                onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
+                onUpload: uploadFile
+                    ? (data: ArrayBuffer, file: File) => uploadFile({ data, name: file.name })
+                    : undefined,
                 onCancel: () => updateMarkdownDialog(null),
                 onSave: async value => {
                     updateMarkdownDialog(null);
@@ -284,7 +291,9 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 title: i18n.t("Edit contents of {{name}}", row),
                 initialValue: row.value.referenceValue,
                 markdownPreview: markdown => <StepPreview value={markdown} />,
-                onUpload: uploadFile ? (data: ArrayBuffer) => uploadFile({ data }) : undefined,
+                onUpload: uploadFile
+                    ? (data: ArrayBuffer, file: File) => uploadFile({ data, name: file.name })
+                    : undefined,
                 onCancel: () => updateMarkdownDialog(null),
                 onSave: async value => {
                     updateMarkdownDialog(null);
@@ -355,7 +364,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         async (ids: string[]) => {
             if (!ids[0]) return;
             loading.show(true, i18n.t("Exporting translations"));
-            await usecases.translations.export(ids[0]);
+            await usecases.modules.exportTranslations(ids[0]);
             loading.reset();
         },
         [loading, usecases]
@@ -621,7 +630,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
             {inputDialogProps && <InputDialog isOpen={true} fullWidth={true} maxWidth={"md"} {...inputDialogProps} />}
             {markdownDialogProps && <MarkdownEditorDialog {...markdownDialogProps} />}
 
-            <ImportTranslationDialog ref={translationImportRef} onSave={handleTranslationUpload} />
+            <ImportTranslationDialog type="module" ref={translationImportRef} onSave={handleTranslationUpload} />
 
             <Dropzone ref={moduleImportRef} accept={zipMimeType} onDrop={handleFileUpload}>
                 <ObjectsTable<ListItem>
@@ -750,6 +759,6 @@ export type ModuleListTableAction = {
     deleteModules?: (params: { ids: string[] }) => Promise<void>;
     resetModules?: (params: { ids: string[] }) => Promise<void>;
     swap?: (params: { type: "module" | "step" | "page"; id: string; from: string; to: string }) => Promise<void>;
-    uploadFile?: (params: { data: ArrayBuffer }) => Promise<string>;
+    uploadFile?: (params: { data: ArrayBuffer; name: string }) => Promise<string>;
     installApp?: (params: { id: string }) => Promise<boolean>;
 };

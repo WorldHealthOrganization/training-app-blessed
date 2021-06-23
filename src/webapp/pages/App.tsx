@@ -11,6 +11,7 @@ import { AppRoute } from "../router/AppRoute";
 import { Router } from "../router/Router";
 import muiThemeLegacy from "../themes/dhis2-legacy.theme";
 import { muiTheme } from "../themes/dhis2.theme";
+import { AboutPage } from "./about/AboutPage";
 import "./App.css";
 import { EditPage } from "./edit/EditPage";
 import { ExitPage } from "./exit/ExitPage";
@@ -81,6 +82,12 @@ export const routes: AppRoute[] = [
         name: () => i18n.t("Settings"),
         paths: ["/settings"],
         element: <SettingsPage />,
+    },
+    {
+        key: "about",
+        name: () => i18n.t("About"),
+        paths: ["/about"],
+        element: <AboutPage />,
     },
     {
         key: "edit",

@@ -175,23 +175,14 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
     }
 
     public async exportTranslations(key: string): Promise<void> {
-        const model = await this.get(key);
+        const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
+            Namespaces.TRAINING_MODULES,
+            key
+        );
         if (!model) throw new Error(`Module ${key} not found`);
 
-        const foo = _.compact([
-            model.name,
-            model.contents.welcome,
-            ..._.flatMap(model.contents.steps, step => [step.title, step.subtitle, ...step.pages]),
-        ]);
-
-        const referenceStrings = _.fromPairs(foo.map(({ key, referenceValue }) => [key, referenceValue]));
-        const translatedStrings = _(foo)
-            .flatMap(({ key, translations }) => _.toPairs(translations).map(([lang, value]) => ({ lang, key, value })))
-            .groupBy("lang")
-            .mapValues(array => _.fromPairs(array.map(({ key, value }) => [key, value])))
-            .value();
-
-        const files = _.toPairs({ ...translatedStrings, en: referenceStrings });
+        const translations = await this.extractTranslations(model);
+        const files = _.toPairs(translations);
         const zip = new JSZip();
 
         for (const [lang, contents] of files) {
@@ -202,10 +193,10 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
 
         const blob = await zip.generateAsync({ type: "blob" });
         const moduleName = _.kebabCase(model.name.referenceValue);
-        FileSaver.saveAs(blob, `translations-${moduleName}-.zip`);
+        FileSaver.saveAs(blob, `translations-${moduleName}.zip`);
     }
 
-    public async importTranslations(key: string, language: string, terms: Record<string, string>): Promise<void> {
+    public async importTranslations(key: string, language: string, terms: Record<string, string>): Promise<number> {
         const model = await this.storageClient.getObjectInCollection<PersistedTrainingModule>(
             Namespaces.TRAINING_MODULES,
             key
@@ -238,6 +229,26 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
         };
 
         await this.saveDataStore(translatedModel);
+
+        const translations = await this.extractTranslations(model);
+        return _.intersection(_.keys(translations["en"]), _.keys(terms)).length;
+    }
+
+    private async extractTranslations(model: PersistedTrainingModule): Promise<Record<string, Record<string, string>>> {
+        const texts = _.compact([
+            model.name,
+            model.contents.welcome,
+            ..._.flatMap(model.contents.steps, step => [step.title, step.subtitle, ...step.pages]),
+        ]);
+
+        const referenceStrings = _.fromPairs(texts.map(({ key, referenceValue }) => [key, referenceValue]));
+        const translatedStrings = _(texts)
+            .flatMap(({ key, translations }) => _.toPairs(translations).map(([lang, value]) => ({ lang, key, value })))
+            .groupBy("lang")
+            .mapValues(array => _.fromPairs(array.map(({ key, value }) => [key, value])))
+            .value();
+
+        return { ...translatedStrings, en: referenceStrings };
     }
 
     @cache()

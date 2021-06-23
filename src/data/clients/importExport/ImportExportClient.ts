@@ -6,6 +6,7 @@ import { TranslatableText } from "../../../domain/entities/TranslatableText";
 import { InstanceRepository } from "../../../domain/repositories/InstanceRepository";
 import { fromPairs } from "../../../types/utils";
 import { promiseMap } from "../../../utils/promises";
+import { getUrls, replaceUrls } from "../../../utils/urls";
 
 export type Mapping = MappingItem[];
 
@@ -60,9 +61,12 @@ export class ImportExportClient {
     }
 
     private async addFiles<T extends ExportableItem>(modules: Array<T | undefined>, zip: JSZip) {
-        const urls = _(modules).flatMap(getUrls).uniq().value();
-        const files = await this.getFiles(urls, this.instanceRepository.baseUrl);
+        const urls = _(modules)
+            .flatMap(item => getUrls(item))
+            .uniq()
+            .value();
 
+        const files = await this.getFiles(urls, this.instanceRepository.getBaseUrl());
         const filesFolder = _(files).isEmpty() ? null : zip.folder(this.exportConfig.filesFolder);
 
         if (filesFolder) {
@@ -151,23 +155,4 @@ export class ImportExportClient {
         const blob = new Blob([json], { type: "application/json" });
         zip.file(path, blob);
     }
-}
-
-// Full-fledged url regexp are extremely slow, so let's use a very simple on that covers our use-cases:
-//   [Some link](http://some-link.com/path?x=1)
-//   [Some link](http://some-link.com/path?x=1 "Title")
-//   <img src="http://some-link.com/path?x=1">
-const urlRegExp = /(https?:\/\/|\.\.\/)[^\\"\s)]+/g;
-
-function getUrls<T>(module: T): string[] {
-    // For simplicity, process directly the JSON representation of the module
-    const json = JSON.stringify(module);
-    const urls = Array.from(json.matchAll(urlRegExp)).map(groups => groups[0]);
-    return _(urls).compact().uniq().value();
-}
-
-function replaceUrls<T>(module: T, urlMapping: Record<string, string>): T {
-    const json = JSON.stringify(module);
-    const json2 = json.replace(urlRegExp, url => urlMapping[url] || url);
-    return JSON.parse(json2);
 }
