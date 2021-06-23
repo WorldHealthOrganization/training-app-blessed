@@ -9,7 +9,7 @@ export interface TrainingModuleRepository {
     swapOrder(id1: string, id2: string): Promise<void>;
     updateProgress(id: string, lastStep: number, completed: boolean): Promise<void>;
     exportTranslations(key: string): Promise<void>;
-    importTranslations(key: string, language: string, terms: Record<string, string>): Promise<void>;
+    importTranslations(key: string, language: string, terms: Record<string, string>): Promise<number>;
     resetDefaultValue(ids: string[]): Promise<void>;
     export(ids: string[]): Promise<void>;
     import(files: File[]): Promise<PersistedTrainingModule[]>;

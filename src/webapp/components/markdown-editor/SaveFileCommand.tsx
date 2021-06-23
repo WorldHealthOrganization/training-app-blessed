@@ -77,14 +77,24 @@ export const saveFileCommand: Command = {
 };
 
 function getMarkdown(fileUrl: string, type?: FileTypeResult): string {
+    // Detect transformed gif files
+    if (process.env.NODE_ENV === "development" && type?.mime === "image/gif") {
+        return `<video-gif src="${fileUrl}"></video-gif>`;
+    }
+
+    // Detect and add pdf preview (HTML5)
+    if (type?.mime === "application/pdf") {
+        return `<pdf src="${fileUrl}" />`;
+    }
+
     // Detect and add images inline (markdown)
     if (type?.mime.startsWith("image/")) {
         return `![Uploaded file](${fileUrl})`;
     }
 
-    // Detect and add pdf preview (HTML5)
-    if (type?.mime === "application/pdf") {
-        return `<embed src="${fileUrl}" width="100%" height="600px" />`;
+    // Detect and add videos inline (markdown)
+    if (type?.mime.startsWith("video/")) {
+        return `<video src="${fileUrl}"></video>`;
     }
 
     // Fail-safe markdown download link

@@ -19,8 +19,6 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module, 
 
     const [dialogProps, updateDialog] = useState<InputDialogProps | null>(null);
 
-    const uploadFile = useCallback(({ data }) => usecases.instance.uploadFile(data), [usecases]);
-
     const openAddStep = useCallback(() => {
         updateDialog({
             title: i18n.t("Add new step"),
@@ -37,7 +35,7 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module, 
 
     const tableActions: ComponentParameter<typeof ModuleListTable, "tableActions"> = useMemo(
         () => ({
-            uploadFile,
+            uploadFile: ({ data, name }) => usecases.instance.uploadFile(data, name),
             editContents: async ({ text, value }) => onChange(module => updateTranslation(module, text.key, value)),
             swap: async ({ type, from, to }) => {
                 if (type === "module") return;
@@ -48,7 +46,7 @@ export const ContentsStep: React.FC<ModuleCreationWizardStepProps> = ({ module, 
             deleteStep: async ({ step }) => onChange(module => removeStep(module, step)),
             deletePage: async ({ step, page }) => onChange(module => removePage(module, step, page)),
         }),
-        [onChange, uploadFile]
+        [onChange, usecases]
     );
 
     return (
