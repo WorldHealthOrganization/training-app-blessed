@@ -140,8 +140,6 @@ export class ImportExportClient {
             const blob = await fetch(url, { credentials })
                 .then(res => (res.status >= 200 && res.status < 300 && !res.redirected ? res : Promise.reject()))
                 .then(res => res.blob())
-                // Make sure we capture only image URLs
-                .then(blob => (blob.type.startsWith("image/") ? blob : Promise.reject()))
                 .catch(_err => null);
 
             return blob ? { url, blob } : null;
