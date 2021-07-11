@@ -1,84 +1,106 @@
-## Setup
+# Start package for [Bulma](http://bulma.io)
 
+Tiny npm package that includes the `npm` **dependencies** you need to **build your own website** with Bulma.
+
+<a href="http://bulma.io"><img src="https://raw.githubusercontent.com/jgthms/bulma-start/master/bulma-start.png" alt="Bulma: a Flexbox CSS framework" style="max-width:100%;" width="600" height="315"></a>
+
+## Install
+
+```sh
+npm install bulma-start
 ```
-$ yarn install
-```
+_or_
 
-## Development
-
-Start development server:
-
-```
-$ PORT=8082 REACT_APP_DHIS2_BASE_URL="https://play.dhis2.org/dev" yarn start
-```
-
-Linting:
-
-```
-$ yarn lint
+```sh
+yarn add bulma-start
 ```
 
-## Tests
+## What's included
 
-Run unit tests:
+The `npm` dependencies included in `package.json` are:
 
-```
-$ yarn test
-```
+* <code>[bulma](https://github.com/jgthms/bulma)</code>
+* <code>[node-sass](https://github.com/sass/node-sass)</code> to compile your own Sass file
+* <code>[postcss-cli](https://github.com/postcss/postcss-cli)</code> and <code>[autoprefixer](https://github.com/postcss/autoprefixer)</code> to add support for older browsers
+* <code>[babel-cli](https://babeljs.io/docs/usage/cli/)</code>, <code>[babel-preset-env](https://github.com/babel/babel-preset-env)</code> and <code>[babel-preset-es2015-ie](https://github.com/jmcriffey/babel-preset-es2015-ie)</code> for compiling ES6 JavaScript files
 
-Run integration tests locally:
+Apart from `package.json`, the following files are included:
 
-```
-$ export CYPRESS_DHIS2_AUTH='admin:district'
-$ export CYPRESS_EXTERNAL_API="http://localhost:8080"
-$ export CYPRESS_ROOT_URL=http://localhost:8081
+* `.babelrc` configuration file for [Babel](https://babeljs.io/)
+* `.gitignore` common [Git](https://git-scm.com/) ignored files
+* `index.html` this HTML5 file
+* `_sass/main.scss` a basic SCSS file that **imports Bulma** and explains how to **customize** your styles, and compiles to `css/main.css`
+* `_javascript/main.js` an ES6 JavaScript that compiles to `lib/main.js`
 
-# non-interactive
-$ yarn cy:e2e:run
 
-# interactive UI
-$ yarn cy:e2e:open
-```
+## Get your feet wet
 
-For this to work in Travis CI, you will have to create an environment variable CYPRESS_DHIS2_AUTH (Settings -> Environment Variables) with the password used in your testing DHIS2 instance.
+This package is meant to provide a **good starting point** for working with Bulma.
 
-## Build app ZIP
+When installing this package with the commands above, it landed in `$HOME/node_packages/bulma-start`.
+In order to use it as a **template** for your **project**, you might consider copying it to a better suited location:
 
-```
-$ yarn build-webapp
-```
-
-## Some development tips
-
-### Structure
-
--   `i18n/`: Contains literal translations (gettext format)
--   `public/`: Main app folder with a `index.html`, exposes the APP, contains the feedback-tool
--   `src/pages`: Main React components.
--   `src/components`: Reusable React components.
--   `src/models`: Models that encapsulate all the logic of the app (React components should only contain view logic).
--   `src/types`: `.d.ts` file types for modules without TS definitions.
--   `src/utils`: Misc utilities.
--   `src/locales`: Auto-generated, don't change nor add to version control.
--   `cypress/integration/`: Contains the integration Cypress tests.
-
-### i18n
-
-```
-$ yarn update-po
-# ... add/edit translations in i18n/*.po files ...
-$ yarn localize
+```sh
+cd $HOME/projects
+cp -a $HOME/node_modules/bulma-start my-bulma-project
 ```
 
-### App context
+Alternatively, you could do something similar with a GitHub clone as well.
 
-File `src/contexts/app-context.ts` holds some general app context so typical infrastructure objects (`api`, `d2`, `currentUser`...) are readily available. Add your own global objects if necessary.
-
+```sh
+cd $HOME/projects
+git clone https://github.com/jgthms/bulma-start
+mv bulma-start my-bulma-project
+rm -rf my-bulma-project/.git     # cut its roots
 ```
-import { useAppContext } from "./path/to/contexts/app-context";
 
-const SomeComponent: React.FunctionComponent = () => {
-    const { d2, api, currentUser } = useAppContext();
-    // ...
-}
+Now, that you prepared the groundwork for your project, set up Bulma and run the watchers:
+
+```sh
+cd my-bulma-project
+npm install
+npm start
 ```
+
+As long as `npm start` is running, it will **watch** your changes. You can edit `_sass/main.scss` and `_javascript/main.js` at will. Changes are **immediately** compiled to their destinations, where `index.html` will pick them up upon reload in your browser.
+
+Some controlling output is written to the `npm start` console in that process:
+
+```sh
+_javascript/main.js -> lib/main.js
+
+=> changed: $HOME/projects/start-with-bulma/_sass/main.scss
+Rendering Complete, saving .css file...
+Wrote CSS to $HOME/projects/start-with-bulma/css/main.css
+```
+
+Use `npm run` to show all available commands:
+
+```sh
+Lifecycle scripts included in bulma-start:
+  start
+    npm-run-all --parallel css-watch js-watch
+
+available via `npm run-script`:
+  css-build
+    node-sass _sass/main.scss css/main.css
+  css-deploy
+    npm run css-build && npm run css-postcss
+  css-postcss
+    postcss --use autoprefixer --output css/main.css css/main.css
+  css-watch
+    npm run css-build -- --watch
+  deploy
+    npm run css-deploy && npm run js-build
+  js-build
+    babel _javascript --out-dir lib
+  js-watch
+    npm run js-build -- --watch
+```
+
+If you want to learn more, follow these links: [Bulma homepage](http://bulma.io) and [Documentation](http://bulma.io/documentation/overview/start/).
+
+
+## Copyright and license
+
+Code copyright 2017 Jeremy Thomas. Code released under [the MIT license](https://github.com/jgthms/bulma-start/blob/master/LICENSE).
