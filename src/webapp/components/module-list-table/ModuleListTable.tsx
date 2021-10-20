@@ -64,7 +64,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     const modules = await usecases.modules.import(files);
                     snackbar.success(i18n.t("Imported {{n}} modules", { n: modules.length }));
                     await refreshRows();
-                } catch (err) {
+                } catch (err: any) {
                     snackbar.error((err && err.message) || err.toString());
                 } finally {
                     loading.reset();

@@ -90,7 +90,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
                     },
                 };
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             return [];
         }
@@ -278,7 +278,7 @@ export class TrainingModuleDefaultRepository implements TrainingModuleRepository
             );
 
             return modules[0];
-        } catch (error) {
+        } catch (error: any) {
             // Module not found
             return undefined;
         }

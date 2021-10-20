@@ -60,7 +60,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                         saveText: i18n.t("Yes"),
                         cancelText: i18n.t("No"),
                     });
-                } catch (err) {
+                } catch (err: any) {
                     snackbar.error((err && err.message) || err.toString());
                 } finally {
                     loading.reset();
