@@ -13,7 +13,12 @@ import _ from "lodash";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { FileRejection } from "react-dropzone";
 import styled from "styled-components";
-import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
+import {
+    LandingNode,
+    LandingNodeType,
+    OrderedLandingNode,
+    buildOrderedLandingNodes,
+} from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import { useAppContext } from "../../contexts/app-context";
@@ -246,6 +251,28 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 isActive: nodes => _.every(nodes, item => item.type === "root"),
                 multiple: false,
             },
+            {
+                name: "move-up",
+                text: i18n.t("Move up"),
+                icon: <Icon>arrow_upwards</Icon>,
+                onClick: async () => {},
+                isActive: nodes =>
+                    _.every(nodes, ({ type, order }) => (type === "sub-section" || type === "category") && order !== 0),
+                multiple: false,
+            },
+            {
+                name: "move-down",
+                text: i18n.t("Move down"),
+                icon: <Icon>arrow_downwards</Icon>,
+                onClick: async () => {},
+                isActive: (nodes: OrderedLandingNode[]) =>
+                    _.every(
+                        nodes,
+                        ({ type, order, lastOrder }) =>
+                            (type === "sub-section" || type === "category") && order !== lastOrder
+                    ),
+                multiple: false,
+            },
         ],
         [usecases, reload, loading, nodes]
     );
@@ -283,7 +310,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 onDrop={handleFileUpload}
             >
                 <ObjectsTable<LandingNode>
-                    rows={nodes}
+                    rows={buildOrderedLandingNodes(nodes)}
                     columns={columns}
                     actions={actions}
                     globalActions={globalActions}
