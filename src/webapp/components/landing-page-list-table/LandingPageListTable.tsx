@@ -255,7 +255,12 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 name: "move-up",
                 text: i18n.t("Move up"),
                 icon: <Icon>arrow_upwards</Icon>,
-                onClick: async () => {},
+                onClick: ids => {
+                    const node = flattenRows(nodes).find(({ id }) => id === ids[0]);
+                    if (!node) return;
+
+                    console.debug(node);
+                },
                 isActive: nodes =>
                     _.every(nodes, ({ type, order }) => (type === "sub-section" || type === "category") && order !== 0),
                 multiple: false,

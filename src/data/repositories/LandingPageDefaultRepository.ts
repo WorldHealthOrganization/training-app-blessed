@@ -146,6 +146,19 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
         return _.intersection(_.keys(translations["en"]), _.keys(terms)).length;
     }
 
+    public async swapOrder(id1: string, id2: string) {
+        const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
+        const tmp = _(nodes).filter(({ id }) => id === id1 || id === id2);
+        //.map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
+        //.compact()
+        //.flatMap(node => [node.id, extractChildrenNodes(node, node.parent).map(({ id }) => id)])
+        //.flatten()
+        //.value();
+        console.debug(tmp);
+
+        //await this.storageClient.removeObjectsInCollection(Namespaces.LANDING_PAGES, toDelete);
+    }
+
     private async extractTranslations(models: PersistedLandingPage[]): Promise<Record<string, Record<string, string>>> {
         const texts = _.flatMap(models, model => _.compact([model.name, model.title, model.content]));
 
