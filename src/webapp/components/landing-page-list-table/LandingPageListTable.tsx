@@ -255,11 +255,17 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 name: "move-up",
                 text: i18n.t("Move up"),
                 icon: <Icon>arrow_upwards</Icon>,
-                onClick: ids => {
-                    const node = flattenRows(nodes).find(({ id }) => id === ids[0]);
-                    if (!node) return;
+                onClick: async ids => {
+                    const allNodes: LandingNode[] = flattenRows(nodes);
+                    const node = allNodes.find(({ id }) => id === ids[0]);
+                    if (!node || !node.order) return;
 
-                    console.debug(node);
+                    const parent = allNodes.find(({ id }) => id === node?.parent);
+                    const swapId = parent?.children[node?.order - 1]?.id;
+                    if (!swapId) return;
+
+                    await usecases.landings.swapOrder(node.id, swapId);
+                    //await reload();
                 },
                 isActive: nodes =>
                     _.every(nodes, ({ type, order }) => (type === "sub-section" || type === "category") && order !== 0),

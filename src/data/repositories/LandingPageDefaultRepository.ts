@@ -148,12 +148,13 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
 
     public async swapOrder(id1: string, id2: string) {
         const nodes = await this.storageClient.listObjectsInCollection<PersistedLandingPage>(Namespaces.LANDING_PAGES);
-        const tmp = _(nodes).filter(({ id }) => id === id1 || id === id2);
-        //.map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
-        //.compact()
-        //.flatMap(node => [node.id, extractChildrenNodes(node, node.parent).map(({ id }) => id)])
-        //.flatten()
-        //.value();
+        const tmp = _(nodes)
+            .filter(({ id }) => id === id1 || id === id2)
+            //.map(node => LandingNodeModel.decode(buildDomainLandingNode(node, nodes)).toMaybe().extract())
+            //.compact()
+            //.flatMap(node => [node.id, extractChildrenNodes(node, node.parent).map(({ id }) => id)])
+            //.flatten()
+            .value();
         console.debug(tmp);
 
         //await this.storageClient.removeObjectsInCollection(Namespaces.LANDING_PAGES, toDelete);
