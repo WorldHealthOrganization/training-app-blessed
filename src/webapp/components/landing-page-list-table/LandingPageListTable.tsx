@@ -257,15 +257,15 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 icon: <Icon>arrow_upwards</Icon>,
                 onClick: async ids => {
                     const allNodes: LandingNode[] = flattenRows(nodes);
-                    const node = allNodes.find(({ id }) => id === ids[0]);
-                    if (!node || !node.order) return;
+                    const node1 = allNodes.find(({ id }) => id === ids[0]);
+                    if (!node1 || !node1.order) return;
 
-                    const parent = allNodes.find(({ id }) => id === node?.parent);
-                    const swapId = parent?.children[node?.order - 1]?.id;
-                    if (!swapId) return;
+                    const parent = allNodes.find(({ id }) => id === node1?.parent);
+                    const node2 = parent?.children[node1?.order - 1];
+                    if (!node2) return;
 
-                    await usecases.landings.swapOrder(node.id, swapId);
-                    //await reload();
+                    await usecases.landings.swapOrder(node1, node2);
+                    await reload();
                 },
                 isActive: nodes =>
                     _.every(nodes, ({ type, order }) => (type === "sub-section" || type === "category") && order !== 0),
