@@ -87,6 +87,22 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
         [usecases, snackbar]
     );
 
+    const move = useCallback(
+        async (ids: string[], nodes: LandingNode[], orderChange: number) => {
+            const allNodes: LandingNode[] = flattenRows(nodes);
+            const node1 = allNodes.find(({ id }) => id === ids[0]);
+            if (!node1 || node1.order === undefined) return;
+
+            const parent = allNodes.find(({ id }) => id === node1?.parent);
+            const node2 = parent?.children[node1?.order + orderChange];
+            if (!node2) return;
+
+            await usecases.landings.swapOrder(node1, node2);
+            await reload();
+        },
+        [reload, usecases]
+    );
+
     const columns: TableColumn<LandingNode>[] = useMemo(
         () => [
             {
@@ -255,18 +271,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 name: "move-up",
                 text: i18n.t("Move up"),
                 icon: <Icon>arrow_upwards</Icon>,
-                onClick: async ids => {
-                    const allNodes: LandingNode[] = flattenRows(nodes);
-                    const node1 = allNodes.find(({ id }) => id === ids[0]);
-                    if (!node1 || !node1.order) return;
-
-                    const parent = allNodes.find(({ id }) => id === node1?.parent);
-                    const node2 = parent?.children[node1?.order - 1];
-                    if (!node2) return;
-
-                    await usecases.landings.swapOrder(node1, node2);
-                    await reload();
-                },
+                onClick: ids => move(ids, nodes, -1),
                 isActive: nodes =>
                     _.every(nodes, ({ type, order }) => (type === "sub-section" || type === "category") && order !== 0),
                 multiple: false,
@@ -275,7 +280,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 name: "move-down",
                 text: i18n.t("Move down"),
                 icon: <Icon>arrow_downwards</Icon>,
-                onClick: async () => {},
+                onClick: ids => move(ids, nodes, 1),
                 isActive: (nodes: OrderedLandingNode[]) =>
                     _.every(
                         nodes,
@@ -285,7 +290,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 multiple: false,
             },
         ],
-        [usecases, reload, loading, nodes]
+        [usecases, reload, loading, nodes, move]
     );
 
     const globalActions: TableGlobalAction[] | undefined = useMemo(
