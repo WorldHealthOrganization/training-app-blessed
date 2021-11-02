@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Traning App - UI Interface\n"
-"POT-Creation-Date: 2021-06-23T11:22:17.026Z\n"
+"POT-Creation-Date: 2021-11-02T10:49:57.879Z\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,6 +307,10 @@ msgstr "Añadir página"
 msgid "Edit module"
 msgstr "Editar modulo"
 
+#, fuzzy
+msgid "Clone module"
+msgstr "Eliminar modulo"
+
 msgid "Edit page"
 msgstr "Editar página"
 
@@ -360,6 +364,9 @@ msgstr "Final"
 
 msgid "Exit"
 msgstr "Salir"
+
+msgid "Clone"
+msgstr ""
 
 msgid "Create"
 msgstr "Crear"
@@ -443,17 +450,8 @@ msgstr "Lushomo"
 msgid "Training app"
 msgstr "Aplicación de formación"
 
-msgid "Cancel module editing?"
-msgstr "¿Cancelar la edición del módulo?"
-
-msgid "Cancel module creation?"
-msgstr "¿Cancelar la creación del módulo?"
-
 msgid "All your changes will be lost. Are you sure you want to proceed?"
 msgstr "Todos sus cambios se perderán. ¿Desea continuar?"
-
-msgid "Create module"
-msgstr "Crear modulo"
 
 msgid "Continue Tutorial"
 msgstr "Continuar el tutorial"
@@ -583,3 +581,12 @@ msgstr "Inicio"
 
 msgid "Start Tutorial"
 msgstr "Empezar tutorial"
+
+#~ msgid "Cancel module editing?"
+#~ msgstr "¿Cancelar la edición del módulo?"
+
+#~ msgid "Cancel module creation?"
+#~ msgstr "¿Cancelar la creación del módulo?"
+
+#~ msgid "Create module"
+#~ msgstr "Crear modulo"

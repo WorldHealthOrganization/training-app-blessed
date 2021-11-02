@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-23T11:22:17.026Z\n"
-"PO-Revision-Date: 2021-06-23T11:22:17.026Z\n"
+"POT-Creation-Date: 2021-11-02T10:49:57.879Z\n"
+"PO-Revision-Date: 2021-11-02T10:49:57.879Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -301,6 +301,9 @@ msgstr ""
 msgid "Edit module"
 msgstr ""
 
+msgid "Clone module"
+msgstr ""
+
 msgid "Edit page"
 msgstr ""
 
@@ -353,6 +356,9 @@ msgid "Final"
 msgstr ""
 
 msgid "Exit"
+msgstr ""
+
+msgid "Clone"
 msgstr ""
 
 msgid "Create"
@@ -411,16 +417,7 @@ msgstr ""
 msgid "Training app"
 msgstr ""
 
-msgid "Cancel module editing?"
-msgstr ""
-
-msgid "Cancel module creation?"
-msgstr ""
-
 msgid "All your changes will be lost. Are you sure you want to proceed?"
-msgstr ""
-
-msgid "Create module"
 msgstr ""
 
 msgid "Continue Tutorial"

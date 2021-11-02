@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Traning App - UI Interface\n"
-"POT-Creation-Date: 2021-06-23T11:22:17.026Z\n"
+"POT-Creation-Date: 2021-11-02T10:49:57.879Z\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,6 +307,10 @@ msgstr "Ajouter une page"
 msgid "Edit module"
 msgstr "Module d'édition"
 
+#, fuzzy
+msgid "Clone module"
+msgstr "Supprimer le module"
+
 msgid "Edit page"
 msgstr "Modifier la page"
 
@@ -360,6 +364,9 @@ msgstr "Final"
 
 msgid "Exit"
 msgstr "Sortie"
+
+msgid "Clone"
+msgstr ""
 
 msgid "Create"
 msgstr "Créer"
@@ -421,7 +428,16 @@ msgid ""
 "application. WHO provides no assurance as to the validity, accuracy or "
 "completeness of any other tutorials built by the application's user "
 "community.*"
-msgstr "*Avis de non-responsabilité: L'OMS a développé cette application pour aider les pays à renforcer leurs capacités de collecte et d'utilisation des données sanitaires. L'OMS fournit une série de tutoriels pour aider les pays à utiliser les paquets standard DHIS2 de l'OMS, qui se trouvent dans le [dépôt GitHub des tutoriels de l'OMS](https://github.com/WorldHealthOrganization/DHIS2-tutorials) et peuvent être installés dans l'application. L'OMS ne donne aucune garantie quant à la validité, l'exactitude ou l'exhaustivité de tout autre tutoriel élaboré par la communauté des utilisateurs de l'application.*"
+msgstr ""
+"*Avis de non-responsabilité: L'OMS a développé cette application pour aider "
+"les pays à renforcer leurs capacités de collecte et d'utilisation des "
+"données sanitaires. L'OMS fournit une série de tutoriels pour aider les pays "
+"à utiliser les paquets standard DHIS2 de l'OMS, qui se trouvent dans le "
+"[dépôt GitHub des tutoriels de l'OMS](https://github.com/"
+"WorldHealthOrganization/DHIS2-tutorials) et peuvent être installés dans "
+"l'application. L'OMS ne donne aucune garantie quant à la validité, "
+"l'exactitude ou l'exhaustivité de tout autre tutoriel élaboré par la "
+"communauté des utilisateurs de l'application.*"
 
 msgid "World Health Organization"
 msgstr "World Health Organization"
@@ -435,18 +451,9 @@ msgstr "Lushomo"
 msgid "Training app"
 msgstr "Application de formation"
 
-msgid "Cancel module editing?"
-msgstr "Annuler l'édition du module?"
-
-msgid "Cancel module creation?"
-msgstr "Annuler la création du module?"
-
 msgid "All your changes will be lost. Are you sure you want to proceed?"
 msgstr ""
 "Toutes vos modifications seront perdues. Êtes-vous sûr de vouloir continuer?"
-
-msgid "Create module"
-msgstr "Créer un module"
 
 msgid "Continue Tutorial"
 msgstr "Continuer le tutoriel"
@@ -578,3 +585,12 @@ msgstr "Début"
 
 msgid "Start Tutorial"
 msgstr "Démarrer le tutoriel"
+
+#~ msgid "Cancel module editing?"
+#~ msgstr "Annuler l'édition du module?"
+
+#~ msgid "Cancel module creation?"
+#~ msgstr "Annuler la création du module?"
+
+#~ msgid "Create module"
+#~ msgstr "Créer un module"
