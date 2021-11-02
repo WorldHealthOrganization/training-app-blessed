@@ -11,14 +11,22 @@ import { DhisPage } from "../dhis/DhisPage";
 
 export interface EditPageProps {
     edit: boolean;
+    clone: boolean;
 }
 
-export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
+const cancelMap = {
+    edit: "editing",
+    clone: "cloning",
+    create: "creation",
+};
+
+export const EditPage: React.FC<EditPageProps> = ({ edit, clone }) => {
     const { module, setAppState, usecases, reload } = useAppContext();
 
     const [stateModule, updateStateModule] = useState<PartialTrainingModule>(module ?? defaultTrainingModule);
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
     const [dirty, setDirty] = useState<boolean>(false);
+    const action = edit ? "edit" : clone ? "clone" : "create";
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -41,22 +49,22 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
         }
 
         updateDialog({
-            title: edit ? i18n.t("Cancel module editing?") : i18n.t("Cancel module creation?"),
+            title: i18n.t(`Cancel module ${cancelMap[action]}?`),
             description: i18n.t("All your changes will be lost. Are you sure you want to proceed?"),
             saveText: i18n.t("Yes"),
             cancelText: i18n.t("No"),
             onSave: openSettings,
             onCancel: () => updateDialog(null),
         });
-    }, [dirty, edit, openSettings]);
+    }, [dirty, openSettings, action]);
 
     useEffect(() => {
-        if (module) updateStateModule(module);
-    }, [module]);
+        if (module) updateStateModule(clone ? { ...module, id: `${module.id}-${Date.now()}` } : module);
+    }, [module, clone]);
 
     return (
         <DhisPage>
-            <Header title={edit ? i18n.t("Edit module") : i18n.t("Create module")} onBackClick={onCancel} />
+            <Header title={i18n.t(`${_.startCase(action.toLowerCase())} module`)} onBackClick={onCancel} />
 
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 
