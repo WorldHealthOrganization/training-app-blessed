@@ -10,8 +10,7 @@ import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 
 export interface EditPageProps {
-    edit: boolean;
-    clone: boolean;
+    action: "create" | "edit" | "clone";
 }
 
 const cancelMap = {
@@ -20,13 +19,23 @@ const cancelMap = {
     create: "creation",
 };
 
-export const EditPage: React.FC<EditPageProps> = ({ edit, clone }) => {
+const getClonedModule = (module: PartialTrainingModule): PartialTrainingModule => {
+    const id = `${module.id}-copy`;
+    const referenceValue = `Copy of ${module.name.referenceValue}`;
+
+    return {
+        ...module,
+        id,
+        name: { key: id, referenceValue, translations: {} },
+    };
+};
+
+export const EditPage: React.FC<EditPageProps> = ({ action = "create" }) => {
     const { module, setAppState, usecases, reload } = useAppContext();
 
     const [stateModule, updateStateModule] = useState<PartialTrainingModule>(module ?? defaultTrainingModule);
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
     const [dirty, setDirty] = useState<boolean>(false);
-    const action = edit ? "edit" : clone ? "clone" : "create";
 
     const openSettings = useCallback(() => {
         setAppState({ type: "SETTINGS" });
@@ -49,7 +58,7 @@ export const EditPage: React.FC<EditPageProps> = ({ edit, clone }) => {
         }
 
         updateDialog({
-            title: i18n.t(`Cancel module ${cancelMap[action]}?`),
+            title: i18n.t("Cancel module {{action}}?", { action: cancelMap[action] }),
             description: i18n.t("All your changes will be lost. Are you sure you want to proceed?"),
             saveText: i18n.t("Yes"),
             cancelText: i18n.t("No"),
@@ -59,18 +68,21 @@ export const EditPage: React.FC<EditPageProps> = ({ edit, clone }) => {
     }, [dirty, openSettings, action]);
 
     useEffect(() => {
-        if (module) updateStateModule(clone ? { ...module, id: `${module.id}-${Date.now()}` } : module);
-    }, [module, clone]);
+        if (module) updateStateModule(action === "clone" ? getClonedModule(module) : module);
+    }, [module, action]);
 
     return (
         <DhisPage>
-            <Header title={i18n.t(`${_.startCase(action.toLowerCase())} module`)} onBackClick={onCancel} />
+            <Header
+                title={i18n.t("{{action}} module", { action: _.startCase(action.toLowerCase()) })}
+                onBackClick={onCancel}
+            />
 
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 
             {stateModule ? (
                 <Wizard
-                    isEdit={edit}
+                    isEdit={["edit", "clone"].includes(action)}
                     onChange={onChange}
                     onCancel={onCancel}
                     onClose={openSettings}
