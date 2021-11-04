@@ -82,7 +82,7 @@ export const EditPage: React.FC<EditPageProps> = ({ action = "create" }) => {
 
             {stateModule ? (
                 <Wizard
-                    isEdit={["edit", "clone"].includes(action)}
+                    isEdit={action === "edit"}
                     onChange={onChange}
                     onCancel={onCancel}
                     onClose={openSettings}

@@ -5,6 +5,8 @@ import { useLocation } from "react-router-dom";
 import { trainingModuleValidations } from "../../../domain/entities/TrainingModule";
 import { validateModel } from "../../../domain/entities/Validation";
 import { ModuleCreationWizardStepProps, moduleCreationWizardSteps } from "./steps";
+import { useAppContext } from "../../contexts/app-context";
+import i18n from "../../../locales";
 
 export interface ModuleCreationWizardProps extends ModuleCreationWizardStepProps {
     className?: string;
@@ -12,6 +14,7 @@ export interface ModuleCreationWizardProps extends ModuleCreationWizardStepProps
 
 export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = props => {
     const location = useLocation();
+    const { usecases } = useAppContext();
 
     const { className, ...stepProps } = props;
 
@@ -20,13 +23,28 @@ export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = props =
     const onStepChangeRequest = useCallback(
         async (_currentStep: WizardStep, newStep: WizardStep) => {
             const index = _(steps).findIndex(step => step.key === newStep.key);
-            return _.take(steps, index).flatMap(({ validationKeys }) =>
-                validateModel(props.module, trainingModuleValidations, validationKeys).map(
+            const step = _.take(steps, index);
+
+            const { validationKeys } = step[0] || {};
+            const allModuleIds: string[] = [];
+            if (validationKeys && validationKeys.includes("id")) {
+                allModuleIds.push(...(await usecases.modules.list()).map(({ id }) => id));
+            }
+
+            return step.flatMap(({ validationKeys }) => {
+                const validationErrors = validateModel(props.module, trainingModuleValidations, validationKeys).map(
                     ({ description }) => description
-                )
-            );
+                );
+
+                // dynamic validation, based on the existing module ids
+                if (validationKeys.includes("id") && allModuleIds.includes(props.module.id)) {
+                    validationErrors.push(i18n.t("Code '{{code}}' already exists", { code: props.module.id }));
+                }
+
+                return validationErrors;
+            });
         },
-        [props.module, steps]
+        [props.module, steps, usecases.modules]
     );
 
     const urlHash = location.hash.slice(1);
