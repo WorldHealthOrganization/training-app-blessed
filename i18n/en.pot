@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-11-02T10:49:57.879Z\n"
-"PO-Revision-Date: 2021-11-02T10:49:57.879Z\n"
+"POT-Creation-Date: 2021-11-04T09:08:47.418Z\n"
+"PO-Revision-Date: 2021-11-04T09:08:47.418Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -417,7 +417,13 @@ msgstr ""
 msgid "Training app"
 msgstr ""
 
+msgid "Cancel module {{action}}?"
+msgstr ""
+
 msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "{{action}} module"
 msgstr ""
 
 msgid "Continue Tutorial"
