@@ -88,16 +88,18 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
     );
 
     const move = useCallback(
-        async (ids: string[], nodes: LandingNode[], orderChange: number) => {
-            const allNodes: LandingNode[] = flattenRows(nodes);
-            const node1 = allNodes.find(({ id }) => id === ids[0]);
-            if (!node1 || node1.order === undefined) return;
+        async (ids: string[], nodes: LandingNode[], change: "up" | "down") => {
+            const orderChange = change === "up" ? -1 : 1;
+            const allNodes = flattenRows(nodes);
 
-            const parent = allNodes.find(({ id }) => id === node1?.parent);
-            const node2 = parent?.children[node1?.order + orderChange];
-            if (!node2) return;
+            const firstNode = allNodes.find(({ id }) => id === ids[0]);
+            if (!firstNode?.order) return;
 
-            await usecases.landings.swapOrder(node1, node2);
+            const parent = allNodes.find(({ id }) => id === firstNode?.parent);
+            const secondNode = parent?.children[firstNode?.order + orderChange];
+            if (!secondNode?.order) return;
+
+            await usecases.landings.swapOrder(firstNode, secondNode);
             await reload();
         },
         [reload, usecases]
@@ -271,22 +273,17 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 name: "move-up",
                 text: i18n.t("Move up"),
                 icon: <Icon>arrow_upwards</Icon>,
-                onClick: ids => move(ids, nodes, -1),
-                isActive: nodes =>
-                    _.every(nodes, ({ type, order }) => (type === "sub-section" || type === "category") && order !== 0),
+                onClick: ids => move(ids, nodes, "up"),
+                isActive: nodes => _.every(nodes, ({ type, order }) => type !== "root" && order !== 0),
                 multiple: false,
             },
             {
                 name: "move-down",
                 text: i18n.t("Move down"),
                 icon: <Icon>arrow_downwards</Icon>,
-                onClick: ids => move(ids, nodes, 1),
+                onClick: ids => move(ids, nodes, "down"),
                 isActive: (nodes: OrderedLandingNode[]) =>
-                    _.every(
-                        nodes,
-                        ({ type, order, lastOrder }) =>
-                            (type === "sub-section" || type === "category") && order !== lastOrder
-                    ),
+                    _.every(nodes, ({ type, order, lastOrder }) => type !== "root" && order !== lastOrder),
                 multiple: false,
             },
         ],

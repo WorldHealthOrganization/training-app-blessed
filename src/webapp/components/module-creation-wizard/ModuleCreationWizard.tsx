@@ -38,7 +38,7 @@ export const ModuleCreationWizard: React.FC<ModuleCreationWizardProps> = props =
 
                 // dynamic validation, based on the existing module ids
                 if (validationKeys.includes("id") && allModuleIds.includes(props.module.id)) {
-                    validationErrors.push(i18n.t("Code '{{code}}' already exists", { code: props.module.id }));
+                    validationErrors.push(i18n.t("Code {{code}} already exists", { code: props.module.id }));
                 }
 
                 return validationErrors;

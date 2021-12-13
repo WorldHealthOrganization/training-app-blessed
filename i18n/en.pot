@@ -179,7 +179,7 @@ msgstr ""
 msgid "Minimize window"
 msgstr ""
 
-msgid "Code '{{code}}' already exists"
+msgid "Code {{code}} already exists"
 msgstr ""
 
 msgid "Note: The sharing settings are only applied to the current module"
@@ -420,13 +420,19 @@ msgstr ""
 msgid "Training app"
 msgstr ""
 
-msgid "Cancel module {{action}}?"
+msgid "Cancel module editing?"
+msgstr ""
+
+msgid "Cancel module cloning?"
+msgstr ""
+
+msgid "Cancel module creation?"
 msgstr ""
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
 msgstr ""
 
-msgid "{{action}} module"
+msgid "New module"
 msgstr ""
 
 msgid "Continue Tutorial"

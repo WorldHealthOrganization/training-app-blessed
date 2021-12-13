@@ -13,12 +13,6 @@ export interface EditPageProps {
     action: "create" | "edit" | "clone";
 }
 
-const cancelMap = {
-    edit: "editing",
-    clone: "cloning",
-    create: "creation",
-};
-
 const getClonedModule = (module: PartialTrainingModule): PartialTrainingModule => {
     const id = `${module.id}-copy`;
     const referenceValue = `Copy of ${module.name.referenceValue}`;
@@ -57,8 +51,14 @@ export const EditPage: React.FC<EditPageProps> = ({ action = "create" }) => {
             return;
         }
 
+        const dialogTitles = {
+            edit: i18n.t("Cancel module editing?"),
+            clone: i18n.t("Cancel module cloning?"),
+            create: i18n.t("Cancel module creation?"),
+        };
+
         updateDialog({
-            title: i18n.t("Cancel module {{action}}?", { action: cancelMap[action] }),
+            title: dialogTitles[action],
             description: i18n.t("All your changes will be lost. Are you sure you want to proceed?"),
             saveText: i18n.t("Yes"),
             cancelText: i18n.t("No"),
@@ -71,12 +71,15 @@ export const EditPage: React.FC<EditPageProps> = ({ action = "create" }) => {
         if (module) updateStateModule(action === "clone" ? getClonedModule(module) : module);
     }, [module, action]);
 
+    const titles = {
+        edit: i18n.t("Edit module"),
+        clone: i18n.t("Clone module"),
+        create: i18n.t("New module"),
+    };
+
     return (
         <DhisPage>
-            <Header
-                title={i18n.t("{{action}} module", { action: _.startCase(action.toLowerCase()) })}
-                onBackClick={onCancel}
-            />
+            <Header title={titles[action]} onBackClick={onCancel} />
 
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 

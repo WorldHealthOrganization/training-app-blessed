@@ -180,7 +180,7 @@ msgstr "Expandir ventana"
 msgid "Minimize window"
 msgstr "Minimizar ventana"
 
-msgid "Code '{{code}}' already exists"
+msgid "Code {{code}} already exists"
 msgstr ""
 
 msgid "Note: The sharing settings are only applied to the current module"
@@ -316,9 +316,8 @@ msgstr "Añadir página"
 msgid "Edit module"
 msgstr "Editar modulo"
 
-#, fuzzy
 msgid "Clone module"
-msgstr "Eliminar modulo"
+msgstr ""
 
 msgid "Edit page"
 msgstr "Editar página"
@@ -453,16 +452,21 @@ msgstr "Lushomo"
 msgid "Training app"
 msgstr "Aplicación de formación"
 
-#, fuzzy
-msgid "Cancel module {{action}}?"
-msgstr "¿Cancelar la creación del módulo?"
+msgid "Cancel module editing?"
+msgstr "¿Cancelar la edición del módulo?"
+
+msgid "Cancel module cloning?"
+msgstr ""
+
+msgid "Cancel module creation?"
+msgstr ""
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
 msgstr "Todos sus cambios se perderán. ¿Desea continuar?"
 
 #, fuzzy
-msgid "{{action}} module"
-msgstr "Eliminar modulo"
+msgid "New module"
+msgstr "Añadir modulo"
 
 msgid "Continue Tutorial"
 msgstr "Continuar el tutorial"
@@ -592,9 +596,3 @@ msgstr "Inicio"
 
 msgid "Start Tutorial"
 msgstr "Empezar tutorial"
-
-#~ msgid "Cancel module editing?"
-#~ msgstr "¿Cancelar la edición del módulo?"
-
-#~ msgid "Create module"
-#~ msgstr "Crear modulo"
