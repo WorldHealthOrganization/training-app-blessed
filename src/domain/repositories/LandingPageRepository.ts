@@ -9,4 +9,5 @@ export interface LandingPageRepository {
     removeChilds(ids: string[]): Promise<void>;
     exportTranslations(): Promise<void>;
     importTranslations(language: string, terms: Record<string, string>): Promise<number>;
+    swapOrder(node1: LandingNode, node2: LandingNode): Promise<void>;
 }
