@@ -58,7 +58,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
             }
 
             return _.compact([validation.toMaybe().extract()]);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             return [];
         }
@@ -166,7 +166,7 @@ const buildDomainLandingNode = (root: PersistedLandingPage, items: PersistedLand
         children: _(items)
             .filter(({ parent }) => parent === root.id)
             .sortBy(item => item.order ?? 1000)
-            .map((node, order) => ({ order, ...buildDomainLandingNode(node, items) }))
+            .map((node, order) => ({ ...buildDomainLandingNode(node, items), order }))
             .value(),
     };
 };
