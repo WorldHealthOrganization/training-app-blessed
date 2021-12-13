@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Traning App - UI Interface\n"
-"POT-Creation-Date: 2021-11-04T12:08:25.120Z\n"
+"POT-Creation-Date: 2021-12-13T10:54:04.302Z\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,6 +122,12 @@ msgstr "Exportation des traductions en JSON"
 
 msgid "Exporting translations"
 msgstr "Exportation des traductions"
+
+msgid "Move up"
+msgstr "Avancez"
+
+msgid "Move down"
+msgstr "Descendre"
 
 msgid "Import landing pages"
 msgstr "Importer des pages de renvoi"
@@ -319,12 +325,6 @@ msgstr "Modifier la page"
 
 msgid "Delete module"
 msgstr "Supprimer le module"
-
-msgid "Move up"
-msgstr "Avancez"
-
-msgid "Move down"
-msgstr "Descendre"
 
 msgid "Install app"
 msgstr "Installer l'application"
