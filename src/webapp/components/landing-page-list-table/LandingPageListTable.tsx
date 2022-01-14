@@ -93,11 +93,11 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
             const allNodes = flattenRows(nodes);
 
             const firstNode = allNodes.find(({ id }) => id === ids[0]);
-            if (!firstNode?.order) return;
+            if (firstNode?.order === undefined) return;
 
             const parent = allNodes.find(({ id }) => id === firstNode?.parent);
             const secondNode = parent?.children[firstNode?.order + orderChange];
-            if (!secondNode?.order) return;
+            if (secondNode?.order === undefined) return;
 
             await usecases.landings.swapOrder(firstNode, secondNode);
             await reload();
