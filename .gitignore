@@ -38,3 +38,8 @@ cypress/videos/
 
 # Custom
 bak
+
+# Jekyll
+.jekyll-cache/
+_site
+Gemfile*
