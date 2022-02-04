@@ -112,6 +112,9 @@ export const SettingsPage: React.FC = () => {
             openEditModulePage: ({ id }) => {
                 setAppState({ type: "EDIT_MODULE", module: id });
             },
+            openCloneModulePage: ({ id }) => {
+                setAppState({ type: "CLONE_MODULE", module: id });
+            },
             editContents: async ({ id, text, value }) => {
                 const module = await usecases.modules.get(id);
                 if (module) await usecases.modules.update(updateTranslation(module, text.key, value));

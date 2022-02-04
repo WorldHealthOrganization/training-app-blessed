@@ -9,6 +9,7 @@ export type AppStateType =
     | "SETTINGS"
     | "ABOUT"
     | "EDIT_MODULE"
+    | "CLONE_MODULE"
     | "CREATE_MODULE";
 
 interface BaseAppState {
@@ -52,6 +53,11 @@ interface EditAppState extends BaseAppState {
     module: string;
 }
 
+interface CloneAppState extends BaseAppState {
+    type: "CLONE_MODULE";
+    module: string;
+}
+
 interface CreateAppState extends BaseAppState {
     type: "CREATE_MODULE";
 }
@@ -64,6 +70,7 @@ export type AppState =
     | SettingsAppState
     | AboutAppState
     | EditAppState
+    | CloneAppState
     | CreateAppState;
 
 export const buildPathFromState = (state: AppState): string => {
@@ -80,6 +87,8 @@ export const buildPathFromState = (state: AppState): string => {
             return `/about`;
         case "EDIT_MODULE":
             return `/edit/${state.module}`;
+        case "CLONE_MODULE":
+            return `/clone/${state.module}`;
         case "CREATE_MODULE":
             return `/create`;
         default:
@@ -115,6 +124,8 @@ export const buildStateFromPath = (matches: ReactRouterMatch[]): AppState => {
                 return { type: "ABOUT" };
             case "/edit/:module":
                 return { type: "EDIT_MODULE", module: match.params.module ?? "" };
+            case "/clone/:module":
+                return { type: "CLONE_MODULE", module: match.params.module ?? "" };
             case "/create":
                 return { type: "CREATE_MODULE" };
         }

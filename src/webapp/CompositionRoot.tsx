@@ -16,6 +16,7 @@ import { GetModuleUseCase } from "../domain/usecases/GetModuleUseCase";
 import { GetSettingsPermissionsUseCase } from "../domain/usecases/GetSettingsPermissionsUseCase";
 import { GetShowAllModulesUseCase } from "../domain/usecases/GetShowAllModulesUseCase";
 import { ImportLandingPagesTranslationsUseCase } from "../domain/usecases/ImportLandingPagesTranslationsUseCase";
+import { SwapLandingChildOrderUseCase } from "../domain/usecases/SwapLandingChildOrderUseCase";
 import { ImportLandingPagesUseCase } from "../domain/usecases/ImportLandingPagesUseCase";
 import { ImportModulesUseCase } from "../domain/usecases/ImportModulesUseCase";
 import { ImportModuleTranslationsUseCase } from "../domain/usecases/ImportModuleTranslationsUseCase";
@@ -62,6 +63,7 @@ export function getCompositionRoot(baseUrl: string) {
                 import: new ImportLandingPagesUseCase(landingPageRepository),
                 exportTranslations: new ExportLandingPagesTranslationsUseCase(landingPageRepository),
                 importTranslations: new ImportLandingPagesTranslationsUseCase(landingPageRepository),
+                swapOrder: new SwapLandingChildOrderUseCase(landingPageRepository),
             }),
             progress: getExecute({
                 update: new UpdateUserProgressUseCase(trainingModuleRepository),
