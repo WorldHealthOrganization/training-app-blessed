@@ -62,7 +62,7 @@ export class InstanceDhisRepository implements InstanceRepository {
 
         try {
             await this.api.appHub.install(latestVersion).getData();
-        } catch (error) {
+        } catch (error: any) {
             return false;
         }
 
@@ -108,7 +108,7 @@ export class InstanceDhisRepository implements InstanceRepository {
     public async isAppInstalledByUrl(launchUrl: string): Promise<boolean> {
         try {
             await this.api.baseConnection.request({ method: "get", url: launchUrl }).getData();
-        } catch (error) {
+        } catch (error: any) {
             return false;
         }
 
@@ -130,7 +130,7 @@ export class InstanceDhisRepository implements InstanceRepository {
     private async listStoreApps() {
         try {
             return this.api.appHub.list().getData();
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             return [];
         }
@@ -162,7 +162,7 @@ async function transformFile(blob: Blob, mime: string): Promise<Blob> {
 
             const data = ffmpeg.FS("readFile", "file.mp4");
             return new Blob([data.buffer], { type: "video/mp4" });
-        } catch (error) {
+        } catch (error: any) {
             return blob;
         }
     }

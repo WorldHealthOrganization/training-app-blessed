@@ -58,7 +58,7 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
             }
 
             return _.compact([validation.toMaybe().extract()]);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             return [];
         }
@@ -146,6 +146,13 @@ export class LandingPageDefaultRepository implements LandingPageRepository {
         return _.intersection(_.keys(translations["en"]), _.keys(terms)).length;
     }
 
+    public async swapOrder(node1: LandingNode, node2: LandingNode) {
+        await this.storageClient.saveObjectsInCollection(Namespaces.LANDING_PAGES, [
+            { ...node1, order: node2.order },
+            { ...node2, order: node1.order },
+        ]);
+    }
+
     private async extractTranslations(models: PersistedLandingPage[]): Promise<Record<string, Record<string, string>>> {
         const texts = _.flatMap(models, model => _.compact([model.name, model.title, model.content]));
 
@@ -166,7 +173,7 @@ const buildDomainLandingNode = (root: PersistedLandingPage, items: PersistedLand
         children: _(items)
             .filter(({ parent }) => parent === root.id)
             .sortBy(item => item.order ?? 1000)
-            .map((node, order) => ({ order, ...buildDomainLandingNode(node, items) }))
+            .map((node, order) => ({ ...buildDomainLandingNode(node, items), order }))
             .value(),
     };
 };

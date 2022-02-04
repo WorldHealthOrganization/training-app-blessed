@@ -35,3 +35,15 @@ export const LandingNodeModel: Codec<LandingNode> = Schema.object({
     modules: Schema.optionalSafe(Schema.array(Schema.string), []),
     children: Schema.lazy(() => Schema.array(LandingNodeModel)),
 });
+
+export interface OrderedLandingNode extends LandingNode {
+    lastOrder: number;
+}
+
+export const buildOrderedLandingNodes = (nodes: LandingNode[]): OrderedLandingNode[] => {
+    return nodes.map(node => ({
+        ...node,
+        lastOrder: nodes.length - 1,
+        children: buildOrderedLandingNodes(node.children),
+    }));
+};

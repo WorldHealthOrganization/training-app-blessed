@@ -1,4 +1,3 @@
-import { useConfig } from "@dhis2/app-runtime";
 import { LoadingProvider, SnackbarProvider } from "@eyeseetea/d2-ui-components";
 import { MuiThemeProvider, StylesProvider } from "@material-ui/core/styles";
 import OldMuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -93,18 +92,23 @@ export const routes: AppRoute[] = [
         key: "edit",
         name: () => i18n.t("Edit"),
         paths: ["/edit/:module"],
-        element: <EditPage edit={true} />,
+        element: <EditPage action="edit" />,
+    },
+    {
+        key: "clone",
+        name: () => i18n.t("Clone"),
+        paths: ["/clone/:module"],
+        element: <EditPage action="clone" />,
     },
     {
         key: "create",
         name: () => i18n.t("Create"),
         paths: ["/create"],
-        element: <EditPage edit={false} />,
+        element: <EditPage action="create" />,
     },
 ];
 
-const App: React.FC<{ locale: string }> = ({ locale }) => {
-    const { baseUrl } = useConfig();
+const App: React.FC<{ locale: string; baseUrl: string }> = ({ locale, baseUrl }) => {
     const compositionRoot = getCompositionRoot(baseUrl);
 
     return (
@@ -116,7 +120,7 @@ const App: React.FC<{ locale: string }> = ({ locale }) => {
                             <LoadingProvider>
                                 <div id="app" className="content">
                                     <HashRouter>
-                                        <Router />
+                                        <Router baseUrl={baseUrl} />
                                     </HashRouter>
                                 </div>
                             </LoadingProvider>
