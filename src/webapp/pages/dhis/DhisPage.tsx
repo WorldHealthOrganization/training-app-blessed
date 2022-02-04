@@ -1,5 +1,5 @@
 //@ts-ignore
-import { HeaderBar } from "@dhis2/ui-widgets";
+import { HeaderBar } from "@dhis2/ui";
 import React from "react";
 import i18n from "../../../locales";
 

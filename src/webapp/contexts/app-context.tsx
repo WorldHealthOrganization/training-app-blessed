@@ -99,7 +99,10 @@ export function useAppContext(): UseAppContextResult {
 
     useEffect(() => {
         setCurrentModule(
-            appState.type === "TRAINING" || appState.type === "TRAINING_DIALOG" || appState.type === "EDIT_MODULE"
+            appState.type === "TRAINING" ||
+                appState.type === "TRAINING_DIALOG" ||
+                appState.type === "EDIT_MODULE" ||
+                appState.type === "CLONE_MODULE"
                 ? modules.find(({ id }) => id === appState.module)
                 : undefined
         );
