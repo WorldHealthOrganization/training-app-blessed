@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { NamedRef, SharingSetting } from "../../domain/entities/Ref";
 import { JSONTrainingModule } from "./JSONTrainingModule";
 

@@ -10,10 +10,21 @@ import { useAppContext } from "../../contexts/app-context";
 import { DhisPage } from "../dhis/DhisPage";
 
 export interface EditPageProps {
-    edit: boolean;
+    action: "create" | "edit" | "clone";
 }
 
-export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
+const getClonedModule = (module: PartialTrainingModule): PartialTrainingModule => {
+    const id = `${module.id}-copy`;
+    const referenceValue = `Copy of ${module.name.referenceValue}`;
+
+    return {
+        ...module,
+        id,
+        name: { key: id, referenceValue, translations: {} },
+    };
+};
+
+export const EditPage: React.FC<EditPageProps> = ({ action = "create" }) => {
     const { module, setAppState, usecases, reload } = useAppContext();
 
     const [stateModule, updateStateModule] = useState<PartialTrainingModule>(module ?? defaultTrainingModule);
@@ -40,29 +51,41 @@ export const EditPage: React.FC<EditPageProps> = ({ edit }) => {
             return;
         }
 
+        const dialogTitles = {
+            edit: i18n.t("Cancel module editing?"),
+            clone: i18n.t("Cancel module cloning?"),
+            create: i18n.t("Cancel module creation?"),
+        };
+
         updateDialog({
-            title: edit ? i18n.t("Cancel module editing?") : i18n.t("Cancel module creation?"),
+            title: dialogTitles[action],
             description: i18n.t("All your changes will be lost. Are you sure you want to proceed?"),
             saveText: i18n.t("Yes"),
             cancelText: i18n.t("No"),
             onSave: openSettings,
             onCancel: () => updateDialog(null),
         });
-    }, [dirty, edit, openSettings]);
+    }, [dirty, openSettings, action]);
 
     useEffect(() => {
-        if (module) updateStateModule(module);
-    }, [module]);
+        if (module) updateStateModule(action === "clone" ? getClonedModule(module) : module);
+    }, [module, action]);
+
+    const titles = {
+        edit: i18n.t("Edit module"),
+        clone: i18n.t("Clone module"),
+        create: i18n.t("New module"),
+    };
 
     return (
         <DhisPage>
-            <Header title={edit ? i18n.t("Edit module") : i18n.t("Create module")} onBackClick={onCancel} />
+            <Header title={titles[action]} onBackClick={onCancel} />
 
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 
             {stateModule ? (
                 <Wizard
-                    isEdit={edit}
+                    isEdit={action === "edit"}
                     onChange={onChange}
                     onCancel={onCancel}
                     onClose={openSettings}

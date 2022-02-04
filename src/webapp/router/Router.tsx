@@ -1,4 +1,3 @@
-import { useConfig } from "@dhis2/app-runtime";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { matchRoutes, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import styled from "styled-components";
@@ -9,9 +8,8 @@ import { buildPathFromState, buildStateFromPath } from "../entities/AppState";
 import { ExitPage } from "../pages/exit/ExitPage";
 import { AppRoute, buildRoutes } from "./AppRoute";
 
-export const Router: React.FC = () => {
+export const Router: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
     const { appState, routes, setAppState, module, reload } = useAppContext();
-    const { baseUrl } = useConfig();
     const navigate = useNavigate();
     const location = useLocation();
 

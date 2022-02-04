@@ -64,7 +64,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                     const modules = await usecases.modules.import(files);
                     snackbar.success(i18n.t("Imported {{n}} modules", { n: modules.length }));
                     await refreshRows();
-                } catch (err) {
+                } catch (err: any) {
                     snackbar.error((err && err.message) || err.toString());
                 } finally {
                     loading.reset();
@@ -218,6 +218,14 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         (ids: string[]) => {
             if (!tableActions.openEditModulePage || !ids[0]) return;
             tableActions.openEditModulePage({ id: ids[0] });
+        },
+        [tableActions]
+    );
+
+    const cloneModule = useCallback(
+        (ids: string[]) => {
+            if (!tableActions.openCloneModulePage || !ids[0]) return;
+            tableActions.openCloneModulePage({ id: ids[0] });
         },
         [tableActions]
     );
@@ -463,6 +471,18 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
                 },
             },
             {
+                name: "clone-module",
+                text: i18n.t("Clone module"),
+                icon: <Icon>content_copy</Icon>,
+                onClick: cloneModule,
+                isActive: rows => {
+                    return (
+                        !!tableActions.openCloneModulePage &&
+                        _.every(rows, item => item.rowType === "module" && item.editable)
+                    );
+                },
+            },
+            {
                 name: "edit-page",
                 text: i18n.t("Edit page"),
                 icon: <Icon>edit</Icon>,
@@ -587,6 +607,7 @@ export const ModuleListTable: React.FC<ModuleListTableProps> = props => {
         [
             tableActions,
             editModule,
+            cloneModule,
             deleteModules,
             deletePage,
             deleteStep,
@@ -750,6 +771,7 @@ const PageWrapper = styled.div`
 
 export type ModuleListTableAction = {
     openEditModulePage?: (params: { id: string }) => void;
+    openCloneModulePage?: (params: { id: string }) => void;
     openCreateModulePage?: () => void;
     editContents?: (params: { id: string; text: TranslatableText; value: string }) => Promise<void>;
     addStep?: (params: { id: string; title: string }) => Promise<void>;
