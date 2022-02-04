@@ -13,7 +13,12 @@ import _ from "lodash";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { FileRejection } from "react-dropzone";
 import styled from "styled-components";
-import { LandingNode, LandingNodeType } from "../../../domain/entities/LandingPage";
+import {
+    LandingNode,
+    LandingNodeType,
+    OrderedLandingNode,
+    buildOrderedLandingNodes,
+} from "../../../domain/entities/LandingPage";
 import i18n from "../../../locales";
 import { MarkdownViewer } from "../../components/markdown-viewer/MarkdownViewer";
 import { useAppContext } from "../../contexts/app-context";
@@ -60,7 +65,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                         saveText: i18n.t("Yes"),
                         cancelText: i18n.t("No"),
                     });
-                } catch (err) {
+                } catch (err: any) {
                     snackbar.error((err && err.message) || err.toString());
                 } finally {
                     loading.reset();
@@ -80,6 +85,24 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
             }
         },
         [usecases, snackbar]
+    );
+
+    const move = useCallback(
+        async (ids: string[], nodes: LandingNode[], change: "up" | "down") => {
+            const orderChange = change === "up" ? -1 : 1;
+            const allNodes = flattenRows(nodes);
+
+            const firstNode = allNodes.find(({ id }) => id === ids[0]);
+            if (firstNode?.order === undefined) return;
+
+            const parent = allNodes.find(({ id }) => id === firstNode?.parent);
+            const secondNode = parent?.children[firstNode?.order + orderChange];
+            if (secondNode?.order === undefined) return;
+
+            await usecases.landings.swapOrder(firstNode, secondNode);
+            await reload();
+        },
+        [reload, usecases]
     );
 
     const columns: TableColumn<LandingNode>[] = useMemo(
@@ -246,8 +269,25 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 isActive: nodes => _.every(nodes, item => item.type === "root"),
                 multiple: false,
             },
+            {
+                name: "move-up",
+                text: i18n.t("Move up"),
+                icon: <Icon>arrow_upwards</Icon>,
+                onClick: ids => move(ids, nodes, "up"),
+                isActive: nodes => _.every(nodes, ({ type, order }) => type !== "root" && order !== 0),
+                multiple: false,
+            },
+            {
+                name: "move-down",
+                text: i18n.t("Move down"),
+                icon: <Icon>arrow_downwards</Icon>,
+                onClick: ids => move(ids, nodes, "down"),
+                isActive: (nodes: OrderedLandingNode[]) =>
+                    _.every(nodes, ({ type, order, lastOrder }) => type !== "root" && order !== lastOrder),
+                multiple: false,
+            },
         ],
-        [usecases, reload, loading, nodes]
+        [usecases, reload, loading, nodes, move]
     );
 
     const globalActions: TableGlobalAction[] | undefined = useMemo(
@@ -283,7 +323,7 @@ export const LandingPageListTable: React.FC<{ nodes: LandingNode[]; isLoading?: 
                 onDrop={handleFileUpload}
             >
                 <ObjectsTable<LandingNode>
-                    rows={nodes}
+                    rows={buildOrderedLandingNodes(nodes)}
                     columns={columns}
                     actions={actions}
                     globalActions={globalActions}

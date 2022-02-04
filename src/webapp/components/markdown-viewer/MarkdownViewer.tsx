@@ -19,6 +19,7 @@ const components = {
     video: (props: any) => <video width="100%" controls {...props}></video>,
     "video-gif": (props: any) => <video width="100%" autoPlay loop muted playsInline src={props.src}></video>,
     pdf: (props: any) => <embed width="100%" height="600px" src={props.src} />,
+    //eslint-disable-next-line jsx-a11y/anchor-has-content
     a: (props: any) => <a target="_blank" {...props} />,
 };
 

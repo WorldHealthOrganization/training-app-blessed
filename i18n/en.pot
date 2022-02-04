@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-06-23T11:22:17.026Z\n"
-"PO-Revision-Date: 2021-06-23T11:22:17.026Z\n"
+"POT-Creation-Date: 2021-12-13T10:54:04.302Z\n"
+"PO-Revision-Date: 2021-12-13T10:54:04.302Z\n"
 
 msgid "Field {{field}} cannot be blank"
 msgstr ""
@@ -122,6 +122,12 @@ msgstr ""
 msgid "Exporting translations"
 msgstr ""
 
+msgid "Move up"
+msgstr ""
+
+msgid "Move down"
+msgstr ""
+
 msgid "Import landing pages"
 msgstr ""
 
@@ -171,6 +177,9 @@ msgid "Expand window"
 msgstr ""
 
 msgid "Minimize window"
+msgstr ""
+
+msgid "Code {{code}} already exists"
 msgstr ""
 
 msgid "Note: The sharing settings are only applied to the current module"
@@ -301,16 +310,13 @@ msgstr ""
 msgid "Edit module"
 msgstr ""
 
+msgid "Clone module"
+msgstr ""
+
 msgid "Edit page"
 msgstr ""
 
 msgid "Delete module"
-msgstr ""
-
-msgid "Move up"
-msgstr ""
-
-msgid "Move down"
 msgstr ""
 
 msgid "Install app"
@@ -353,6 +359,9 @@ msgid "Final"
 msgstr ""
 
 msgid "Exit"
+msgstr ""
+
+msgid "Clone"
 msgstr ""
 
 msgid "Create"
@@ -414,13 +423,16 @@ msgstr ""
 msgid "Cancel module editing?"
 msgstr ""
 
+msgid "Cancel module cloning?"
+msgstr ""
+
 msgid "Cancel module creation?"
 msgstr ""
 
 msgid "All your changes will be lost. Are you sure you want to proceed?"
 msgstr ""
 
-msgid "Create module"
+msgid "New module"
 msgstr ""
 
 msgid "Continue Tutorial"

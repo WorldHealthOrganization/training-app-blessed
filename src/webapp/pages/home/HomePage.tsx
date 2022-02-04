@@ -1,4 +1,3 @@
-import _ from "lodash";
 import CircularProgress from "material-ui/CircularProgress";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
